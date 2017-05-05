@@ -1,7 +1,10 @@
 TEMPLATE = app
 
-QT += qml quick
+QT += qml quick quickcontrols2
 CONFIG += c++11
+
+# include for external packages
+include(vendor/fluid/fluid.pri)
 
 SOURCES += \
     app/Services/SerialController.cpp \
@@ -47,10 +50,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-
-# include for external packages
-include(vendor/fluid/fluid.pri)
 
 DISTFILES += \
     config/Safety.json \
