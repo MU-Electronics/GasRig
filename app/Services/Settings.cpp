@@ -2,7 +2,7 @@
 
 namespace App { namespace Services
 {
-    Settings::Settings() :
+    Settings::Settings()
     {
     }
 }}

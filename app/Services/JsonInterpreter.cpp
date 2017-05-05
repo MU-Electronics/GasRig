@@ -2,7 +2,7 @@
 
 namespace App { namespace Services
 {
-    JsonInterpreter::JsonInterpreter() :
+    JsonInterpreter::JsonInterpreter()
     {
     }
 }}

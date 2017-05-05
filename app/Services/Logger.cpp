@@ -2,7 +2,7 @@
 
 namespace App { namespace Services
 {
-    Logger::Logger() :
+    Logger::Logger()
     {
     }
 }}
