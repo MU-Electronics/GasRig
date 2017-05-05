@@ -54,7 +54,8 @@ include(vendor/fluid/fluid.pri)
 
 DISTFILES += \
     config/Safety.json \
-    config/SystemSettings.json
+    config/SystemSettings.json \
+    readme.md
 
 HEADERS += \
     app/Services/Serialcontroller.h \
