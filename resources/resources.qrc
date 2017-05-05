@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>views/main.qml</file>
+        <file>views/MainForm.ui.qml</file>
+        <file>assets/images/logo-manchester.png</file>
+    </qresource>
+</RCC>

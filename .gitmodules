@@ -1,0 +1,3 @@
+[submodule "vendor/fluid"]
+	path = vendor/fluid
+	url = https://github.com/lirios/fluid.git
