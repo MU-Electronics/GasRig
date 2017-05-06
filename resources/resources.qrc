@@ -1,7 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>views/main.qml</file>
-        <file>views/MainForm.ui.qml</file>
         <file>assets/images/logo-manchester.png</file>
+        <file>assets/images/UniOfManchesterLogo.svg</file>
+        <file>assets/images/favicon.ico</file>
+        <file>assets/images/favicon.svg</file>
+        <file>views/SelectMode.qml</file>
     </qresource>
 </RCC>

@@ -1,6 +1,8 @@
 // Qt includes
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQuickStyle>
+#include <QQmlContext>
 
 // Include the template framework
 #include "iconsimageprovider.h"
@@ -21,6 +23,10 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
+    // Setup the styling
+    if (QQuickStyle::name().isEmpty())
+        QQuickStyle::setStyle(QLatin1String("Material"));
+
     // Load the template framework
     engine.addImportPath(QLatin1String("qrc:/"));
     engine.addImageProvider(QLatin1String("fluidicons"), new IconsImageProvider());
@@ -28,6 +34,8 @@ int main(int argc, char *argv[])
 
     // Load the main application qml file
     engine.load(QUrl(QStringLiteral("qrc:/views/main.qml")));
+
+
 
     return app.exec();
 }
