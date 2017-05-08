@@ -53,5 +53,5 @@ copy C:\Qt\5.8\mingw53_32\bin\Qt5Concurrent.dll C:\Users\xray\Desktop\GasRig\bui
 copy C:\Qt\5.8\mingw53_32\bin\Qt5DesignerComponents.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5DesignerComponents.dll
 copy C:\Qt\5.8\mingw53_32\bin\Qt5Designer.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5Designer.dll
 REM "Run the new app"
-"C:\PSTools\PsExec.exe" -u xray -p "PASSWORD" "C:\Users\xray\Desktop\GasRig\build\release\GasRig.exe"
+"C:\PSTools\PsExec.exe" -u xray -p "PASSWORD" -accepteula "C:\Users\xray\Desktop\GasRig\build\release\GasRig.exe"
 ```
