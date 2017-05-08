@@ -5,7 +5,6 @@
         <file>assets/images/UniOfManchesterLogo.svg</file>
         <file>assets/images/favicon.ico</file>
         <file>assets/images/favicon.svg</file>
-        <file>views/SelectMode.qml</file>
         <file>views/template/SideBar.qml</file>
         <file>views/template/TitleBar.qml</file>
         <file>views/modes/TestingMaintenance.qml</file>
