@@ -22,19 +22,39 @@ Pane {
 
     Universal.background: Universal.accent
 
+    ListItem {
+        id: connectionTab
+        text: qsTr("Connection status")
+        highlighted: true
+        onClicked: {
+            // Remove highligh from mode selection
+            listView.currentIndex = -1
+
+            //Add highligh to this tab
+            connectionTab.highlighted = false
+
+            // Push the view update
+            stackView.push("qrc:/views/modes/ConnectionStatus.qml")
+
+            //listPane.enabled = false
+        }
+    }
+
     ListView {
         id: listView
         anchors.fill: parent
-        currentIndex: 0
+        anchors.topMargin: 50
+        currentIndex: -1
         model: ListModel {
-            ListElement { title: qsTr("Sealed Pressure"); source: "qrc:/views/SelectMode.qml" }
-            ListElement { title: qsTr("Cycle Pressure"); source: "qrc:/views/SelectMode.qml" }
-            ListElement { title: qsTr("Continuous Flow"); source: "qrc:/views/SelectMode.qml" }
+            ListElement { title: qsTr("Pressurise Cell"); source: "qrc:/views/modes/PressuriseCell.qml" }
+            ListElement { title: qsTr("De-Pressurise Cell"); source: "qrc:/views/modes/DepressuriseCell.qml" }
+            ListElement { title: qsTr("Cycle Pressure"); source: "qrc:/views/modes/CyclePressure.qml" }
+            ListElement { title: qsTr("Continuous Flow"); source: "qrc:/views/modes/ContinuousFlow.qml"  }
             ListElement { title: qsTr("Vacuum Station"); source: "qrc:/views/modes/VacuumStation.qml" }
-            ListElement { title: qsTr("Custom Experiment"); source: "qrc:/views/SelectMode.qml" }
-            ListElement { title: qsTr("Safe Manual Control"); source: "qrc:/views/SelectMode.qml" }
-            ListElement { title: qsTr("Remote Control"); source: "qrc:/views/SelectMode.qml" }
-            ListElement { title: qsTr("Testing & Maintenance"); source: "qrc:/views/SelectMode.qml" }
+            ListElement { title: qsTr("Custom Experiment"); source: "qrc:/views/modes/CustomExperiment.qml" }
+            ListElement { title: qsTr("Safe Manual Control"); source: "qrc:/views/modes/SafeManualControl.qml" }
+            ListElement { title: qsTr("Remote Control"); source: "qrc:/views/modes/RemoteControl.qml"  }
+            ListElement { title: qsTr("Testing Mode"); source: "qrc:/views/modes/TestingMaintenance.qml"  }
         }
         header: Subheader {
             text: qsTr("Select Mode")
@@ -42,12 +62,19 @@ Pane {
         delegate: ListItem {
             text: model.title
             highlighted: ListView.isCurrentItem
+
             onClicked: {
+                //Remove highligh from connection status
+                connectionTab.highlighted = false
+
+                // Add highligh to mode
                 listView.currentIndex = index
+
+                // Push the view update
                 stackView.push(model.source)
                 //listPane.enabled = false
             }
         }
-        //ScrollBar.vertical: ScrollBar {}
+        ScrollBar.vertical: ScrollBar {}
     }
 }

@@ -14,5 +14,11 @@
         <file>views/modes/SafeManualControl.qml</file>
         <file>views/modes/VacuumStation.qml</file>
         <file>views/modes/ConnectionStatus.qml</file>
+        <file>views/modes/PressuriseCell.qml</file>
+        <file>views/modes/DepressuriseCell.qml</file>
+        <file>views/modes/CyclePressure.qml</file>
+        <file>views/modes/ContinuousFlow.qml</file>
+        <file>assets/images/CommingSoon.jpg</file>
+        <file>views/template/Mode_NotSupported.qml</file>
     </qresource>
 </RCC>

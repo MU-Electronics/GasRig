@@ -1,5 +1,7 @@
-import QtQuick 2.0
+import "../template"
 
-Item {
-    Text{ text:"hellow" }
+
+Mode_NotSupported{
+    featureName: qsTr("Vacuum Station Not Supported Yet")
 }
+

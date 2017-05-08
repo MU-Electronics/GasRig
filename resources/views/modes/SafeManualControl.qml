@@ -1,5 +1,7 @@
-import QtQuick 2.0
+import "../template"
 
-Item {
 
+Mode_NotSupported{
+    featureName: qsTr("Safe Manual Control Not Supported Yet")
 }
+
