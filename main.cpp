@@ -35,7 +35,6 @@ int main(int argc, char *argv[])
     // Load the main application qml file
     engine.load(QUrl(QStringLiteral("qrc:/views/main.qml")));
 
-
-
+    // Return event loop
     return app.exec();
 }

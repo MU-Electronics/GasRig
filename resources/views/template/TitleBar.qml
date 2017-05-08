@@ -30,7 +30,7 @@ TabbedPage {
                 text: qsTr("Close Application")
                 iconName: "navigation/close"
                 tooltip: qsTr("Pick a color")
-                onTriggered: console.log("close")
+                onTriggered: Qt.quit();
             }
         ]
 
