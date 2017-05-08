@@ -54,7 +54,7 @@ Pane {
             ListElement { title: qsTr("Custom Experiment"); source: "qrc:/views/modes/CustomExperiment.qml" }
             ListElement { title: qsTr("Safe Manual Control"); source: "qrc:/views/modes/SafeManualControl.qml" }
             ListElement { title: qsTr("Remote Control"); source: "qrc:/views/modes/RemoteControl.qml"  }
-            ListElement { title: qsTr("Testing Mode"); source: "qrc:/views/modes/TestingMaintenance.qml"  }
+            ListElement { title: qsTr("Testing Mode"); source: "qrc:/views/modes/TestingMaintenance/Index.qml"  }
         }
         header: Subheader {
             text: qsTr("Select Mode")

@@ -7,7 +7,6 @@
         <file>assets/images/favicon.svg</file>
         <file>views/template/SideBar.qml</file>
         <file>views/template/TitleBar.qml</file>
-        <file>views/modes/TestingMaintenance.qml</file>
         <file>views/modes/RemoteControl.qml</file>
         <file>views/modes/CustomExperiment.qml</file>
         <file>views/modes/SafeManualControl.qml</file>
@@ -19,5 +18,6 @@
         <file>views/modes/ContinuousFlow.qml</file>
         <file>assets/images/CommingSoon.jpg</file>
         <file>views/template/Mode_NotSupported.qml</file>
+        <file>views/modes/TestingMaintenance/Index.qml</file>
     </qresource>
 </RCC>
