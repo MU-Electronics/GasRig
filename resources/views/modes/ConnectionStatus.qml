@@ -137,27 +137,32 @@ Flickable
                 Column {
                     id: column
 
+                    spacing: 20
+
                     width: iconConnect.width
 
                     anchors.top: connectionStatusIcon.bottom
                     anchors.topMargin: 20
 
                     FluidControls.BodyLabel {
-                        text: qsTr("We tried to connect to the {{ name }} but it seems " +
-                                   "that the connection has failed. ")
+                        text: model.desc
                         wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignHCenter
                         width: parent.width
                         anchors.left: parent.left
                         anchors.leftMargin: 10
                         anchors.right: parent.right
                         anchors.rightMargin: 10
+                        id: explainConnection
                     }
 
                     Row {
                         id: helpReconnectButtons
                         spacing: 20
                         anchors.left: parent.left
-                        anchors.leftMargin: 10
+                        anchors.leftMargin: (rectangleHolder.width - 230) / 2
+                        width:230
+
                         Button {
                             text: qsTr("Help")
                             onClicked: {
