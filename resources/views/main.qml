@@ -14,7 +14,10 @@ ApplicationWindow {
 
     visible: true
 
-    visibility: "FullScreen"
+    // End app will be full screen
+    //visibility: "FullScreen"
+    //Easy of debugging use maximized
+    visibility: maximized
 
     title: qsTr("JFET Services: Gas Rig")
 
