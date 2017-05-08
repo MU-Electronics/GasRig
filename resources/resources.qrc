@@ -19,5 +19,10 @@
         <file>assets/images/CommingSoon.jpg</file>
         <file>views/template/Mode_NotSupported.qml</file>
         <file>views/modes/TestingMaintenance/Index.qml</file>
+        <file>views/modes/TestingMaintenance/Valve.qml</file>
+        <file>views/modes/TestingMaintenance/Vacuum.qml</file>
+        <file>views/modes/TestingMaintenance/Expansion.qml</file>
+        <file>views/modes/TestingMaintenance/RigStatus.qml</file>
+        <file>views/modes/TestingMaintenance/FlowController.qml</file>
     </qresource>
 </RCC>

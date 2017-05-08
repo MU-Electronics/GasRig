@@ -10,7 +10,7 @@ Item
         width: (parent.width) / 2
         anchors.left: parent.left
         TabBar {
-            id: bar
+            id: testingModeTabBar
             width: parent.width
             TabButton {
                 text: qsTr("Valves")
@@ -28,15 +28,26 @@ Item
 
         StackLayout {
             width: parent.width
-            currentIndex: bar.currentIndex
+            currentIndex: testingModeTabBar.currentIndex
+            anchors.top: testingModeTabBar.bottom
+            anchors.topMargin: 20
+            anchors.left: testingModeTabBar.left
+            anchors.leftMargin: 10
             Item {
-                id: homeTab
+                id: valveTab
+                Valve{}
             }
             Item {
-                id: discoverTab
+                id: vacuumTab
+                Vacuum{}
             }
             Item {
-                id: activityTab
+                id: flowTab
+                FlowController{}
+            }
+            Item {
+                id: expansionTab
+                Expansion{}
             }
         }
     }
@@ -45,11 +56,20 @@ Item
         anchors.left: tabController.right
         width: 6
         height: parent.height
-        color: Material.color(Material.Grey, Material.Shade200)
+        color: Material.color(Material.Grey, Material.Shade300)
     }
-    Item{
-        width: ((parent.width) / 2) - 26
+    Rectangle{
+        color: Material.color(Material.Grey, Material.Shade200)
+        width: ((parent.width) / 2) - 6
+        height: parent.height
         anchors.right: parent.right
-        Text{ text: "Hey" }
+        anchors.top: parent.top
+        RigStatus{
+            width: ((parent.width)) - 20
+            height: parent.height
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.topMargin: 20
+        }
     }
 }
