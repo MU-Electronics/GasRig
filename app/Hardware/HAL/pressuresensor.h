@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include "app/Services/SerialController.h"
+#include "app/Services/SerialWrapper.h"
 
 
 namespace App { namespace Hardware { namespace HAL
