@@ -46,6 +46,12 @@ REM "Ensure all the required DLLs are avaiable to the program"
 windeployqt --qmldir "C:\Users\xray\Desktop\GasRig\GasRig" "C:\Users\xray\Desktop\GasRig\build\release"
 REM "Copy missing dlls that windeployqt seems to miss"
 copy C:\Qt\5.8\mingw53_32\bin\libwinpthread-1.dll C:\Users\xray\Desktop\GasRig\build\release\libwinpthread-1.dll
+copy C:\Qt\5.8\mingw53_32\bin\Qt5OpenGL.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5OpenGL.dll
+copy C:\Qt\5.8\mingw53_32\bin\Qt5MultimediaQuick_p.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5MultimediaQuick_p.dll
+copy C:\Qt\5.8\mingw53_32\bin\Qt5Multimedia.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5Multimedia.dll
+copy C:\Qt\5.8\mingw53_32\bin\Qt5Concurrent.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5Concurrent.dll
+copy C:\Qt\5.8\mingw53_32\bin\Qt5DesignerComponents.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5DesignerComponents.dll
+copy C:\Qt\5.8\mingw53_32\bin\Qt5Designer.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5Designer.dll
 REM "Run the new app"
-"C:\Users\xray\Desktop\GasRig\build\release\GasRig.exe"
+"C:\PSTools\PsExec.exe" -u xray -p "PASSWORD" "C:\Users\xray\Desktop\GasRig\build\release\GasRig.exe"
 ```
