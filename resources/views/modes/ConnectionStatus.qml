@@ -29,7 +29,17 @@ Flickable
         //cellHeight: 150
 
         // Pressure sensor, Labjack, Vac station, Flow controller 1, Flow controller 2, 12V supply, 24V supply
-        model: 8
+        model: ListModel {
+            id: toMonitor
+            ListElement { title: qsTr("Pressure Sensor"); desc: qsTr("This shows the status of the connection to the pressure sensor."); status: 3 }
+            ListElement { title: qsTr("LabJack"); desc: qsTr("This shows the status of the connection to the LabJack."); status: 3 }
+            ListElement { title: qsTr("Vac Station"); desc: qsTr("This shows the status of the connection to the vacuum station.") ; status: 3 }
+            ListElement { title: qsTr("Flow Controller 1"); desc: qsTr("This shows the status of the connection to flow controller one."); status: 3  }
+            ListElement { title: qsTr("Flow Controller 2"); desc: qsTr("This shows the status of the connection to flow controller two."); status: 3 }
+            ListElement { title: qsTr("System Condition"); desc: qsTr("This shows whether the gas rig is in a state that it can be used."); status: 3 }
+            ListElement { title: qsTr("12V Supply"); desc: qsTr("This shows whether the 12V internal power supply is functioning"); status: 3 }
+            ListElement { title: qsTr("24V Supply"); desc: qsTr("This shows whether the 12V internal power supply is functioning") ; status: 3 }
+        }
         delegate: Rectangle
         {
             id: rectangleHolder
@@ -38,6 +48,26 @@ Flickable
 
             width: (window.width / layout.noInColoum) - (200 / layout.noInColoum)
             height: (window.height / layout.noInRow) - 48
+
+            state: model.status
+
+            states: [
+                State {
+                    name: "1"
+                    PropertyChanges { target: connectionStatusIcon; name: "action/done"; visible: true; color: Material.color(Material.Green, Material.Shade500)}
+                    PropertyChanges { target: connectionStatusLoading; visible: false; }
+                },
+                State {
+                    name: "2"
+                    PropertyChanges { target: connectionStatusIcon; name: "navigation/close"; visible: true; }
+                    PropertyChanges { target: connectionStatusLoading; visible: false; }
+                },
+                State {
+                    name: "3"
+                    PropertyChanges { target: connectionStatusIcon; name: "action/cached"; visible: false; }
+                    PropertyChanges { target: connectionStatusLoading; visible: true; }
+                }
+            ]
 
             FluidControls.Card
             {
@@ -58,7 +88,7 @@ Flickable
 
                     FluidControls.TitleLabel
                     {
-                        text: qsTr("Pressure Sensor")
+                        text: model.title
                         horizontalAlignment: Text.AlignHCenter
 
                         anchors.fill: parent
@@ -68,6 +98,7 @@ Flickable
                         color: Material.color(Material.Grey, Material.Shade700)
                     }
                 }
+
 
                 FluidControls.Icon
                 {
@@ -83,6 +114,22 @@ Flickable
 
                     anchors.left: parent.left
                     anchors.leftMargin: (rectangleHolder.width - 100) / 2
+                    anchors.top: titleBar.bottom
+                    anchors.topMargin: 20
+
+                    visible: false
+                }
+
+                BusyIndicator {
+                    id: connectionStatusLoading
+                    running: true
+                    visible: false
+
+                    width: 75
+                    height: 75
+
+                    anchors.left: parent.left
+                    anchors.leftMargin: (rectangleHolder.width - 75) / 2
                     anchors.top: titleBar.bottom
                     anchors.topMargin: 20
                 }
@@ -107,16 +154,23 @@ Flickable
                     }
 
                     Row {
+                        id: helpReconnectButtons
                         spacing: 20
                         anchors.left: parent.left
                         anchors.leftMargin: 10
                         Button {
                             text: qsTr("Help")
-                            onClicked: alert.open()
+                            onClicked: {
+                                toMonitor.set(index, {"status": 1})
+                                alert.open()
+                            }
                         }
 
                         Button {
                             text: qsTr("Re-Connecting")
+                            onClicked: {
+                                toMonitor.set(index, {"status": 3})
+                            }
                         }
                     }
                 }
@@ -135,12 +189,9 @@ Flickable
         y: (parent.height - height) / 2.5
 
         title: "Connection Failed"
-        text: qsTr("We tried to connect to the {{ name }} but it seems " +
-                   "that the connection has failed. " +
-                   "Try rebooting the PC and reloading the application, " +
-                   "if that does not work check the ID for the {{ name }} " +
-                   "in the settings for the applcation. " +
-                   "If all else failed contact JFET services, The University of Manchester. ")
+        text: qsTr("<p>We tried to connect to the device but it seems that the connection has failed.</p><br/>" +
+                   "<p>Try rebooting the PC and reloading the application, if that does not work check the vendor and product ID for the device in the settings for the applcation. </p><br/>" +
+                   "<p>If all else failed contact JFET services, The University of Manchester. </p>")
 
         standardButtons: Dialog.Cancel
     }

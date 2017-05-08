@@ -15,7 +15,7 @@
  * @brief qMain
  * @param argc
  * @param argv
- * @return
+ * @return Qt application event loop
  */
 int main(int argc, char *argv[])
 {
