@@ -1,13 +1,13 @@
+# include for external packages
+include(vendor/fluid/fluid.pri)
+
 TEMPLATE = app
 
 QT += qml quick quickcontrols2
 CONFIG += c++11
 
-# include for external packages
-include(vendor/fluid/fluid.pri)
-
 SOURCES += \
-    app/Services/SerialController.cpp \
+    app/Services/SerialWrapper.cpp \
     main.cpp \
     bootstrap/Startup.cpp \
     app/ViewManager/View.cpp \
@@ -57,7 +57,6 @@ DISTFILES += \
     readme.md
 
 HEADERS += \
-    app/Services/Serialcontroller.h \
     bootstrap/Startup.h \
     app/ViewManager/View.h \
     app/Hardware/Access.h \
@@ -73,4 +72,5 @@ HEADERS += \
     app/Safety/Monitor.h \
     app/Services/JsonInterpreter.h \
     app/Services/Logger.h \
-    app/Services/Settings.h
+    app/Services/Settings.h \
+    app/Services/SerialWrapper.h

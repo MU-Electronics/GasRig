@@ -1,5 +1,4 @@
 #pragma once
-#include <QWidget>
 
 namespace App { namespace Experiment{
     class Loader

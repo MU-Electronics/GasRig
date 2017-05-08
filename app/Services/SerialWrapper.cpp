@@ -1,4 +1,4 @@
-#include "SerialController.h"
+#include "SerialWrapper.h"
 
 namespace App { namespace Services
 {
