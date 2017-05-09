@@ -62,7 +62,8 @@ Pane {
         delegate: ListItem {
             text: model.title
             highlighted: ListView.isCurrentItem
-
+            anchors.left: parent.left
+            anchors.leftMargin: 25
             onClicked: {
                 //Remove highligh from connection status
                 connectionTab.highlighted = false

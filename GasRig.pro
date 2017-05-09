@@ -25,7 +25,9 @@ SOURCES += \
     app/Safety/Monitor.cpp \
     app/Services/JsonInterpreter.cpp \
     app/Services/Logger.cpp \
-    app/Services/Settings.cpp
+    app/Services/Settings.cpp \
+    app/ViewManager/ConnectionStatus.cpp \
+    app/ViewManager/Testing.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -74,4 +76,6 @@ HEADERS += \
     app/Services/JsonInterpreter.h \
     app/Services/Logger.h \
     app/Services/Settings.h \
-    app/Services/SerialWrapper.h
+    app/Services/SerialWrapper.h \
+    app/ViewManager/ConnectionStatus.h \
+    app/ViewManager/Testing.h
