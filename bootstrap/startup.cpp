@@ -36,6 +36,12 @@ namespace Bootstrap
         // Load the system settings
         loadSettings();
 
+        // Load IO thread
+        loadIOThread();
+
+        // Load safety thread
+        loadSafetyThread();
+
         // Configure the theme being used
         configTheme();
 
@@ -44,12 +50,6 @@ namespace Bootstrap
 
         // Load the view manager
         loadViewManager();
-
-        // Load IO thread
-        loadIOThread();
-
-        // Load safety thread
-        loadSafetyThread();
     }
 
 
@@ -119,7 +119,7 @@ namespace Bootstrap
      */
     void Startup::loadViewManager()
     {
-        App::ViewManager::View manager(m_root);
+        //App::ViewManager::View manager(this, m_engine);
     }
 
 
@@ -158,6 +158,7 @@ namespace Bootstrap
     {
 
     }
+
 }
 
 

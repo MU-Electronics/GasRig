@@ -2,10 +2,11 @@
 
 #include <QObject>
 #include <QQuickItem>
+#include "Manager.h"
 
 namespace App { namespace ViewManager
 {
-    class Testing : public QObject
+    class Testing : public QObject, public App::ViewManager::Manager
     {
         public:
             Testing(QObject *parent, QObject* root);

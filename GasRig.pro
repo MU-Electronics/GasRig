@@ -78,4 +78,5 @@ HEADERS += \
     app/Services/Settings.h \
     app/Services/SerialWrapper.h \
     app/ViewManager/ConnectionStatus.h \
-    app/ViewManager/Testing.h
+    app/ViewManager/Testing.h \
+    app/ViewManager/Manager.h

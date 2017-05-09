@@ -34,7 +34,7 @@ Pane {
             connectionTab.highlighted = false
 
             // Push the view update
-            stackView.push("qrc:/views/modes/ConnectionStatus.qml")
+            stackView.push("qrc:/views/management/ConnectionStatus.qml")
 
             //listPane.enabled = false
         }
@@ -54,7 +54,6 @@ Pane {
             ListElement { title: qsTr("Custom Experiment"); source: "qrc:/views/modes/CustomExperiment.qml" }
             ListElement { title: qsTr("Safe Manual Control"); source: "qrc:/views/modes/SafeManualControl.qml" }
             ListElement { title: qsTr("Remote Control"); source: "qrc:/views/modes/RemoteControl.qml"  }
-            ListElement { title: qsTr("Testing Mode"); source: "qrc:/views/modes/TestingMaintenance/Index.qml"  }
         }
         header: Subheader {
             text: qsTr("Select Mode")
@@ -62,8 +61,8 @@ Pane {
         delegate: ListItem {
             text: model.title
             highlighted: ListView.isCurrentItem
-            anchors.left: parent.left
-            anchors.leftMargin: 25
+            //anchors.left: parent.left
+            //anchors.leftMargin: 25
             onClicked: {
                 //Remove highligh from connection status
                 connectionTab.highlighted = false

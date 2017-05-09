@@ -6,6 +6,8 @@ import QtQuick.Layouts 1.3
 import Fluid.Controls 1.0
 import "template"
 import "modes"
+import "management"
+import "management/TestingMaintenance"
 
 ApplicationWindow {
     id: window

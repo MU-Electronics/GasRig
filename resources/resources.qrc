@@ -11,18 +11,19 @@
         <file>views/modes/CustomExperiment.qml</file>
         <file>views/modes/SafeManualControl.qml</file>
         <file>views/modes/VacuumStation.qml</file>
-        <file>views/modes/ConnectionStatus.qml</file>
         <file>views/modes/PressuriseCell.qml</file>
         <file>views/modes/DepressuriseCell.qml</file>
         <file>views/modes/CyclePressure.qml</file>
         <file>views/modes/ContinuousFlow.qml</file>
         <file>assets/images/CommingSoon.jpg</file>
         <file>views/template/Mode_NotSupported.qml</file>
-        <file>views/modes/TestingMaintenance/Index.qml</file>
-        <file>views/modes/TestingMaintenance/Valve.qml</file>
-        <file>views/modes/TestingMaintenance/Vacuum.qml</file>
-        <file>views/modes/TestingMaintenance/Expansion.qml</file>
-        <file>views/modes/TestingMaintenance/RigStatus.qml</file>
-        <file>views/modes/TestingMaintenance/FlowController.qml</file>
+        <file>views/management/Settings.qml</file>
+        <file>views/management/TestingMaintenance/Expansion.qml</file>
+        <file>views/management/TestingMaintenance/FlowController.qml</file>
+        <file>views/management/TestingMaintenance/Index.qml</file>
+        <file>views/management/TestingMaintenance/RigStatus.qml</file>
+        <file>views/management/TestingMaintenance/Vacuum.qml</file>
+        <file>views/management/TestingMaintenance/Valve.qml</file>
+        <file>views/management/ConnectionStatus.qml</file>
     </qresource>
 </RCC>

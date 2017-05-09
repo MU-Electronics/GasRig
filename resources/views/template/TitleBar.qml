@@ -21,10 +21,20 @@ TabbedPage {
                 onTriggered: console.log("Dummy error")
             },
             Action {
+                text: qsTr("Testing Mode")
+                iconName: "action/build"
+                tooltip: qsTr("Settings")
+                onTriggered: {
+                    stackView.push("qrc:/views/management/TestingMaintenance/Index.qml")
+                }
+            },
+            Action {
                 text: qsTr("Settings")
                 iconName: "action/settings"
                 tooltip: qsTr("Settings")
-                onTriggered: console.log("Settings clicked")
+                onTriggered: {
+                    stackView.push("qrc:/views/management/Settings.qml")
+                }
             },
             Action {
                 text: qsTr("Close Application")

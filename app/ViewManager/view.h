@@ -1,19 +1,33 @@
 #pragma once
 
 #include <QObject>
+#include <QQmlApplicationEngine>
+#include <map>
+#include <string>
+#include "Manager.h"
+
 
 namespace App { namespace ViewManager
 {
     class View:  public QObject
     {
         public:
-            View(QObject* root);
+            View(QObject* parent, QQmlApplicationEngine& engine);
+
+            std::map<std::string, App::ViewManager::Manager*> m_Manager;
 
         private:
-            QObject* m_root;
+            QObject& m_engine;
+            bool m_safety;
+            bool m_IO;
 
-            explicit View(const View& rhs) = delete;
-            View& operator= (const View& rhs) = delete;
+            void loadManagers();
+            void connectManagerToView();
+            void connectViewToModel();
+            void connectSafetyToIO();
+
+            //explicit View(const View& rhs) = delete;
+            //View& operator= (const View& rhs) = delete;
     };
 }}
 
