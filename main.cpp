@@ -1,13 +1,13 @@
 // Qt includes
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
-#include <QQuickStyle>
-#include <QQmlContext>
 
 // Include the template framework
 #include "iconsimageprovider.h"
 #include "iconthemeimageprovider.h"
 
+// Require app
+#include "bootstrap/Startup.h"
 
 /**
  * Main applcation function
@@ -19,22 +19,18 @@
  */
 int main(int argc, char *argv[])
 {
+    // Start app
     QGuiApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
+    // Boot the applcation
+    Bootstrap::Startup loader;
 
-    // Setup the styling
-    if (QQuickStyle::name().isEmpty())
-        QQuickStyle::setStyle(QLatin1String("Material"));
+    // If successfull return event loop
+    if (loader.success())
+    {
+       return app.exec();
+    }
 
-    // Load the template framework
-    engine.addImportPath(QLatin1String("qrc:/"));
-    engine.addImageProvider(QLatin1String("fluidicons"), new IconsImageProvider());
-    engine.addImageProvider(QLatin1String("fluidicontheme"), new IconThemeImageProvider());
-
-    // Load the main application qml file
-    engine.load(QUrl(QStringLiteral("qrc:/views/main.qml")));
-
-    // Return event loop
-    return app.exec();
+    // End app
+    //return -1;
 }
