@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QQmlApplicationEngine>
 #include <map>
+#include <memory>
 #include <string>
 #include "Manager.h"
 
@@ -14,10 +15,10 @@ namespace App { namespace ViewManager
         public:
             View(QObject* parent, QQmlApplicationEngine& engine);
 
-            std::map<std::string, App::ViewManager::Manager*> m_Manager;
+            std::map<std::string, std::shared_ptr<App::ViewManager::Manager>> m_Manager;
 
         private:
-            QObject& m_engine;
+            QQmlApplicationEngine& m_engine;
             bool m_safety;
             bool m_IO;
 
