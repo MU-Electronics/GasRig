@@ -22,6 +22,10 @@ namespace Bootstrap{
         QQmlApplicationEngine& m_engine;
         bool m_isValid;
 
+        void configTheme();
+        void loadMainView();
+        void loadViewManager();
+
         explicit Startup(const Startup& rhs) = delete;
         Startup& operator= (const Startup& rhs) = delete;
     };
