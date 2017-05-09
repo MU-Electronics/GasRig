@@ -37,8 +37,8 @@ Flickable
             ListElement { title: qsTr("Flow Controller 1"); desc: qsTr("This shows the status of the connection to flow controller one."); status: 3  }
             ListElement { title: qsTr("Flow Controller 2"); desc: qsTr("This shows the status of the connection to flow controller two."); status: 3 }
             ListElement { title: qsTr("System Condition"); desc: qsTr("This shows whether the gas rig is in a state that it can be used."); status: 3 }
-            ListElement { title: qsTr("12V Supply"); desc: qsTr("This shows whether the 12V internal power supply is functioning"); status: 3 }
-            ListElement { title: qsTr("24V Supply"); desc: qsTr("This shows whether the 12V internal power supply is functioning") ; status: 3 }
+            ListElement { title: qsTr("Safety Monitor"); desc: qsTr("This shows whether the programs safety monitor is running."); status: 3 }
+            ListElement { title: qsTr("Supplies"); desc: qsTr("This shows whether the 12V and 24V internal power supply is functioning.") ; status: 3 }
         }
         delegate: Rectangle
         {

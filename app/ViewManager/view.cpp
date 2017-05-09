@@ -2,7 +2,8 @@
 
 namespace App { namespace ViewManager
 {
-    View::View()
+    View::View(QObject *root)
+        : m_root(root)
     {
     }
 }}

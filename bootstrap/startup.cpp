@@ -5,17 +5,15 @@
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QQmlContext>
-
-// Libs prov to be used
-#include <QStringListModel>
-#include <QQuickItem>
-#include <QQuickWindow>
 #include <QDebug>
 #include <QtGlobal>
 
 // Include the template framework
 #include "iconsimageprovider.h"
 #include "iconthemeimageprovider.h"
+
+// Application includes
+#include "app/ViewManager/View.h"
 
 namespace Bootstrap
 {
@@ -35,14 +33,23 @@ namespace Bootstrap
           m_engine (*new QQmlApplicationEngine()),
           m_isValid(true)
     {
+        // Load the system settings
+        loadSettings();
+
         // Configure the theme being used
         configTheme();
+
+        // Load main view
+        loadMainView();
 
         // Load the view manager
         loadViewManager();
 
-        // Load main view
-        loadMainView();
+        // Load IO thread
+        loadIOThread();
+
+        // Load safety thread
+        loadSafetyThread();
     }
 
 
@@ -88,13 +95,19 @@ namespace Bootstrap
         // Load the main application qml file
         m_engine.load(QUrl(QStringLiteral("qrc:/views/main.qml")));
 
+        // Get root objects
+        auto rootObjects = m_engine.rootObjects();
+
         // Validate
-        if (m_engine.rootObjects().isEmpty())
+        if (rootObjects.isEmpty())
         {
             qDebug() << "There are no QML objects!";
             m_isValid = false;
             return;
         }
+
+        // Save a pointer to the root objects
+        m_root = rootObjects[0];
     }
 
 
@@ -105,6 +118,43 @@ namespace Bootstrap
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      */
     void Startup::loadViewManager()
+    {
+        App::ViewManager::View manager(m_root);
+    }
+
+
+    /**
+     * Loads the application and safety settings
+     *
+     * @brief Startup::loadSettings
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     */
+    void Startup::loadSettings()
+    {
+
+    }
+
+
+    /**
+     * Loads the IO thread to control the gas rig
+     *
+     * @brief Startup::loadIOThread
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     */
+    void Startup::loadIOThread()
+    {
+
+
+    }
+
+
+    /**
+     * Load the safety thread to monitor for extreme events
+     *
+     * @brief Startup::loadSafetyThread
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     */
+    void Startup::loadSafetyThread()
     {
 
     }
