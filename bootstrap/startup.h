@@ -25,7 +25,7 @@ namespace Bootstrap{
 
         void configTheme();
         void loadMainView();
-        void loadViewManager();
+        void loadApplication();
         void loadSettings();
         void loadIOThread();
         void loadSafetyThread();

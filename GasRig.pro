@@ -11,7 +11,6 @@ SOURCES += \
     app/Services/SerialWrapper.cpp \
     main.cpp \
     bootstrap/Startup.cpp \
-    app/ViewManager/View.cpp \
     app/Hardware/Access.cpp \
     app/Hardware/HAL/PressureSensor.cpp \
     app/Hardware/HAL/VacStation.cpp \
@@ -27,7 +26,8 @@ SOURCES += \
     app/Services/Logger.cpp \
     app/Services/Settings.cpp \
     app/ViewManager/ConnectionStatus.cpp \
-    app/ViewManager/Testing.cpp
+    app/ViewManager/Testing.cpp \
+    app/Application.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -61,7 +61,6 @@ DISTFILES += \
 
 HEADERS += \
     bootstrap/Startup.h \
-    app/ViewManager/View.h \
     app/Hardware/Access.h \
     app/Hardware/HAL/PressureSensor.h \
     app/Hardware/HAL/FlowController.h \
@@ -80,4 +79,5 @@ HEADERS += \
     app/ViewManager/ConnectionStatus.h \
     app/ViewManager/Testing.h \
     app/ViewManager/Manager.h \
-    app/Utilities/Properties.h
+    app/Utilities/Properties.h \
+    app/Application.h

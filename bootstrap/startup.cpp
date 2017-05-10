@@ -13,7 +13,7 @@
 #include "iconthemeimageprovider.h"
 
 // Application includes
-#include "app/ViewManager/View.h"
+#include "app/Application.h"
 
 namespace Bootstrap
 {
@@ -46,7 +46,7 @@ namespace Bootstrap
         configTheme();
 
         // Load the view manager
-        loadViewManager();
+        loadApplication();
 
         // Load main view
         loadMainView();
@@ -119,9 +119,9 @@ namespace Bootstrap
      * @brief Startup::loadViewManager
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      */
-    void Startup::loadViewManager()
+    void Startup::loadApplication()
     {
-        App::ViewManager::View manager(this, &m_engine);
+        App::Application application(this, &m_engine);
     }
 
 

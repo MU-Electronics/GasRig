@@ -1,4 +1,4 @@
-#include "View.h"
+#include "Application.h"
 
 // External libs
 #include <QQmlApplicationEngine>
@@ -6,19 +6,19 @@
 #include <QQmlEngine>
 
 // include view manangers
-#include "Testing.h"
-#include "ConnectionStatus.h"
+#include "ViewManager/Testing.h"
+#include "ViewManager/ConnectionStatus.h"
 
 
-namespace App { namespace ViewManager
+namespace App
 {
-    View::View(QObject* parent, QQmlApplicationEngine* engine)
+    Application::Application(QObject* parent, QQmlApplicationEngine* engine)
         : QObject(parent),
           m_engine(engine),
           m_safety(true),
           m_IO(true),
-          manager_testing(*new Testing(parent, engine)),
-          manager_connection(*new ConnectionStatus(parent, engine))
+          manager_testing(*new ViewManager::Testing(parent, engine)),
+          manager_connection(*new ViewManager::ConnectionStatus(parent, engine))
     {
         // Load all managers
         registerManagers();
@@ -31,7 +31,7 @@ namespace App { namespace ViewManager
     }
 
 
-    View::~View()
+    Application::~Application()
     {
 
     }
@@ -42,7 +42,7 @@ namespace App { namespace ViewManager
      *
      * @brief View::loadManagers
      */
-    void View::registerManagers()
+    void Application::registerManagers()
     {
         // Set testing manager
         m_engine->rootContext()->setContextProperty("TestingManager", &manager_testing);
@@ -58,7 +58,7 @@ namespace App { namespace ViewManager
      *
      * @brief View::connectViewToModel
      */
-    void View::connectViewToModel()
+    void Application::connectViewToModel()
     {
 
     }
@@ -69,8 +69,8 @@ namespace App { namespace ViewManager
      *
      * @brief View::connectSafetyToIO
      */
-    void View::connectSafetyToIO()
+    void Application::connectSafetyToIO()
     {
 
     }
-}}
+}
