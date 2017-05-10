@@ -4,11 +4,14 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQmlEngine>
+#include <QThread>
 
-// include view manangers
+// Include view manangers
 #include "ViewManager/Testing.h"
 #include "ViewManager/ConnectionStatus.h"
 
+// Include objects for threading
+#include "Safety/Monitor.h"
 
 namespace App
 {
@@ -62,7 +65,7 @@ namespace App
     /**
      * Loads the IO thread to control the gas rig
      *
-     * @brief Application::loadIOThread
+     * @brief Application::startAddtionalThread
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      */
     void Application::startAddtionalThread()
@@ -70,7 +73,11 @@ namespace App
         // IO Thread
 
         // Safety Thread
-
+        QThread safety;
+        Safety::Monitor monitor(this);
+        monitor.setup(safety);
+        monitor.moveToThread(&safety);
+        safety.start();
     }
 
 
@@ -78,7 +85,7 @@ namespace App
     /**
      * Connect the views managers to models via the Qt connect method
      *
-     * @brief View::connectViewToModel
+     * @brief Application::connectViewToManager
      */
     void Application::connectViewToManager()
     {
@@ -89,7 +96,7 @@ namespace App
     /**
      * Connect the safety thread to IO thread via the Qt connect method
      *
-     * @brief View::connectSafetyToIO
+     * @brief Application::connectThreads
      */
     void Application::connectThreads()
     {
