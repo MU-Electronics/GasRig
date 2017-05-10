@@ -5,24 +5,31 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <QString>
 #include "Manager.h"
 
+
+#include "Testing.h"
+#include "ConnectionStatus.h"
 
 namespace App { namespace ViewManager
 {
     class View:  public QObject
     {
+        Q_OBJECT
         public:
-            View(QObject* parent, QQmlApplicationEngine& engine);
+            View(QObject* parent, QQmlApplicationEngine *engine);
+            ~View();
 
-            std::map<std::string, std::shared_ptr<App::ViewManager::Manager>> m_Manager;
+            Testing& manager_testing;
+            ConnectionStatus& manager_connection;
 
         private:
-            QQmlApplicationEngine& m_engine;
+            QQmlApplicationEngine* m_engine;
             bool m_safety;
             bool m_IO;
 
-            void loadManagers();
+            void registerManagers();
             void connectManagerToView();
             void connectViewToModel();
             void connectSafetyToIO();

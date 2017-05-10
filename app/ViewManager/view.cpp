@@ -3,8 +3,7 @@
 // External libs
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <map>
-#include <memory>
+#include <QQmlEngine>
 
 // include view manangers
 #include "Testing.h"
@@ -13,51 +12,45 @@
 
 namespace App { namespace ViewManager
 {
-    View::View(QObject* parent, QQmlApplicationEngine& engine)
+    View::View(QObject* parent, QQmlApplicationEngine* engine)
         : QObject(parent),
           m_engine(engine),
           m_safety(true),
-          m_IO(true)
+          m_IO(true),
+          manager_testing(*new Testing(parent, engine)),
+          manager_connection(*new ConnectionStatus(parent, engine))
     {
         // Load all managers
-        loadManagers();
+        registerManagers();
 
         // Connect all managers
-        connectManagerToView();
         connectViewToModel();
 
         // connect IO thread and Safety thread
         connectSafetyToIO();
     }
 
+
+    View::~View()
+    {
+
+    }
+
+
     /**
      * Register all the view manager instances
      *
      * @brief View::loadManagers
      */
-    void View::loadManagers()
+    void View::registerManagers()
     {
-        // Setup the connection status view manager
-        m_Manager["connection_status"] = std::shared_ptr<App::ViewManager::Manager>(new App::ViewManager::ConnectionStatus(this, &m_engine));
+        // Set testing manager
+        m_engine->rootContext()->setContextProperty("TestingManager", &manager_testing);
 
-        // Setup the testing view manager
-        m_Manager["testing"] = std::shared_ptr<App::ViewManager::Manager>(new App::ViewManager::Testing(this, &m_engine));
+        // Set connection status manager
+        m_engine->rootContext()->setContextProperty("ConnectionStatusManager", &manager_connection);
     }
 
-
-    /**
-     * Connect the view managers to views via the Qt connect method
-     *
-     * @brief View::connectManagerToView
-     */
-    void View::connectManagerToView()
-    {
-        auto& rootContext = m_engine.rootContext();
-        for (auto& manager : m_Manager)
-        {
-            rootContext.setContextProperty(manager.first, &manager.second);
-        }
-    }
 
 
     /**

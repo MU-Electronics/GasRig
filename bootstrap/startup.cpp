@@ -45,11 +45,13 @@ namespace Bootstrap
         // Configure the theme being used
         configTheme();
 
+        // Load the view manager
+        loadViewManager();
+
         // Load main view
         loadMainView();
 
-        // Load the view manager
-        loadViewManager();
+
     }
 
 
@@ -119,7 +121,7 @@ namespace Bootstrap
      */
     void Startup::loadViewManager()
     {
-        //App::ViewManager::View manager(this, m_engine);
+        App::ViewManager::View manager(this, &m_engine);
     }
 
 
