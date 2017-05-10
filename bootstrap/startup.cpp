@@ -31,7 +31,8 @@ namespace Bootstrap
     Startup::Startup()
         : QObject(nullptr),
           m_engine (*new QQmlApplicationEngine()),
-          m_isValid(true)
+          m_isValid(true),
+          m_application(*new App::Application(this, &m_engine))
     {
         // Load the system settings
         loadSettings();
@@ -115,7 +116,7 @@ namespace Bootstrap
      */
     void Startup::loadApplication()
     {
-        App::Application application(this, &m_engine);
+
     }
 
 

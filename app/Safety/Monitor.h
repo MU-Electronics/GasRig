@@ -9,19 +9,16 @@ namespace App { namespace Safety
     {
         Q_OBJECT
         public:
-            Monitor(QObject *parent = 0);
+            explicit Monitor();
             ~Monitor();
 
             void setup(QThread &thread);
 
         public slots:
-            void start();
+            void runner();
 
         private:
             //QThread* m_thread;
-
-            explicit Monitor(const Monitor& rhs) = delete;
-            Monitor& operator= (const Monitor& rhs) = delete;
     };
 }}
 

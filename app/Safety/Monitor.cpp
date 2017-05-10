@@ -1,12 +1,12 @@
 #include "Monitor.h"
 
+#include <QObject>
 #include <QThread>
+#include <QDebug>
 
 namespace App { namespace Safety
 {
-
-
-    Monitor::Monitor(QObject *parent)
+    Monitor::Monitor()
     {
 
     }
@@ -14,18 +14,22 @@ namespace App { namespace Safety
     Monitor::~Monitor()
     {
 
-
     }
 
     void Monitor::setup(QThread &thread)
     {
         //m_thread = &thread;
-        connect(&thread, SIGNAL(started()), this, SLOT(start()));
+        qDebug("connect");
+        connect(&thread, SIGNAL(started()), this, SLOT(runner()));
     }
 
-    void Monitor::start()
+    void Monitor::runner()
     {
-
+        qDebug("Running");
+        for(int i = 0; i < 100; i++)
+        {
+            qDebug() << "A: " <<i;
+        }
     }
 
 }}

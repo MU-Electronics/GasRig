@@ -1,15 +1,24 @@
 #pragma once
 
+#include <QObject>
+#include <QThread>
+
 namespace App { namespace Hardware
 {
-    class Access
+    class Access: public QObject
     {
-    public:
-        Access();
+        Q_OBJECT
+        public:
+            explicit Access();
+            ~Access();
 
-    private:
-        explicit Access(const Access& rhs) = delete;
-        Access& operator= (const Access& rhs) = delete;
+            void setup(QThread &thread);
+
+        public slots:
+            void runner();
+
+        private:
+            //QThread* m_thread;
     };
 }}
 

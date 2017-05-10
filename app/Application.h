@@ -1,11 +1,18 @@
 #pragma once
 
+// External libs
 #include <QObject>
 #include <QQmlApplicationEngine>
+#include <QThread>
+#include <QMap>
 
-
+// View managers
 #include "ViewManager/Testing.h"
 #include "ViewManager/ConnectionStatus.h"
+
+// Objects to the threaded
+#include "Safety/Monitor.h"
+#include "Hardware/access.h"
 
 namespace App
 {
@@ -25,8 +32,12 @@ namespace App
             QQmlApplicationEngine* m_engine;
 
             // Addtional threads
-            bool thread_safety;
-            bool thread_IO;
+            QThread thread_safety;
+            QThread thread_hardware;
+
+            // Objects to be moved to the threads
+            Safety::Monitor& monitor;
+            Hardware::Access& hardware;
 
 
             void registerManagers();

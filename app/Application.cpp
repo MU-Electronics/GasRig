@@ -5,6 +5,7 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QThread>
+#include <QString>
 
 // Include view manangers
 #include "ViewManager/Testing.h"
@@ -12,6 +13,7 @@
 
 // Include objects for threading
 #include "Safety/Monitor.h"
+#include "Hardware/access.h"
 
 namespace App
 {
@@ -19,9 +21,9 @@ namespace App
         : QObject(parent),
           m_engine(engine),
 
-          // Create instacne for each addtions thread
-          thread_safety(true),
-          thread_IO(true),
+          // Start objects that are to be threaded
+          monitor(*new Safety::Monitor()),
+          hardware(*new Hardware::Access()),
 
           // Create instance for each view manager
           manager_testing(*new ViewManager::Testing(parent, engine)),
@@ -43,7 +45,8 @@ namespace App
 
     Application::~Application()
     {
-
+        thread_hardware.terminate();
+        thread_safety.terminate();
     }
 
 
@@ -63,21 +66,22 @@ namespace App
 
 
     /**
-     * Loads the IO thread to control the gas rig
+     * Loads the hardware and safety monitor thread
      *
      * @brief Application::startAddtionalThread
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      */
     void Application::startAddtionalThread()
     {
-        // IO Thread
+        // Hardware Thread
+        hardware.setup(thread_hardware);
+        hardware.moveToThread(&thread_hardware);
+        thread_hardware.start();
 
         // Safety Thread
-        QThread safety;
-        Safety::Monitor monitor(this);
-        monitor.setup(safety);
-        monitor.moveToThread(&safety);
-        safety.start();
+        monitor.setup(thread_safety);
+        monitor.moveToThread(&thread_safety);
+        thread_safety.start();
     }
 
 
