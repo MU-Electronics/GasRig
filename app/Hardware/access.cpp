@@ -26,7 +26,7 @@ namespace App { namespace Hardware
     void Access::runner()
     {
         qDebug("Running");
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < 2; i++)
         {
             qDebug() << "B: " <<i;
         }

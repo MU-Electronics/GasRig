@@ -35,9 +35,6 @@ namespace App
         // Load all managers
         registerManagers();
 
-        // Connect views and managers together
-        connectViewToManager();
-
         // Connect threads to one another
         connectThreads();
     }
@@ -45,6 +42,7 @@ namespace App
 
     Application::~Application()
     {
+        // Shut down the threads
         thread_hardware.terminate();
         thread_safety.terminate();
     }
@@ -82,18 +80,6 @@ namespace App
         monitor.setup(thread_safety);
         monitor.moveToThread(&thread_safety);
         thread_safety.start();
-    }
-
-
-
-    /**
-     * Connect the views managers to models via the Qt connect method
-     *
-     * @brief Application::connectViewToManager
-     */
-    void Application::connectViewToManager()
-    {
-
     }
 
 

@@ -28,6 +28,8 @@ namespace App
             ViewManager::Testing& manager_testing;
             ViewManager::ConnectionStatus& manager_connection;
 
+            void connectViewToManager();
+
         private:
             QQmlApplicationEngine* m_engine;
 
@@ -42,7 +44,7 @@ namespace App
 
             void registerManagers();
             void startAddtionalThread();
-            void connectViewToManager();
+
             void connectThreads();
 
 

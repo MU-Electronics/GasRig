@@ -40,12 +40,11 @@ namespace Bootstrap
         // Configure the theme being used
         configTheme();
 
-        // Load the view manager
-        loadApplication();
-
         // Load main view
         loadMainView();
 
+        // Load the view manager
+        loadApplication();
 
     }
 

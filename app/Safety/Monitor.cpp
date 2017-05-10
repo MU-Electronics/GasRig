@@ -26,7 +26,7 @@ namespace App { namespace Safety
     void Monitor::runner()
     {
         qDebug("Running");
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < 2; i++)
         {
             qDebug() << "A: " <<i;
         }

@@ -1,5 +1,7 @@
 #include "Testing.h"
-#include <iostream>
+#include <QDebug>
+#include <QQuickView>
+#include <QUrl>
 
 namespace App { namespace ViewManager
 {
@@ -10,9 +12,10 @@ namespace App { namespace ViewManager
         exampleVar("Hello from C++");
     }
 
-    void Testing::helloWorld()
+    void Testing::vacuumOn()
     {
-        std::cout << "Hey" << std::endl;
+        qDebug() << "Turn Vacuum On";
+        exampleVar("updated");
     }
 }}
 

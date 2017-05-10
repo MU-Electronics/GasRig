@@ -17,10 +17,11 @@ namespace App { namespace ViewManager
 
         public:
             Testing(QObject *parent, QQmlApplicationEngine *root);
-            void helloWorld();
+            void makeConnections();
         signals:
 
         public slots:
+            void vacuumOn();
 
         private:
             QQmlApplicationEngine* m_root;
