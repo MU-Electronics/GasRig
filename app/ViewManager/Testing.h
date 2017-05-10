@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
+
 #include "Manager.h"
 #include <QString>
 #include "../Utilities/Properties.h"

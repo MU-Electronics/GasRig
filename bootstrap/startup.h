@@ -27,8 +27,6 @@ namespace Bootstrap{
         void loadMainView();
         void loadApplication();
         void loadSettings();
-        void loadIOThread();
-        void loadSafetyThread();
 
         explicit Startup(const Startup& rhs) = delete;
         Startup& operator= (const Startup& rhs) = delete;

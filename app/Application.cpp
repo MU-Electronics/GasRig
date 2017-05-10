@@ -15,19 +15,26 @@ namespace App
     Application::Application(QObject* parent, QQmlApplicationEngine* engine)
         : QObject(parent),
           m_engine(engine),
-          m_safety(true),
-          m_IO(true),
+
+          // Create instacne for each addtions thread
+          thread_safety(true),
+          thread_IO(true),
+
+          // Create instance for each view manager
           manager_testing(*new ViewManager::Testing(parent, engine)),
           manager_connection(*new ViewManager::ConnectionStatus(parent, engine))
     {
+        // Start addtional application threads
+        startAddtionalThread();
+
         // Load all managers
         registerManagers();
 
-        // Connect all managers
-        connectViewToModel();
+        // Connect views and managers together
+        connectViewToManager();
 
-        // connect IO thread and Safety thread
-        connectSafetyToIO();
+        // Connect threads to one another
+        connectThreads();
     }
 
 
@@ -52,13 +59,28 @@ namespace App
     }
 
 
+    /**
+     * Loads the IO thread to control the gas rig
+     *
+     * @brief Application::loadIOThread
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     */
+    void Application::startAddtionalThread()
+    {
+        // IO Thread
+
+        // Safety Thread
+
+    }
+
+
 
     /**
      * Connect the views managers to models via the Qt connect method
      *
      * @brief View::connectViewToModel
      */
-    void Application::connectViewToModel()
+    void Application::connectViewToManager()
     {
 
     }
@@ -69,7 +91,7 @@ namespace App
      *
      * @brief View::connectSafetyToIO
      */
-    void Application::connectSafetyToIO()
+    void Application::connectThreads()
     {
 
     }

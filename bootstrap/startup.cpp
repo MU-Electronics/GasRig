@@ -36,12 +36,6 @@ namespace Bootstrap
         // Load the system settings
         loadSettings();
 
-        // Load IO thread
-        loadIOThread();
-
-        // Load safety thread
-        loadSafetyThread();
-
         // Configure the theme being used
         configTheme();
 
@@ -132,31 +126,6 @@ namespace Bootstrap
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      */
     void Startup::loadSettings()
-    {
-
-    }
-
-
-    /**
-     * Loads the IO thread to control the gas rig
-     *
-     * @brief Startup::loadIOThread
-     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     */
-    void Startup::loadIOThread()
-    {
-
-
-    }
-
-
-    /**
-     * Load the safety thread to monitor for extreme events
-     *
-     * @brief Startup::loadSafetyThread
-     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     */
-    void Startup::loadSafetyThread()
     {
 
     }

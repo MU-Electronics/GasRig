@@ -17,18 +17,23 @@ namespace App
             Application(QObject* parent, QQmlApplicationEngine *engine);
             ~Application();
 
+            // View managers
             ViewManager::Testing& manager_testing;
             ViewManager::ConnectionStatus& manager_connection;
 
         private:
             QQmlApplicationEngine* m_engine;
-            bool m_safety;
-            bool m_IO;
+
+            // Addtional threads
+            bool thread_safety;
+            bool thread_IO;
+
 
             void registerManagers();
-            void connectManagerToView();
-            void connectViewToModel();
-            void connectSafetyToIO();
+            void startAddtionalThread();
+            void connectViewToManager();
+            void connectThreads();
+
 
             //explicit Application(const Application& rhs) = delete;
             //Application& operator= (const Application& rhs) = delete;
