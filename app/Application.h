@@ -9,6 +9,7 @@
 // View managers
 #include "ViewManager/Testing.h"
 #include "ViewManager/ConnectionStatus.h"
+#include "ViewManager/SystemStatus.h"
 
 // Objects to the threaded
 #include "Safety/Monitor.h"
@@ -27,6 +28,7 @@ namespace App
             // View managers
             ViewManager::Testing& manager_testing;
             ViewManager::ConnectionStatus& manager_connection;
+            ViewManager::SystemStatus& manager_systemStatus;
 
             void connectViewToManager();
 

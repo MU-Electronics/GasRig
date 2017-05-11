@@ -10,6 +10,7 @@
 // Include view manangers
 #include "ViewManager/Testing.h"
 #include "ViewManager/ConnectionStatus.h"
+#include "ViewManager/SystemStatus.h"
 
 // Include objects for threading
 #include "Safety/Monitor.h"
@@ -27,7 +28,8 @@ namespace App
 
           // Create instance for each view manager
           manager_testing(*new ViewManager::Testing(parent, engine)),
-          manager_connection(*new ViewManager::ConnectionStatus(parent, engine))
+          manager_connection(*new ViewManager::ConnectionStatus(parent, engine)),
+          manager_systemStatus(*new ViewManager::SystemStatus(parent, engine))
     {
         // Start addtional application threads
         startAddtionalThread();
@@ -60,6 +62,9 @@ namespace App
 
         // Set connection status manager
         m_engine->rootContext()->setContextProperty("ConnectionStatusManager", &manager_connection);
+
+        // Set system status manager
+        m_engine->rootContext()->setContextProperty("SystemStatusManager", &manager_systemStatus);
     }
 
 

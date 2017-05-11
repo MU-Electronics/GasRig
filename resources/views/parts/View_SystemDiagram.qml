@@ -10,32 +10,38 @@ Item
         id:canvas
         width: 400
         height: 400
-        onPaint:{
+        function paint_canvas(){
             var ctx = canvas.getContext('2d');
 
-            CanvasHelper.valve(ctx, 50, 50, true);
+            CanvasHelper.valve(ctx, 50, 50, SystemStatusManager.valves[1]);
 
-            CanvasHelper.valve(ctx, 200, 50, false);
+            CanvasHelper.valve(ctx, 200, 50, SystemStatusManager.valves[2]);
 
-            ctx.moveTo(110,75);
+            //ctx.moveTo(110,75);
+            canvas.requestPaint();
+        }
+
+        function clear_canvas(){
+            var ctx = canvas.getContext('2d');
+            //ctx.reset();
+            //ctx.clearRect(0,0,50,50);
+            CanvasHelper.valve(ctx, 50, 50, SystemStatusManager.valves[1]);
+            canvas.requestPaint();
         }
     }
 
-    Button{
-
-        text: 'change colour'
-
-        onClicked: {
-            console.log("hey hey")
-            var ct = canvas.getContext('2d');
-            ct.width = ct.width;
-            ct.clearRect(0,0,300,300); // X, Y, Width, Height
-            ct.clearRect(0, 0, ct.width, ct.height);
-            ct.restore();
-
-            CanvasHelper.valve(ct, 50, 50, false);
-            CanvasHelper.valve(ct, 100, 50, false);
-            canvas.requestPaint();
+    Row{
+        Button{
+            text: 'Clear Canvas'
+            onClicked: {
+                canvas.clear_canvas();
+            }
+        }
+        Button{
+            text: 'Draw Canvas'
+            onClicked: {
+                canvas.paint_canvas();
+            }
         }
     }
 

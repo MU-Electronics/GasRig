@@ -20,8 +20,9 @@ ApplicationWindow {
     //visibility: "FullScreen"
     //Easy of debugging use maximized
     minimumWidth: 1280
-      minimumHeight: 1024
-      visibility: "Maximized"
+    //minimumHeight: 1024
+    minimumHeight: 1000 // my laptops a bit smaller :S
+    visibility: "Maximized"
 
     title: qsTr("JFET Services: Gas Rig")
 
