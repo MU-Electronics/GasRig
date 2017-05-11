@@ -18,7 +18,6 @@ namespace App { namespace Safety
 
     void Monitor::setup(QThread &thread)
     {
-        //m_thread = &thread;
         qDebug("connect");
         connect(&thread, SIGNAL(started()), this, SLOT(runner()));
     }

@@ -1,7 +1,7 @@
-import "../template"
+import "../parts"
 
 
 Mode_NotSupported{
-    featureName: qsTr("Pressurise Cell Not Supported Yet")
+    featureName: qsTr("Continuous Flow Not Supported Yet")
 }
 

@@ -1,4 +1,4 @@
-import "../template"
+import "../parts"
 
 
 Mode_NotSupported{

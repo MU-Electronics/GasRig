@@ -18,17 +18,33 @@ namespace App { namespace Hardware
 
     void Access::setup(QThread &thread)
     {
-        //m_thread = &thread;
-        qDebug("connect");
+        // Start the thread running when thread is ready
         connect(&thread, SIGNAL(started()), this, SLOT(runner()));
+
+
+    }
+
+    void Access::setupHAL()
+    {
+
     }
 
     void Access::runner()
     {
-        qDebug("Running");
-        for(int i = 0; i < 2; i++)
+        // Setup the hardware layers
+        setupHAL();
+
+        // Monitor the devices
+        while(true)
         {
-            qDebug() << "B: " <<i;
+            // Monitor vac station prams
+
+
+            // Monitor pressure sensor prams
+
+            // Monotor labjack prams
+
+            // Monitor flow controller prams
         }
     }
 

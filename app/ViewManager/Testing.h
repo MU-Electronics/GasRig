@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
+#include <QString>
 
 #include "Manager.h"
 #include <QString>
@@ -21,7 +22,7 @@ namespace App { namespace ViewManager
         signals:
 
         public slots:
-            void vacuumOn();
+            void requestVacuum(bool onOff);
 
         private:
             QQmlApplicationEngine* m_root;

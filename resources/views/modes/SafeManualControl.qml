@@ -1,7 +1,7 @@
-import "../template"
+import "../parts"
 
 
 Mode_NotSupported{
-    featureName: qsTr("Safe Manual Control Not Supported Yet")
+    featureName: qsTr("Continuous Flow Not Supported Yet")
 }
 

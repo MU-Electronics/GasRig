@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QQuickView>
 #include <QUrl>
+#include <QString>
 
 namespace App { namespace ViewManager
 {
@@ -12,9 +13,9 @@ namespace App { namespace ViewManager
         exampleVar("Hello from C++");
     }
 
-    void Testing::vacuumOn()
+    void Testing::requestVacuum(bool onOff)
     {
-        qDebug() << "Turn Vacuum On";
+        qDebug() << "Turn Vacuum is: " << onOff;
         exampleVar("updated");
     }
 }}
