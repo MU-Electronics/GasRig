@@ -28,7 +28,8 @@ SOURCES += \
     app/ViewManager/ConnectionStatus.cpp \
     app/ViewManager/Testing.cpp \
     app/Application.cpp \
-    app/ViewManager/SystemStatus.cpp
+    app/ViewManager/SystemStatus.cpp \
+    app/Services/Thread.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -82,4 +83,5 @@ HEADERS += \
     app/ViewManager/Manager.h \
     app/Utilities/Properties.h \
     app/Application.h \
-    app/ViewManager/SystemStatus.h
+    app/ViewManager/SystemStatus.h \
+    app/Services/Thread.h

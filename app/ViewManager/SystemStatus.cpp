@@ -1,6 +1,7 @@
 #include "SystemStatus.h"
 #include <QVariantMap>
 #include <QString>
+#include <QtGlobal>
 
 namespace App { namespace ViewManager
 {
@@ -12,6 +13,15 @@ namespace App { namespace ViewManager
         for(int i = 0; i <= 9; i++){
             m_valves.insert(QString(i), false);
         }
+
+        // Request current values for valves
+        //emit valveStatus(0);
+
+        // Set default pressure values
+        for(int i = 0; i <= 9; i++){
+            m_pressure.append(0);
+        }
+
     }
 
     SystemStatus::~SystemStatus()

@@ -3,6 +3,10 @@
 // include external libs
 #include <QObject>
 #include <QThread>
+#include <QMutex>
+
+// include thread
+#include "../Services/Thread.h"
 
 // include HALS
 #include "HAL/FlowController.h"
@@ -12,19 +16,12 @@
 
 namespace App { namespace Hardware
 {
-    class Access: public QObject
+    class Access: public App::Services::Thread
     {
         Q_OBJECT
         public:
-            explicit Access();
+            Access(QObject *parent = 0);
             ~Access();
-
-            void setup(QThread &thread);
-
-        public slots:
-            void runner();
-
-
 
         private:
             HAL::VacStation m_vacStation;
@@ -33,8 +30,11 @@ namespace App { namespace Hardware
             HAL::LabJack m_labjack;
 
             void setupHAL();
+            void worker();
 
-            //QThread* m_thread;
+        public slots:
+            //void worker();
+
     };
 }}
 

@@ -1,24 +1,24 @@
 #pragma once
 
+// include external libs
 #include <QObject>
 #include <QThread>
+#include <QMutex>
+
+// include thread
+#include "../Services/Thread.h"
 
 namespace App { namespace Safety
 {
-    class Monitor: public QObject
+    class Monitor: public App::Services::Thread
     {
         Q_OBJECT
         public:
-            explicit Monitor();
+            Monitor(QObject *parent = 0);
             ~Monitor();
 
-            void setup(QThread &thread);
-
-        public slots:
-            void runner();
-
         private:
-            //QThread* m_thread;
+            void worker();
     };
 }}
 

@@ -6,7 +6,8 @@
 
 namespace App { namespace Hardware
 {
-    Access::Access()
+    Access::Access(QObject *parent)
+        : Thread(parent, false, false)
     {
 
     }
@@ -16,36 +17,11 @@ namespace App { namespace Hardware
 
     }
 
-    void Access::setup(QThread &thread)
+    void Access::worker()
     {
-        // Start the thread running when thread is ready
-        connect(&thread, SIGNAL(started()), this, SLOT(runner()));
+        qDebug() << "Hardware thread";
 
-
-    }
-
-    void Access::setupHAL()
-    {
-
-    }
-
-    void Access::runner()
-    {
-        // Setup the hardware layers
-        setupHAL();
-
-        // Monitor the devices
-        while(true)
-        {
-            // Monitor vac station prams
-
-
-            // Monitor pressure sensor prams
-
-            // Monotor labjack prams
-
-            // Monitor flow controller prams
-        }
+        thread()->sleep(8);
     }
 
 }}

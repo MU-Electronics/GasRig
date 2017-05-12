@@ -6,6 +6,7 @@
 #include <QString>
 #include <QVariantMap>
 #include <QVariant>
+#include <QtGlobal>
 
 // Include contract
 #include "Manager.h"
@@ -21,7 +22,7 @@ namespace App { namespace ViewManager
     {
         Q_OBJECT
         Q_PROPERTY(QVariantMap valves READ valves)
-
+        Q_PROPERTY(QList<qreal> pressure READ pressure)
 
         public:
             // constructure and destructor
@@ -30,6 +31,7 @@ namespace App { namespace ViewManager
 
             // Getters
             QVariantMap valves() const { return m_valves; }
+            QList<qreal> pressure() const { return m_pressure; }
 
         signals:
 
@@ -41,6 +43,7 @@ namespace App { namespace ViewManager
 
             // system status cache variables
             QVariantMap m_valves;
+            QList<qreal> m_pressure;
     };
 }}
 

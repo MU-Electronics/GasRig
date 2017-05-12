@@ -2,6 +2,7 @@
 
 // External libs
 #include <QQmlApplicationEngine>
+#include <QObject>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QThread>
@@ -31,8 +32,11 @@ namespace App
           manager_connection(*new ViewManager::ConnectionStatus(parent, engine)),
           manager_systemStatus(*new ViewManager::SystemStatus(parent, engine))
     {
+        // Register addtion threads
+        registerAddtionalThreads();
+
         // Start addtional application threads
-        startAddtionalThread();
+        startAddtionalThread();  
 
         // Load all managers
         registerManagers();
@@ -44,9 +48,16 @@ namespace App
 
     Application::~Application()
     {
-        // Shut down the threads
-        thread_hardware.terminate();
-        thread_safety.terminate();
+        // Stop the hardware thread
+        hardware.abort();
+        thread_hardware.wait();
+        qDebug() << "Deleting hardware thread in thread " << this->QObject::thread()->currentThreadId();
+
+        // Stop the safety thread
+        monitor.abort();
+        thread_safety.wait();
+        qDebug() << "Deleting safety thread in thread: " << this->QObject::thread()->currentThreadId();
+
     }
 
 
@@ -68,6 +79,18 @@ namespace App
     }
 
 
+    void Application::registerAddtionalThreads()
+    {
+        // Hardware Thread
+        hardware.setup(thread_hardware);
+        hardware.moveToThread(&thread_hardware);
+
+        // Safety Thread
+        monitor.setup(thread_safety);
+        monitor.moveToThread(&thread_safety);
+    }
+
+
     /**
      * Loads the hardware and safety monitor thread
      *
@@ -76,15 +99,15 @@ namespace App
      */
     void Application::startAddtionalThread()
     {
-        // Hardware Thread
-        hardware.setup(thread_hardware);
-        hardware.moveToThread(&thread_hardware);
-        thread_hardware.start();
+        // Double check no instance is running and start thread for hardware
+        hardware.abort();
+        thread_hardware.wait();
+        hardware.requestWork();
 
-        // Safety Thread
-        monitor.setup(thread_safety);
-        monitor.moveToThread(&thread_safety);
-        thread_safety.start();
+        // Double check no instance is running and start thread for safety
+        monitor.abort();
+        thread_safety.wait();
+        monitor.requestWork();
     }
 
 

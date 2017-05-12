@@ -45,6 +45,7 @@ namespace App
 
 
             void registerManagers();
+            void registerAddtionalThreads();
             void startAddtionalThread();
 
             void connectThreads();

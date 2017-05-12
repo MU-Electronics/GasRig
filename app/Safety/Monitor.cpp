@@ -5,8 +5,10 @@
 #include <QDebug>
 
 namespace App { namespace Safety
-{
-    Monitor::Monitor()
+{    
+
+    Monitor::Monitor(QObject *parent)
+        : Thread(parent, false, false)
     {
 
     }
@@ -16,19 +18,11 @@ namespace App { namespace Safety
 
     }
 
-    void Monitor::setup(QThread &thread)
+    void Monitor::worker()
     {
-        qDebug("connect");
-        connect(&thread, SIGNAL(started()), this, SLOT(runner()));
-    }
+        qDebug() << "Safety thread";
 
-    void Monitor::runner()
-    {
-        qDebug("Running");
-        for(int i = 0; i < 2; i++)
-        {
-            qDebug() << "A: " <<i;
-        }
+        thread()->sleep(8);
     }
 
 }}
