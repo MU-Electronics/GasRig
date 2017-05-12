@@ -21,7 +21,7 @@ namespace App { namespace Hardware
     {
         qDebug() << "Hardware thread";
 
-        thread()->sleep(8);
+        thread()->sleep(1);
     }
 
 }}

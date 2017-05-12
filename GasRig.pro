@@ -57,7 +57,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    config/Safety.json \
     config/SystemSettings.json \
     readme.md
 

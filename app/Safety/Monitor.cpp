@@ -22,7 +22,7 @@ namespace App { namespace Safety
     {
         qDebug() << "Safety thread";
 
-        thread()->sleep(8);
+        thread()->sleep(10);
     }
 
 }}

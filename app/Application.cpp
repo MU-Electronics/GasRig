@@ -57,7 +57,6 @@ namespace App
         monitor.abort();
         thread_safety.wait();
         qDebug() << "Deleting safety thread in thread: " << this->QObject::thread()->currentThreadId();
-
     }
 
 
