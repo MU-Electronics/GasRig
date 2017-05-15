@@ -7,11 +7,9 @@
 
 namespace App { namespace Services
 {
-    Settings::Settings(QString location, Settings::SaveFormat format)
-        : m_loadedFile(location),
-          m_format(format)
+    Settings::Settings()
     {
-        load();
+
     }
 
     Settings::~Settings()
@@ -27,8 +25,12 @@ namespace App { namespace Services
      * @param format
      * @return bool
      */
-    bool Settings::load()
+    bool Settings::load(QString location, Settings::SaveFormat format)
     {
+        // Cache data
+        m_loadedFile = location;
+        m_format = format;
+
         // Load the file
         QFile loadFile(m_loadedFile);
 

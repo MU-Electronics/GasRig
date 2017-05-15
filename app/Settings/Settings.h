@@ -8,7 +8,7 @@ namespace App { namespace Services{
     class Settings
     {
     public:
-        Settings(QString location, Settings::SaveFormat format);
+        Settings();
         ~Settings();
 
         enum SaveFormat {
@@ -18,7 +18,7 @@ namespace App { namespace Services{
         QString m_loadedFile;
         SaveFormat m_format;
 
-        bool load();
+        bool load(QString location, SaveFormat format);
         bool update() const;
 
         virtual void read(const QJsonObject &json) = 0;

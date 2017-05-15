@@ -24,12 +24,16 @@ SOURCES += \
     app/Safety/Monitor.cpp \
     app/Services/JsonInterpreter.cpp \
     app/Services/Logger.cpp \
-    app/Services/Settings.cpp \
     app/ViewManager/ConnectionStatus.cpp \
     app/ViewManager/Testing.cpp \
     app/Application.cpp \
     app/ViewManager/SystemStatus.cpp \
-    app/Services/Thread.cpp
+    app/Services/Thread.cpp \
+    app/Settings/Safety.cpp \
+    app/Settings/Settings.cpp \
+    app/Settings/General.cpp \
+    app/Settings/Hardware.cpp \
+    app/Settings/View.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -75,7 +79,6 @@ HEADERS += \
     app/Safety/Monitor.h \
     app/Services/JsonInterpreter.h \
     app/Services/Logger.h \
-    app/Services/Settings.h \
     app/Services/SerialWrapper.h \
     app/ViewManager/ConnectionStatus.h \
     app/ViewManager/Testing.h \
@@ -83,4 +86,9 @@ HEADERS += \
     app/Utilities/Properties.h \
     app/Application.h \
     app/ViewManager/SystemStatus.h \
-    app/Services/Thread.h
+    app/Services/Thread.h \
+    app/Settings/Safety.h \
+    app/Settings/Settings.h \
+    app/Settings/General.h \
+    app/Settings/Hardware.h \
+    app/Settings/View.h
