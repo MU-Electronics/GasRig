@@ -50,6 +50,8 @@ namespace App
 
             void connectThreads();
 
+            void debug();
+
 
             //explicit Application(const Application& rhs) = delete;
             //Application& operator= (const Application& rhs) = delete;

@@ -1,15 +1,17 @@
 #pragma once
 
+#include <QObject>
 #include <QString>
 #include <QDebug>
 #include <QJsonObject>
 
-namespace App { namespace Services{
-    class Settings
+namespace App { namespace Settings{
+    class Setting : public QObject
     {
+        Q_OBJECT
     public:
-        Settings();
-        ~Settings();
+        Setting(QObject *parent = 0);
+        virtual ~Setting() {};
 
         enum SaveFormat {
             Json, Binary
@@ -19,13 +21,10 @@ namespace App { namespace Services{
         SaveFormat m_format;
 
         bool load(QString location, SaveFormat format);
-        bool update() const;
+        bool update();
 
         virtual void read(const QJsonObject &json) = 0;
         virtual void write(QJsonObject &json) const = 0;
-    private:
-        explicit Settings(const Settings& rhs) = delete;
-        Settings& operator= (const Settings& rhs) = delete;
     };
 }}
 

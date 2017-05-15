@@ -17,6 +17,9 @@
 #include "Safety/Monitor.h"
 #include "Hardware/access.h"
 
+// For debugging only to be removed
+#include "Settings/Safety.h"
+
 namespace App
 {
     Application::Application(QObject* parent, QQmlApplicationEngine* engine)
@@ -43,6 +46,9 @@ namespace App
 
         // Connect threads to one another
         connectThreads();
+
+        // Debugging area for testing
+        debug();
     }
 
 
@@ -117,6 +123,21 @@ namespace App
      */
     void Application::connectThreads()
     {
+
+    }
+
+    /**
+     * A simple area that allows classes etc to be tested before used
+     * NOTE: Will be remove before first release
+     *
+     * @brief debug
+     */
+
+    void Application::debug()
+    {
+
+        Settings::Safety safety_settings;
+        safety_settings.load(":/config/Safety.json", safety_settings.SaveFormat::Json);
 
     }
 }

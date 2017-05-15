@@ -30,10 +30,7 @@ SOURCES += \
     app/ViewManager/SystemStatus.cpp \
     app/Services/Thread.cpp \
     app/Settings/Safety.cpp \
-    app/Settings/Settings.cpp \
-    app/Settings/General.cpp \
-    app/Settings/Hardware.cpp \
-    app/Settings/View.cpp
+    app/Settings/Setting.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -88,7 +85,4 @@ HEADERS += \
     app/ViewManager/SystemStatus.h \
     app/Services/Thread.h \
     app/Settings/Safety.h \
-    app/Settings/Settings.h \
-    app/Settings/General.h \
-    app/Settings/Hardware.h \
-    app/Settings/View.h
+    app/Settings/Setting.h

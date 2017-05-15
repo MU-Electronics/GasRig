@@ -1,8 +1,32 @@
-#include "Logger.h"
+#include "View.h"
 
-namespace App { namespace Services
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QDebug>
+#include <QJsonObject>
+
+namespace App { namespace Settings
 {
-    Logger::Logger()
+    View::View()
     {
+
     }
+
+    View::~View()
+    {
+
+    }
+
+
+    void read(const QJsonObject &json)
+    {
+
+    }
+
+    void write(QJsonObject &json)
+    {
+
+    }
+
 }}

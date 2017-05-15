@@ -1,8 +1,31 @@
-#include "Logger.h"
+#include "Hardware.h"
 
-namespace App { namespace Services
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QDebug>
+
+namespace App { namespace Settings
 {
-    Logger::Logger()
+    Hardware::Hardware()
     {
+
     }
+
+    Hardware::~Hardware()
+    {
+
+    }
+
+
+    void read(const QJsonObject &json)
+    {
+
+    }
+
+    void write(QJsonObject &json)
+    {
+
+    }
+
 }}

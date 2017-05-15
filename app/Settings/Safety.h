@@ -1,14 +1,27 @@
 #pragma once
 
-namespace App { namespace Services{
-    class Logger
+#include <QObject>
+#include <QString>
+#include <QDebug>
+#include <QJsonObject>
+
+#include "Setting.h"
+
+namespace App { namespace Settings{
+    class Safety: public App::Settings::Setting
     {
+        Q_OBJECT
     public:
-        Logger();
+
+        Safety(QObject *parent = 0);
+        ~Safety();
+
+        void read(const QJsonObject &json);
+        void write(QJsonObject &json) const;
 
     private:
-        explicit Logger(const Logger& rhs) = delete;
-        Logger& operator= (const Logger& rhs) = delete;
+        //explicit Safety(const Safety& rhs) = delete;
+        //Safety& operator= (const Safety& rhs) = delete;
     };
 }}
 
