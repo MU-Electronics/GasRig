@@ -1,9 +1,7 @@
 #include "Safety.h"
 
 #include <QObject>
-#include <QFile>
 #include <QJsonArray>
-#include <QJsonDocument>
 #include <QJsonObject>
 #include <QDebug>
 
