@@ -16,7 +16,6 @@
           "connection_type": 1,
           "address": 1,
           "openFirst": true,
-
         },
         "flow_controller_one":{
           "com": "10",
@@ -50,5 +49,9 @@
         "pressure": "90",
         "value_timing": "0.2",
         "vacuum_max": "0.0000007"
+    },
+    "polling_times": {
+        "pressure_sensor": "0.5",
+        "vacuum_sensor": "1"
     }
 }

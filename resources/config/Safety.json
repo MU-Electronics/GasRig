@@ -1,3 +1,18 @@
 {
+    "pressure_rise": "1",
+    "pressure_fall": "1",
 
+    "vacuum_rise": "0.5",
+    "vacuum_fall": "0.5",
+
+    "valve_combinations": {
+        1: {
+            "8": true,
+            "6": true
+        },
+        2: {
+            "3": true,
+            "1": true
+        }
+    }
 }
