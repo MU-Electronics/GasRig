@@ -22,6 +22,18 @@
 
 namespace App
 {
+    /**
+     * Class constructure performs:
+     *      - Registers threads
+     *      - Starts threads
+     *      - Registers the main view manager which then registers sub managers
+     *      - Connects the threads signals and slots together
+     *      - For development only runs a debugging methods (to be removed before first release)
+     *
+     * @brief Application::Application
+     * @param parent
+     * @param engine
+     */
     Application::Application(QObject* parent, QQmlApplicationEngine* engine)
         : QObject(parent),
           m_engine(engine),
@@ -52,6 +64,12 @@ namespace App
     }
 
 
+    /**
+     * Class destructor performs:
+     *    - Stops all running threads
+     *
+     * @brief Application::~Application
+     */
     Application::~Application()
     {
         // Stop the hardware thread
@@ -84,6 +102,11 @@ namespace App
     }
 
 
+    /**
+     * Setups up any additional threads to be ran but does not start then
+     *
+     * @brief Application::registerAddtionalThreads
+     */
     void Application::registerAddtionalThreads()
     {
         // Hardware Thread

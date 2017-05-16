@@ -89,6 +89,12 @@ namespace App { namespace Services
     }
 
 
+    /**
+     * Keeps the thread running in a forever loop while having the ability to
+     * end the thread at any time via the thread_abort member variable
+     *
+     * @brief Thread::foreverLoop
+     */
     void Thread::foreverLoop()
     {
         qDebug() << "Working is running in: " << thread()->currentThreadId();
