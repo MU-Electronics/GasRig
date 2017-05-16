@@ -1,0 +1,16 @@
+{
+  "JFET": {
+    "phone": "0161 275 4641",
+    "address": "PSI, The University of Manchester",
+    "email": "chemelec@listserv.manchester.ac.uk",
+    "developer": "Sam Mottley",
+    "developer_email": "sam.mottley@manchester.ac.uk"
+  },
+  "owner": {
+    "name": "Inigo",
+    "section": "Floor 4",
+    "company": "The University of Manchester",
+    "phone": "54644",
+    "email": "someone@some.com"
+  }
+}

@@ -29,6 +29,8 @@
         <file>views/parts/View_Status.qml</file>
         <file>assets/js/QtCanvasHelper.js</file>
         <file>config/Safety.json</file>
-        <file>config/SystemSettings.json</file>
+        <file>config/General.json</file>
+        <file>config/Hardware.json</file>
+        <file>config/View.json</file>
     </qresource>
 </RCC>

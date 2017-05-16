@@ -1,0 +1,54 @@
+{
+    "usb_connections": {
+        "pressure_sensor": {
+          "vendorId": "1254",
+          "productId": "1288",
+          "braud": "9600",
+          "id": "25"
+        },
+        "vacuum_station":{
+          "com": "12",
+          "braud": "9600",
+          "id": "10"
+        },
+        "labJack":{
+          "hardware_type": 3,
+          "connection_type": 1,
+          "address": 1,
+          "openFirst": true,
+
+        },
+        "flow_controller_one":{
+          "com": "10",
+          "braud": "9600",
+          "IDH": "11",
+          "IDM": "22",
+          "IDL": "11",
+          "IDS": "A3"
+        },
+        "flow_controller_two":{
+          "com": "10",
+          "braud": "9600",
+          "IDH": "11",
+          "IDM": "22",
+          "IDL": "11",
+          "IDS": "A3"
+        }
+    },
+    "valve_connections":{
+        "1": "EIO1",
+        "2": "EIO1",
+        "3": "EIO1",
+        "4": "EIO1",
+        "5": "EIO1",
+        "6": "EIO1",
+        "7": "EIO1",
+        "8": "EIO1",
+        "9": "EIO1"
+    },
+    "absoulte_maximums": {
+        "pressure": "90",
+        "value_timing": "0.2",
+        "vacuum_max": "0.0000007"
+    }
+}
