@@ -6,11 +6,11 @@
     "vacuum_fall": "0.5",
 
     "valve_combinations": {
-        "1": {
+        "turbo_open_to_high_pressure": {
             "8": true,
             "6": true
         },
-        "2": {
+        "valve_open_to_exhaust": {
             "3": true,
             "1": true
         }

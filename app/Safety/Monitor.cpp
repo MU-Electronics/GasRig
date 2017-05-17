@@ -39,7 +39,7 @@ namespace App { namespace Safety
      */
     void Monitor::worker()
     {
-        qDebug() << "Safety thread";
+        //qDebug() << "Safety thread";
 
         thread()->sleep(10);
     }

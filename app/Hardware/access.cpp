@@ -40,7 +40,7 @@ namespace App { namespace Hardware
      */
     void Access::worker()
     {
-        qDebug() << "Hardware thread";
+        //qDebug() << "Hardware thread";
 
         thread()->sleep(1);
     }

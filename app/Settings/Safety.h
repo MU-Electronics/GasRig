@@ -4,6 +4,8 @@
 #include <QString>
 #include <QDebug>
 #include <QJsonObject>
+#include <QVariantMap>
+#include <QMap>
 
 #include "Setting.h"
 
@@ -15,6 +17,11 @@ namespace App { namespace Settings{
 
         Safety(QObject *parent = 0);
         ~Safety();
+
+        QVariantMap pressure;
+        QVariantMap vacuum;
+        QVariantMap valve_error;
+
 
         void read(const QJsonObject &json);
         void write(QJsonObject &json) const;
