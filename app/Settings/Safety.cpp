@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QJsonValue>
 #include <QDebug>
 
 
@@ -53,6 +54,11 @@ namespace App { namespace Settings
         // Store valve configuration
         QVariantMap root_map = json.toVariantMap();
         valve_error = root_map["valve_combinations"].toMap();
+
+
+        // @todo REMOVE THIS just debugging
+        QJsonObject temp;
+        write(temp);
     }
 
 
@@ -64,7 +70,49 @@ namespace App { namespace Settings
      */
     void Safety::write(QJsonObject &json) const
     {
+        // Save max pressure drop and rise
+        json["pressure_rise"] = pressure["pressure_rise"].toString();
+        json["pressure_fall"] = pressure["pressure_fall"].toString();
+
+        // Save max vacuum drop and rise
+        json["vacuum_rise"] = vacuum["vacuum_rise"].toString();
+        json["vacuum_fall"] = vacuum["vacuum_fall"].toString();
+
+        // Store valve configuration
+        QJsonObject valveErrors;
+
+        // Loop thgrough set congiuration
+        for(auto & outer : valve_error.toStdMap())
+        {
+            // Cache inner value states for each error condition
+            QJsonObject errorState;
+
+            // Set the valve  states
+            for(auto & inner : outer.second.toMap().toStdMap())
+            {
+                // Get the valve id
+                QString valveId = inner.first;
+
+                // Get the valve state
+                bool state = inner.second.toBool();
+
+                // Set the states in the cache inner container
+                errorState[valveId] = state;
+            }
+
+            // Write the state of the cache inner container to end container
+            valveErrors[outer.first] = errorState;
+        }
+
+        json["valve_combinations"] = valveErrors;
+
+        // Show end object
+        qDebug() << json;
 
     }
 
 }}
+
+
+
+

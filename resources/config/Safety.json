@@ -5,6 +5,13 @@
     "vacuum_rise": "0.5",
     "vacuum_fall": "0.5",
 
+    "turbo_pump_temp": {
+
+    },
+
+    "flow_rate_min": "0",
+    "flow_rate_max": "10",
+
     "valve_combinations": {
         "turbo_open_to_high_pressure": {
             "8": true,
