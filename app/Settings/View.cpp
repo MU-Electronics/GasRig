@@ -28,9 +28,6 @@ namespace App { namespace Settings
 
         // Store the owners details
         owner = rootMap["owner"].toMap();
-
-        QJsonObject test;
-        write(test);
     }
 
     void View::write(QJsonObject &json) const
@@ -52,8 +49,6 @@ namespace App { namespace Settings
         ownerDetails["phone"] = owner["phone"].toString();
         ownerDetails["email"] = owner["email"].toString();
         json["owner"] = ownerDetails;
-
-        qDebug() << json;
     }
 
 }}

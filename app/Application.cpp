@@ -21,6 +21,7 @@
 #include "Settings/Safety.h"
 #include "Settings/General.h"
 #include "Settings/View.h"
+#include "Settings/Hardware.h"
 
 namespace App
 {
@@ -168,6 +169,9 @@ namespace App
 
         Settings::View view_settings;
         view_settings.load(":/config/View.json", view_settings.SaveFormat::Json);
+
+        Settings::Hardware hardware_settings;
+        hardware_settings.load(":/config/Hardware.json", hardware_settings.SaveFormat::Json);
 
     }
 }

@@ -32,7 +32,8 @@ SOURCES += \
     app/Settings/Safety.cpp \
     app/Settings/Setting.cpp \
     app/Settings/General.cpp \
-    app/Settings/View.cpp
+    app/Settings/View.cpp \
+    app/Settings/Hardware.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -89,4 +90,5 @@ HEADERS += \
     app/Settings/Safety.h \
     app/Settings/Setting.h \
     app/Settings/General.h \
-    app/Settings/View.h
+    app/Settings/View.h \
+    app/Settings/Hardware.h
