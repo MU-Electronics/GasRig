@@ -28,6 +28,9 @@ namespace App
 {
     /**
      * Class constructure performs:
+     *      - Set QObject
+     *      - Sets the engine member variable
+     *      - Create instant of the settings container to be past to other objects
      *      - Registers threads
      *      - Starts threads
      *      - Registers the main view manager which then registers sub managers

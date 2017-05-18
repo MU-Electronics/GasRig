@@ -20,7 +20,7 @@ namespace App { namespace ViewManager
     void Testing::requestVacuum(bool onOff)
     {
         qDebug() << "Turn Vacuum is: " << onOff;
-        exampleVar("updated");
+        exampleVar(m_settings.general.admin["username"].toString());
     }
 }}
 
