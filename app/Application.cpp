@@ -19,6 +19,7 @@
 
 // For debugging only to be removed
 #include "Settings/Safety.h"
+#include "Settings/General.h"
 
 namespace App
 {
@@ -158,9 +159,11 @@ namespace App
 
     void Application::debug()
     {
-
         Settings::Safety safety_settings;
         safety_settings.load(":/config/Safety.json", safety_settings.SaveFormat::Json);
+
+        Settings::General general_settings;
+        general_settings.load(":/config/General.json", general_settings.SaveFormat::Json);
 
     }
 }

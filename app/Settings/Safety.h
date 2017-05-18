@@ -1,11 +1,8 @@
 #pragma once
 
 #include <QObject>
-#include <QString>
-#include <QDebug>
 #include <QJsonObject>
 #include <QVariantMap>
-#include <QMap>
 
 #include "Setting.h"
 

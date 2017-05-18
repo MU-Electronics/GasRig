@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QString>
-#include <QDebug>
+#include <QObject>
 #include <QJsonObject>
+#include <QVariantMap>
 
 #include "Setting.h"
 
@@ -11,11 +11,13 @@ namespace App { namespace Settings{
     {
         Q_OBJECT
     public:
-        General();
+        General(QObject *parent = 0);
         ~General();
 
-        void read(QJsonObject &json);
-        void write(QJsonObject &json);
+        QVariantMap admin;
+
+        void read(const QJsonObject &json);
+        void write(QJsonObject &json) const;
 
     private:
         //explicit General(const General& rhs) = delete;

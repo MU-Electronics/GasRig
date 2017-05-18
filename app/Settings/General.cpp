@@ -7,7 +7,7 @@
 
 namespace App { namespace Settings
 {
-    General::General()
+    General::General(QObject *parent)
         : Setting()
     {
 
@@ -19,14 +19,23 @@ namespace App { namespace Settings
     }
 
 
-    void read(const QJsonObject &json)
+    void General::read(const QJsonObject &json)
     {
+        // Get root to map
+        QVariantMap rootMap = json.toVariantMap();
+
+        // Store the admin login details
+        admin = rootMap["admin_login"].toMap();
 
     }
 
-    void write(QJsonObject &json)
+    void General::write(QJsonObject &json) const
     {
-
+        // Save admins username and password
+        QJsonObject adminData;
+        adminData["username"] = admin["username"].toString();
+        adminData["password"] = admin["password"].toString();
+        json["admin_login"] = adminData;
     }
 
 }}
