@@ -14,6 +14,9 @@
 // Include app deps
 #include "../Utilities/Properties.h"
 
+// Include settings container
+#include "../Settings/container.h"
+
 namespace App { namespace ViewManager
 {
 
@@ -26,7 +29,7 @@ namespace App { namespace ViewManager
 
         public:
             // constructure and destructor
-            SystemStatus(QObject *parent, QQmlApplicationEngine *root);
+            SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
             ~SystemStatus();
 
             // Getters
@@ -40,6 +43,8 @@ namespace App { namespace ViewManager
 
         private:
             QQmlApplicationEngine* m_root;
+
+            Settings::Container m_settings;
 
             // system status cache variables
             QVariantMap m_valves;

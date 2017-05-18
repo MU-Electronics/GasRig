@@ -18,8 +18,11 @@
 #include "Safety/Monitor.h"
 #include "Hardware/Access.h"
 
-// For debugging only to be removed
+// Include the setting contain
 #include "Settings/container.h"
+
+// For debugging only to be removed
+
 
 namespace App
 {
@@ -43,13 +46,13 @@ namespace App
           settings_container(*new Settings::Container),
 
           // Start objects that are to be threaded
-          monitor(*new Safety::Monitor()),
-          hardware(*new Hardware::Access()),
+          monitor(*new Safety::Monitor(this, settings_container)),
+          hardware(*new Hardware::Access(this, settings_container)),
 
           // Create instance for each view manager
-          manager_testing(*new ViewManager::Testing(parent, engine)),
-          manager_connection(*new ViewManager::ConnectionStatus(parent, engine)),
-          manager_systemStatus(*new ViewManager::SystemStatus(parent, engine))
+          manager_testing(*new ViewManager::Testing(parent, engine, settings_container)),
+          manager_connection(*new ViewManager::ConnectionStatus(parent, engine, settings_container)),
+          manager_systemStatus(*new ViewManager::SystemStatus(parent, engine, settings_container))
     {
         // Register addtion threads
         registerAddtionalThreads();
@@ -161,6 +164,6 @@ namespace App
      */
     void Application::debug()
     {
-        qDebug() << settings_container.safety.pressure["rise"];
+
     }
 }

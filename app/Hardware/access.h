@@ -14,16 +14,21 @@
 #include "HAL/PressureSensor.h"
 #include "HAL/VacStation.h"
 
+// Include settings container
+#include "../Settings/container.h"
+
 namespace App { namespace Hardware
 {
     class Access: public App::Services::Thread
     {
         Q_OBJECT
         public:
-            Access(QObject *parent = 0);
+            Access(QObject *parent, Settings::Container settings);
             ~Access();
 
         private:
+            Settings::Container m_settings;
+
             HAL::VacStation m_vacStation;
             HAL::FlowController m_flowController;
             HAL::PressureSensor m_pressureSensor;

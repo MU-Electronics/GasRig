@@ -3,11 +3,15 @@
 #include <QString>
 #include <QtGlobal>
 
+// Include settings container
+#include "../Settings/container.h"
+
 namespace App { namespace ViewManager
 {
-    SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root)
+    SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings)
         : QObject(parent),
-          m_root(root)
+          m_root(root),
+          m_settings(settings)
     {
         // Init default value state
         for(int i = 0; i <= 9; i++){

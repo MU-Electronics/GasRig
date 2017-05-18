@@ -4,17 +4,22 @@
 #include <QThread>
 #include <QDebug>
 
+// Include settings container
+#include "../Settings/container.h"
+
 namespace App { namespace Hardware
 {
     /**
      * Class constructure performs:
      *      - Set parent thread class
+     *      - Set settings member variable
      *
      * @brief Monitor::Monitor
      * @param parent
      */
-    Access::Access(QObject *parent)
-        : Thread(parent, false, false)
+    Access::Access(QObject *parent, Settings::Container settings)
+        : Thread(parent, false, false),
+          m_settings(settings)
     {
 
     }

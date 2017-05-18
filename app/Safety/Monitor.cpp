@@ -4,18 +4,22 @@
 #include <QThread>
 #include <QDebug>
 
+#include "../Settings/container.h"
+
 namespace App { namespace Safety
 {    
 
     /**
      * Class constructure performs:
      *      - Set parent thread class
+     *      - Set settings member variable
      *
      * @brief Monitor::Monitor
      * @param parent
      */
-    Monitor::Monitor(QObject *parent)
-        : Thread(parent, false, false)
+    Monitor::Monitor(QObject *parent, Settings::Container settings)
+        : Thread(parent, false, false),
+          m_settings(settings)
     {
 
     }
@@ -40,6 +44,7 @@ namespace App { namespace Safety
     void Monitor::worker()
     {
         //qDebug() << "Safety thread";
+        //qDebug() << m_settings.safety.pressure["rise"];
 
         thread()->sleep(10);
     }

@@ -4,11 +4,15 @@
 #include <QUrl>
 #include <QString>
 
+// Include settings container
+#include "../Settings/container.h"
+
 namespace App { namespace ViewManager
 {
-    Testing::Testing(QObject *parent, QQmlApplicationEngine *root)
+    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings)
         : QObject(parent),
-          m_root(root)
+          m_root(root),
+          m_settings(settings)
     {
         exampleVar("Hello from C++");
     }
