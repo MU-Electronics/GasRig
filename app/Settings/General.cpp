@@ -1,14 +1,13 @@
 #include "General.h"
 
-#include <QFile>
+#include <QObject>
 #include <QJsonArray>
-#include <QJsonDocument>
+#include <QJsonObject>
 #include <QDebug>
 
 namespace App { namespace Settings
 {
     General::General(QObject *parent)
-        : Setting()
     {
 
     }

@@ -20,6 +20,7 @@
 // For debugging only to be removed
 #include "Settings/Safety.h"
 #include "Settings/General.h"
+#include "Settings/View.h"
 
 namespace App
 {
@@ -164,6 +165,9 @@ namespace App
 
         Settings::General general_settings;
         general_settings.load(":/config/General.json", general_settings.SaveFormat::Json);
+
+        Settings::View view_settings;
+        view_settings.load(":/config/View.json", view_settings.SaveFormat::Json);
 
     }
 }
