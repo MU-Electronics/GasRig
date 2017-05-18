@@ -6,6 +6,9 @@
 #include <QThread>
 #include <QMap>
 
+// Settings container
+#include "Settings/container.h"
+
 // View managers
 #include "ViewManager/Testing.h"
 #include "ViewManager/ConnectionStatus.h"
@@ -25,15 +28,13 @@ namespace App
             Application(QObject* parent, QQmlApplicationEngine *engine);
             ~Application();
 
-            // View managers
-            ViewManager::Testing& manager_testing;
-            ViewManager::ConnectionStatus& manager_connection;
-            ViewManager::SystemStatus& manager_systemStatus;
-
             void connectViewToManager();
 
         private:
             QQmlApplicationEngine* m_engine;
+
+            // Settings container
+            Settings::Container& settings_container;
 
             // Addtional threads
             QThread thread_safety;
@@ -43,11 +44,14 @@ namespace App
             Safety::Monitor& monitor;
             Hardware::Access& hardware;
 
+            // View managers
+            ViewManager::Testing& manager_testing;
+            ViewManager::ConnectionStatus& manager_connection;
+            ViewManager::SystemStatus& manager_systemStatus;
 
             void registerManagers();
             void registerAddtionalThreads();
             void startAddtionalThread();
-
             void connectThreads();
 
             void debug();

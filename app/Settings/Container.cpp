@@ -38,19 +38,19 @@ namespace App { namespace Settings
     void Container::loadSettings()
     {
         // Get the current programs dir
-        QString path = path();
+        QString pathDir = getDir();
 
         // Load the safety settings file
-        safety.load(path+"/config/Safety.json", safety.SaveFormat::Json);
+        safety.load(pathDir+"/config/Safety.json", safety.SaveFormat::Json);
 
         // Load the general settings file
-        general.load(path+"/config/General.json", general.SaveFormat::Json);
+        general.load(pathDir+"/config/General.json", general.SaveFormat::Json);
 
         // Load the view settings file
-        view.load(path+"/config/View.json", view.SaveFormat::Json);
+        view.load(pathDir+"/config/View.json", view.SaveFormat::Json);
 
         // Load the hardware settings file
-        hardware.load(path+"/config/Hardware.json", hardware.SaveFormat::Json);
+        hardware.load(pathDir+"/config/Hardware.json", hardware.SaveFormat::Json);
     }
 
 

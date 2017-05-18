@@ -39,6 +39,9 @@ namespace App
         : QObject(parent),
           m_engine(engine),
 
+          // Create instance of the settings container
+          settings_container(*new Settings::Container),
+
           // Start objects that are to be threaded
           monitor(*new Safety::Monitor()),
           hardware(*new Hardware::Access()),
@@ -158,9 +161,6 @@ namespace App
      */
     void Application::debug()
     {
-
-        Settings::Container settingsContainer;
-        qDebug() << settingsContainer.safety.pressure["rise"];
-
+        qDebug() << settings_container.safety.pressure["rise"];
     }
 }
