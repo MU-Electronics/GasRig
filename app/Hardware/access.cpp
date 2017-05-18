@@ -1,5 +1,6 @@
 #include "Access.h"
 
+// Include external libs
 #include <QObject>
 #include <QThread>
 #include <QDebug>
@@ -34,6 +35,17 @@ namespace App { namespace Hardware
     Access::~Access()
     {
 
+    }
+
+
+    /**
+     * Allows for any configurations to be ran before the worker is set going
+     *
+     * @brief Access::configure
+     */
+    void Access::configure()
+    {
+        qDebug() << "Hardware thread child setup method ran";
     }
 
 

@@ -35,6 +35,18 @@ namespace App { namespace Safety
 
     }
 
+
+    /**
+     * Allows for any configurations to be ran before the worker is set going
+     *
+     * @brief Monitor::configure
+     */
+    void Monitor::configure()
+    {
+        qDebug() << "Safety thread child setup method ran";
+    }
+
+
     /**
      * The thread worker that will be in a forever loop untill stopped
      * via the thread_abort parent member variable

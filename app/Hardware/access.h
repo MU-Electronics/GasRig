@@ -1,21 +1,22 @@
 #pragma once
 
-// include external libs
+// Include external libs
 #include <QObject>
 #include <QThread>
 #include <QMutex>
 
-// include thread
+// Include settings container
+#include "../Settings/container.h"
+
+// Include thread
 #include "../Services/Thread.h"
 
-// include HALS
+// Include HALS
 #include "HAL/FlowController.h"
 #include "HAL/Labjack.h"
 #include "HAL/PressureSensor.h"
 #include "HAL/VacStation.h"
 
-// Include settings container
-#include "../Settings/container.h"
 
 namespace App { namespace Hardware
 {
@@ -34,7 +35,7 @@ namespace App { namespace Hardware
             HAL::PressureSensor m_pressureSensor;
             HAL::LabJack m_labjack;
 
-            void setupHAL();
+            void configure();
             void worker();
 
         public slots:

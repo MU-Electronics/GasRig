@@ -23,6 +23,7 @@ namespace App { namespace Safety
         private:
             Settings::Container m_settings;
 
+            void configure();
             void worker();
     };
 }}

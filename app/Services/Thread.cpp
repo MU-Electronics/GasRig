@@ -19,8 +19,8 @@ namespace App { namespace Services
      * @param abort
      */
     Thread::Thread(QObject *parent, bool working, bool abort)
-        : thread_working(working),
-          thread_abort(abort)
+        : thread_abort(abort),
+          thread_working(working)
     {
     }
 
@@ -40,6 +40,9 @@ namespace App { namespace Services
 
         // Connect the finish work signal to the thread quit method
         connect(this, SIGNAL(finished()), &thread, SLOT(quit()), Qt::DirectConnection);
+
+        // Run any configuration on the child class
+        configure();
     }
 
     /**
