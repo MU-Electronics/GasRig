@@ -4,10 +4,10 @@
 #include <QJsonObject>
 #include <QVariantMap>
 
-#include "Setting.h"
+#include "../Services/JsonFile.h"
 
 namespace App { namespace Settings{
-    class General: public App::Settings::Setting
+    class General: public App::Services::JsonFile
     {
         Q_OBJECT
     public:

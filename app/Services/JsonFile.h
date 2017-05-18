@@ -5,13 +5,13 @@
 #include <QDebug>
 #include <QJsonObject>
 
-namespace App { namespace Settings{
-    class Setting : public QObject
+namespace App { namespace Services {
+    class JsonFile : public QObject
     {
         Q_OBJECT
     public:
-        Setting(QObject *parent = 0);
-        virtual ~Setting() {};
+        JsonFile(QObject *parent = 0);
+        virtual ~JsonFile() {};
 
         enum SaveFormat {
             Json, Binary

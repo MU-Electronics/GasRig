@@ -1,13 +1,13 @@
-#include "Setting.h"
+#include "JsonFile.h"
 
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QDebug>
 
-namespace App { namespace Settings
+namespace App { namespace Services
 {
-    Setting::Setting(QObject *parent)
+    JsonFile::JsonFile(QObject *parent)
     {
 
     }
@@ -20,7 +20,7 @@ namespace App { namespace Settings
      * @param format
      * @return bool
      */
-    bool Setting::load(QString location, SaveFormat format)
+    bool JsonFile::load(QString location, SaveFormat format)
     {
         // Cache data
         m_loadedFile = location;
@@ -59,7 +59,7 @@ namespace App { namespace Settings
      * @brief Settings::update
      * @return bool
      */
-    bool Setting::update()
+    bool JsonFile::update()
     {
         // Load the file
         QFile saveFile(m_loadedFile);
@@ -81,7 +81,7 @@ namespace App { namespace Settings
 
         // Save the file in the correct format
         saveFile.write(m_format == Json
-            ? saveDoc.toJson()
+            ? saveDoc.toJson(QJsonDocument::Indented)
             : saveDoc.toBinaryData());
 
         return true;

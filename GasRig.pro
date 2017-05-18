@@ -7,6 +7,14 @@ QT += qml quick quickcontrols2 widgets
 CONFIG += c++11
 
 
+# Copy config files to build dir
+copydata.commands = $(COPY_DIR) $$PWD/resources/config $$OUT_PWD
+first.depends = $(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
+
+
 SOURCES += \
     app/Services/SerialWrapper.cpp \
     main.cpp \
@@ -17,12 +25,10 @@ SOURCES += \
     app/Hardware/HAL/Labjack.cpp \
     app/Hardware/HAL/FlowController.cpp \
     app/Experiment/Engine.cpp \
-    app/Services/FileDriver.cpp \
     app/Experiment/Loader.cpp \
     app/Experiment/Installer.cpp \
     app/Services/FormBuilder.cpp \
     app/Safety/Monitor.cpp \
-    app/Services/JsonInterpreter.cpp \
     app/Services/Logger.cpp \
     app/ViewManager/ConnectionStatus.cpp \
     app/ViewManager/Testing.cpp \
@@ -30,10 +36,10 @@ SOURCES += \
     app/ViewManager/SystemStatus.cpp \
     app/Services/Thread.cpp \
     app/Settings/Safety.cpp \
-    app/Settings/Setting.cpp \
     app/Settings/General.cpp \
     app/Settings/View.cpp \
-    app/Settings/Hardware.cpp
+    app/Settings/Hardware.cpp \
+    app/Services/JsonFile.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -72,12 +78,10 @@ HEADERS += \
     app/Hardware/HAL/Labjack.h \
     app/Hardware/HAL/VacStation.h \
     app/Experiment/Engine.h \
-    app/Services/FileDriver.h \
     app/Experiment/Loader.h \
     app/Experiment/Installer.h \
     app/Services/FormBuilder.h \
     app/Safety/Monitor.h \
-    app/Services/JsonInterpreter.h \
     app/Services/Logger.h \
     app/Services/SerialWrapper.h \
     app/ViewManager/ConnectionStatus.h \
@@ -88,7 +92,7 @@ HEADERS += \
     app/ViewManager/SystemStatus.h \
     app/Services/Thread.h \
     app/Settings/Safety.h \
-    app/Settings/Setting.h \
     app/Settings/General.h \
     app/Settings/View.h \
-    app/Settings/Hardware.h
+    app/Settings/Hardware.h \
+    app/Services/JsonFile.h

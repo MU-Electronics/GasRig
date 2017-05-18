@@ -7,6 +7,7 @@
 #include <QQmlEngine>
 #include <QThread>
 #include <QString>
+#include <QDebug>
 
 // Include view manangers
 #include "ViewManager/Testing.h"
@@ -22,6 +23,7 @@
 #include "Settings/General.h"
 #include "Settings/View.h"
 #include "Settings/Hardware.h"
+#include <QDir>
 
 namespace App
 {
@@ -161,17 +163,23 @@ namespace App
 
     void Application::debug()
     {
+        // Determin the applcations location
+        QDir pathsRoot(QDir::currentPath());
+        pathsRoot.cdUp(); pathsRoot.cdUp(); pathsRoot.cdUp();
+        QString path =  pathsRoot.path();
+
         Settings::Safety safety_settings;
-        safety_settings.load(":/config/Safety.json", safety_settings.SaveFormat::Json);
+        safety_settings.load(path+"/config/Safety.json", safety_settings.SaveFormat::Json);
 
         Settings::General general_settings;
-        general_settings.load(":/config/General.json", general_settings.SaveFormat::Json);
+        general_settings.load(path+"/config/General.json", general_settings.SaveFormat::Json);
+        general_settings.admin["username"] = "test";
+        general_settings.update();
 
         Settings::View view_settings;
-        view_settings.load(":/config/View.json", view_settings.SaveFormat::Json);
+        view_settings.load(path+"/config/View.json", view_settings.SaveFormat::Json);
 
         Settings::Hardware hardware_settings;
-        hardware_settings.load(":/config/Hardware.json", hardware_settings.SaveFormat::Json);
-
+        hardware_settings.load(path+"/config/Hardware.json", hardware_settings.SaveFormat::Json);
     }
 }
