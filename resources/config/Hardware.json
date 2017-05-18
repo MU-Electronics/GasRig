@@ -15,7 +15,7 @@
           "hardware_type": 3,
           "connection_type": 1,
           "address": 1,
-          "openFirst": true,
+          "openFirst": true
         },
         "flow_controller_one":{
           "com": "10",
