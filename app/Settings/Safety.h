@@ -20,6 +20,8 @@ namespace App { namespace Settings{
 
         QVariantMap pressure;
         QVariantMap vacuum;
+        QVariantMap flow_controller;
+        QVariantMap turbo_pump;
         QVariantMap valve_error;
 
 

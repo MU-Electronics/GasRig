@@ -1,16 +1,25 @@
 {
-    "pressure_rise": "1",
-    "pressure_fall": "1",
-
-    "vacuum_rise": "0.5",
-    "vacuum_fall": "0.5",
-
-    "turbo_pump_temp": {
-
+    "pressure": {
+        "rise": "1",
+        "fall": "1"
     },
 
-    "flow_rate_min": "0",
-    "flow_rate_max": "10",
+    "vacuum":{
+        "rise": "0.5",
+        "fall": "0.5"
+    },
+
+    "turbo_pump": {
+        "temp_bottom": "60",
+        "temp_electronics": "50",
+        "temp_bearing": "60",
+        "temp_motor": "60"
+    },
+
+    "flow_controller": {
+        "min_flow": "0",
+        "max_flow": "10"
+    },
 
     "valve_combinations": {
         "turbo_open_to_high_pressure": {
