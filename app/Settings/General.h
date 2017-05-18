@@ -9,10 +9,9 @@
 namespace App { namespace Settings{
     class General: public App::Services::JsonFile
     {
-        Q_OBJECT
+
     public:
-        General(QObject *parent = 0);
-        ~General();
+        General();
 
         QVariantMap admin;
 

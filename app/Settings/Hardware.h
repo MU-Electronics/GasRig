@@ -9,10 +9,9 @@
 namespace App { namespace Settings{
     class Hardware: public App::Services::JsonFile
     {
-        Q_OBJECT
+
     public:
-        Hardware(QObject *parent = 0);
-        ~Hardware();
+        Hardware();
 
         QVariantMap usb_connections;
         QVariantMap valve_connections;

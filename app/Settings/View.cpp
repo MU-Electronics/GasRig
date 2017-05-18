@@ -7,16 +7,10 @@
 
 namespace App { namespace Settings
 {
-    View::View(QObject *parent)
+    View::View()
     {
 
     }
-
-    View::~View()
-    {
-
-    }
-
 
     void View::read(const QJsonObject &json)
     {

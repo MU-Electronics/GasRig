@@ -9,11 +9,10 @@
 namespace App { namespace Settings{
     class Safety: public App::Services::JsonFile
     {
-        Q_OBJECT
+
     public:
 
-        Safety(QObject *parent = 0);
-        ~Safety();
+        Safety();
 
         QVariantMap pressure;
         QVariantMap vacuum;

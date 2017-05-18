@@ -9,10 +9,9 @@
 namespace App { namespace Settings{
     class View: public App::Services::JsonFile
     {
-        Q_OBJECT
+
     public:
-        View(QObject *parent = 0);
-        ~View();
+        View();
 
         QVariantMap JFET;
         QVariantMap owner;

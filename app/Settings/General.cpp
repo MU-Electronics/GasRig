@@ -7,16 +7,10 @@
 
 namespace App { namespace Settings
 {
-    General::General(QObject *parent)
+    General::General()
     {
 
     }
-
-    General::~General()
-    {
-
-    }
-
 
     void General::read(const QJsonObject &json)
     {

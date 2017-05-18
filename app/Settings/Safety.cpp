@@ -15,19 +15,7 @@ namespace App { namespace Settings
      * @brief Safety::Safety
      * @param parent
      */
-    Safety::Safety(QObject *parent)
-    {
-
-    }
-
-
-
-    /**
-     * Delete Class
-     *
-     * @brief Safety::~Safety
-     */
-    Safety::~Safety()
+    Safety::Safety()
     {
 
     }

@@ -39,7 +39,8 @@ SOURCES += \
     app/Settings/General.cpp \
     app/Settings/View.cpp \
     app/Settings/Hardware.cpp \
-    app/Services/JsonFile.cpp
+    app/Services/JsonFile.cpp \
+    app/Settings/Container.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -95,4 +96,5 @@ HEADERS += \
     app/Settings/General.h \
     app/Settings/View.h \
     app/Settings/Hardware.h \
-    app/Services/JsonFile.h
+    app/Services/JsonFile.h \
+    app/Settings/Container.h

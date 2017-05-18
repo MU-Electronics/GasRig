@@ -6,12 +6,12 @@
 #include <QJsonObject>
 
 namespace App { namespace Services {
-    class JsonFile : public QObject
+    class JsonFile
     {
-        Q_OBJECT
+
     public:
-        JsonFile(QObject *parent = 0);
-        virtual ~JsonFile() {};
+        JsonFile();
+        //virtual ~JsonFile() {};
 
         enum SaveFormat {
             Json, Binary

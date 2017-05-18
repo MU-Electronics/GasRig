@@ -7,12 +7,7 @@
 
 namespace App { namespace Settings
 {
-    Hardware::Hardware(QObject *parent)
-    {
-
-    }
-
-    Hardware::~Hardware()
+    Hardware::Hardware()
     {
 
     }

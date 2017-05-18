@@ -7,7 +7,7 @@
 
 namespace App { namespace Services
 {
-    JsonFile::JsonFile(QObject *parent)
+    JsonFile::JsonFile()
     {
 
     }
