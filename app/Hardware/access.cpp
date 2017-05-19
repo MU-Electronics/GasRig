@@ -27,7 +27,7 @@ namespace App { namespace Hardware
     Access::Access(QObject *parent, Settings::Container settings)
         :   Thread(parent, false, false),
             m_settings(settings),
-            m_vacStation(*new HAL::VacStation(this, 1)),
+            m_vacStation(*new HAL::VacStation(this, 123)),
             m_flowController(*new HAL::FlowController(this)),
             m_pressureSensor(*new HAL::PressureSensor(this)),
             m_labjack(*new HAL::LabJack(this))
@@ -55,6 +55,16 @@ namespace App { namespace Hardware
     void Access::configure(QThread &thread)
     {
         qDebug() << "Hardware thread child setup method ran";
+
+        // Open the com port for the vac station
+        m_vacStation.open("tty.usbserial-AH02FNCX", 9600, 1000);
+
+        // Open com port for the pressure sensor
+
+        // Open com port for the flow controllers
+
+        // Open the com port for the labjack
+
     }
 
 
@@ -70,17 +80,15 @@ namespace App { namespace Hardware
 
         //qDebug() << m_vacStation.findPortName(24577, 1027);
 
+        if(firstRun == false)
+        {
+            m_vacStation.GetTemperature(1);
+        }
 
 
+        firstRun = true;
 
-        m_vacStation.open("tty.usbserial-AH02FNCX", 9600, 1000);
-
-        m_vacStation.GetTemperature(1);
-
-        m_vacStation.close();
-
-
-        thread()->sleep(20);
+        //thread()->sleep(20);
     }
 
 }}

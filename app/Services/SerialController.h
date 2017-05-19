@@ -36,7 +36,7 @@ namespace App { namespace Services
 
         private:
             QSerialPort&    m_serialPort;
-            QTimer&          m_timer;
+            QTimer&         m_timer;
             int             m_timeOut;
             qint64          m_bytesWritten;
             QByteArray      m_writeData;

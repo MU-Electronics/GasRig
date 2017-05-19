@@ -64,7 +64,7 @@ namespace App { namespace Services
         m_serialPort.setPortName(com);
 
         // Set the braud rate
-        m_serialPort.setBaudRate(braud);
+        m_serialPort.setBaudRate(QSerialPort::Baud9600); // braud
 
         // Set the data bit rate
         m_serialPort.setDataBits(QSerialPort::Data8);
@@ -85,13 +85,16 @@ namespace App { namespace Services
             return false;
         }
 
+        m_serialPort.setDataTerminalReady(true);
+
+
 
 
         // Set the timer to be single shot only
-        //m_timer.setSingleShot(true);
+        m_timer.setSingleShot(true);
 
         // Set correct time out
-        //m_timeOut = timeout;
+        m_timeOut = timeout;
 
 
 
@@ -105,7 +108,7 @@ namespace App { namespace Services
         connect(&m_serialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error), this, &SerialController::handleError);
 
         // When the timer has timeout connect it to the timeout handler
-        //connect(&m_timer, &QTimer::timeout, this, &SerialController::handleTimeout);
+        connect(&m_timer, &QTimer::timeout, this, &SerialController::handleTimeout);
 
         // Port configured correctly
         return true;
@@ -251,12 +254,13 @@ namespace App { namespace Services
     {
         // Read all the data
         // Possable problem with this not guarantee reading all the data something to test!!
+        qDebug() << "Reading";
         m_readData = m_serialPort.readAll();
-
+        qDebug() << m_readData << "FINALLYY";
         if (m_readData.isEmpty())
         {
             // Stop the timeout timer
-            //m_timer.stop();
+            m_timer.stop();
 
             // Reset vars
             clearVars();
@@ -344,6 +348,8 @@ namespace App { namespace Services
         // Tell the serial port to write the data
         qint64 bytesWritten = m_serialPort.write(writeData);
 
+        qDebug() << "Data wrote to com port";
+
         // Check the number of btyes written
         if (bytesWritten == -1)
         {
@@ -357,6 +363,6 @@ namespace App { namespace Services
         }
 
         // Set timeout
-        //m_timer.start(m_timeOut);
+        m_timer.start(m_timeOut);
     }
 }}

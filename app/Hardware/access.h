@@ -35,6 +35,8 @@ namespace App { namespace Hardware
             HAL::PressureSensor& m_pressureSensor;
             HAL::LabJack& m_labjack;
 
+            bool firstRun = false;
+
             void configure(QThread &thread);
             void worker();
 

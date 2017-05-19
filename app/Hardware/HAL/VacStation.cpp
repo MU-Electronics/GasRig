@@ -77,7 +77,7 @@ namespace App { namespace Hardware { namespace HAL
     bool VacStation::send(QString action, QString parameterValue, QString data, unsigned int bytesRead)
     {
         // Create package to send
-        QByteArray package = this->CreatePackage(action, parameterValue, data);
+        QByteArray package = CreatePackage(action, parameterValue, data);
 
         // Write the package to the bus
         write(package);
