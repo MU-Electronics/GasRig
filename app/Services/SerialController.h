@@ -20,6 +20,7 @@ namespace App { namespace Services
 
 
             bool open(QString com, int braud, int timeout);
+            void close();
             void write(const QByteArray &writeData);
 
 
@@ -37,6 +38,8 @@ namespace App { namespace Services
             qint64          m_bytesWritten;
             QByteArray      m_writeData;
             QByteArray      m_readData;
+
+            void clearVars();
 
             virtual void proccessReadData(QString readData) = 0;
 

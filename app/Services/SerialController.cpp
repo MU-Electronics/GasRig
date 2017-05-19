@@ -36,7 +36,7 @@ namespace App { namespace Services
      */
     SerialController::~SerialController()
     {
-        m_serialPort.close();
+        close();
     }
 
 
@@ -103,6 +103,35 @@ namespace App { namespace Services
 
 
     /**
+     * Close the serial port connection
+     *
+     * @brief SerialController::close
+     */
+    void SerialController::close()
+    {
+        // Close the port
+        m_serialPort.close();
+
+        // Reset vars
+        clearVars();
+    }
+
+
+    /**
+     * Clear any member variables holding data related to I/O
+     *
+     * @brief SerialController::clearVars
+     */
+    void SerialController::clearVars()
+    {
+        // Reset any vars
+        m_bytesWritten = 0;
+        m_writeData.clear();
+        m_readData.clear();
+    }
+
+
+    /**
      * When data is read to the read on the serial line this method will take over
      *
      * @brief SerialController::handleRead
@@ -115,6 +144,12 @@ namespace App { namespace Services
 
         if (m_readData.isEmpty())
         {
+            // Stop the timeout timer
+            m_timer.stop();
+
+            // Reset vars
+            clearVars();
+
             // Run child method to proccess the data
             proccessReadData(m_readData);
         }
@@ -154,6 +189,12 @@ namespace App { namespace Services
     {
         // General error message for any timeout event
         qDebug() << "Operation timed out for port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+
+        // Clear the output and input buffer
+        m_serialPort.clear();
+
+        // Reset vars
+        clearVars();
     }
 
 
@@ -175,6 +216,12 @@ namespace App { namespace Services
         if (serialPortError == QSerialPort::WriteError) {
             qDebug() << "An I/O error occurred while writing the data to port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
         }
+
+        // Clear the output and input buffer
+        m_serialPort.clear();
+
+        // Reset vars
+        clearVars();
     }
 
 
