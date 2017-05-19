@@ -283,6 +283,8 @@ namespace App { namespace Services
         // Append the written btyes to the buffer
         m_bytesWritten += bytes;
 
+        qDebug() << "Writing";
+
         // If the written btye buffer size is the same size as the package being wrote then were finished
         if (m_bytesWritten == m_writeData.size())
         {

@@ -125,6 +125,9 @@ namespace App { namespace Services
 
             // Runn the worker
             worker();
+
+            // event loop
+            thread()->requestInterruption();
         }
 
         // Lock the object
