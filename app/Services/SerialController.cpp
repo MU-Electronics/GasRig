@@ -29,7 +29,8 @@ namespace App { namespace Services
      */
     SerialController::SerialController(QObject *parent)
         :   QObject(parent),
-            m_serialPort(*new QSerialPort),
+            m_serialPort(*new QSerialPort(parent)),
+            m_timer(*new QTimer(parent)),
             m_timeOut(1000),
             m_bytesWritten(0)
     {
@@ -78,7 +79,7 @@ namespace App { namespace Services
         m_serialPort.setStopBits(QSerialPort::OneStop);
 
         // Check port open
-        if (!m_serialPort.open(QIODevice::ReadOnly))
+        if (!m_serialPort.open(QIODevice::ReadWrite))
         {
             qDebug() << "Failed to open port" << com << "error: " << m_serialPort.errorString();
             return false;
@@ -87,10 +88,10 @@ namespace App { namespace Services
 
 
         // Set the timer to be single shot only
-        m_timer.setSingleShot(true);
+        //m_timer.setSingleShot(true);
 
         // Set correct time out
-        m_timeOut = timeout;
+        //m_timeOut = timeout;
 
 
 
@@ -104,7 +105,7 @@ namespace App { namespace Services
         connect(&m_serialPort, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error), this, &SerialController::handleError);
 
         // When the timer has timeout connect it to the timeout handler
-        connect(&m_timer, &QTimer::timeout, this, &SerialController::handleTimeout);
+        //connect(&m_timer, &QTimer::timeout, this, &SerialController::handleTimeout);
 
         // Port configured correctly
         return true;
@@ -255,7 +256,7 @@ namespace App { namespace Services
         if (m_readData.isEmpty())
         {
             // Stop the timeout timer
-            m_timer.stop();
+            //m_timer.stop();
 
             // Reset vars
             clearVars();
@@ -356,6 +357,6 @@ namespace App { namespace Services
         }
 
         // Set timeout
-        m_timer.start(m_timeOut);
+        //m_timer.start(m_timeOut);
     }
 }}

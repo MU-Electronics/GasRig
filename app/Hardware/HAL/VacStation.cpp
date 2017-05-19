@@ -2,22 +2,91 @@
 
 // Include external libs
 #include <QDebug>
+#include <QString>
+#include <QByteArray>
+
 
 // Include serial controller
 
 
 namespace App { namespace Hardware { namespace HAL
 {
+
+    /**
+     * On class construction the below is proccessed:
+     *      - Serial controller is init
+     *      - id is set
+     *
+     * @brief VacStation::VacStation
+     * @param parent
+     * @param id
+     */
     VacStation::VacStation(QObject *parent, int id)
         :   SerialController(parent),
             m_id(id)
     {
-        open("/dev/tty.usbserial-AH02FNCX", 9600, 1000);
+
     }
 
+
+    /**
+     * On destruction of class the below will be ran:
+     *
+     * @brief VacStation::~VacStation
+     */
     VacStation::~VacStation()
     {
 
+    }
+
+
+
+    /**
+     * When data has been recived it will be handled here
+     *
+     * @brief VacStation::proccessReadData
+     * @param readData
+     */
+    void VacStation::proccessReadData(QString readData)
+    {
+        if(readData != "" && readData != "\r")
+        {
+            // Check for valid message via check sum
+            if(CheckSumEightValidation(readData))
+            {
+                qDebug() << "Data ok";
+                //return readData;
+            }
+
+        }
+
+        qDebug() << readData;
+    }
+
+
+    /**
+     * PUBLIC: Creates a package and send it to the bus, then wait for a responce and validates the responce.
+     *
+     * @param QString action The action eg request, command etc (See Pfeffier Vacuum Protocol for "RS485" p.25 chap. 7.2 in TC110 OPerating Instructions)
+     * @param QString parameterValue The id for the information / action required
+     * @param QString  data The control data to be sent
+     * @param unsigned int bytesRead The number of bytes for the returned response
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @return string
+     */
+    bool VacStation::send(QString action, QString parameterValue, QString data, unsigned int bytesRead)
+    {
+        // Create package to send
+        QByteArray package = this->CreatePackage(action, parameterValue, data);
+
+        // Write the package to the bus
+        write(package);
+
+        //debug message
+        qDebug() << package;
+
+        // package write
+        return true;
     }
 
 
@@ -28,9 +97,9 @@ namespace App { namespace Hardware { namespace HAL
      * @param QString action The action eg request, command etc (See Pfeffier Vacuum Protocol for "RS485" p.25 chap. 7.2 in TC110 OPerating Instructions)
      * @param QString parameterValue The id for the information / action required
      * @param QString data The control data to be sent
-     * @return QString package data
+     * @return QByteArray package data
      */
-    QString VacStation::CreatePackage(QString action, QString parameterValue, QString data)
+    QByteArray VacStation::CreatePackage(QString action, QString parameterValue, QString data)
     {
         // Format data legnth 2 bytes
         int size = data.length();
@@ -45,14 +114,40 @@ namespace App { namespace Hardware { namespace HAL
         // Append the check sum  and carriage return
         package = package + CalculateCheckSumEight(package) + "\r";
 
-        // Return string
-        return package;
+        // Return string and Conver to btye array
+        return QByteArray::fromStdString(package.toStdString());
     }
 
 
-    void VacStation::proccessReadData(QString readData)
+    /**
+     * PUBLIC: Get temperature of selected location
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int location	Select the area for the temperature reading
+     *							1 = Pump Bottom
+     *							2 = Electronics
+     *							3 = Bearing
+     *							4 = Motor
+     * @return void
+     */
+    void VacStation::GetTemperature(int location)
     {
-        qDebug() << readData;
+       // Get the correct param type
+        QString param = "342";
+        switch(location)
+        {
+            case 1: // Pump Bottom
+                param = "330"; break;
+            case 2: // Electronics
+                param = "326"; break;
+            case 3: // Bearing
+                param = "342"; break;
+            case 4: // Motor
+                param = "346"; break;
+        }
+
+        // Send request, receive it and check it's valid
+        send("00", param, "=?", 20);
     }
 
 }}}

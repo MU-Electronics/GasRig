@@ -41,7 +41,7 @@ namespace App { namespace Safety
      *
      * @brief Monitor::configure
      */
-    void Monitor::configure()
+    void Monitor::configure(QThread &thread)
     {
         qDebug() << "Safety thread child setup method ran";
     }

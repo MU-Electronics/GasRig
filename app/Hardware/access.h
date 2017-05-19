@@ -35,7 +35,7 @@ namespace App { namespace Hardware
             HAL::PressureSensor& m_pressureSensor;
             HAL::LabJack& m_labjack;
 
-            void configure();
+            void configure(QThread &thread);
             void worker();
 
         public slots:

@@ -23,6 +23,7 @@ namespace App { namespace Services
             void close();
             void write(const QByteArray &writeData);
 
+            bool CheckSumEightValidation(QString qPackage);
             QString CalculateCheckSumEight(QString qstring);
             QString findPortName(quint16 productId, quint16 vendorID);
 
@@ -35,14 +36,14 @@ namespace App { namespace Services
 
         private:
             QSerialPort&    m_serialPort;
-            QTimer          m_timer;
+            QTimer&          m_timer;
             int             m_timeOut;
             qint64          m_bytesWritten;
             QByteArray      m_writeData;
             QByteArray      m_readData;
 
             void clearVars();
-            bool CheckSumEightValidation(QString qPackage);
+
 
             virtual void proccessReadData(QString readData) = 0;
 

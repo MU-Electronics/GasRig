@@ -35,7 +35,7 @@ namespace App { namespace Services{
     private:
         virtual void worker() = 0;
 
-        virtual void configure() = 0;
+        virtual void configure(QThread &thread) = 0;
 
     };
 }}

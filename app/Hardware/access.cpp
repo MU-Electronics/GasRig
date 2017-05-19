@@ -32,7 +32,6 @@ namespace App { namespace Hardware
             m_pressureSensor(*new HAL::PressureSensor(this)),
             m_labjack(*new HAL::LabJack(this))
     {
-
     }
 
 
@@ -53,7 +52,7 @@ namespace App { namespace Hardware
      *
      * @brief Access::configure
      */
-    void Access::configure()
+    void Access::configure(QThread &thread)
     {
         qDebug() << "Hardware thread child setup method ran";
     }
@@ -69,7 +68,19 @@ namespace App { namespace Hardware
     {
         //qDebug() << "Hardware thread";
 
-        thread()->sleep(1);
+        //qDebug() << m_vacStation.findPortName(24577, 1027);
+
+
+
+
+        m_vacStation.open("tty.usbserial-AH02FNCX", 9600, 1000);
+
+        m_vacStation.GetTemperature(1);
+
+        m_vacStation.close();
+
+
+        thread()->sleep(20);
     }
 
 }}

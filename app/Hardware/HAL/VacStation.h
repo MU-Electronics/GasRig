@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QString>
+#include <QByteArray>
 
 
 // Include serial controller
@@ -17,12 +18,15 @@ namespace App { namespace Hardware { namespace HAL
             VacStation(QObject *parent, int id);
             ~VacStation();
 
+            void GetTemperature(int location);
+
         private:
             int m_id;
 
             void proccessReadData(QString readData);
 
-            QString CreatePackage(QString action, QString parameterValue, QString data);
+            QByteArray CreatePackage(QString action, QString parameterValue, QString data);
+            bool send(QString action, QString parameterValue, QString data, unsigned int bytesRead);
 
 
             //explicit VacStation(const VacStation& rhs) = delete;

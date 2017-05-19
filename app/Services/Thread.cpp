@@ -42,7 +42,7 @@ namespace App { namespace Services
         connect(this, SIGNAL(finished()), &thread, SLOT(quit()), Qt::DirectConnection);
 
         // Run any configuration on the child class
-        configure();
+        configure(thread);
     }
 
     /**
