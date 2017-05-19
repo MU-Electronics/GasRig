@@ -12,7 +12,7 @@ namespace App { namespace Hardware { namespace HAL
         :   SerialController(parent),
             m_id(id)
     {
-        open("com1", 9600, 1000);
+        open("/dev/tty.usbserial-AH02FNCX", 9600, 1000);
     }
 
     VacStation::~VacStation()

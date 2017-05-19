@@ -15,6 +15,7 @@
 
 // Include serial port class
 #include <QtSerialPort/QSerialPort>
+#include <QSerialPortInfo>
 
 namespace App { namespace Services
 {
@@ -136,6 +137,39 @@ namespace App { namespace Services
         m_bytesWritten = 0;
         m_writeData.clear();
         m_readData.clear();
+    }
+
+
+    /**
+     * Find the com port identifier by the venor and product IDs
+     *
+     * @brief SerialController::findPortName
+     * @param productId
+     * @param vendorID
+     * @return QString port name
+     */
+    QString SerialController::findPortName(quint16 productId, quint16 vendorID)
+    {
+        // Port name
+        QString port;
+
+        //  Loop through all com ports
+        foreach(const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
+        {
+            // If the port has a product and vendor id
+            if(serialPortInfo.hasProductIdentifier() && serialPortInfo.hasVendorIdentifier())
+            {
+                // If the product and vendor ids match
+                if((serialPortInfo.productIdentifier() == productId) && (serialPortInfo.vendorIdentifier() == vendorID))
+                {
+                    // Set the port name
+                    port = serialPortInfo.portName();
+                }
+            }
+        }
+
+        // Return port
+        return port;
     }
 
 

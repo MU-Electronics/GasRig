@@ -24,6 +24,7 @@ namespace App { namespace Services
             void write(const QByteArray &writeData);
 
             QString CalculateCheckSumEight(QString qstring);
+            QString findPortName(quint16 productId, quint16 vendorID);
 
         private slots:
             void handleRead();
