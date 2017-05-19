@@ -3,7 +3,7 @@ include(vendor/fluid/fluid.pri)
 
 TEMPLATE = app
 
-QT += qml quick quickcontrols2 widgets
+QT += qml quick quickcontrols2 widgets serialport
 CONFIG += c++11
 
 
@@ -16,7 +16,6 @@ QMAKE_EXTRA_TARGETS += first copydata
 
 
 SOURCES += \
-    app/Services/SerialWrapper.cpp \
     main.cpp \
     bootstrap/Startup.cpp \
     app/Hardware/Access.cpp \
@@ -40,7 +39,8 @@ SOURCES += \
     app/Settings/View.cpp \
     app/Settings/Hardware.cpp \
     app/Services/JsonFile.cpp \
-    app/Settings/Container.cpp
+    app/Settings/Container.cpp \
+    app/Services/SerialController.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -84,7 +84,6 @@ HEADERS += \
     app/Services/FormBuilder.h \
     app/Safety/Monitor.h \
     app/Services/Logger.h \
-    app/Services/SerialWrapper.h \
     app/ViewManager/ConnectionStatus.h \
     app/ViewManager/Testing.h \
     app/ViewManager/Manager.h \
@@ -97,4 +96,5 @@ HEADERS += \
     app/Settings/View.h \
     app/Settings/Hardware.h \
     app/Services/JsonFile.h \
-    app/Settings/Container.h
+    app/Settings/Container.h \
+    app/Services/SerialController.h
