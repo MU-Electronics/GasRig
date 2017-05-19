@@ -1,11 +1,19 @@
 #include "SerialController.h"
 
+// Include external libs
 #include <QString>
 #include <QDebug>
 #include <QTimer>
 #include <QByteArray>
 #include <QObject>
 
+// Include std libs @todo these should be changed for Qt libs
+#include <sstream>
+#include <string>
+#include <iostream>
+#include <iomanip>
+
+// Include serial port class
 #include <QtSerialPort/QSerialPort>
 
 namespace App { namespace Services
@@ -118,7 +126,7 @@ namespace App { namespace Services
 
 
     /**
-     * Clear any member variables holding data related to I/O
+     * PRIVATE: Clear any member variables holding data related to I/O
      *
      * @brief SerialController::clearVars
      */
@@ -129,6 +137,74 @@ namespace App { namespace Services
         m_writeData.clear();
         m_readData.clear();
     }
+
+
+    /**
+     * PRIVATE: Calcuate a check sum-8 for given data
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param QString string The string to create the check sum for
+     * @return QString
+     */
+    QString SerialController::CalculateCheckSumEight(QString qstring)
+    {
+        // Convert ot std string @todo make use QString
+        std::string string = qstring.toStdString();
+
+        // Find check sum 8
+        int sum = 0;
+        for (unsigned int i = 0; i < string.size(); i++) {
+            if(string[i] == ' '){
+                sum += 32;
+            }else{
+                sum += string[i];
+            }
+        }
+        int modulus_int = sum % 256;
+
+        // Ensure
+        std::string modulus = std::to_string(modulus_int);
+        if(modulus_int < 100)
+        {
+            std::stringstream holder;
+            holder << std::setw(3) << std::setfill('0') << modulus << std::endl;
+            modulus = holder.str();
+        }
+
+        return QString::fromStdString(modulus);
+    }
+
+
+    /**
+     * PRIVATE: Check the check sum provided against the data provided
+     * @todo remove the std library for Qt libs completely
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param string package The string with check sum that needs validating
+     * @return bool
+     */
+    bool SerialController::CheckSumEightValidation(QString qPackage)
+    {
+        // package to std string
+        std::string package = qPackage.toStdString();
+
+        // Get check sum
+        std::string checkSum = package.substr( package.length() - 4 );
+        checkSum = checkSum.erase(checkSum.size()-1);
+
+        // Get data that is for the check sum
+        std::string data = package.erase(package.size()-4);
+
+        // Calcuate check sum for data
+        QString newSum = this->CalculateCheckSumEight(QString::fromStdString(data));
+
+        // Check sums are the same
+        if (checkSum.compare(newSum.toStdString()) != 0)
+            return true;
+
+        return false;
+    }
+
 
 
     /**

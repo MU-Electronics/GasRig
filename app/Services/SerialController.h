@@ -23,6 +23,7 @@ namespace App { namespace Services
             void close();
             void write(const QByteArray &writeData);
 
+            QString CalculateCheckSumEight(QString qstring);
 
         private slots:
             void handleRead();
@@ -40,6 +41,7 @@ namespace App { namespace Services
             QByteArray      m_readData;
 
             void clearVars();
+            bool CheckSumEightValidation(QString qPackage);
 
             virtual void proccessReadData(QString readData) = 0;
 

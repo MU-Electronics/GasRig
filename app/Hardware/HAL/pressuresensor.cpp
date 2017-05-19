@@ -2,8 +2,7 @@
 
 namespace App { namespace Hardware { namespace HAL
 {
-    PressureSensor::PressureSensor(QObject *parent) :
-        QObject(parent)
+    PressureSensor::PressureSensor(QObject *parent)
     {
     }
 }}}

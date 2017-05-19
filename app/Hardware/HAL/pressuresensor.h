@@ -1,13 +1,13 @@
 #pragma once
 #include <QObject>
-#include "app/Services/SerialController.h"
+
+#include "../../Services/SerialController.h"
 
 
 namespace App { namespace Hardware { namespace HAL
 {
-    class PressureSensor : public QObject
+    class PressureSensor
     {
-        Q_OBJECT
     public:
         explicit PressureSensor(QObject *parent=0);
 

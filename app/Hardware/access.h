@@ -30,10 +30,10 @@ namespace App { namespace Hardware
         private:
             Settings::Container m_settings;
 
-            HAL::VacStation m_vacStation;
-            HAL::FlowController m_flowController;
-            HAL::PressureSensor m_pressureSensor;
-            HAL::LabJack m_labjack;
+            HAL::VacStation& m_vacStation;
+            HAL::FlowController& m_flowController;
+            HAL::PressureSensor& m_pressureSensor;
+            HAL::LabJack& m_labjack;
 
             void configure();
             void worker();

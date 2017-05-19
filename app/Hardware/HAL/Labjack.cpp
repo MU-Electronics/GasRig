@@ -2,7 +2,7 @@
 
 namespace App { namespace Hardware { namespace HAL
 {
-    LabJack::LabJack()
+    LabJack::LabJack(QObject *parent)
     {
     }
 }}}

@@ -8,6 +8,12 @@
 // Include settings container
 #include "../Settings/container.h"
 
+// Include Hals
+#include "HAL/VacStation.h"
+#include "HAL/FlowController.h"
+#include "HAL/PressureSensor.h"
+#include "HAL/Labjack.h"
+
 namespace App { namespace Hardware
 {
     /**
@@ -19,8 +25,12 @@ namespace App { namespace Hardware
      * @param parent
      */
     Access::Access(QObject *parent, Settings::Container settings)
-        : Thread(parent, false, false),
-          m_settings(settings)
+        :   Thread(parent, false, false),
+            m_settings(settings),
+            m_vacStation(*new HAL::VacStation(this, 1)),
+            m_flowController(*new HAL::FlowController(this)),
+            m_pressureSensor(*new HAL::PressureSensor(this)),
+            m_labjack(*new HAL::LabJack(this))
     {
 
     }
