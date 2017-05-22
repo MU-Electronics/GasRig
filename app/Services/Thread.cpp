@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QDebug>
+#include <QApplication>
 
 namespace App { namespace Services
 {
@@ -127,7 +128,7 @@ namespace App { namespace Services
             worker();
 
             // event loop
-            thread()->requestInterruption();
+            QApplication::processEvents();
         }
 
         // Lock the object
