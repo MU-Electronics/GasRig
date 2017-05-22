@@ -11,9 +11,9 @@ namespace App { namespace Hardware { namespace HAL
         public:
             HALSupport(QObject *parent = 0);
 
-            bool setParams(QVariantMap command);
-
             QVariantMap m_command;
+
+            bool setParams(QVariantMap command);
     };
 
 }}}

@@ -22,8 +22,6 @@ namespace App { namespace Hardware { namespace HAL
             VacStation(QObject *parent, int id);
             ~VacStation();
 
-            //bool setParams(QVariantMap command);
-
         signals:
             void vacStationData(QString id, QString param, QString data);
 
@@ -45,7 +43,6 @@ namespace App { namespace Hardware { namespace HAL
 
         private:
             int m_id;
-            //QVariantMap m_command;
 
             void proccessReadData(QString readData);
 

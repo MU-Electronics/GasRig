@@ -37,11 +37,11 @@ SOURCES += \
     app/Settings/Safety.cpp \
     app/Settings/General.cpp \
     app/Settings/View.cpp \
-    app/Settings/Hardware.cpp \
     app/Services/JsonFile.cpp \
     app/Settings/Container.cpp \
     app/Services/SerialController.cpp \
-    app/Hardware/HAL/HALSupport.cpp
+    app/Hardware/HAL/HALSupport.cpp \
+    app/Settings/Hardware.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -95,8 +95,8 @@ HEADERS += \
     app/Settings/Safety.h \
     app/Settings/General.h \
     app/Settings/View.h \
-    app/Settings/Hardware.h \
     app/Services/JsonFile.h \
     app/Settings/Container.h \
     app/Services/SerialController.h \
-    app/Hardware/HAL/HALSupport.h
+    app/Hardware/HAL/HALSupport.h \
+    app/Settings/Hardware.h
