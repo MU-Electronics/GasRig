@@ -7,12 +7,29 @@ QT += qml quick quickcontrols2 widgets serialport
 CONFIG += c++11
 
 
+
 # Copy config files to build dir
-copydata.commands = $(COPY_DIR) $$PWD/resources/config $$OUT_PWD
-first.depends = $(first) copydata
-export(first.depends)
-export(copydata.commands)
-QMAKE_EXTRA_TARGETS += first copydata
+win32 {
+    PWD_WIN = $${PWD}
+    DESTDIR_WIN = $${OUT_PWD}
+    PWD_WIN ~= s,/,\\,g
+    DESTDIR_WIN ~= s,/,\\,g
+
+    configfiles.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\debug\\config)
+}
+
+macx {
+    configfiles.commands = cp -r $$PWD/resources/config/* $$OUT_PWD/debug/config
+}
+
+linux {
+    configfiles.commands = cp -r $$PWD/resources/config/* $$OUT_PWD/debug/config
+}
+
+QMAKE_EXTRA_TARGETS += configfiles
+POST_TARGETDEPS += configfiles
+
+
 
 
 SOURCES += \

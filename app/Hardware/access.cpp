@@ -27,13 +27,20 @@ namespace App { namespace Hardware
      */
     Access::Access(QObject *parent, Settings::Container settings)
         :   Thread(parent, false, false),
+
+            // System settings container
             m_settings(settings),
+
+            // Timer for time based events
             m_timer(*new QTimer(this)),
+
+            // HAL objects
             m_vacStation(*new HAL::VacStation(this, 123)),
             m_flowController(*new HAL::FlowController(this)),
             m_pressureSensor(*new HAL::PressureSensor(this)),
             m_labjack(*new HAL::LabJack(this))
     {
+
     }
 
 
@@ -113,6 +120,16 @@ namespace App { namespace Hardware
         // Find the correct HAL
         if(hardware == "VacStation")
         {
+            // If the bus is not free we cant procceed
+            if(!m_vacStation.busFree())
+            {
+                // Re add the method to the queue as this one will be removed
+                m_queue.enqueue(command);
+
+                // Return back to worker for next method
+                return;
+            }
+
             // Set the method params
             m_vacStation.setParams(command);
 

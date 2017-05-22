@@ -13,7 +13,7 @@ namespace App { namespace Hardware { namespace HAL
 
             QVariantMap m_command;
 
-            bool setParams(QVariantMap command);
+            void setParams(QVariantMap command);
     };
 
 }}}

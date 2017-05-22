@@ -16,7 +16,7 @@ namespace App { namespace Hardware { namespace HAL
      * @param command
      * @return
      */
-    bool HALSupport::setParams(QVariantMap command)
+    void HALSupport::setParams(QVariantMap command)
     {
         m_command = command;
     }
