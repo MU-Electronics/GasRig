@@ -2,6 +2,7 @@
 
 // External deps
 #include <QDir>
+#include <QCoreApplication>
 
 // Include the setting managers
 #include "Safety.h"
@@ -62,14 +63,22 @@ namespace App { namespace Settings
      */
     QString Container::getDir()
     {
-        // Instance of QDir at current path of program
-        QDir pathsRoot(QDir::currentPath());
+        // This should work across platform, working windows need to check mac
+        QString path = QCoreApplication::applicationDirPath();
 
-        // CD up to the programs root dir
-        pathsRoot.cdUp(); pathsRoot.cdUp(); pathsRoot.cdUp();
+        // I know the below works fine for mac
+        #ifdef __APPLE__
+            #include "TargetConditionals.h"
+            #ifdef TARGET_OS_MAC
+                // Instance of QDir at current path of program
+                QDir pathsRoot(QDir::currentPath());
+                pathsRoot.cdUp(); pathsRoot.cdUp(); pathsRoot.cdUp();
+                path = pathsRoot.path();
+            #endif
+        #endif
 
         // Return the path
-        return pathsRoot.path();
+        return path;
     }
 
 }}
