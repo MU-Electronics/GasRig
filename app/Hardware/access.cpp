@@ -124,6 +124,9 @@ namespace App { namespace Hardware
         QString hardware = command.value("hardware").toString();
         QString method = command.value("method").toString();
 
+        // Debug message
+        qDebug() << "Harware set to: " << hardware << " Method ran: " << method;
+
         // Find the correct HAL
         if(hardware == "VacStation")
         {
@@ -132,9 +135,6 @@ namespace App { namespace Hardware
 
             // Run the method
             QMetaObject::invokeMethod(&m_vacStation, method.toLatin1().data(), Qt::DirectConnection);
-
-            // Debug message
-            qDebug() << "Params set: " << command << " Method ran: " << method<< " Hardware: " << hardware;
         }
         else if(hardware == "PressureSensor")
         {

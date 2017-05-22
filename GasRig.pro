@@ -40,7 +40,8 @@ SOURCES += \
     app/Settings/Hardware.cpp \
     app/Services/JsonFile.cpp \
     app/Settings/Container.cpp \
-    app/Services/SerialController.cpp
+    app/Services/SerialController.cpp \
+    app/Hardware/HAL/HALSupport.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -97,4 +98,5 @@ HEADERS += \
     app/Settings/Hardware.h \
     app/Services/JsonFile.h \
     app/Settings/Container.h \
-    app/Services/SerialController.h
+    app/Services/SerialController.h \
+    app/Hardware/HAL/HALSupport.h

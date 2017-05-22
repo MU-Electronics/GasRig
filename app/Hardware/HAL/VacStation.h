@@ -11,16 +11,18 @@
 // Include serial controller
 #include "../../Services/SerialController.h"
 
+#include "HALSupport.h"
+
 namespace App { namespace Hardware { namespace HAL
 {
-    class VacStation: public App::Services::SerialController
+    class VacStation: public App::Services::SerialController, public HALSupport
     {
         Q_OBJECT
         public:
             VacStation(QObject *parent, int id);
             ~VacStation();
 
-            bool setParams(QVariantMap command);
+            //bool setParams(QVariantMap command);
 
         signals:
             void vacStationData(QString id, QString param, QString data);
@@ -43,7 +45,7 @@ namespace App { namespace Hardware { namespace HAL
 
         private:
             int m_id;
-            QVariantMap m_command;
+            //QVariantMap m_command;
 
             void proccessReadData(QString readData);
 
