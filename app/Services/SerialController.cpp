@@ -7,12 +7,6 @@
 #include <QByteArray>
 #include <QObject>
 
-// Include std libs @todo these should be changed for Qt libs
-#include <sstream>
-#include <string>
-#include <iostream>
-#include <iomanip>
-
 // Include serial port class
 #include <QtSerialPort/QSerialPort>
 #include <QSerialPortInfo>
@@ -184,32 +178,20 @@ namespace App { namespace Services
      * @param QString string The string to create the check sum for
      * @return QString
      */
-    QString SerialController::CalculateCheckSumEight(QString qstring)
+    QString SerialController::CalculateCheckSumEight(QString string)
     {
-        // Convert ot std string @todo make use QString
-        std::string string = qstring.toStdString();
-
         // Find check sum 8
         int sum = 0;
         for (unsigned int i = 0; i < string.size(); i++) {
             if(string[i] == ' '){
                 sum += 32;
             }else{
-                sum += string[i];
+                sum += string[i].toLatin1();
             }
         }
         int modulus_int = sum % 256;
 
-        // Ensure
-        std::string modulus = std::to_string(modulus_int);
-        if(modulus_int < 100)
-        {
-            std::stringstream holder;
-            holder << std::setw(3) << std::setfill('0') << modulus << std::endl;
-            modulus = holder.str();
-        }
-
-        return QString::fromStdString(modulus);
+        return QString("%1").arg(modulus_int, 3, 10, QChar('0'));
     }
 
 
@@ -221,23 +203,22 @@ namespace App { namespace Services
      * @param string package The string with check sum that needs validating
      * @return bool
      */
-    bool SerialController::CheckSumEightValidation(QString qPackage)
+    bool SerialController::CheckSumEightValidation(QString package)
     {
-        // package to std string
-        std::string package = qPackage.toStdString();
-
         // Get check sum
-        std::string checkSum = package.substr( package.length() - 4 );
-        checkSum = checkSum.erase(checkSum.size()-1);
+        QString checkSum = package.right(4).left(3);
 
         // Get data that is for the check sum
-        std::string data = package.erase(package.size()-4);
+        QString data = package.left(package.length()-4);
 
         // Calcuate check sum for data
-        QString newSum = this->CalculateCheckSumEight(QString::fromStdString(data));
+        QString newSum = this->CalculateCheckSumEight(data);
 
         // Check sums are the same
-        if (checkSum.compare(newSum.toStdString()) != 0)
+        int validate = QString::compare(newSum, checkSum, Qt::CaseInsensitive);
+
+        // If the differance between the two stirng is zero then check sums match
+        if (validate == 0)
             return true;
 
         return false;
@@ -254,19 +235,18 @@ namespace App { namespace Services
     {
         // Read all the data
         // Possable problem with this not guarantee reading all the data something to test!!
-        qDebug() << "Reading";
-        m_readData = m_serialPort.readAll();
-        qDebug() << m_readData << "FINALLYY";
-        if (m_readData.isEmpty())
+        m_readData.append(m_serialPort.readAll());
+
+        if (!m_readData.isEmpty() && CheckSumEightValidation(m_readData))
         {
             // Stop the timeout timer
             m_timer.stop();
 
-            // Reset vars
-            clearVars();
-
             // Run child method to proccess the data
             proccessReadData(m_readData);
+
+            // Reset vars
+            clearVars();
         }
 
     }
@@ -282,8 +262,6 @@ namespace App { namespace Services
     {
         // Append the written btyes to the buffer
         m_bytesWritten += bytes;
-
-        qDebug() << "Writing";
 
         // If the written btye buffer size is the same size as the package being wrote then were finished
         if (m_bytesWritten == m_writeData.size())
@@ -349,8 +327,6 @@ namespace App { namespace Services
 
         // Tell the serial port to write the data
         qint64 bytesWritten = m_serialPort.write(writeData);
-
-        qDebug() << "Data wrote to com port";
 
         // Check the number of btyes written
         if (bytesWritten == -1)

@@ -124,10 +124,10 @@ namespace App { namespace Services
                 break;
             }
 
-            // Runn the worker
+            // Run the worker
             worker();
 
-            // event loop
+            // Check for events and proccess them
             QApplication::processEvents();
         }
 

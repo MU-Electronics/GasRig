@@ -23,8 +23,8 @@ namespace App { namespace Services
             void close();
             void write(const QByteArray &writeData);
 
-            bool CheckSumEightValidation(QString qPackage);
-            QString CalculateCheckSumEight(QString qstring);
+            bool CheckSumEightValidation(QString package);
+            QString CalculateCheckSumEight(QString string);
             QString findPortName(quint16 productId, quint16 vendorID);
 
         private slots:

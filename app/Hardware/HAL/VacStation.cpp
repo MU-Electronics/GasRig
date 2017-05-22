@@ -49,6 +49,8 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::proccessReadData(QString readData)
     {
+        qDebug() << "Read: " << readData;
+
         if(readData != "" && readData != "\r")
         {
             // Check for valid message via check sum
@@ -59,8 +61,6 @@ namespace App { namespace Hardware { namespace HAL
             }
 
         }
-
-        qDebug() << readData;
     }
 
 
