@@ -60,7 +60,7 @@ namespace App { namespace Services
         thread_abort = false;
 
         // Send out a debug notice
-        qDebug() << "Started a Thread: " << thread()->currentThreadId();
+        //qDebug() << "Started a Thread: " << thread()->currentThreadId();
 
         // Unlock the object
         mutex.unlock();
@@ -85,7 +85,7 @@ namespace App { namespace Services
             thread_abort = true;
 
             // Send out a debug notice
-            qDebug() << "Aborting the thread: " << thread()->currentThreadId();
+            //qDebug() << "Aborting the thread: " << thread()->currentThreadId();
         }
 
         // Unlock the object
@@ -101,7 +101,7 @@ namespace App { namespace Services
      */
     void Thread::foreverLoop()
     {
-        qDebug() << "Working is running in: " << thread()->currentThreadId();
+        //qDebug() << "Working is running in: " << thread()->currentThreadId();
 
         while(true) {
 
@@ -118,7 +118,7 @@ namespace App { namespace Services
             if (abort)
             {
                 // Send out a debug notice
-                qDebug() << "Aborting a worker in thread: " << thread()->currentThreadId();
+                //qDebug() << "Aborting a worker in thread: " << thread()->currentThreadId();
 
                 // Break out of loop
                 break;
@@ -141,7 +141,7 @@ namespace App { namespace Services
         mutex.unlock();
 
         // Send out a debug notice
-        qDebug() << "Worker process has finished in thread: " << thread()->currentThreadId();
+        //qDebug() << "Worker process has finished in thread: " << thread()->currentThreadId();
 
         // Tell the app that the process has finished
         emit finished();

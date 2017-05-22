@@ -85,12 +85,12 @@ namespace App
         // Stop the hardware thread
         hardware.abort();
         thread_hardware.wait();
-        qDebug() << "Deleting hardware thread in thread " << this->QObject::thread()->currentThreadId();
+        //qDebug() << "Deleting hardware thread in thread " << this->QObject::thread()->currentThreadId();
 
         // Stop the safety thread
         monitor.abort();
         thread_safety.wait();
-        qDebug() << "Deleting safety thread in thread: " << this->QObject::thread()->currentThreadId();
+        //qDebug() << "Deleting safety thread in thread: " << this->QObject::thread()->currentThreadId();
     }
 
 
