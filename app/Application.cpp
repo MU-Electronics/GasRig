@@ -69,6 +69,9 @@ namespace App
         // Connect threads to one another
         connectThreads();
 
+        // Connect view managers to threads
+        connectViewToThreads();
+
         // Debugging area for testing
         debug();
     }
@@ -150,12 +153,31 @@ namespace App
 
 
     /**
+     * Connect the view managers to threads
+     *
+     * @brief Application::connectViewToThreads
+     */
+    void Application::connectViewToThreads()
+    {
+        // Make connections for testing view manager
+        manager_testing.makeConnections(hardware, monitor);
+
+        // Make connections for system settings view manager
+        manager_systemStatus.makeConnections(hardware, monitor);
+
+        // Make connections for connection status view manager
+        manager_connection.makeConnections(hardware, monitor);
+
+    }
+
+    /**
      * Connect the safety thread to IO thread via the Qt connect method
      *
      * @brief Application::connectThreads
      */
     void Application::connectThreads()
     {
+
 
     }
 

@@ -10,6 +10,10 @@
 // Include settings container
 #include "../Settings/container.h"
 
+// Include threads
+#include "../Hardware/Access.h"
+#include "../Safety/Monitor.h"
+
 namespace App { namespace ViewManager
 {
     class ConnectionStatus : public QObject, public App::ViewManager::Manager
@@ -19,7 +23,8 @@ namespace App { namespace ViewManager
 
         public:
             ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
-            ~ConnectionStatus();
+
+            void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
             void helloWorld();
         signals:

@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QString>
 #include <QByteArray>
+#include <QVariantMap>
 
 
 // Include serial controller
@@ -149,18 +150,33 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
+     * Set the param package to be used with the methods below
+     *
+     * @brief VacStation::setParams
+     * @param command
+     * @return
+     */
+    bool VacStation::setParams(QVariantMap command)
+    {
+        m_command = command;
+    }
+
+    /**
      * PUBLIC: Get temperature of selected location
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int location	Select the area for the temperature reading
+     * @paramPackage int location	Select the area for the temperature reading
      *							1 = Pump Bottom
      *							2 = Electronics
      *							3 = Bearing
      *							4 = Motor
      * @return void
      */
-    void VacStation::GetTemperature(int location)
+    void VacStation::GetTemperature()
     {
+        // Get the location of temperture
+        int location = m_command.value("location").toInt();
+
        // Get the correct param type
         QString param = "342";
         switch(location)
@@ -184,15 +200,18 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Get trubo speed
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int type	Select the type of speed reading
+     * @paramPackage int type	Select the type of speed reading
      *							1 = Accel-Decel
      *							2 = Actual Rotation Speed
      *							3 = Nominal Speed
      *							4 = Motor
      * @return double
      */
-    void VacStation::GetTurboSpeed(int type)
+    void VacStation::GetTurboSpeed()
     {
+        // Set the desired id
+        int type = m_command.value("type").toInt();
+
         // Get the correct param type
         QString param = "398";
         switch(type)
@@ -216,11 +235,13 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Get error message histroy
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int id 1-10 error history list
-     * @return double
+     * @paramPackage int id 1-10 error history list
      */
-    void VacStation::GetError(int id)
+    void VacStation::GetError()
     {
+        // Set the desired id
+        int id = m_command.value("line").toInt();
+
         // Get the correct param type
         QString param = "360";
         switch(id)
@@ -256,10 +277,6 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Get the gas mode
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @return int How heavy is the gas?
-     *				0 = Heavy (39 < X < 80)
-     *				1 = Light(=<39)
-     *				2 = Helium
      */
     void VacStation::GetGasMode()
     {
@@ -275,11 +292,6 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Get backing pump mode
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @return int How heavy is the gas?
-     *				0 = Continuous
-     *				1 = Intermittent
-     *				2 = Delayed
-     *				3 = Delayed + Intermittent
      */
     void VacStation::GetBackingPumpMode()
     {
@@ -295,9 +307,6 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Get turbo pump state on or off
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int state Should the turbo pump turn on when station on or just use backing pump?
-     *					0 = off
-     *					1 = on
      * @return bool
      */
     void VacStation::GetTurboPumpState()
@@ -314,9 +323,6 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Is the unit pumping?
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int state Is the unit pumping?
-     *					0 = off
-     *					1 = on
      * @return bool
      */
     void VacStation::GetPumpingState()
@@ -333,14 +339,13 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Set the gas mode
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int mode	How heavy is the gas?
-     *						0 = Heavy (39 < X < 80)
-     *                      1 = Light(=<39)
-     *						2 = Helium
      * @return bool
      */
-    void VacStation::SetGasMode(int mode)
+    void VacStation::SetGasMode()
     {
+        // Set the desired mode
+        int mode = m_command.value("mode").toInt();
+
         // Get the correct param type
         QString param = "027";
 
@@ -363,15 +368,18 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Set backing pump mode
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int mode How heavy is the gas?
+     * @paramPackage int mode How heavy is the gas?
      *					0 = Continuous
      *					1 = Intermittent
      *					2 = Delayed
      *					3 = Delayed + Intermittent
      * @return bool
      */
-    void VacStation::SetBackingPumpMode(int mode)
+    void VacStation::SetBackingPumpMode()
     {
+        // Set the desired mode
+        int mode = m_command.value("mode").toInt();
+
        // Get the correct param type
         QString param = "025";
 
@@ -396,13 +404,16 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Set turbo pump on or off
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int state Should the turbo pump turn on when station on or just use backing pump?
+     * @paramPackage int state Should the turbo pump turn on when station on or just use backing pump?
      *					0 = off
      *					1 = on
      * @return bool
      */
-    void VacStation::SetTurboPumpState(int state)
+    void VacStation::SetTurboPumpState()
     {
+        // Get the desired state
+        int state = m_command.value("state").toInt();
+
         // Get the correct param type
         QString param = "023";
 
@@ -423,13 +434,16 @@ namespace App { namespace Hardware { namespace HAL
      * PUBLIC: Set the unit pumping or off?
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param int state Should the unit be pumping?
+     * @paramPackage int state Should the unit be pumping?
      *					0 = off
      *					1 = on
      * @return bool
      */
-    void VacStation::SetPumpingState(int state)
+    void VacStation::SetPumpingState()
     {
+        // Get the desired state
+        int state = m_command.value("state").toInt();
+
        // Get the correct param type
         QString param = "010";
 

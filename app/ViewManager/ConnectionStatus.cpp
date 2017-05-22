@@ -3,6 +3,9 @@
 
 // Include settings container
 #include "../Settings/container.h"
+// Include threads
+#include "../Hardware/Access.h"
+#include "../Safety/Monitor.h"
 
 namespace App { namespace ViewManager
 {
@@ -14,7 +17,7 @@ namespace App { namespace ViewManager
         exampleVar("Hello from C++");
     }
 
-    ConnectionStatus::~ConnectionStatus()
+    void ConnectionStatus::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
     {
 
     }

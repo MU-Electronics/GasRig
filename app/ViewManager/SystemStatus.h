@@ -17,6 +17,10 @@
 // Include settings container
 #include "../Settings/container.h"
 
+// Include threads
+#include "../Hardware/Access.h"
+#include "../Safety/Monitor.h"
+
 namespace App { namespace ViewManager
 {
 
@@ -30,7 +34,8 @@ namespace App { namespace ViewManager
         public:
             // constructure and destructor
             SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
-            ~SystemStatus();
+
+            void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
             // Getters
             QVariantMap valves() const { return m_valves; }

@@ -53,6 +53,7 @@ namespace App
             void registerAddtionalThreads();
             void startAddtionalThread();
             void connectThreads();
+            void connectViewToThreads();
 
             void debug();
 

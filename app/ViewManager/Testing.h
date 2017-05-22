@@ -4,13 +4,17 @@
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
 #include <QString>
+#include <QString>
 
 #include "Manager.h"
-#include <QString>
 #include "../Utilities/Properties.h"
 
 // Include settings container
 #include "../Settings/container.h"
+
+// Include threads
+#include "../Hardware/Access.h"
+#include "../Safety/Monitor.h"
 
 namespace App { namespace ViewManager
 {
@@ -21,19 +25,19 @@ namespace App { namespace ViewManager
 
         public:
             Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
-            void makeConnections();
+            void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
+
+
         signals:
+            void vacStationPump(QVariantMap command);
 
         public slots:
             void requestVacuum(bool onOff);
 
         private:
             QQmlApplicationEngine* m_root;
-
             Settings::Container m_settings;
 
-            //explicit Testing(const Testing& rhs) = delete;
-            //Testing& operator= (const Testing& rhs) = delete;
     };
 }}
 

@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QString>
 #include <QByteArray>
+#include <QVariantMap>
 
 
 // Include serial controller
@@ -19,26 +20,30 @@ namespace App { namespace Hardware { namespace HAL
             VacStation(QObject *parent, int id);
             ~VacStation();
 
+            bool setParams(QVariantMap command);
+
+        signals:
+            void vacStationData(QString id, QString param, QString data);
+
+        private slots:
             // Get vac pump data
-            void GetTemperature(int location);
-            void GetTurboSpeed(int type);
-            void GetError(int id);
+            void GetTemperature();
+            void GetTurboSpeed();
+            void GetError();
             void GetGasMode();
             void GetBackingPumpMode();
             void GetTurboPumpState();
             void GetPumpingState();
 
             // Set vac pump params
-            void SetGasMode(int mode);
-            void SetBackingPumpMode(int mode);
-            void SetTurboPumpState(int state);
-            void SetPumpingState(int state);
-
-       signals:
-            void vacStationData(QString id, QString param, QString data);
+            void SetGasMode();
+            void SetBackingPumpMode();
+            void SetTurboPumpState();
+            void SetPumpingState();
 
         private:
             int m_id;
+            QVariantMap m_command;
 
             void proccessReadData(QString readData);
 

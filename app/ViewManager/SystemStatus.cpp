@@ -6,6 +6,10 @@
 // Include settings container
 #include "../Settings/container.h"
 
+// Include threads
+#include "../Hardware/Access.h"
+#include "../Safety/Monitor.h"
+
 namespace App { namespace ViewManager
 {
     SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings)
@@ -28,7 +32,7 @@ namespace App { namespace ViewManager
 
     }
 
-    SystemStatus::~SystemStatus()
+    void SystemStatus::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
     {
 
     }
