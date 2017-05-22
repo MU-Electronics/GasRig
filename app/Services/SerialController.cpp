@@ -26,7 +26,8 @@ namespace App { namespace Services
             m_serialPort(*new QSerialPort(parent)),
             m_timer(*new QTimer(parent)),
             m_timeOut(1000),
-            m_bytesWritten(0)
+            m_bytesWritten(0),
+            m_busFree(true)
     {
 
     }
@@ -84,6 +85,12 @@ namespace App { namespace Services
 
 
 
+        // State the bus is no longer use
+        m_busFree = true;
+
+
+
+
         // Set the timer to be single shot only
         m_timer.setSingleShot(true);
 
@@ -119,6 +126,9 @@ namespace App { namespace Services
         // Close the port
         m_serialPort.close();
 
+        // Free bus
+        m_busFree = false;
+
         // Reset vars
         clearVars();
     }
@@ -135,6 +145,18 @@ namespace App { namespace Services
         m_bytesWritten = 0;
         m_writeData.clear();
         m_readData.clear();
+    }
+
+
+    /**
+     * Determin if the bus is in use, therefore no more commands can be sent
+     *
+     * @brief SerialController::busInUse
+     * @return
+     */
+    bool SerialController::busFree()
+    {
+        return m_busFree;
     }
 
 
@@ -228,13 +250,15 @@ namespace App { namespace Services
     void SerialController::handleRead()
     {
         // Read all the data
-        // Possable problem with this not guarantee reading all the data something to test!!
         m_readData.append(m_serialPort.readAll());
 
         if (!m_readData.isEmpty() && validate(m_readData))
         {
             // Stop the timeout timer
             m_timer.stop();
+
+            // State the bus is no longer use
+            m_busFree = true;
 
             // Run child method to proccess the data
             proccessReadData(m_readData);
@@ -282,6 +306,9 @@ namespace App { namespace Services
         // Clear the output and input buffer
         m_serialPort.clear();
 
+        // State the bus is no longer use
+        m_busFree = true;
+
         // Reset vars
         clearVars();
     }
@@ -309,6 +336,9 @@ namespace App { namespace Services
         // Clear the output and input buffer
         m_serialPort.clear();
 
+        // State the bus is no longer use
+        m_busFree = true;
+
         // Reset vars
         clearVars();
     }
@@ -316,6 +346,9 @@ namespace App { namespace Services
 
     void SerialController::write(const QByteArray &writeData)
     {
+        // State the bus is no longer use
+        m_busFree = false;
+
         // Cache the data to be written
         m_writeData = writeData;
 

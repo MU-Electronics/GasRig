@@ -27,6 +27,7 @@ namespace App { namespace Hardware
     Access::Access(QObject *parent, Settings::Container settings)
         :   Thread(parent, false, false),
             m_settings(settings),
+            m_timer(*new QTimer(this)),
             m_vacStation(*new HAL::VacStation(this, 123)),
             m_flowController(*new HAL::FlowController(this)),
             m_pressureSensor(*new HAL::PressureSensor(this)),
@@ -57,11 +58,13 @@ namespace App { namespace Hardware
         qDebug() << "Hardware thread child setup method ran";
 
         // Open the com port for the vac station
-        m_vacStation.open("tty.usbserial-AH02FNCX", 9600, 1000);
+        m_vacStation.open(m_vacStation.findPortName(24577, 1027), 9600, 1000); // Will open on tty.usbserial-AH02FNCX"
 
         // Open com port for the pressure sensor
 
+
         // Open com port for the flow controllers
+
 
         // Open the com port for the labjack
 
@@ -76,19 +79,25 @@ namespace App { namespace Hardware
      */
     void Access::worker()
     {
-        //qDebug() << "Hardware thread";
-
-        //qDebug() << m_vacStation.findPortName(24577, 1027);
-
-        if(firstRun == false)
+        // Get temperature as a one off
+        if(!firstRun && m_vacStation.busFree())
         {
-            m_vacStation.GetTemperature(1);
+            // Mark as ran
+            firstRun = true;
+
+            // Turn the pump on and off
+            m_timer.singleShot(500, [=] {
+                // Turn pump on
+                m_vacStation.SetPumpingState(1);
+            });
+            m_timer.singleShot(5000, [=] {
+                // Turn pump off
+                m_vacStation.SetPumpingState(0);
+            });
         }
 
-
-        firstRun = true;
-
-        //thread()->sleep(20);
+        // Sleep the thread for a while
+        thread()->usleep(5);
     }
 
 }}

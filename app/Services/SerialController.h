@@ -17,15 +17,20 @@ namespace App { namespace Services
             explicit SerialController(QObject *parent = 0);
             ~SerialController();
 
+            // Find port name for device
+            QString findPortName(quint16 productId, quint16 vendorID);
 
-
+            // Bus communications
             bool open(QString com, int braud, int timeout);
             void close();
             void write(const QByteArray &writeData);
 
+            // Validation helpers
             bool CheckSumEightValidation(QString data, QString checkSum);
             QString CalculateCheckSumEight(QString string);
-            QString findPortName(quint16 productId, quint16 vendorID);
+
+            // Check if bus in use
+            bool busFree();
 
         private slots:
             void handleRead();
@@ -41,11 +46,14 @@ namespace App { namespace Services
             qint64          m_bytesWritten;
             QByteArray      m_writeData;
             QByteArray      m_readData;
+            bool            m_busFree;
 
             void clearVars();
 
-
+            // How the child should handle the read data
             virtual void proccessReadData(QString readData) = 0;
+
+            // Validate the data to determin when the full package has been read
             virtual bool validate(QString data) = 0;
 
     };

@@ -42,6 +42,8 @@ namespace App { namespace Hardware { namespace HAL
 
     /**
      * This method validate the data before procceeding to proccessReadData
+     * WARNING: This method may recieve half complete data packages so it
+     *          must take that into account when verifing the package
      *
      * @brief VacStation::validate
      * @param package
@@ -72,7 +74,22 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::proccessReadData(QString readData)
     {
-        qDebug() << "Read: " << readData;
+        // Get the ID
+        QString id = readData.mid(0, 3);
+
+        // Get the parameter number
+        QString param = readData.mid(5, 3);
+
+        // Find how long the data part is
+        QString dataLength = readData.mid(8, 2);
+
+        // Get the data
+        QString data = readData.mid(10, dataLength.toInt());
+
+        // Emit signal to application
+        emit vacStationData(id, param, data);
+
+        qDebug() << "Read: " << readData << "ID: " << id << " Param: " << param << " With Lenght: " << dataLength << "Result: " << data;
     }
 
 
@@ -86,7 +103,7 @@ namespace App { namespace Hardware { namespace HAL
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      * @return string
      */
-    bool VacStation::send(QString action, QString parameterValue, QString data, unsigned int bytesRead)
+    bool VacStation::send(QString action, QString parameterValue, QString data)
     {
         // Create package to send
         QByteArray package = CreatePackage(action, parameterValue, data);
@@ -94,8 +111,8 @@ namespace App { namespace Hardware { namespace HAL
         // Write the package to the bus
         write(package);
 
-        //debug message
-        qDebug() << package;
+        // Debug message
+        //qDebug() << "Sent: " << package;
 
         // package write
         return true;
@@ -158,8 +175,274 @@ namespace App { namespace Hardware { namespace HAL
                 param = "346"; break;
         }
 
+        // Send request
+        send("00", param, "=?");
+    }
+
+
+    /**
+     * PUBLIC: Get trubo speed
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int type	Select the type of speed reading
+     *							1 = Accel-Decel
+     *							2 = Actual Rotation Speed
+     *							3 = Nominal Speed
+     *							4 = Motor
+     * @return double
+     */
+    void VacStation::GetTurboSpeed(int type)
+    {
+        // Get the correct param type
+        QString param = "398";
+        switch(type)
+        {
+            case 1: // Actual Rotation Speed could us 309 for Hz
+                param = "398"; break;
+            case 2: // Accel-Decel
+                param = "336"; break;
+            case 3: // Nominal Speed
+                param = "399"; break;
+            case 4: // Set rotation speed
+                param = "397"; break;
+        }
+
+        // Send request
+        send("00", param, "=?");
+    }
+
+
+    /**
+     * PUBLIC: Get error message histroy
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int id 1-10 error history list
+     * @return double
+     */
+    void VacStation::GetError(int id)
+    {
+        // Get the correct param type
+        QString param = "360";
+        switch(id)
+        {
+            case 1:
+                param = "360"; break;
+            case 2:
+                param = "361"; break;
+            case 3:
+                param = "362"; break;
+            case 4:
+                param = "364"; break;
+            case 5:
+                param = "364"; break;
+            case 6:
+                param = "365"; break;
+            case 7:
+                param = "366"; break;
+            case 8:
+                param = "367"; break;
+            case 9:
+                param = "368"; break;
+            case 10:
+                param = "369"; break;
+        }
+
+        // Send request
+        send("00", param, "=?");
+    }
+
+
+    /**
+     * PUBLIC: Get the gas mode
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @return int How heavy is the gas?
+     *				0 = Heavy (39 < X < 80)
+     *				1 = Light(=<39)
+     *				2 = Helium
+     */
+    void VacStation::GetGasMode()
+    {
+        // Get the correct param type
+        QString param = "027";
+
+        // Send request
+        send("00", param, "=?");
+    }
+
+
+    /**
+     * PUBLIC: Get backing pump mode
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @return int How heavy is the gas?
+     *				0 = Continuous
+     *				1 = Intermittent
+     *				2 = Delayed
+     *				3 = Delayed + Intermittent
+     */
+    void VacStation::GetBackingPumpMode()
+    {
+       // Get the correct param type
+        QString param = "025";
+
         // Send request, receive it and check it's valid
-        send("00", param, "=?", 20);
+        send("00", param, "=?");
+    }
+
+
+    /**
+     * PUBLIC: Get turbo pump state on or off
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int state Should the turbo pump turn on when station on or just use backing pump?
+     *					0 = off
+     *					1 = on
+     * @return bool
+     */
+    void VacStation::GetTurboPumpState()
+    {
+        // Get the correct param type
+        QString param = "023";
+
+        // Send request
+        send("00", param, "=?");
+    }
+
+
+    /**
+     * PUBLIC: Is the unit pumping?
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int state Is the unit pumping?
+     *					0 = off
+     *					1 = on
+     * @return bool
+     */
+    void VacStation::GetPumpingState()
+    {
+       // Get the correct param type
+       QString param = "010";
+
+        // Send request
+        send("00", param, "=?");
+    }
+
+
+    /**
+     * PUBLIC: Set the gas mode
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int mode	How heavy is the gas?
+     *						0 = Heavy (39 < X < 80)
+     *                      1 = Light(=<39)
+     *						2 = Helium
+     * @return bool
+     */
+    void VacStation::SetGasMode(int mode)
+    {
+        // Get the correct param type
+        QString param = "027";
+
+        // Get the mode to change to
+        QString modeChange;
+        if(mode == 0){
+            modeChange = "000";
+        }else if(mode == 1){
+            modeChange = "001";
+        }else if(mode == 2){
+            modeChange = "002";
+        }
+
+        // Send request
+        send("10", param, modeChange);
+    }
+
+
+    /**
+     * PUBLIC: Set backing pump mode
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int mode How heavy is the gas?
+     *					0 = Continuous
+     *					1 = Intermittent
+     *					2 = Delayed
+     *					3 = Delayed + Intermittent
+     * @return bool
+     */
+    void VacStation::SetBackingPumpMode(int mode)
+    {
+       // Get the correct param type
+        QString param = "025";
+
+        // Get the mode to change to
+        QString modeChange;
+        if(mode == 0){
+            modeChange = "000";
+        }else if(mode == 1){
+            modeChange = "001";
+        }else if(mode == 2){
+            modeChange = "002";
+        }else if(mode == 3){
+            modeChange = "003";
+        }
+
+        // Send request
+        send("10", param, modeChange);
+    }
+
+
+    /**
+     * PUBLIC: Set turbo pump on or off
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int state Should the turbo pump turn on when station on or just use backing pump?
+     *					0 = off
+     *					1 = on
+     * @return bool
+     */
+    void VacStation::SetTurboPumpState(int state)
+    {
+        // Get the correct param type
+        QString param = "023";
+
+        // Get the mode to change to
+        QString modeChange;
+        if(state == 0){
+            modeChange = "000";
+        }else if(state == 1){
+            modeChange = "111";
+        }
+
+        // Send request
+        send("10", param, modeChange);
+    }
+
+
+    /**
+     * PUBLIC: Set the unit pumping or off?
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param int state Should the unit be pumping?
+     *					0 = off
+     *					1 = on
+     * @return bool
+     */
+    void VacStation::SetPumpingState(int state)
+    {
+       // Get the correct param type
+        QString param = "010";
+
+        // Get the mode to change to
+        QString modeChange;
+        if(state == 0){
+            modeChange = "000";
+        }else if(state == 1){
+            modeChange = "111";
+        }
+
+        // Send request
+        send("10", param, modeChange);
     }
 
 }}}
