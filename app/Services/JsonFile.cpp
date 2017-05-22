@@ -28,7 +28,7 @@ namespace App { namespace Services
 
         // Load the file
         QFile loadFile(m_loadedFile);
-        qDebug() << location;
+
         // Open the file and return error if failed
         if (!loadFile.open(QIODevice::ReadOnly)) {
             qWarning("Couldn't open save file.");
