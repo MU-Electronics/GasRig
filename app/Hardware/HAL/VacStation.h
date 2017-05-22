@@ -27,6 +27,7 @@ namespace App { namespace Hardware { namespace HAL
 
             QByteArray CreatePackage(QString action, QString parameterValue, QString data);
             bool send(QString action, QString parameterValue, QString data, unsigned int bytesRead);
+            bool validate(QString package);
 
 
             //explicit VacStation(const VacStation& rhs) = delete;

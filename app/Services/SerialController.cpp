@@ -203,16 +203,10 @@ namespace App { namespace Services
      * @param string package The string with check sum that needs validating
      * @return bool
      */
-    bool SerialController::CheckSumEightValidation(QString package)
+    bool SerialController::CheckSumEightValidation(QString data, QString checkSum)
     {
-        // Get check sum
-        QString checkSum = package.right(4).left(3);
-
-        // Get data that is for the check sum
-        QString data = package.left(package.length()-4);
-
         // Calcuate check sum for data
-        QString newSum = this->CalculateCheckSumEight(data);
+        QString newSum = CalculateCheckSumEight(data);
 
         // Check sums are the same
         int validate = QString::compare(newSum, checkSum, Qt::CaseInsensitive);
@@ -237,7 +231,7 @@ namespace App { namespace Services
         // Possable problem with this not guarantee reading all the data something to test!!
         m_readData.append(m_serialPort.readAll());
 
-        if (!m_readData.isEmpty() && CheckSumEightValidation(m_readData))
+        if (!m_readData.isEmpty() && validate(m_readData))
         {
             // Stop the timeout timer
             m_timer.stop();
@@ -270,7 +264,7 @@ namespace App { namespace Services
             m_bytesWritten = 0;
 
             // Print message
-            qDebug() << "Data successfully sent to port " << m_serialPort.portName();
+            //qDebug() << "Data successfully sent to port " << m_serialPort.portName();
         }
     }
 

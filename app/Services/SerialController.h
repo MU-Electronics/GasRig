@@ -23,7 +23,7 @@ namespace App { namespace Services
             void close();
             void write(const QByteArray &writeData);
 
-            bool CheckSumEightValidation(QString package);
+            bool CheckSumEightValidation(QString data, QString checkSum);
             QString CalculateCheckSumEight(QString string);
             QString findPortName(quint16 productId, quint16 vendorID);
 
@@ -46,6 +46,7 @@ namespace App { namespace Services
 
 
             virtual void proccessReadData(QString readData) = 0;
+            virtual bool validate(QString data) = 0;
 
     };
 }}

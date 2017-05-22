@@ -40,9 +40,32 @@ namespace App { namespace Hardware { namespace HAL
     }
 
 
+    /**
+     * This method validate the data before procceeding to proccessReadData
+     *
+     * @brief VacStation::validate
+     * @param package
+     * @return
+     */
+    bool VacStation::validate(QString package)
+    {
+        // Get check sum
+        QString checkSum = package.right(4).left(3);
+
+        // Get data that is for the check sum
+        QString data = package.left(package.length()-4);
+
+        // If the differance between the two stirng is zero then check sums match
+        if (CheckSumEightValidation(data, checkSum))
+            return true;
+
+        return false;
+    }
+
 
     /**
      * When data has been recived it will be handled here
+     * by this time validation has been performed on the data via a check sum
      *
      * @brief VacStation::proccessReadData
      * @param readData
@@ -50,17 +73,6 @@ namespace App { namespace Hardware { namespace HAL
     void VacStation::proccessReadData(QString readData)
     {
         qDebug() << "Read: " << readData;
-
-        if(readData != "" && readData != "\r")
-        {
-            // Check for valid message via check sum
-            if(CheckSumEightValidation(readData))
-            {
-                qDebug() << "Data ok";
-                //return readData;
-            }
-
-        }
     }
 
 
