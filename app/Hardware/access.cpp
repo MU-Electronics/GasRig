@@ -80,32 +80,15 @@ namespace App { namespace Hardware
      */
     void Access::worker()
     {
-        // Lock the object
-        //mutex.lock();
-
-        // No commands to be ran
+        // Check if any commands need to be ran
         if(m_queue.isEmpty())
             return;
 
-
-        // Copy the first command
-        QVariantMap command = m_queue.head();
-        qDebug() << command;
-
-        // Unlock the object
-        //mutex.unlock();
-
         // Run the command
-        executeHalMethods(command);
-
-        // Lock the object
-        //mutex.lock();
+        executeHalMethods(m_queue.head());
 
         // Remove item from queue
         m_queue.dequeue();
-
-        // Unlock the object
-        //mutex.unlock();
 
         // Sleep the thread for a while
         thread()->usleep(1);
