@@ -19,11 +19,11 @@ win32 {
 }
 
 macx {
-    configfiles.commands = cp -r $$PWD/resources/config/* $$OUT_PWD/debug/config
+    configfiles.commands = rsync -av $$PWD/resources/config/* $$OUT_PWD/config
 }
 
 linux {
-    configfiles.commands = cp -r $$PWD/resources/config/* $$OUT_PWD/debug/config
+    configfiles.commands = cp -r $$PWD/resources/config/* $$OUT_PWD/config
 }
 
 QMAKE_EXTRA_TARGETS += configfiles
