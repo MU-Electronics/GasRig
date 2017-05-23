@@ -43,6 +43,7 @@ namespace App { namespace Hardware { namespace HAL
 
         private:
             int m_id;
+            QString m_responsability = "VacStation";
 
             void proccessReadData(QString readData);
 

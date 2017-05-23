@@ -90,7 +90,7 @@ namespace App { namespace Hardware { namespace HAL
         // Emit signal to application
         emit vacStationData(id, param, data);
 
-        qDebug() << "Read: " << readData << "ID: " << id << " Param: " << param << " With Lenght: " << dataLength << "Result: " << data;
+        //qDebug() << "Read: " << readData << "ID: " << id << " Param: " << param << " With Lenght: " << dataLength << "Result: " << data;
     }
 
 

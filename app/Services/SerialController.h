@@ -6,6 +6,7 @@
 #include <QByteArray>
 #include <QObject>
 #include <QString>
+#include <QVariantMap>
 
 namespace App { namespace Services
 {
@@ -32,6 +33,11 @@ namespace App { namespace Services
 
             // Check if bus in use
             bool busFree();
+            bool checkDeviceAvaliable(bool reconnect = false);
+
+        signals:
+            void emit_critialSerialError(QVariantMap errorPackage);
+            void emit_timeoutSerialError(QVariantMap errorPackage);
 
         private slots:
             void handleRead();
@@ -48,8 +54,12 @@ namespace App { namespace Services
             QByteArray      m_writeData;
             QByteArray      m_readData;
             bool            m_busFree;
+            QVariantMap     m_connectionValues;
 
             void clearVars();
+
+            // What is the class responsable for?
+            QString m_responsability;
 
             // How the child should handle the read data
             virtual void proccessReadData(QString readData) = 0;

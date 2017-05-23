@@ -5,6 +5,9 @@
 #include <QThread>
 #include <QDebug>
 #include <QMetaObject>
+#include <QVariantMap>
+#include <QVariant>
+#include <QMapIterator>
 
 // Include settings container
 #include "../Settings/container.h"
@@ -63,10 +66,31 @@ namespace App { namespace Hardware
      */
     void Access::configure(QThread &thread)
     {
-        qDebug() << "Hardware thread child setup method ran";
+        // Open com port for all devices
+        connectDevices();
+    }
 
+
+    void Access::connectDevices()
+    {
         // Open the com port for the vac station
-        m_vacStation.open(m_vacStation.findPortName(24577, 1027), 9600, 1000); // Will open on tty.usbserial-AH02FNCX for my mac
+        if(!m_vacStation.isOpen())
+        {
+            // Get connection data
+            QVariantMap vacData = m_settings.hardware.usb_connections.value("vacuum_station").toMap();
+
+            // Is com port provided?
+            QString comport = vacData["com"].toString();
+            if(comport.isNull())
+            {
+                // Find the com port
+                comport = m_vacStation.findPortName(vacData["productId"].toInt(), vacData["vendorId"].toInt());
+            }
+
+            // Connect to port
+            m_vacStation.open(comport, vacData["braud"].toInt(), vacData["timeout"].toInt()); // Will open on tty.usbserial-AH02FNCX for my mac
+        }
+
 
         // Open com port for the pressure sensor
 
@@ -75,7 +99,6 @@ namespace App { namespace Hardware
 
 
         // Open the com port for the labjack
-
     }
 
 
@@ -88,7 +111,7 @@ namespace App { namespace Hardware
     void Access::worker()
     {
         // Check connections are open
-        checkConnections();
+        connectDevices();
 
         // Check if any commands need to be ran
         if(m_queue.isEmpty())
@@ -117,8 +140,19 @@ namespace App { namespace Hardware
         QString hardware = command.value("hardware").toString();
         QString method = command.value("method").toString();
 
+        // Status package
+        QVariantMap status;
+
+        // Attach current commands to status package
+        QMapIterator<QString, QVariant> i(command);
+        while (i.hasNext())
+        {
+            i.next();
+            status[i.key()] = i.value();
+        }
+
         // Debug message
-        qDebug() << "Harware set to: " << hardware << " Method to run: " << method;
+        // qDebug() << "Harware set to: " << hardware << " Method to run: " << method;
 
         // Find the correct HAL
         if(hardware == "VacStation")
@@ -136,8 +170,9 @@ namespace App { namespace Hardware
             // Set the method params
             m_vacStation.setParams(command);
 
-            // Run the method
-            QMetaObject::invokeMethod(&m_vacStation, method.toLatin1().data(), Qt::DirectConnection);
+            // Run the method and cache the status
+            status["resulting_status"] = (QMetaObject::invokeMethod(&m_vacStation, method.toLatin1().data(), Qt::DirectConnection)) ? true : false;
+
         }
         else if(hardware == "PressureSensor")
         {
@@ -151,11 +186,9 @@ namespace App { namespace Hardware
         {
 
         }
-    }
 
-    void Access::checkConnections()
-    {
-
+        // Emit the result
+        emit_methodAttemptResults(status);
     }
 
 
@@ -172,9 +205,6 @@ namespace App { namespace Hardware
         {
             // Add to the queue
             m_queue.enqueue(command);
-
-            // Debug message
-            qDebug() << "Command added to queue: " << command;
         }
     }
 

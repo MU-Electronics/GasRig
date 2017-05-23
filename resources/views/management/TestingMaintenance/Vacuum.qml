@@ -12,9 +12,11 @@ Item {
 
     Button
     {
-        id: "testingVacuum"
+        id: "vacuumPumpControl"
+        objectName: "vacuumPumpControl"
         text: "Vacuum On / Off"
-        Material.accent: if(vacuumstate) { Material.Teal } else { Material.Orange }
+        Material.background: if(vacuumTab.vacuumstate){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+        Material.foreground: if(vacuumTab.vacuumstate){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
         onClicked:
         {
             // Save state

@@ -7,9 +7,11 @@
           "id": "25"
         },
         "vacuum_station":{
-          "com": "12",
-          "braud": "9600",
-          "id": "10"
+            "vendorId": "1027",
+            "productId": "24577",
+            "braud": "9600",
+            "timeout": "1000",
+            "id": "10"
         },
         "labJack":{
           "hardware_type": 3,

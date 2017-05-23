@@ -29,6 +29,9 @@ namespace App { namespace Hardware
             Access(QObject *parent, Settings::Container settings);
             ~Access();
 
+        signals:
+            void emit_methodAttemptResults(QVariantMap status);
+
         public slots:
             void hardwareAccess(QVariantMap command);
 
@@ -52,16 +55,13 @@ namespace App { namespace Hardware
             void executeHalMethods(QVariantMap command);
 
             // Check com port connections
-            void checkConnections();
+            void connectDevices();
 
             // Ran when configuring thread
             void configure(QThread &thread);
 
             // The worker to run in forever loop
             void worker();
-
-        public slots:
-            //void worker();
 
     };
 }}

@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QByteArray>
 #include <QObject>
+#include <QList>
+#include <QVariantMap>
 
 // Include serial port class
 #include <QtSerialPort/QSerialPort>
@@ -55,6 +57,15 @@ namespace App { namespace Services
      */
     bool SerialController::open(QString com, int braud, int timeout)
     {
+        // Save connection data
+        m_connectionValues["com"] = com;
+        m_connectionValues["braud"] = braud;
+        m_connectionValues["timeout"] = timeout;
+
+        // Check port avaliable
+        if(!checkDeviceAvaliable(false))
+            return false;
+
         // Set the port name
         m_serialPort.setPortName(com);
 
@@ -87,7 +98,6 @@ namespace App { namespace Services
 
         // State the bus is no longer use
         m_busFree = true;
-
 
 
 
@@ -310,6 +320,7 @@ namespace App { namespace Services
         qDebug() << "Operation timed out for port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
 
         // Clear the output and input buffer
+        m_serialPort.flush();
         m_serialPort.clear();
 
         // State the bus is no longer use
@@ -317,6 +328,16 @@ namespace App { namespace Services
 
         // Reset vars
         clearVars();
+
+        // Create package to be emitted
+        QVariantMap errorPackage;
+        errorPackage["responsability"] = m_responsability;
+        errorPackage["com"] = m_connectionValues.value("com").toString();
+        errorPackage["comAttempt"] = m_serialPort.portName();
+        errorPackage["error"] = m_serialPort.errorString();
+
+        // Time out signal
+        emit emit_timeoutSerialError(errorPackage);
     }
 
 
@@ -331,25 +352,90 @@ namespace App { namespace Services
         // Handle read errors
         if (serialPortError == QSerialPort::ReadError)
         {
-            qDebug() << "An I/O error occurred while reading the data from port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+            qDebug() << "An I/O error occurred while reading the data from port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
         }
-
         // Handle write errors
-        if (serialPortError == QSerialPort::WriteError) {
-            qDebug() << "An I/O error occurred while writing the data to port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+        else if (serialPortError == QSerialPort::WriteError)
+        {
+            qDebug() << "An I/O error occurred while writing the data to port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+        }
+        // If port avaiable and error is device not confiured then
+        else if(m_serialPort.errorString() == "Device not configured")
+        {
+            qDebug() << "An I/O error occured most probably related to a USB glitch or being unplugged and plugged; On port: " << m_serialPort.portName() << "; error message: " << m_serialPort.errorString();
         }
 
-        // Clear the output and input buffer
-        m_serialPort.clear();
+        // Create package to be emitted
+        QVariantMap errorPackage;
+        errorPackage["responsability"] = m_responsability;
+        errorPackage["com"] = m_connectionValues.value("com").toString();
+        errorPackage["comAttempt"] = m_serialPort.portName();
+        errorPackage["error"] = m_serialPort.errorString();
+
+        // Emit a signal saying device communication failed
+        emit emit_critialSerialError(errorPackage);
+
+        // Try and reconnect @NOTE: for now we want the system to stop when this occures
+        // checkDeviceAvaliable(true);
 
         // State the bus is no longer use
-        m_busFree = true;
+        m_busFree = false;
 
         // Reset vars
         clearVars();
     }
 
 
+    /**
+     * This method check if the device is avaliable where it should be
+     * It can also reconfigure / re-boot a connection
+     *
+     * @brief SerialController::checkDeviceAvaliable
+     * @param reconnect
+     * @return bool found or not found
+     */
+    bool SerialController::checkDeviceAvaliable(bool reconnect)
+    {
+        // Get list of ports
+        QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+
+        // Device by default is not avaliable
+        bool avaliable = false;
+
+        // Loop through all ports
+        for (int i = 0; i < ports.size(); ++i)
+        {
+            // If avaliable state that it is
+            if (ports.at(i).portName() == m_connectionValues.value("com").toString())
+                avaliable = true;
+        }
+
+        // If the port needs to be reconfigued but only if it is avaliable
+        if(reconnect && avaliable)
+        {
+            // Close the last serial connection
+            m_serialPort.close();
+
+            // Reconnect to device
+            open(m_connectionValues.value("com").toString(), m_connectionValues.value("braud").toInt(),  m_connectionValues.value("timeout").toInt());
+        }
+
+        // If port was found
+        if(avaliable)
+            return true;
+
+        // Port not found
+        return false;
+
+    }
+
+
+    /**
+     * This method write a package of data to the serial port
+     *
+     * @brief SerialController::write
+     * @param writeData
+     */
     void SerialController::write(const QByteArray &writeData)
     {
         // State the bus is no longer use
