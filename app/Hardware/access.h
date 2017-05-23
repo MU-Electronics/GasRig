@@ -51,6 +51,9 @@ namespace App { namespace Hardware
             // Runs the correct HAL function
             void executeHalMethods(QVariantMap command);
 
+            // Check com port connections
+            void checkConnections();
+
             // Ran when configuring thread
             void configure(QThread &thread);
 

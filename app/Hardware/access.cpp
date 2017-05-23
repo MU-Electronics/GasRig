@@ -87,6 +87,9 @@ namespace App { namespace Hardware
      */
     void Access::worker()
     {
+        // Check connections are open
+        checkConnections();
+
         // Check if any commands need to be ran
         if(m_queue.isEmpty())
             return;
@@ -115,13 +118,13 @@ namespace App { namespace Hardware
         QString method = command.value("method").toString();
 
         // Debug message
-        qDebug() << "Harware set to: " << hardware << " Method ran: " << method;
+        qDebug() << "Harware set to: " << hardware << " Method to run: " << method;
 
         // Find the correct HAL
         if(hardware == "VacStation")
         {
             // If the bus is not free we cant procceed
-            if(!m_vacStation.busFree())
+            if(!m_vacStation.busFree() || !m_vacStation.isOpen())
             {
                 // Re add the method to the queue as this one will be removed
                 m_queue.enqueue(command);
@@ -148,6 +151,11 @@ namespace App { namespace Hardware
         {
 
         }
+    }
+
+    void Access::checkConnections()
+    {
+
     }
 
 

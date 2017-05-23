@@ -148,6 +148,12 @@ namespace App { namespace Services
     }
 
 
+    bool SerialController::isOpen()
+    {
+        return m_serialPort.isOpen();
+    }
+
+
     /**
      * Determin if the bus is in use, therefore no more commands can be sent
      *

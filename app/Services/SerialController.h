@@ -24,6 +24,7 @@ namespace App { namespace Services
             bool open(QString com, int braud, int timeout);
             void close();
             void write(const QByteArray &writeData);
+            bool isOpen();
 
             // Validation helpers
             bool CheckSumEightValidation(QString data, QString checkSum);
