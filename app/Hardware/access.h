@@ -34,6 +34,7 @@ namespace App { namespace Hardware
 
         public slots:
             void hardwareAccess(QVariantMap command);
+            void resetUSBConnection();
 
         private:
             // Contains for settings container
@@ -50,6 +51,12 @@ namespace App { namespace Hardware
             HAL::FlowController& m_flowController;
             HAL::PressureSensor& m_pressureSensor;
             HAL::LabJack& m_labjack;
+
+            // Methods in this class that can be ran externally
+            QList<QString> m_avaliableMethods;
+
+            // Store command data for access invoked commands
+            QVariantMap m_lastcommands;
 
             // Runs the correct HAL function
             void executeHalMethods(QVariantMap command);

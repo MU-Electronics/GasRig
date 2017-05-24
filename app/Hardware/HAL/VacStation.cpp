@@ -7,9 +7,6 @@
 #include <QVariantMap>
 
 
-// Include serial controller
-
-
 namespace App { namespace Hardware { namespace HAL
 {
 
@@ -112,9 +109,6 @@ namespace App { namespace Hardware { namespace HAL
         // Write the package to the bus
         write(package);
 
-        // Debug message
-        //qDebug() << "Sent: " << package;
-
         // package write
         return true;
     }
@@ -148,18 +142,6 @@ namespace App { namespace Hardware { namespace HAL
         return QByteArray::fromStdString(package.toStdString());
     }
 
-
-//    /**
-//     * Set the param package to be used with the methods below
-//     *
-//     * @brief VacStation::setParams
-//     * @param command
-//     * @return
-//     */
-//    bool VacStation::setParams(QVariantMap command)
-//    {
-//        m_command = command;
-//    }
 
     /**
      * PUBLIC: Get temperature of selected location

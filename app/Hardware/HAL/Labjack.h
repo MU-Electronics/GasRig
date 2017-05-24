@@ -2,6 +2,7 @@
 
 #include <QObject>
 
+
 namespace App { namespace Hardware { namespace HAL
 {
     class LabJack

@@ -43,7 +43,7 @@ namespace App { namespace Safety
      */
     void Monitor::configure(QThread &thread)
     {
-        qDebug() << "Safety thread child setup method ran";
+        //qDebug() << "Safety thread child setup method ran";
     }
 
 
@@ -58,7 +58,7 @@ namespace App { namespace Safety
         //qDebug() << "Safety thread";
         //qDebug() << m_settings.safety.pressure["rise"];
 
-        thread()->sleep(10);
+        thread()->usleep(50);
     }
 
 }}

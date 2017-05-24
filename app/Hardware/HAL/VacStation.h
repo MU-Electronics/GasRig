@@ -7,10 +7,10 @@
 #include <QByteArray>
 #include <QVariantMap>
 
-
 // Include serial controller
 #include "../../Services/SerialController.h"
 
+// Interface for HAL classes
 #include "HALSupport.h"
 
 namespace App { namespace Hardware { namespace HAL
@@ -45,11 +45,13 @@ namespace App { namespace Hardware { namespace HAL
             int m_id;
             QString m_responsability = "VacStation";
 
-            void proccessReadData(QString readData);
 
             QByteArray CreatePackage(QString action, QString parameterValue, QString data);
             bool send(QString action, QString parameterValue, QString data);
             bool validate(QString package);
+
+
+            void proccessReadData(QString readData);
 
     };
 }}}

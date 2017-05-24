@@ -43,7 +43,8 @@ namespace App { namespace Hardware
             m_pressureSensor(*new HAL::PressureSensor(this)),
             m_labjack(*new HAL::LabJack(this))
     {
-
+        // Set possable method to be ran with this class
+        m_avaliableMethods.append("resetUSBConnection");
     }
 
 
@@ -145,14 +146,19 @@ namespace App { namespace Hardware
 
         // Attach current commands to status package
         QMapIterator<QString, QVariant> i(command);
+
+        // While iterator has data loop
         while (i.hasNext())
         {
+            // Move to next record
             i.next();
+
+            // Store the current record data
             status[i.key()] = i.value();
         }
 
-        // Debug message
-        // qDebug() << "Harware set to: " << hardware << " Method to run: " << method;
+        // Set results to be false as we have none yet
+        status["resulting_status"] = false;
 
         // Find the correct HAL
         if(hardware == "VacStation")
@@ -170,26 +176,77 @@ namespace App { namespace Hardware
             // Set the method params
             m_vacStation.setParams(command);
 
-            // Run the method and cache the status
+            // Run the method in the HAL and cache the status
             status["resulting_status"] = (QMetaObject::invokeMethod(&m_vacStation, method.toLatin1().data(), Qt::DirectConnection)) ? true : false;
 
         }
         else if(hardware == "PressureSensor")
         {
+            // If the bus is not free we cant procceed
+            if(!m_pressureSensor.busFree() || !m_pressureSensor.isOpen())
+            {
+                // Re add the method to the queue as this one will be removed
+                m_queue.enqueue(command);
 
+                // Return back to worker for next method
+                return;
+            }
+
+            // Set the method params
+            m_pressureSensor.setParams(command);
+
+            // Run the method in the HAL and cache the status
+            status["resulting_status"] = (QMetaObject::invokeMethod(&m_pressureSensor, method.toLatin1().data(), Qt::DirectConnection)) ? true : false;
         }
         else if (hardware  == "FlowController")
         {
+            // If the bus is not free we cant procceed
+            if(!m_flowController.busFree() || !m_flowController.isOpen())
+            {
+                // Re add the method to the queue as this one will be removed
+                m_queue.enqueue(command);
 
+                // Return back to worker for next method
+                return;
+            }
+
+            // Set the method params
+            m_flowController.setParams(command);
+
+            // Run the method in the HAL and cache the status
+            status["resulting_status"] = (QMetaObject::invokeMethod(&m_flowController, method.toLatin1().data(), Qt::DirectConnection)) ? true : false;
         }
         else if (hardware == "LabJack")
         {
+            // Questionable how this will be implimented
+            // Code provided is a bit nasty and not cross platform
+            // May be easier to write only part we require
+        }
+        else if (hardware == "AccessLayer")
+        {
+            // If command is allowed to be ran
+            if(m_avaliableMethods.contains(method))
+            {
+                // Store command data
+                m_lastcommands = command;
 
+                // Allow certain methods in this call to be called, main for management of USB connections
+                status["resulting_status"] = (QMetaObject::invokeMethod(this, method.toLatin1().data(), Qt::DirectConnection)) ? true : false;
+            }
+            else
+            {
+                // Error
+                qDebug() << "Method not allow or does not exsist in Access class: " << command;
+
+                // Failed to run method not allowed
+                status["resulting_status"]  = false;
+            }
         }
 
         // Emit the result
         emit_methodAttemptResults(status);
     }
+
 
 
     /**
@@ -206,6 +263,17 @@ namespace App { namespace Hardware
             // Add to the queue
             m_queue.enqueue(command);
         }
+    }
+
+
+    /**
+     * Responable for resetting usb connections
+     *
+     * @brief Access::resetUSBConnection
+     */
+    void Access::resetUSBConnection()
+    {
+        qDebug() << "I'm resetting" << m_lastcommands;
     }
 
 }}

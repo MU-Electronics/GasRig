@@ -40,6 +40,14 @@ namespace App { namespace ViewManager
 
         // Emit siganl to HAL
         emit vacStationPump(command);
+
+        // Create command for HAL
+        QVariantMap command_second;
+        command_second.insert("hardware", "AccessLayer");
+        command_second.insert("method", "resetUSBConnection");
+
+        // Emit siganl to HAL
+        emit vacStationPump(command_second);
     }
 }}
 
