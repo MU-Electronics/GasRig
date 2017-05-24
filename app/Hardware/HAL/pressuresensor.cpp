@@ -6,6 +6,8 @@ namespace App { namespace Hardware { namespace HAL
 {
     PressureSensor::PressureSensor(QObject *parent)
     {
+        // Sets what this class is responable for; @NOTE: Could be done in base class
+        m_responsability = "PressureSensor";
     }
 
 
@@ -33,5 +35,27 @@ namespace App { namespace Hardware { namespace HAL
     void PressureSensor::proccessReadData(QString readData)
     {
         qDebug() << readData;
+    }
+
+
+    /**
+     * Test whether the connection is working
+     *
+     * @brief PressureSensor::testConnection
+     */
+    void PressureSensor::testConnection()
+    {
+
+    }
+
+
+    /**
+     * Reset the current connection
+     *
+     * @brief PressureSensor::resetConnection
+     */
+    void PressureSensor::resetConnection()
+    {
+
     }
 }}}

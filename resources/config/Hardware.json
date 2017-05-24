@@ -9,6 +9,7 @@
         "vacuum_station":{
             "vendorId": "1027",
             "productId": "24577",
+            "com": "tty.usbserial-AH02FNCX",
             "braud": "9600",
             "timeout": "1000",
             "id": "10"

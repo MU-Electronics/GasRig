@@ -18,18 +18,28 @@ namespace App { namespace Services
             explicit SerialController(QObject *parent = 0);
             ~SerialController();
 
+            // Holds the current settings for the current connection
+            QVariantMap     m_connectionValues;
+
+            // What is the class responsable for?
+            QString m_responsability;
+
             // Find port name for device
             QString findPortName(quint16 productId, quint16 vendorID);
 
             // Bus communications
             bool open(QString com, int braud, int timeout);
             void close();
-            void write(const QByteArray &writeData);
+            bool write(const QByteArray &writeData);
             bool isOpen();
 
             // Validation helpers
             bool CheckSumEightValidation(QString data, QString checkSum);
             QString CalculateCheckSumEight(QString string);
+
+            // Signal package generators / helpers
+            QVariantMap errorPackageGenerator(QString com, QString port, QString error);
+            QVariantMap comConnectionPackageGenerator(QString com, bool status);
 
             // Check if bus in use
             bool busFree();
@@ -38,6 +48,7 @@ namespace App { namespace Services
         signals:
             void emit_critialSerialError(QVariantMap errorPackage);
             void emit_timeoutSerialError(QVariantMap errorPackage);
+            void emit_comConnectionStatus(QVariantMap package);
 
         private slots:
             void handleRead();
@@ -54,12 +65,8 @@ namespace App { namespace Services
             QByteArray      m_writeData;
             QByteArray      m_readData;
             bool            m_busFree;
-            QVariantMap     m_connectionValues;
 
             void clearVars();
-
-            // What is the class responsable for?
-            QString m_responsability;
 
             // How the child should handle the read data
             virtual void proccessReadData(QString readData) = 0;

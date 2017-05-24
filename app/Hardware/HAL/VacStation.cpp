@@ -23,7 +23,8 @@ namespace App { namespace Hardware { namespace HAL
         :   SerialController(parent),
             m_id(id)
     {
-
+        // Sets what this class is responable for; @NOTE: Could be done in base class
+        m_responsability = "VacStation";
     }
 
 
@@ -140,6 +141,39 @@ namespace App { namespace Hardware { namespace HAL
 
         // Return string and Conver to btye array
         return QByteArray::fromStdString(package.toStdString());
+    }
+
+
+    /**
+     * Test whether the connection is working
+     *
+     * @brief VacStation::testConnection
+     */
+    void VacStation::testConnection()
+    {
+        // Does the com port & connection exist?
+        if(!checkDeviceAvaliable(false))
+        {
+            // Send a critial issue
+            emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_connectionValues.value("com").toString(), "Cant not find the device on this PC, check cable is plugged in."));
+
+            // return
+            return;
+        }
+
+        // Test sending data works, for now just use get gas mode
+        GetGasMode();
+    }
+
+
+    /**
+     * Reset the current connection
+     *
+     * @brief VacStation::resetConnection
+     */
+    void VacStation::resetConnection()
+    {
+        checkDeviceAvaliable(true);
     }
 
 

@@ -35,4 +35,27 @@ namespace App { namespace Hardware { namespace HAL
     {
         qDebug() << readData;
     }
+
+
+    /**
+     * Test whether the connection is working
+     *
+     * @brief FlowController::testConnection
+     */
+    void FlowController::testConnection()
+    {
+
+    }
+
+
+    /**
+     * Reset the current connection
+     *
+     * @brief FlowController::resetConnection
+     */
+    void FlowController::resetConnection()
+    {
+
+    }
+
 }}}

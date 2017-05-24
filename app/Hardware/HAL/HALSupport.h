@@ -14,6 +14,10 @@ namespace App { namespace Hardware { namespace HAL
             QVariantMap m_command;
 
             void setParams(QVariantMap command);
+
+        public slots:
+            virtual void testConnection() = 0;
+            virtual void resetConnection() = 0;
     };
 
 }}}

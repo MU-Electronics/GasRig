@@ -26,6 +26,10 @@ namespace App { namespace Hardware { namespace HAL
             void vacStationData(QString id, QString param, QString data);
 
         private slots:
+            // Required slot for full HAL Support compliance
+            void testConnection();
+            void resetConnection();
+
             // Get vac pump data
             void GetTemperature();
             void GetTurboSpeed();
@@ -43,8 +47,6 @@ namespace App { namespace Hardware { namespace HAL
 
         private:
             int m_id;
-            QString m_responsability = "VacStation";
-
 
             QByteArray CreatePackage(QString action, QString parameterValue, QString data);
             bool send(QString action, QString parameterValue, QString data);

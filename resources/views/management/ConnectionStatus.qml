@@ -31,14 +31,14 @@ Flickable
         // Pressure sensor, Labjack, Vac station, Flow controller 1, Flow controller 2, 12V supply, 24V supply
         model: ListModel {
             id: toMonitor
-            ListElement { title: qsTr("Pressure Sensor"); desc: qsTr("This shows the status of the connection to the pressure sensor."); status: 3 }
-            ListElement { title: qsTr("LabJack"); desc: qsTr("This shows the status of the connection to the LabJack."); status: 3 }
-            ListElement { title: qsTr("Vac Station"); desc: qsTr("This shows the status of the connection to the vacuum station.") ; status: 3 }
-            ListElement { title: qsTr("Flow Controller 1"); desc: qsTr("This shows the status of the connection to flow controller one."); status: 3  }
-            ListElement { title: qsTr("Flow Controller 2"); desc: qsTr("This shows the status of the connection to flow controller two."); status: 3 }
-            ListElement { title: qsTr("System Condition"); desc: qsTr("This shows whether the gas rig is in a state that it can be used."); status: 3 }
-            ListElement { title: qsTr("Safety Monitor"); desc: qsTr("This shows whether the programs safety monitor is running."); status: 3 }
-            ListElement { title: qsTr("Supplies"); desc: qsTr("This shows whether the 12V and 24V internal power supply is functioning.") ; status: 3 }
+            ListElement { title: qsTr("Pressure Sensor"); desc: qsTr("This shows the status of the connection to the pressure sensor."); hardware: "PressureSensor" }
+            ListElement { title: qsTr("LabJack"); desc: qsTr("This shows the status of the connection to the LabJack."); hardware: "LabJack"  }
+            ListElement { title: qsTr("Vac Station"); desc: qsTr("This shows the status of the connection to the vacuum station."); hardware: "VacStation"}
+            ListElement { title: qsTr("Flow Controller 1"); desc: qsTr("This shows the status of the connection to flow controller one."); hardware: "FlowControllerOne" }
+            ListElement { title: qsTr("Flow Controller 2"); desc: qsTr("This shows the status of the connection to flow controller two."); hardware: "FlowControllerTwo" }
+            ListElement { title: qsTr("System Condition"); desc: qsTr("This shows whether the gas rig is in a state that it can be used."); hardware: "SystemCondition"}
+            ListElement { title: qsTr("Safety Monitor"); desc: qsTr("This shows whether the programs safety monitor is running."); hardware: "SafetyMonitor" }
+            ListElement { title: qsTr("Supplies"); desc: qsTr("This shows whether the 12V and 24V internal power supply is functioning."); hardware: "Supplies" }
         }
         delegate: Rectangle
         {
@@ -49,21 +49,36 @@ Flickable
             width: (window.width / layout.noInColoum) - (200 / layout.noInColoum)
             height: (window.height / layout.noInRow) - 48
 
-            state: model.status
+            state: ConnectionStatusManager.hardwareConnection[model.hardware]
 
             states: [
+                // Not connected
+                State {
+                    name: "0"
+                    PropertyChanges { target: connectionStatusIcon; name: "navigation/cancel"; visible: true; color: Material.color(Material.Red, Material.Shade500)} //done
+                    PropertyChanges { target: connectionStatusLoading; visible: false; }
+                },
+                // Connected
                 State {
                     name: "1"
-                    PropertyChanges { target: connectionStatusIcon; name: "action/done"; visible: true; color: Material.color(Material.Green, Material.Shade500)}
+                    PropertyChanges { target: connectionStatusIcon; name: "action/check_circle"; visible: true; color: Material.color(Material.Green, Material.Shade500)} //done
                     PropertyChanges { target: connectionStatusLoading; visible: false; }
                 },
+                // Timed out
                 State {
                     name: "2"
-                    PropertyChanges { target: connectionStatusIcon; name: "navigation/close"; visible: true; }
+                    PropertyChanges { target: connectionStatusIcon; name: "alert/warning"; visible: true; color: Material.color(Material.Orange, Material.Shade500)} //navigation/close
                     PropertyChanges { target: connectionStatusLoading; visible: false; }
                 },
+                // Error connecting
                 State {
                     name: "3"
+                    PropertyChanges { target: connectionStatusIcon; name: "alert/warning"; visible: true; color: Material.color(Material.Orange, Material.Shade500)} //navigation/close
+                    PropertyChanges { target: connectionStatusLoading; visible: false; }
+                },
+                // Loading circle
+                State {
+                    name: "4"
                     PropertyChanges { target: connectionStatusIcon; name: "action/cached"; visible: false; }
                     PropertyChanges { target: connectionStatusLoading; visible: true; }
                 }

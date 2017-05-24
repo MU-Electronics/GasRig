@@ -95,10 +95,8 @@ namespace App { namespace Services
 
 
 
-
         // State the bus is no longer use
         m_busFree = true;
-
 
 
         // Set the timer to be single shot only
@@ -121,6 +119,19 @@ namespace App { namespace Services
         // When the timer has timeout connect it to the timeout handler
         connect(&m_timer, &QTimer::timeout, this, &SerialController::handleTimeout);
 
+
+
+        // Create package to be emitted
+        QVariantMap package;
+        package["responsability"] = m_responsability;
+        package["com"] = m_connectionValues.value("com").toString();
+        package["open"] = true;
+
+        // Com port open signal
+        emit emit_comConnectionStatus(package);
+
+
+
         // Port configured correctly
         return true;
     }
@@ -141,6 +152,15 @@ namespace App { namespace Services
 
         // Reset vars
         clearVars();
+
+        // Create package to be emitted
+        QVariantMap package;
+        package["responsability"] = m_responsability;
+        package["com"] = m_connectionValues.value("com").toString();
+        package["open"] = false;
+
+        // Com port open signal
+        emit emit_comConnectionStatus(package);
     }
 
 
@@ -302,9 +322,6 @@ namespace App { namespace Services
         {
             // Reset the bytes written buffer
             m_bytesWritten = 0;
-
-            // Print message
-            //qDebug() << "Data successfully sent to port " << m_serialPort.portName();
         }
     }
 
@@ -330,14 +347,7 @@ namespace App { namespace Services
         clearVars();
 
         // Create package to be emitted
-        QVariantMap errorPackage;
-        errorPackage["responsability"] = m_responsability;
-        errorPackage["com"] = m_connectionValues.value("com").toString();
-        errorPackage["comAttempt"] = m_serialPort.portName();
-        errorPackage["error"] = m_serialPort.errorString();
-
-        // Time out signal
-        emit emit_timeoutSerialError(errorPackage);
+        emit emit_timeoutSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_serialPort.portName(), m_serialPort.errorString()));
     }
 
 
@@ -366,17 +376,7 @@ namespace App { namespace Services
         }
 
         // Create package to be emitted
-        QVariantMap errorPackage;
-        errorPackage["responsability"] = m_responsability;
-        errorPackage["com"] = m_connectionValues.value("com").toString();
-        errorPackage["comAttempt"] = m_serialPort.portName();
-        errorPackage["error"] = m_serialPort.errorString();
-
-        // Emit a signal saying device communication failed
-        emit emit_critialSerialError(errorPackage);
-
-        // Try and reconnect @NOTE: for now we want the system to stop when this occures
-        // checkDeviceAvaliable(true);
+        emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_serialPort.portName(), m_serialPort.errorString()));
 
         // State the bus is no longer use
         m_busFree = false;
@@ -436,7 +436,7 @@ namespace App { namespace Services
      * @brief SerialController::write
      * @param writeData
      */
-    void SerialController::write(const QByteArray &writeData)
+    bool SerialController::write(const QByteArray &writeData)
     {
         // State the bus is no longer use
         m_busFree = false;
@@ -452,14 +452,63 @@ namespace App { namespace Services
         {
             // If not bytes were written then error
             qDebug() << "Failed to write the data to port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+
+            // Create package to be emitted
+            emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_serialPort.portName(), m_serialPort.errorString()));
+
+            // State the bus is not useable
+            m_busFree = false;
+
+            // Reset vars
+            clearVars();
+
+            return false;
         }
         else if (bytesWritten != m_writeData.size())
         {
             // If not enough btyes were written then error
             qDebug() << "Failed to write all the data to port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+
+            // Emit a signal saying device communication failed
+            emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_serialPort.portName(), m_serialPort.errorString()));
+
+            // State the bus is not useable
+            m_busFree = false;
+
+            // Reset vars
+            clearVars();
+
+            return false;
         }
 
         // Set timeout
         m_timer.start(m_timeOut);
+
+        return true;
+    }
+
+
+    QVariantMap SerialController::errorPackageGenerator(QString com, QString port, QString error)
+    {
+        // Create package to be emitted
+        QVariantMap errorPackage;
+        errorPackage["responsability"] = m_responsability;
+        errorPackage["com"] = com;
+        errorPackage["comAttempt"] = port;
+        errorPackage["error"] = error;
+
+        return errorPackage;
+    }
+
+
+    QVariantMap SerialController::comConnectionPackageGenerator(QString com, bool status)
+    {
+        // Create package to be emitted
+        QVariantMap package;
+        package["responsability"] = m_responsability;
+        package["com"] = com;
+        package["open"] = status;
+
+        return package;
     }
 }}

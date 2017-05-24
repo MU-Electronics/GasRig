@@ -4,6 +4,7 @@
 
 namespace App { namespace Hardware { namespace HAL
 {
+
     HALSupport::HALSupport(QObject *parent)
     {
 
@@ -20,4 +21,5 @@ namespace App { namespace Hardware { namespace HAL
     {
         m_command = command;
     }
+
 }}}

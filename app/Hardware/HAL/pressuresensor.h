@@ -16,6 +16,11 @@ namespace App { namespace Hardware { namespace HAL
         public:
             explicit PressureSensor(QObject *parent=0);
 
+        private slots:
+            // Required slot for full HAL Support compliance
+            void testConnection();
+            void resetConnection();
+
         private:
             void proccessReadData(QString readData);
             bool validate(QString package);

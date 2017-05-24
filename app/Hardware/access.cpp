@@ -20,6 +20,7 @@
 
 namespace App { namespace Hardware
 {
+
     /**
      * Class constructure performs:
      *      - Set parent thread class
@@ -44,7 +45,7 @@ namespace App { namespace Hardware
             m_labjack(*new HAL::LabJack(this))
     {
         // Set possable method to be ran with this class
-        m_avaliableMethods.append("resetUSBConnection");
+        // None atm set like this: m_avaliableMethods.append("<method name>");
     }
 
 
@@ -67,8 +68,14 @@ namespace App { namespace Hardware
      */
     void Access::configure(QThread &thread)
     {
+        // Connect
+        connect(&m_vacStation, &HAL::VacStation::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
+        connect(&m_vacStation, &HAL::VacStation::emit_critialSerialError, this, &Access::listen_critialSerialError);
+        connect(&m_vacStation, &HAL::VacStation::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
+
         // Open com port for all devices
         connectDevices();
+
     }
 
 
@@ -248,7 +255,6 @@ namespace App { namespace Hardware
     }
 
 
-
     /**
      * This slot allows other proccess to add commands to be ran into the queue
      *
@@ -267,13 +273,34 @@ namespace App { namespace Hardware
 
 
     /**
-     * Responable for resetting usb connections
+     * Listen to all com updates and emit relivent onces
      *
-     * @brief Access::resetUSBConnection
+     * @brief Access::listen_serialComUpdates
+     * @param command
      */
-    void Access::resetUSBConnection()
+    void Access::listen_serialComUpdates(QVariantMap command)
     {
-        qDebug() << "I'm resetting" << m_lastcommands;
+        emit emit_serialComUpdated(command);
+    }
+
+
+    /**
+     * @brief Access::listen_critialSerialError
+     * @param command
+     */
+    void Access::listen_critialSerialError(QVariantMap command)
+    {
+        emit emit_critialSerialError(command);
+    }
+
+
+    /**
+     * @brief Access::listen_timeoutSerialError
+     * @param command
+     */
+    void Access::listen_timeoutSerialError(QVariantMap command)
+    {
+        emit emit_timeoutSerialError(command);
     }
 
 }}

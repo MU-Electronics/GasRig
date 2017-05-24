@@ -57,20 +57,20 @@ namespace App
           manager_connection(*new ViewManager::ConnectionStatus(parent, engine, settings_container)),
           manager_systemStatus(*new ViewManager::SystemStatus(parent, engine, settings_container))
     {
-        // Register addtion threads
-        registerAddtionalThreads();
-
-        // Start addtional application threads
-        startAddtionalThread();  
-
         // Load all managers
         registerManagers();
+
+        // Connect view managers to threads
+        connectViewToThreads();
 
         // Connect threads to one another
         connectThreads();
 
-        // Connect view managers to threads
-        connectViewToThreads();
+        // Register addtion threads
+        registerAddtionalThreads();
+
+        // Start addtional application threads
+        startAddtionalThread();
 
         // Debugging area for testing
         debug();
