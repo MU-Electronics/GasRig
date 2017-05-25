@@ -44,7 +44,7 @@ namespace App { namespace Hardware
             m_pressureSensor(*new HAL::PressureSensor(this)),
             m_labjack(*new HAL::LabJack(this))
     {
-        // Set possable method to be ran with this class
+        // Set possable methods to be ran within this class via the queue
         // None atm set like this: m_avaliableMethods.append("<method name>");
     }
 

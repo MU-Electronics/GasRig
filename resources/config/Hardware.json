@@ -5,7 +5,8 @@
             "productId": "1288",
             "com": "tty.usbserial-FTZ6KPLP",
             "braud": "9600",
-            "id": "25"
+            "timeout": "500",
+            "id": "1"
         },
         "vacuum_station":{
             "vendorId": "1027",
@@ -26,6 +27,7 @@
         "flow_controller":{
             "com": "tty.usbserial-FTWVILT1",
             "braud": "9600",
+            "timeout": "500",
 
             "default": "1",
 
