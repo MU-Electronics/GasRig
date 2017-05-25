@@ -11,7 +11,7 @@
             "productId": "24577",
             "com": "tty.usbserial-AH02FNCX",
             "braud": "9600",
-            "timeout": "1000",
+            "timeout": "500",
             "id": "10"
         },
         "labJack":{

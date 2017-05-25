@@ -32,6 +32,7 @@ namespace App { namespace ViewManager
 
     }
 
+
     /**
      * Connect signals from and to this class and the hardware & safety thread
      *
@@ -46,7 +47,56 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_timeoutSerialError, this, &ConnectionStatus::listen_timeoutSerialError);
         connect(&hardware, &Hardware::Access::emit_critialSerialError, this, &ConnectionStatus::listen_critialSerialError);
 
+        // Listen for power supply signals
+
+        // Listen for safety monitor signals
+
+        // Listen for system safe conition
+
+        // Requests for hardware reconnects
+        connect(this, &ConnectionStatus::emit_hardwareAccess, &hardware, &Hardware::Access::hardwareAccess);
     }
+
+
+
+
+
+    void ConnectionStatus::request_reconnect(QString item)
+    {
+        // Update GUI with please wait
+        m_hardwareConnection.insert(item, "4");
+        emit_hardwareConnectionChanged(m_hardwareConnection);
+
+        // Command package
+        QVariantMap command;
+
+        if(item == "Supplies")
+        {
+
+        }
+        else if (item == "FlowControllerOne")
+        {
+
+        }
+        else if (item == "FlowControllerTwo")
+        {
+
+        }
+        else if (item == "SafetyMonitor")
+        {
+
+        }
+        else
+        {
+            command["hardware"] = item;
+            command["method"] = "resetConnection";
+        }
+
+        emit emit_hardwareAccess(command);
+
+
+    }
+
 
 
 
@@ -59,15 +109,17 @@ namespace App { namespace ViewManager
      */
     void ConnectionStatus::listen_comConnectionStatus(QVariantMap package)
     {
+        // Connection faile
+        m_hardwareConnection.insert(package["responsability"].toString(), "0");
+
         // Connection successfully
         if(package.value("open").toBool())
         {
             m_hardwareConnection.insert(package["responsability"].toString(), "1");
-            return;
         }
 
-        // Connection faile
-        m_hardwareConnection.insert(package["responsability"].toString(), "0");
+        // Update GUI
+        emit_hardwareConnectionChanged(m_hardwareConnection);
     }
 
 
@@ -81,6 +133,9 @@ namespace App { namespace ViewManager
     {
         // Set connection to timeout error
         m_hardwareConnection.insert(package["responsability"].toString(), "2");
+
+        // Update GUI
+        emit_hardwareConnectionChanged(m_hardwareConnection);
     }
 
 
@@ -94,6 +149,9 @@ namespace App { namespace ViewManager
     {
         // Set connection to critial error
         m_hardwareConnection.insert(package["responsability"].toString(), "3");
+
+        // Update GUI
+        emit_hardwareConnectionChanged(m_hardwareConnection);
     }
 
 }}

@@ -22,7 +22,7 @@ namespace App { namespace ViewManager
     {
         Q_OBJECT
         // USB connection statuses
-        Q_PROPERTY(QVariantMap hardwareConnection READ hardwareConnection NOTIFY hardwareConnectionChanged)
+        Q_PROPERTY(QVariantMap hardwareConnection READ hardwareConnection NOTIFY emit_hardwareConnectionChanged)
 
         public:
             ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
@@ -36,12 +36,15 @@ namespace App { namespace ViewManager
 
 
         signals:
-            void hardwareConnectionChanged(QVariantMap);
+            void emit_hardwareConnectionChanged(QVariantMap);
+            void emit_hardwareAccess(QVariantMap command);
 
         public slots:
             void listen_comConnectionStatus(QVariantMap package);
             void listen_critialSerialError(QVariantMap package);
             void listen_timeoutSerialError(QVariantMap package);
+
+            void request_reconnect(QString item);
 
         private:
             QQmlApplicationEngine* m_root;

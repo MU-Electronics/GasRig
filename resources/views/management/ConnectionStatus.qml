@@ -67,7 +67,7 @@ Flickable
                 // Timed out
                 State {
                     name: "2"
-                    PropertyChanges { target: connectionStatusIcon; name: "alert/warning"; visible: true; color: Material.color(Material.Orange, Material.Shade500)} //navigation/close
+                    PropertyChanges { target: connectionStatusIcon; name: "image/timelapse"; visible: true; color: Material.color(Material.Orange, Material.Shade500)} //navigation/close
                     PropertyChanges { target: connectionStatusLoading; visible: false; }
                 },
                 // Error connecting
@@ -189,7 +189,7 @@ Flickable
                         Button {
                             text: qsTr("Re-Connecting")
                             onClicked: {
-                                toMonitor.set(index, {"status": 3})
+                                ConnectionStatusManager.request_reconnect(model.hardware)
                             }
                         }
                     }

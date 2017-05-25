@@ -171,10 +171,13 @@ namespace App { namespace Hardware
         if(hardware == "VacStation")
         {
             // If the bus is not free we cant procceed
-            if(!m_vacStation.busFree() || !m_vacStation.isOpen())
+            if((!m_vacStation.busFree() || !m_vacStation.isOpen()) && method != "resetConnection")
             {
                 // Re add the method to the queue as this one will be removed
                 m_queue.enqueue(command);
+
+                // Log the issue
+                qDebug() << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return;
@@ -190,10 +193,13 @@ namespace App { namespace Hardware
         else if(hardware == "PressureSensor")
         {
             // If the bus is not free we cant procceed
-            if(!m_pressureSensor.busFree() || !m_pressureSensor.isOpen())
+            if((!m_pressureSensor.busFree() || !m_pressureSensor.isOpen()) && method != "resetConnection")
             {
                 // Re add the method to the queue as this one will be removed
                 m_queue.enqueue(command);
+
+                // Log the issue
+                qDebug() << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return;
@@ -208,10 +214,13 @@ namespace App { namespace Hardware
         else if (hardware  == "FlowController")
         {
             // If the bus is not free we cant procceed
-            if(!m_flowController.busFree() || !m_flowController.isOpen())
+            if((!m_flowController.busFree() || !m_flowController.isOpen()) && method != "resetConnection")
             {
                 // Re add the method to the queue as this one will be removed
                 m_queue.enqueue(command);
+
+                // Log the issue
+                qDebug() << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return;

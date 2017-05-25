@@ -64,7 +64,12 @@ namespace App { namespace Services
 
         // Check port avaliable
         if(!checkDeviceAvaliable(false))
+        {
+            // Com port open signal
+            emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
+
             return false;
+        }
 
         // Set the port name
         m_serialPort.setPortName(com);
@@ -87,7 +92,12 @@ namespace App { namespace Services
         // Check port open
         if (!m_serialPort.open(QIODevice::ReadWrite))
         {
+            // Error out
             qDebug() << "Failed to open port" << com << "error: " << m_serialPort.errorString();
+
+            // Com port open signal
+            emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
+
             return false;
         }
 
@@ -121,16 +131,8 @@ namespace App { namespace Services
 
 
 
-        // Create package to be emitted
-        QVariantMap package;
-        package["responsability"] = m_responsability;
-        package["com"] = m_connectionValues.value("com").toString();
-        package["open"] = true;
-
         // Com port open signal
-        emit emit_comConnectionStatus(package);
-
-
+        emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), true));
 
         // Port configured correctly
         return true;
@@ -153,14 +155,8 @@ namespace App { namespace Services
         // Reset vars
         clearVars();
 
-        // Create package to be emitted
-        QVariantMap package;
-        package["responsability"] = m_responsability;
-        package["com"] = m_connectionValues.value("com").toString();
-        package["open"] = false;
-
         // Com port open signal
-        emit emit_comConnectionStatus(package);
+        emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
     }
 
 
@@ -359,30 +355,33 @@ namespace App { namespace Services
      */
     void SerialController::handleError(QSerialPort::SerialPortError serialPortError)
     {
-        // Handle read errors
-        if (serialPortError == QSerialPort::ReadError)
+        if(serialPortError != QSerialPort::NoError)
         {
-            qDebug() << "An I/O error occurred while reading the data from port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
-        }
-        // Handle write errors
-        else if (serialPortError == QSerialPort::WriteError)
-        {
-            qDebug() << "An I/O error occurred while writing the data to port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
-        }
-        // If port avaiable and error is device not confiured then
-        else if(m_serialPort.errorString() == "Device not configured")
-        {
-            qDebug() << "An I/O error occured most probably related to a USB glitch or being unplugged and plugged; On port: " << m_serialPort.portName() << "; error message: " << m_serialPort.errorString();
-        }
+            // Handle read errors
+            if (serialPortError == QSerialPort::ReadError)
+            {
+                qDebug() << "An I/O error occurred while reading the data from port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+            }
+            // Handle write errors
+            else if (serialPortError == QSerialPort::WriteError)
+            {
+                qDebug() << "An I/O error occurred while writing the data to port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+            }
+            // If port avaiable and error is device not confiured then
+            else if(m_serialPort.errorString() == "Device not configured")
+            {
+                qDebug() << "An I/O error occured most probably related to a USB glitch or being unplugged and plugged; On port: " << m_serialPort.portName() << "; error message: " << m_serialPort.errorString();
+            }
 
-        // Create package to be emitted
-        emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_serialPort.portName(), m_serialPort.errorString()));
+            // Create package to be emitted
+            emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_serialPort.portName(), m_serialPort.errorString()));
 
-        // State the bus is no longer use
-        m_busFree = false;
+            // State the bus is no longer use
+            m_busFree = false;
 
-        // Reset vars
-        clearVars();
+            // Reset vars
+            clearVars();
+        }
     }
 
 

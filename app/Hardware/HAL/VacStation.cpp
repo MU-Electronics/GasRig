@@ -5,6 +5,7 @@
 #include <QString>
 #include <QByteArray>
 #include <QVariantMap>
+#include <QThread>
 
 
 namespace App { namespace Hardware { namespace HAL
@@ -173,7 +174,12 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::resetConnection()
     {
+        // Refresh connection attempt
         checkDeviceAvaliable(true);
+
+        // Test sending data works, for now just use get gas mode
+        // Other method will send out relivent success
+        GetGasMode();
     }
 
 
