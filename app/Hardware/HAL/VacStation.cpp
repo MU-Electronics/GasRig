@@ -167,8 +167,9 @@ namespace App { namespace Hardware { namespace HAL
         // Does the com port & connection exist?
         if(!checkDeviceAvaliable(false))
         {
-            // Send a critial issue
-            emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_connectionValues.value("com").toString(), "Cant not find the device on this PC, check cable is plugged in."));
+            // Send a critial issue, MOST PROBABLY USB not connected issue
+            //emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_connectionValues.value("com").toString(), "Cant not find the device on this PC, check cable is plugged in."));
+            emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
 
             // return
             return;
@@ -187,11 +188,18 @@ namespace App { namespace Hardware { namespace HAL
     void VacStation::resetConnection()
     {
         // Refresh connection attempt
-        checkDeviceAvaliable(true);
+        if(!checkDeviceAvaliable(true))
+        {
+            // Send a critial issue, MOST PROBABLY USB not connected issue
+            emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
+
+            return;
+        }
 
         // Test sending data works, for now just use get gas mode
         // Other method will send out relivent success
         GetGasMode();
+
     }
 
 
