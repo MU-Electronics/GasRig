@@ -122,7 +122,11 @@ namespace App { namespace Hardware
     void Access::worker()
     {
         // Check connections are open
-        connectDevices();
+        // This cause a never ending loop when cant connect
+        // Was dicussed at work and autorecover is not desired initally
+        // So is the wrong thing to do any way for now
+        // In future just time stamp to check ever X seconds
+        //connectDevices();
 
         // Check if any commands need to be ran
         if(m_queue.isEmpty())
