@@ -39,7 +39,7 @@ namespace App { namespace Hardware
             m_timer(*new QTimer(this)),
 
             // HAL objects
-            m_vacStation(*new HAL::VacStation(this, 123)),
+            m_vacStation(*new HAL::VacStation(this, 1)),
             m_flowController(*new HAL::FlowController(this)),
             m_pressureSensor(*new HAL::PressureSensor(this)),
             m_labjack(*new HAL::LabJack(this))
@@ -86,6 +86,9 @@ namespace App { namespace Hardware
         {
             // Get connection data
             QVariantMap vacData = m_settings.hardware.usb_connections.value("vacuum_station").toMap();
+
+            // Set vac pump id from settings
+            m_vacStation.setId(vacData["id"].toInt());
 
             // Is com port provided?
             QString comport = vacData["com"].toString();

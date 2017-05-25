@@ -1,10 +1,11 @@
 {
     "usb_connections": {
         "pressure_sensor": {
-          "vendorId": "1254",
-          "productId": "1288",
-          "braud": "9600",
-          "id": "25"
+            "vendorId": "24577",
+            "productId": "1288",
+            "com": "tty.usbserial-FTZ6KPLP",
+            "braud": "9600",
+            "id": "25"
         },
         "vacuum_station":{
             "vendorId": "1027",
@@ -12,29 +13,31 @@
             "com": "tty.usbserial-AH02FNCX",
             "braud": "9600",
             "timeout": "500",
-            "id": "10"
+            "id": "123"
         },
         "labJack":{
-          "hardware_type": 3,
-          "connection_type": 1,
-          "address": 1,
-          "openFirst": true
+            "vendorId": "3285",
+            "productId": "3",
+            "hardware_type": 3,
+            "connection_type": 1,
+            "address": 1,
+            "openFirst": true
         },
-        "flow_controller_one":{
-          "com": "10",
-          "braud": "9600",
-          "IDH": "11",
-          "IDM": "22",
-          "IDL": "11",
-          "IDS": "A3"
-        },
-        "flow_controller_two":{
-          "com": "10",
-          "braud": "9600",
-          "IDH": "11",
-          "IDM": "22",
-          "IDL": "11",
-          "IDS": "A3"
+        "flow_controller":{
+            "com": "tty.usbserial-FTWVILT1",
+            "braud": "9600",
+
+            "default": "1",
+
+            "1_IDH": "11",
+            "1_IDM": "22",
+            "1_IDL": "11",
+            "1_IDS": "A3",
+
+            "2_IDH": "11",
+            "2_IDM": "22",
+            "2_IDL": "11",
+            "2_IDS": "A3"
         }
     },
     "valve_connections":{

@@ -22,6 +22,8 @@ namespace App { namespace Hardware { namespace HAL
             VacStation(QObject *parent, int id);
             ~VacStation();
 
+            void setId(int id);
+
         signals:
             void vacStationData(QString id, QString param, QString data);
 

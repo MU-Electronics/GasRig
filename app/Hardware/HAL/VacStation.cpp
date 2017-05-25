@@ -41,6 +41,18 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
+     * Sets the ID for the vac pump
+     *
+     * @brief VacStation::setId
+     * @param id
+     */
+    void VacStation::setId(int id)
+    {
+        m_id = id;
+    }
+
+
+    /**
      * This method validate the data before procceeding to proccessReadData
      * WARNING: This method may recieve half complete data packages so it
      *          must take that into account when verifing the package

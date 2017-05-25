@@ -23,8 +23,7 @@ namespace App { namespace Settings
         usb_connections["pressure_sensor"] = connectionData["pressure_sensor"].toMap();
         usb_connections["vacuum_station"] = connectionData["vacuum_station"].toMap();
         usb_connections["labJack"] = connectionData["labJack"].toMap();
-        usb_connections["flow_controller_one"] = connectionData["flow_controller_one"].toMap();
-        usb_connections["flow_controller_two"] = connectionData["flow_controller_two"].toMap();
+        usb_connections["flow_controller"] = connectionData["flow_controller"].toMap();
 
         // Store valve connections
         valve_connections = rootMap["valve_connections"].toMap();
