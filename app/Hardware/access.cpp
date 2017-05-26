@@ -41,7 +41,7 @@ namespace App { namespace Hardware
             // HAL objects
             m_vacStation(*new HAL::VacStation(this, 1)),
             m_flowController(*new HAL::FlowController(this)),
-            m_pressureSensor(*new HAL::PressureSensor(this)),
+            m_pressureSensor(*new HAL::PressureSensor(this, 1)),
             m_labjack(*new HAL::LabJack(this))
     {
         // Set possable methods to be ran within this class via the queue
@@ -68,16 +68,22 @@ namespace App { namespace Hardware
      */
     void Access::configure(QThread &thread)
     {
-        // Connect
+        // Connect vac station HAL connections
         connect(&m_vacStation, &HAL::VacStation::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
         connect(&m_vacStation, &HAL::VacStation::emit_critialSerialError, this, &Access::listen_critialSerialError);
         connect(&m_vacStation, &HAL::VacStation::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
 
+        // Connect pressure sensor HAL connections
+        connect(&m_pressureSensor, &HAL::VacStation::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
+        connect(&m_pressureSensor, &HAL::VacStation::emit_critialSerialError, this, &Access::listen_critialSerialError);
+        connect(&m_pressureSensor, &HAL::VacStation::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
+
+        // Connect flow controller HAL connections
+
+        // Connect labjack HAL connections
+
         // Open com port for all devices
         connectDevices();
-
-        m_pressureSensor.readPressure();
-
     }
 
 
@@ -112,18 +118,18 @@ namespace App { namespace Hardware
             QVariantMap pressureData = m_settings.hardware.usb_connections.value("pressure_sensor").toMap();
 
             // Set vac pump id from settings
-            //m_vacStation.setId(vacData["id"].toInt());
+            m_pressureSensor.setId(pressureData["id"].toInt());
 
             // Is com port provided?
-            QString comport = pressureData["com"].toString();
-            if(comport.isNull())
+            QString pressureComPort = pressureData["com"].toString();
+            if(pressureComPort.isNull())
             {
                 // Find the com port
-                comport = m_pressureSensor.findPortName(pressureData["productId"].toInt(), pressureData["vendorId"].toInt());
+                pressureComPort = m_pressureSensor.findPortName(pressureData["productId"].toInt(), pressureData["vendorId"].toInt());
             }
-            qDebug() << "connecting";
+
             // Connect to port
-            m_pressureSensor.open(comport, pressureData["braud"].toInt(), pressureData["timeout"].toInt()); // Will open on tty.usbserial-AH02FNCX for my mac
+            m_pressureSensor.open(pressureComPort, pressureData["braud"].toInt(), pressureData["timeout"].toInt()); // Will open on tty.usbserial-AH02FNCX for my mac
         }
 
         // Open com port for the flow controllers

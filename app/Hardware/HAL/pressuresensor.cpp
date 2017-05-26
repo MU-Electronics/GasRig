@@ -1,10 +1,16 @@
 #include "PressureSensor.h"
 
 #include <QDebug>
+#include <QString>
+#include <QByteArray>
+#include <QVariantMap>
+#include <QThread>
 
 namespace App { namespace Hardware { namespace HAL
 {
-    PressureSensor::PressureSensor(QObject *parent)
+    PressureSensor::PressureSensor(QObject *parent, int id)
+        :   SerialController(parent),
+            m_id(id)
     {
         // Sets what this class is responable for; @NOTE: Could be done in base class
         m_responsability = "PressureSensor";
@@ -14,31 +20,39 @@ namespace App { namespace Hardware { namespace HAL
 
     QByteArray PressureSensor::createPackage(QString action, QString parameterValue, QString data)
     {
-        // Compile string
-        //QString package = QString::number(m_id) + action + parameterValue + data;
-        bool ok;
+        // Below inits the device
         QByteArray package;
-        package.append("1");
-        package.append("48");
+        package.resize(4);
+        package[0] = 0x01; // ID with a decimal value of 1
+        package[1] = 0x30; // Function with a decimal value of 48
+        package[2] = 0x34; // Upper CRC with a decimal value of 52
+        package[3] = 0x00; // Lower CRC with a decimal value of 0
 
-        // Get crc
-        QString crc = calculateCheckSumSixteen(package);
+        // Below reads the serial number
+        QByteArray package2;
+        package2.resize(4);
+        package2[0] = 0x01; // ID with a decimal value of 1
+        package2[1] = 0x45; // Function with a decimal value of 69
+        package2[2] = 0xD3; // Upper CRC with a decimal value of 211
+        package2[3] = 0xC1; // Lower CRC with a decimal value of 193
 
-        unsigned int low = crc.toUInt(&ok, 16) & 0xff;
-        unsigned int high= (crc.toUInt(&ok, 16)  >> 8) & 0xff;
+        write(package2);
 
-        // Append the check sum  and carriage return
-        //package = package + QString::number(high) + QString::number(low) + "\r";
-        package.append("52");
-        package.append("0");
-
-        //write(QByteArray::fromStdString(package.toStdString()));
-        write(package);
-
-        qDebug() << package;
+        qDebug() << package2;
 
         // Return string and Conver to btye array
-        return QByteArray::fromStdString(package.toStdString());
+        return package2;
+    }
+
+    /**
+     * Sets the ID for the vac pump
+     *
+     * @brief VacStation::setId
+     * @param id
+     */
+    void PressureSensor::setId(int id)
+    {
+        m_id = id;
     }
 
     /**
@@ -64,8 +78,6 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::proccessReadData(QString readData)
     {
-
-
         qDebug() << readData;
     }
 
@@ -88,7 +100,7 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::resetConnection()
     {
-
+        readPressure();
     }
 
 

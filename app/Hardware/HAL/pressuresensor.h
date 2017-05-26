@@ -16,7 +16,9 @@ namespace App { namespace Hardware { namespace HAL
     {
         Q_OBJECT
         public:
-            explicit PressureSensor(QObject *parent=0);
+            PressureSensor(QObject *parent, int id);
+
+            void setId(int id);
 
         public slots:
             void confirmInit();
@@ -34,8 +36,8 @@ namespace App { namespace Hardware { namespace HAL
             void proccessReadData(QString readData);
             bool validate(QString package);
 
-            explicit PressureSensor(const PressureSensor& rhs) = delete;
-            PressureSensor& operator= (const PressureSensor& rhs) = delete;
+            //explicit PressureSensor(const PressureSensor& rhs) = delete;
+            //PressureSensor& operator= (const PressureSensor& rhs) = delete;
     };
 }}}
 

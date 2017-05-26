@@ -130,7 +130,6 @@ namespace App { namespace Services
         connect(&m_timer, &QTimer::timeout, this, &SerialController::handleTimeout);
 
 
-
         // Com port open signal
         emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), true));
 

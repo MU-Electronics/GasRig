@@ -95,7 +95,7 @@ namespace App { namespace ViewManager
             command["method"] = "resetConnection";
         }
 
-
+        qDebug() << command;
         // Send the command to the hardware
         emit emit_hardwareAccess(command);
     }
@@ -112,6 +112,7 @@ namespace App { namespace ViewManager
      */
     void ConnectionStatus::listen_comConnectionStatus(QVariantMap package)
     {
+        qDebug() << package;
         // Connection faile
         m_hardwareConnection.insert(package["responsability"].toString(), "0");
 
@@ -134,6 +135,7 @@ namespace App { namespace ViewManager
      */
     void ConnectionStatus::listen_timeoutSerialError(QVariantMap package)
     {
+        qDebug() << package;
         // Set connection to timeout error
         m_hardwareConnection.insert(package["responsability"].toString(), "2");
 
@@ -150,6 +152,7 @@ namespace App { namespace ViewManager
      */
     void ConnectionStatus::listen_critialSerialError(QVariantMap package)
     {
+        qDebug() << package;
         // Set connection to critial error
         m_hardwareConnection.insert(package["responsability"].toString(), "3");
 
