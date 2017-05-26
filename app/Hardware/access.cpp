@@ -76,6 +76,8 @@ namespace App { namespace Hardware
         // Open com port for all devices
         connectDevices();
 
+        m_pressureSensor.readPressure();
+
     }
 
 
@@ -104,7 +106,25 @@ namespace App { namespace Hardware
 
 
         // Open com port for the pressure sensor
+        if(!m_pressureSensor.isOpen())
+        {
+            // Get connection data
+            QVariantMap pressureData = m_settings.hardware.usb_connections.value("pressure_sensor").toMap();
 
+            // Set vac pump id from settings
+            //m_vacStation.setId(vacData["id"].toInt());
+
+            // Is com port provided?
+            QString comport = pressureData["com"].toString();
+            if(comport.isNull())
+            {
+                // Find the com port
+                comport = m_pressureSensor.findPortName(pressureData["productId"].toInt(), pressureData["vendorId"].toInt());
+            }
+            qDebug() << "connecting";
+            // Connect to port
+            m_pressureSensor.open(comport, pressureData["braud"].toInt(), pressureData["timeout"].toInt()); // Will open on tty.usbserial-AH02FNCX for my mac
+        }
 
         // Open com port for the flow controllers
 

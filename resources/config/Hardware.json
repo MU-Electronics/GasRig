@@ -5,7 +5,7 @@
             "productId": "1288",
             "com": "tty.usbserial-FTZ6KPLP",
             "braud": "9600",
-            "timeout": "500",
+            "timeout": "1000",
             "id": "1"
         },
         "vacuum_station":{

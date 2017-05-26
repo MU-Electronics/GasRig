@@ -70,7 +70,7 @@ namespace App { namespace Hardware { namespace HAL
         QString data = package.left(package.length()-4);
 
         // If the differance between the two stirng is zero then check sums match
-        if (CheckSumEightValidation(data, checkSum))
+        if (checkSumEightValidation(data, checkSum))
             return true;
 
         return false;
@@ -118,7 +118,7 @@ namespace App { namespace Hardware { namespace HAL
     bool VacStation::send(QString action, QString parameterValue, QString data)
     {
         // Create package to send
-        QByteArray package = CreatePackage(action, parameterValue, data);
+        QByteArray package = createPackage(action, parameterValue, data);
 
         // Write the package to the bus
         write(package);
@@ -137,7 +137,7 @@ namespace App { namespace Hardware { namespace HAL
      * @param QString data The control data to be sent
      * @return QByteArray package data
      */
-    QByteArray VacStation::CreatePackage(QString action, QString parameterValue, QString data)
+    QByteArray VacStation::createPackage(QString action, QString parameterValue, QString data)
     {
         // Format data legnth 2 bytes
         int size = data.length();
@@ -150,7 +150,7 @@ namespace App { namespace Hardware { namespace HAL
         QString package = QString::number(m_id) + action + parameterValue + data_length + data;
 
         // Append the check sum  and carriage return
-        package = package + CalculateCheckSumEight(package) + "\r";
+        package = package + calculateCheckSumEight(package) + "\r";
 
         // Return string and Conver to btye array
         return QByteArray::fromStdString(package.toStdString());

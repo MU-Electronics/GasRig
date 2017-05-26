@@ -1,4 +1,4 @@
-#include "SerialController.h"
+﻿#include "SerialController.h"
 
 // Include external libs
 #include <QString>
@@ -17,30 +17,30 @@ namespace App { namespace Services
 {
 
     /**
-     * This construct the serial controller class by performing:
-     *      - Create instant of QSerialPort
-     *
-     * @brief SerialController::SerialController
-     * @param parent
-     */
+         * This construct the serial controller class by performing:
+         *      - Create instant of QSerialPort
+         *
+         * @brief SerialController::SerialController
+         * @param parent
+         */
     SerialController::SerialController(QObject *parent)
         :   QObject(parent),
-            m_serialPort(*new QSerialPort(parent)),
-            m_timer(*new QTimer(parent)),
-            m_timeOut(1000),
-            m_bytesWritten(0),
-            m_busFree(true)
+          m_serialPort(*new QSerialPort(parent)),
+          m_timer(*new QTimer(parent)),
+          m_timeOut(1000),
+          m_bytesWritten(0),
+          m_busFree(true)
     {
 
     }
 
 
     /**
-     * On class destruction performs:
-     *      - Closes the serial port
-     *
-     * @brief SerialController::~SerialController
-     */
+         * On class destruction performs:
+         *      - Closes the serial port
+         *
+         * @brief SerialController::~SerialController
+         */
     SerialController::~SerialController()
     {
         close();
@@ -48,13 +48,13 @@ namespace App { namespace Services
 
 
     /**
-     * Configures the serial port class and connects signals related the the serial port the the serial controller
-     *
-     * @brief SerialController::open
-     * @param com
-     * @param braud
-     * @return
-     */
+         * Configures the serial port class and connects signals related the the serial port the the serial controller
+         *
+         * @brief SerialController::open
+         * @param com
+         * @param braud
+         * @return
+         */
     bool SerialController::open(QString com, int braud, int timeout)
     {
         // Save connection data
@@ -140,10 +140,10 @@ namespace App { namespace Services
 
 
     /**
-     * Close the serial port connection
-     *
-     * @brief SerialController::close
-     */
+         * Close the serial port connection
+         *
+         * @brief SerialController::close
+         */
     void SerialController::close()
     {
         // Close the port
@@ -161,10 +161,10 @@ namespace App { namespace Services
 
 
     /**
-     * PRIVATE: Clear any member variables holding data related to I/O
-     *
-     * @brief SerialController::clearVars
-     */
+         * PRIVATE: Clear any member variables holding data related to I/O
+         *
+         * @brief SerialController::clearVars
+         */
     void SerialController::clearVars()
     {
         // Reset any vars
@@ -181,11 +181,11 @@ namespace App { namespace Services
 
 
     /**
-     * Determin if the bus is in use, therefore no more commands can be sent
-     *
-     * @brief SerialController::busInUse
-     * @return
-     */
+         * Determin if the bus is in use, therefore no more commands can be sent
+         *
+         * @brief SerialController::busInUse
+         * @return
+         */
     bool SerialController::busFree()
     {
         return m_busFree;
@@ -193,13 +193,13 @@ namespace App { namespace Services
 
 
     /**
-     * Find the com port identifier by the venor and product IDs
-     *
-     * @brief SerialController::findPortName
-     * @param productId
-     * @param vendorID
-     * @return QString port name
-     */
+         * Find the com port identifier by the venor and product IDs
+         *
+         * @brief SerialController::findPortName
+         * @param productId
+         * @param vendorID
+         * @return QString port name
+         */
     QString SerialController::findPortName(quint16 productId, quint16 vendorID)
     {
         // Port name
@@ -225,14 +225,48 @@ namespace App { namespace Services
     }
 
 
+    QString SerialController::calculateCheckSumSixteen(QString dataIn)
+    {
+        QByteArray data = dataIn.toUtf8(); //QString.toUtf8()
+        uint16_t crc = 0xFFFF;
+        bool b;
+
+        for(int pos = 0; pos<data.length();pos++)
+        {
+            crc ^= (uint16_t)data.data()[pos];
+            for( int i = 8; i != 0; i--)
+            {
+                if ((crc & 0x0001) != 0)  // LSB is set
+                {
+                    crc >>= 1;            // Shift right
+                    crc ^= 0xA001;        // XOR 0xA001
+                }
+                else
+                {
+                    crc >>= 1;            // LSB is not set
+                }
+//                if(crc%2==1)
+//                    b= true;
+//                else
+//                    b= false;
+//                crc/= 2;
+//                if(b)
+//                    crc^= 0xA001;
+            }
+
+        }
+        return QString::number(crc);
+    }
+
+
     /**
-     * PRIVATE: Calcuate a check sum-8 for given data
-     *
-     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param QString string The string to create the check sum for
-     * @return QString
-     */
-    QString SerialController::CalculateCheckSumEight(QString string)
+         * PRIVATE: Calcuate a check sum-8 for given data
+         *
+         * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+         * @param QString string The string to create the check sum for
+         * @return QString
+         */
+    QString SerialController::calculateCheckSumEight(QString string)
     {
         // Find check sum 8
         int sum = 0;
@@ -250,17 +284,17 @@ namespace App { namespace Services
 
 
     /**
-     * PRIVATE: Check the check sum provided against the data provided
-     * @todo remove the std library for Qt libs completely
-     *
-     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     * @param string package The string with check sum that needs validating
-     * @return bool
-     */
-    bool SerialController::CheckSumEightValidation(QString data, QString checkSum)
+         * PRIVATE: Check the check sum provided against the data provided
+         * @todo remove the std library for Qt libs completely
+         *
+         * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+         * @param string package The string with check sum that needs validating
+         * @return bool
+         */
+    bool SerialController::checkSumEightValidation(QString data, QString checkSum)
     {
         // Calcuate check sum for data
-        QString newSum = CalculateCheckSumEight(data);
+        QString newSum = calculateCheckSumEight(data);
 
         // Check sums are the same
         int validate = QString::compare(newSum, checkSum, Qt::CaseInsensitive);
@@ -275,10 +309,10 @@ namespace App { namespace Services
 
 
     /**
-     * When data is read to the read on the serial line this method will take over
-     *
-     * @brief SerialController::handleRead
-     */
+         * When data is read to the read on the serial line this method will take over
+         *
+         * @brief SerialController::handleRead
+         */
     void SerialController::handleRead()
     {
         // Read all the data
@@ -303,11 +337,11 @@ namespace App { namespace Services
 
 
     /**
-     * When bytes have been written to the serail line this method runs
-     *
-     * @brief SerialController::handleBytesWritten
-     * @param bytes
-     */
+         * When bytes have been written to the serail line this method runs
+         *
+         * @brief SerialController::handleBytesWritten
+         * @param bytes
+         */
     void SerialController::handleBytesWritten(qint64 bytes)
     {
         // Append the written btyes to the buffer
@@ -323,10 +357,10 @@ namespace App { namespace Services
 
 
     /**
-     * When the timeout has exceed this method runs
-     *
-     * @brief SerialController::handleTimeout
-     */
+         * When the timeout has exceed this method runs
+         *
+         * @brief SerialController::handleTimeout
+         */
     void SerialController::handleTimeout()
     {
         // General error message for any timeout event
@@ -348,11 +382,11 @@ namespace App { namespace Services
 
 
     /**
-     * When the serial port experiances an error this method proccess it
-     *
-     * @brief SerialController::handleError
-     * @param serialPortError
-     */
+         * When the serial port experiances an error this method proccess it
+         *
+         * @brief SerialController::handleError
+         * @param serialPortError
+         */
     void SerialController::handleError(QSerialPort::SerialPortError serialPortError)
     {
         if(serialPortError != QSerialPort::NoError)
@@ -386,13 +420,13 @@ namespace App { namespace Services
 
 
     /**
-     * This method check if the device is avaliable where it should be
-     * It can also reconfigure / re-boot a connection
-     *
-     * @brief SerialController::checkDeviceAvaliable
-     * @param reconnect
-     * @return bool found or not found
-     */
+         * This method check if the device is avaliable where it should be
+         * It can also reconfigure / re-boot a connection
+         *
+         * @brief SerialController::checkDeviceAvaliable
+         * @param reconnect
+         * @return bool found or not found
+         */
     bool SerialController::checkDeviceAvaliable(bool reconnect)
     {
         // Get list of ports
@@ -430,11 +464,11 @@ namespace App { namespace Services
 
 
     /**
-     * This method write a package of data to the serial port
-     *
-     * @brief SerialController::write
-     * @param writeData
-     */
+         * This method write a package of data to the serial port
+         *
+         * @brief SerialController::write
+         * @param writeData
+         */
     bool SerialController::write(const QByteArray &writeData)
     {
         // State the bus is no longer use

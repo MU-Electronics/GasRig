@@ -50,7 +50,7 @@ namespace App { namespace Hardware { namespace HAL
         private:
             int m_id;
 
-            QByteArray CreatePackage(QString action, QString parameterValue, QString data);
+            QByteArray createPackage(QString action, QString parameterValue, QString data);
             bool send(QString action, QString parameterValue, QString data);
             bool validate(QString package);
 
