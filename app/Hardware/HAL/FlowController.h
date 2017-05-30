@@ -25,6 +25,7 @@ namespace App { namespace Hardware { namespace HAL
         private:
             void proccessReadData(QStringList readData);
             bool validate(QStringList package);
+            QString calculateCheckSum(QStringList dataIn);
 
             explicit FlowController(const FlowController& rhs) = delete;
             FlowController& operator= (const FlowController& rhs) = delete;

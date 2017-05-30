@@ -35,6 +35,7 @@ namespace App { namespace Hardware { namespace HAL
 
             void proccessReadData(QStringList readData);
             bool validate(QStringList package);
+            QString calculateCheckSum(QStringList dataIn);
 
             //explicit PressureSensor(const PressureSensor& rhs) = delete;
             //PressureSensor& operator= (const PressureSensor& rhs) = delete;

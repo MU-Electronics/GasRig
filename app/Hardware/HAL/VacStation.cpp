@@ -53,6 +53,33 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
+     * PRIVATE: Calcuate a check sum-8 for given data
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param QString string The string to create the check sum for
+     * @return QString
+     */
+    QString VacStation::calculateCheckSum(QStringList stringList)
+    {
+        // Join all data to one acsii string
+        QString string = stringList.join("");
+
+        // Find check sum 8
+        int sum = 0;
+        for (unsigned int i = 0; i < string.size(); i++) {
+            if(string[i] == ' '){
+                sum += 32;
+            }else{
+                sum += string[i].toLatin1();
+            }
+        }
+        int modulus_int = sum % 256;
+
+        return QString("%1").arg(modulus_int, 3, 10, QChar('0'));
+    }
+
+
+    /**
      * This method validate the data before procceeding to proccessReadData
      * WARNING: This method may recieve half complete data packages so it
      *          must take that into account when verifing the package
@@ -71,9 +98,11 @@ namespace App { namespace Hardware { namespace HAL
 
         // Get data that is for the check sum
         QString data = packageString.left(packageString.length()-4);
+        QStringList validate;
+        validate.append(data);
 
         // If the differance between the two stirng is zero then check sums match
-        if (checkSumEightValidation(data, checkSum))
+        if (checkSumValidation(validate, checkSum))
             return true;
 
         return false;
@@ -154,9 +183,11 @@ namespace App { namespace Hardware { namespace HAL
 
         // Compile string
         QString package = QString::number(m_id) + action + parameterValue + data_length + data;
+        QStringList validate;
+        validate.append(package);
 
         // Append the check sum  and carriage return
-        package = package + calculateCheckSumEight(package) + "\r";
+        package = package + calculateCheckSum(validate) + "\r";
 
         // Return string and Conver to btye array
         return QByteArray::fromStdString(package.toStdString());

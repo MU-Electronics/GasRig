@@ -56,6 +56,41 @@ namespace App { namespace Hardware { namespace HAL
         m_id = id;
     }
 
+    QString PressureSensor::calculateCheckSum(QStringList dataIn)
+    {
+        //QByteArray data = dataIn.toUtf8(); //QString.toUtf8()
+        uint16_t crc = 0xFFFF;
+        bool b;
+
+        for(int pos = 0; pos<dataIn.length();pos++)
+        {
+            crc ^= (uint16_t) dataIn.at(pos).toInt();
+            //qDebug() << dataIn.at(pos).toInt();
+            for( int i = 8; i != 0; i--)
+            {
+//                if ((crc & 0x0001) != 0)  // LSB is set
+//                {
+//                    crc >>= 1;            // Shift right
+//                    crc ^= 0xA001;        // XOR 0xA001
+//                }
+//                else
+//                {
+//                    crc >>= 1;            // LSB is not set
+//                }
+                if(crc%2==1)
+                    b= true;
+                else
+                    b= false;
+                crc/= 2;
+                if(b)
+                    crc^= 0xA001;
+            }
+
+        }
+        return QString::number(crc);
+    }
+
+
     /**
      * This method validate the data before procceeding to proccessReadData
      * WARNING: This method may recieve half complete data packages so it
@@ -73,12 +108,15 @@ namespace App { namespace Hardware { namespace HAL
             data.append(package.at(i));
         }
 
-        // remove check sums
+        // Remove check sums
         QStringList dataArray = package;
         dataArray.removeLast();
         dataArray.removeLast();
 
-        qDebug() << "Converted from: " << package << " to:" << data << " Make checksum: " << calculateCheckSumSixteen(dataArray);
+        // Get the check sum
+        QString checksumAscii = calculateCheckSum(dataArray);
+
+        qDebug() << "Converted from: " << package << " to:" << data << " Make checksum: " << calculateCheckSum(dataArray);
 
         return false;
     }

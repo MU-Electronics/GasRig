@@ -224,77 +224,18 @@ namespace App { namespace Services
     }
 
 
-    QString SerialController::calculateCheckSumSixteen(QStringList dataIn)
-    {
-        //QByteArray data = dataIn.toUtf8(); //QString.toUtf8()
-        uint16_t crc = 0xFFFF;
-        bool b;
-
-        for(int pos = 0; pos<dataIn.length();pos++)
-        {
-            crc ^= (uint16_t) dataIn.at(pos).toInt();
-            //qDebug() << dataIn.at(pos).toInt();
-            for( int i = 8; i != 0; i--)
-            {
-//                if ((crc & 0x0001) != 0)  // LSB is set
-//                {
-//                    crc >>= 1;            // Shift right
-//                    crc ^= 0xA001;        // XOR 0xA001
-//                }
-//                else
-//                {
-//                    crc >>= 1;            // LSB is not set
-//                }
-                if(crc%2==1)
-                    b= true;
-                else
-                    b= false;
-                crc/= 2;
-                if(b)
-                    crc^= 0xA001;
-            }
-
-        }
-        return QString::number(crc);
-    }
-
-
     /**
-         * PRIVATE: Calcuate a check sum-8 for given data
-         *
-         * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-         * @param QString string The string to create the check sum for
-         * @return QString
-         */
-    QString SerialController::calculateCheckSumEight(QString string)
-    {
-        // Find check sum 8
-        int sum = 0;
-        for (unsigned int i = 0; i < string.size(); i++) {
-            if(string[i] == ' '){
-                sum += 32;
-            }else{
-                sum += string[i].toLatin1();
-            }
-        }
-        int modulus_int = sum % 256;
-
-        return QString("%1").arg(modulus_int, 3, 10, QChar('0'));
-    }
-
-
-    /**
-         * PRIVATE: Check the check sum provided against the data provided
-         * @todo remove the std library for Qt libs completely
-         *
-         * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-         * @param string package The string with check sum that needs validating
-         * @return bool
-         */
-    bool SerialController::checkSumEightValidation(QString data, QString checkSum)
+     * PRIVATE: Check the check sum provided against the data provided
+     * @todo remove the std library for Qt libs completely
+     *
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @param string package The string with check sum that needs validating
+     * @return bool
+     */
+    bool SerialController::checkSumValidation(QStringList data, QString checkSum)
     {
         // Calcuate check sum for data
-        QString newSum = calculateCheckSumEight(data);
+        QString newSum = calculateCheckSum(data);
 
         // Check sums are the same
         int validate = QString::compare(newSum, checkSum, Qt::CaseInsensitive);

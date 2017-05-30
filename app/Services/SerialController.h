@@ -37,9 +37,7 @@ namespace App { namespace Services
             bool isOpen();
 
             // Validation helpers
-            bool checkSumEightValidation(QString data, QString checkSum);
-            QString calculateCheckSumEight(QString string);
-            QString calculateCheckSumSixteen(QStringList data);
+            bool checkSumValidation(QStringList data, QString checkSum);
 
             // Signal package generators / helpers
             QVariantMap errorPackageGenerator(QString com, QString port, QString error);
@@ -77,6 +75,9 @@ namespace App { namespace Services
 
             // Validate the data to determin when the full package has been read
             virtual bool validate(QStringList data) = 0;
+
+            // Due to number of check sum formats we'll abstract this out to the HALs
+            virtual QString calculateCheckSum(QStringList string) = 0;
 
     };
 }}

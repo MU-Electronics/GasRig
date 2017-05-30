@@ -24,6 +24,13 @@ namespace App { namespace Hardware { namespace HAL
     }
 
 
+    QString FlowController::calculateCheckSum(QStringList dataIn)
+    {
+
+        return QString::number(1);
+    }
+
+
     /**
      * When data has been recived it will be handled here
      * by this time validation has been performed on the data via a check sum

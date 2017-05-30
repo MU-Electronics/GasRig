@@ -55,6 +55,7 @@ namespace App { namespace Hardware { namespace HAL
 
             bool validate(QStringList package);
             void proccessReadData(QStringList readData);
+            QString calculateCheckSum(QStringList stringList);
 
     };
 }}}
