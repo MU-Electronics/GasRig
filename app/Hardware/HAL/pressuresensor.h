@@ -23,15 +23,17 @@ namespace App { namespace Hardware { namespace HAL
         public slots:
             void confirmInit();
             void readPressure();
+            void readSerialNumber();
 
-            // Required slot for full HAL Support compliance
+            // Required slots for full HAL Support compliance
             void testConnection();
             void resetConnection();
 
         private:
             int m_id;
 
-            QByteArray createPackage(QString action, QString parameterValue, QString data);
+            QByteArray createPackage(QString action, QString parameterValue);
+            bool send(QString action, QString parameterValue);
 
             void proccessReadData(QStringList readData);
             bool validate(QStringList package);

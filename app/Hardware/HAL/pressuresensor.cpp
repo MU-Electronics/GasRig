@@ -20,31 +20,79 @@ namespace App { namespace Hardware { namespace HAL
     }
 
 
-    QByteArray PressureSensor::createPackage(QString action, QString parameterValue, QString data)
+    /**
+     * PUBLIC: Creates a package and send it to the bus, then wait for a responce and validates the responce.
+     *
+     * @param QString action The action eg request, command etc (See Pfeffier Vacuum Protocol for "RS485" p.25 chap. 7.2 in TC110 OPerating Instructions)
+     * @param QString parameterValue The id for the information / action required
+     * @param QString  data The control data to be sent
+     * @param unsigned int bytesRead The number of bytes for the returned response
+     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
+     * @return string
+     */
+    bool PressureSensor::send(QString action, QString parameterValue)
     {
-        // Below inits the device
-        QByteArray package;
-        package.resize(4);
-        package[0] = 0x01; // ID with a decimal value of 1
-        package[1] = 0x30; // Function with a decimal value of 48
-        package[2] = 0x34; // Upper CRC with a decimal value of 52
-        package[3] = 0x00; // Lower CRC with a decimal value of 0
+        // Create package to send
+        QByteArray package = createPackage(action, parameterValue);
 
-        // Below reads the serial number
-        QByteArray package2;
-        package2.resize(4);
-        package2[0] = 0x01; // ID with a decimal value of 1
-        package2[1] = 0x45; // Function with a decimal value of 69
-        package2[2] = 0xD3; // Upper CRC with a decimal value of 211
-        package2[3] = 0xC1; // Lower CRC with a decimal value of 193
-
+        // Write the package to the bus
         write(package);
 
-        qDebug() << package2;
+        // package write
+        return true;
+    }
+
+
+    QByteArray PressureSensor::createPackage(QString action, QString parameterValue)
+    {
+        // Create package container
+        QByteArray package;
+
+        // convert id to hex
+        QString id = QString("%1").arg(m_id, 0, 16);
+
+        // Convert function to hex
+        QString actionHex = QString("%1").arg(action.toInt(), 0, 16);
+
+        // Calcuate check sum
+        QStringList dataArray;
+        dataArray << QString::number(m_id) << action;
+        if(!parameterValue.isEmpty())
+            dataArray << parameterValue;
+        QString checkSum = calculateCheckSum(dataArray);
+
+        // Convert check sum into hex
+        QString checkSumHex = QString("%1").arg(checkSum.toInt(), 0, 16);
+
+        // Get high and low bytes
+        QString highCheckSum = QString("%1").arg(checkSumHex.mid(0,2), 0, 16);
+        QString lowCheckSum = QString("%1").arg(checkSumHex.mid(2,2), 0, 16);
+
+        // Create the package
+        if(!parameterValue.isEmpty())
+        {
+            // Set size of package
+            package.resize(5);
+
+            // Get param value in hex form
+            QString parameterValueHex = QString("%1").arg((int) parameterValue.toInt(), 0, 16);
+
+            // Create package
+            package = QByteArray::fromHex(id.toUtf8() + actionHex.toUtf8() + parameterValueHex.toUtf8() + highCheckSum.toUtf8() + lowCheckSum.toUtf8());
+        }
+        else
+        {
+            // Set size of package
+            package.resize(4);
+
+            // Create package
+            package = QByteArray::fromHex(id.toUtf8() + actionHex.toUtf8() + highCheckSum.toUtf8() + lowCheckSum.toUtf8());
+        }
 
         // Return string and Conver to btye array
-        return package2;
+        return package;
     }
+
 
     /**
      * Sets the ID for the vac pump
@@ -57,6 +105,14 @@ namespace App { namespace Hardware { namespace HAL
         m_id = id;
     }
 
+
+    /**
+     * Calcuates a check sum 16 modbus
+     *
+     * @brief PressureSensor::calculateCheckSum
+     * @param dataIn
+     * @return
+     */
     QString PressureSensor::calculateCheckSum(QStringList dataIn)
     {
         uint16_t crc = 0xFFFF;
@@ -119,6 +175,7 @@ namespace App { namespace Hardware { namespace HAL
         return false;
     }
 
+
     /**
      * When data has been recived it will be handled here
      * by this time validation has been performed on the data via a check sum
@@ -166,13 +223,19 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::confirmInit()
     {
-        QByteArray package;
-        package.resize(4);
-        package[0] = 0x01; // ID with a decimal value of 1
-        package[1] = 0x30; // Function with a decimal value of 48
-        package[2] = 0x34; // Upper CRC with a decimal value of 52
-        package[3] = 0x00; // Lower CRC with a decimal value of 0
-        write(package);
+        send("48", "");
+    }
+
+
+    void PressureSensor::readSerialNumber()
+    {
+        QByteArray package2;
+        package2.resize(4);
+        package2[0] = 0x01; // ID with a decimal value of 1
+        package2[1] = 0x45; // Function with a decimal value of 69
+        package2[2] = 0xD3; // Upper CRC with a decimal value of 211
+        package2[3] = 0xC1; // Lower CRC with a decimal value of 193
+        //write(package2);
     }
 
 
@@ -187,7 +250,7 @@ namespace App { namespace Hardware { namespace HAL
         int channel = m_command.value("channel").toInt();
 
         //createPackage("73","1","");
-         createPackage("48","","");
+         createPackage("48","");
     }
 }}}
 
