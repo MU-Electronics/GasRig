@@ -23,8 +23,8 @@ namespace App { namespace Hardware { namespace HAL
             void resetConnection();
 
         private:
-            void proccessReadData(QString readData);
-            bool validate(QString package);
+            void proccessReadData(QStringList readData);
+            bool validate(QStringList package);
 
             explicit FlowController(const FlowController& rhs) = delete;
             FlowController& operator= (const FlowController& rhs) = delete;

@@ -26,7 +26,7 @@ namespace App { namespace ViewManager
     void Testing::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
     {
         // Connect object signals to hardware slots and visa versa
-        connect(this, &Testing::vacStationPump, &hardware, &Hardware::Access::hardwareAccess);
+        connect(this, &Testing::hardwareRequest, &hardware, &Hardware::Access::hardwareAccess);
     }
 
 
@@ -39,7 +39,18 @@ namespace App { namespace ViewManager
         command.insert("state", onOff);
 
         // Emit siganl to HAL
-        emit vacStationPump(command);
+        emit hardwareRequest(command);
+    }
+
+    void Testing::requestPressureConfirmation()
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "PressureSensor");
+        command.insert("method", "confirmInit");
+
+        // Emit siganl to HAL
+        emit hardwareRequest(command);
     }
 }}
 

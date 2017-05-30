@@ -24,6 +24,9 @@ namespace App { namespace Services
             // What is the class responsable for?
             QString m_responsability;
 
+            // When reading format hex to acsii
+            bool m_hexToAcsii = false;
+
             // Find port name for device
             QString findPortName(quint16 productId, quint16 vendorID);
 
@@ -64,16 +67,16 @@ namespace App { namespace Services
             int             m_timeOut;
             qint64          m_bytesWritten;
             QByteArray      m_writeData;
-            QByteArray      m_readData;
+            QStringList      m_readData;
             bool            m_busFree;
 
             void clearVars();
 
             // How the child should handle the read data
-            virtual void proccessReadData(QString readData) = 0;
+            virtual void proccessReadData(QStringList readData) = 0;
 
             // Validate the data to determin when the full package has been read
-            virtual bool validate(QString data) = 0;
+            virtual bool validate(QStringList data) = 0;
 
     };
 }}

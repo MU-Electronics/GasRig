@@ -308,14 +308,28 @@ namespace App { namespace Services
 
 
     /**
-         * When data is read to the read on the serial line this method will take over
-         *
-         * @brief SerialController::handleRead
-         */
+     * When data is read to the read on the serial line this method will take over
+     *
+     * @brief SerialController::handleRead
+     */
     void SerialController::handleRead()
     {
-        // Read all the data
-        m_readData.append(m_serialPort.readAll());
+        // Get the read data
+        QByteArray data = m_serialPort.readAll();
+
+        if(!m_hexToAcsii)
+        {
+            // Read all the data straight into the read container
+            m_readData.append(data);
+        }
+        else
+        {
+            // For each btye we will convert to ascii format then sort in read container
+            for (int i = 0; i < data.size(); ++i)
+            {
+                 m_readData.append(QString::number((int) data.at(i)));
+            }
+        }
 
         if (!m_readData.isEmpty() && validate(m_readData))
         {

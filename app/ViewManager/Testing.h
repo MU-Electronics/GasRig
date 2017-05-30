@@ -29,10 +29,11 @@ namespace App { namespace ViewManager
 
 
         signals:
-            void vacStationPump(QVariantMap command);
+            void hardwareRequest(QVariantMap command);
 
         public slots:
             void requestVacuum(bool onOff);
+            void requestPressureConfirmation();
 
         private:
             QQmlApplicationEngine* m_root;

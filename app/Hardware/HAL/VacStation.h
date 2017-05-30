@@ -53,8 +53,8 @@ namespace App { namespace Hardware { namespace HAL
             QByteArray createPackage(QString action, QString parameterValue, QString data);
             bool send(QString action, QString parameterValue, QString data);
 
-            bool validate(QString package);
-            void proccessReadData(QString readData);
+            bool validate(QStringList package);
+            void proccessReadData(QStringList readData);
 
     };
 }}}

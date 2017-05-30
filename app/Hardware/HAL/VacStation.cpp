@@ -61,13 +61,16 @@ namespace App { namespace Hardware { namespace HAL
      * @param package
      * @return
      */
-    bool VacStation::validate(QString package)
+    bool VacStation::validate(QStringList package)
     {
+        // Combind all read packages into on string
+        QString packageString = package.join("");
+
         // Get check sum
-        QString checkSum = package.right(4).left(3);
+        QString checkSum = packageString.right(4).left(3);
 
         // Get data that is for the check sum
-        QString data = package.left(package.length()-4);
+        QString data = packageString.left(packageString.length()-4);
 
         // If the differance between the two stirng is zero then check sums match
         if (checkSumEightValidation(data, checkSum))
@@ -84,8 +87,11 @@ namespace App { namespace Hardware { namespace HAL
      * @brief VacStation::proccessReadData
      * @param readData
      */
-    void VacStation::proccessReadData(QString readData)
+    void VacStation::proccessReadData(QStringList package)
     {
+        // Combind all read packages into on string
+        QString readData = package.join("");
+
         // Get the ID
         QString id = readData.mid(0, 3);
 

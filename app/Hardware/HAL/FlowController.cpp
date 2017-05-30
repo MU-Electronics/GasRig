@@ -18,7 +18,7 @@ namespace App { namespace Hardware { namespace HAL
      * @param package
      * @return
      */
-    bool FlowController::validate(QString package)
+    bool FlowController::validate(QStringList package)
     {
         return true;
     }
@@ -31,7 +31,7 @@ namespace App { namespace Hardware { namespace HAL
      * @brief FlowController::proccessReadData
      * @param readData
      */
-    void FlowController::proccessReadData(QString readData)
+    void FlowController::proccessReadData(QStringList readData)
     {
         qDebug() << readData;
     }

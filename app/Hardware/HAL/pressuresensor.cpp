@@ -15,6 +15,7 @@ namespace App { namespace Hardware { namespace HAL
         // Sets what this class is responable for; @NOTE: Could be done in base class
         m_responsability = "PressureSensor";
         m_id = 1;
+        m_hexToAcsii = true;
     }
 
 
@@ -36,7 +37,7 @@ namespace App { namespace Hardware { namespace HAL
         package2[2] = 0xD3; // Upper CRC with a decimal value of 211
         package2[3] = 0xC1; // Lower CRC with a decimal value of 193
 
-        write(package2);
+        write(package);
 
         qDebug() << package2;
 
@@ -64,7 +65,7 @@ namespace App { namespace Hardware { namespace HAL
      * @param package
      * @return
      */
-    bool PressureSensor::validate(QString package)
+    bool PressureSensor::validate(QStringList package)
     {
         return true;
     }
@@ -76,9 +77,13 @@ namespace App { namespace Hardware { namespace HAL
      * @brief PressureSensor::proccessReadData
      * @param readData
      */
-    void PressureSensor::proccessReadData(QString readData)
+    void PressureSensor::proccessReadData(QStringList readData)
     {
-        qDebug() << readData;
+        for (int i = 0; i < readData.size(); ++i)
+        {
+            qDebug() << readData.at(i);
+        }
+        qDebug() << "Read on port: " << readData;
     }
 
 
@@ -112,7 +117,13 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::confirmInit()
     {
-
+        QByteArray package;
+        package.resize(4);
+        package[0] = 0x01; // ID with a decimal value of 1
+        package[1] = 0x30; // Function with a decimal value of 48
+        package[2] = 0x34; // Upper CRC with a decimal value of 52
+        package[3] = 0x00; // Lower CRC with a decimal value of 0
+        write(package);
     }
 
 

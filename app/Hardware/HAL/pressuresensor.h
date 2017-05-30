@@ -33,8 +33,8 @@ namespace App { namespace Hardware { namespace HAL
 
             QByteArray createPackage(QString action, QString parameterValue, QString data);
 
-            void proccessReadData(QString readData);
-            bool validate(QString package);
+            void proccessReadData(QStringList readData);
+            bool validate(QStringList package);
 
             //explicit PressureSensor(const PressureSensor& rhs) = delete;
             //PressureSensor& operator= (const PressureSensor& rhs) = delete;
