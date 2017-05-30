@@ -224,33 +224,34 @@ namespace App { namespace Services
     }
 
 
-    QString SerialController::calculateCheckSumSixteen(QString dataIn)
+    QString SerialController::calculateCheckSumSixteen(QStringList dataIn)
     {
-        QByteArray data = dataIn.toUtf8(); //QString.toUtf8()
+        //QByteArray data = dataIn.toUtf8(); //QString.toUtf8()
         uint16_t crc = 0xFFFF;
         bool b;
 
-        for(int pos = 0; pos<data.length();pos++)
+        for(int pos = 0; pos<dataIn.length();pos++)
         {
-            crc ^= (uint16_t)data.data()[pos];
+            crc ^= (uint16_t) dataIn.at(pos).toInt();
+            //qDebug() << dataIn.at(pos).toInt();
             for( int i = 8; i != 0; i--)
             {
-                if ((crc & 0x0001) != 0)  // LSB is set
-                {
-                    crc >>= 1;            // Shift right
-                    crc ^= 0xA001;        // XOR 0xA001
-                }
-                else
-                {
-                    crc >>= 1;            // LSB is not set
-                }
-//                if(crc%2==1)
-//                    b= true;
+//                if ((crc & 0x0001) != 0)  // LSB is set
+//                {
+//                    crc >>= 1;            // Shift right
+//                    crc ^= 0xA001;        // XOR 0xA001
+//                }
 //                else
-//                    b= false;
-//                crc/= 2;
-//                if(b)
-//                    crc^= 0xA001;
+//                {
+//                    crc >>= 1;            // LSB is not set
+//                }
+                if(crc%2==1)
+                    b= true;
+                else
+                    b= false;
+                crc/= 2;
+                if(b)
+                    crc^= 0xA001;
             }
 
         }
@@ -327,7 +328,8 @@ namespace App { namespace Services
             // For each btye we will convert to ascii format then sort in read container
             for (int i = 0; i < data.size(); ++i)
             {
-                 m_readData.append(QString::number((int) data.at(i)));
+                qDebug()<<"Adding: "<<data.at(i);
+                 m_readData.append(QString::number((unsigned char) data.at(i)));
             }
         }
 

@@ -39,7 +39,7 @@ namespace App { namespace Services
             // Validation helpers
             bool checkSumEightValidation(QString data, QString checkSum);
             QString calculateCheckSumEight(QString string);
-            QString calculateCheckSumSixteen(QString data);
+            QString calculateCheckSumSixteen(QStringList data);
 
             // Signal package generators / helpers
             QVariantMap errorPackageGenerator(QString com, QString port, QString error);

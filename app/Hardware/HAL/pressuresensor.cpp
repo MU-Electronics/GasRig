@@ -67,7 +67,20 @@ namespace App { namespace Hardware { namespace HAL
      */
     bool PressureSensor::validate(QStringList package)
     {
-        return true;
+        QString data;
+        for (int i = 0; i < (package.size()-2); ++i)
+        {
+            data.append(package.at(i));
+        }
+
+        // remove check sums
+        QStringList dataArray = package;
+        dataArray.removeLast();
+        dataArray.removeLast();
+
+        qDebug() << "Converted from: " << package << " to:" << data << " Make checksum: " << calculateCheckSumSixteen(dataArray);
+
+        return false;
     }
 
     /**
@@ -79,10 +92,10 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::proccessReadData(QStringList readData)
     {
-        for (int i = 0; i < readData.size(); ++i)
-        {
-            qDebug() << readData.at(i);
-        }
+//        for (int i = 0; i < readData.size(); ++i)
+//        {
+//            qDebug() << readData.at(i);
+//        }
         qDebug() << "Read on port: " << readData;
     }
 
