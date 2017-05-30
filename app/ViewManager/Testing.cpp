@@ -47,7 +47,9 @@ namespace App { namespace ViewManager
         // Create command for HAL
         QVariantMap command;
         command.insert("hardware", "PressureSensor");
-        command.insert("method", "confirmInit");
+        //command.insert("method", "confirmInit");
+        command.insert("method", "readPressure");
+        command.insert("channel", "1");
 
         // Emit siganl to HAL
         emit hardwareRequest(command);

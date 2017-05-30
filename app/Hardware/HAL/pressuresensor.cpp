@@ -49,10 +49,13 @@ namespace App { namespace Hardware { namespace HAL
         QByteArray package;
 
         // convert id to hex
-        QString id = QString("%1").arg(m_id, 0, 16);
+        QString id = QString("%1").arg(m_id, 2, 16, QChar('0'));
 
         // Convert function to hex
-        QString actionHex = QString("%1").arg(action.toInt(), 0, 16);
+        QString actionHex = QString("%1").arg(action.toInt(), 2, 16, QChar('0'));
+
+        // Convert for para Hex
+        QString parameterValueHex;
 
         // Calcuate check sum
         QStringList dataArray;
@@ -75,7 +78,7 @@ namespace App { namespace Hardware { namespace HAL
             package.resize(5);
 
             // Get param value in hex form
-            QString parameterValueHex = QString("%1").arg((int) parameterValue.toInt(), 0, 16);
+            parameterValueHex = QString("%1").arg(parameterValue.toInt(), 2, 16, QChar('0'));
 
             // Create package
             package = QByteArray::fromHex(id.toUtf8() + actionHex.toUtf8() + parameterValueHex.toUtf8() + highCheckSum.toUtf8() + lowCheckSum.toUtf8());
@@ -216,7 +219,7 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
-     * Confirm the device is init
+     * Requests confirmation that the device is init
      * Relatvie to function 48 in the datasheet
      *
      * @brief PressureSensor::confirmIniti
@@ -227,15 +230,14 @@ namespace App { namespace Hardware { namespace HAL
     }
 
 
+    /**
+     * Requests the serial number of the sensor
+     *
+     * @brief PressureSensor::readSerialNumber
+     */
     void PressureSensor::readSerialNumber()
     {
-        QByteArray package2;
-        package2.resize(4);
-        package2[0] = 0x01; // ID with a decimal value of 1
-        package2[1] = 0x45; // Function with a decimal value of 69
-        package2[2] = 0xD3; // Upper CRC with a decimal value of 211
-        package2[3] = 0xC1; // Lower CRC with a decimal value of 193
-        //write(package2);
+        send("69", "");
     }
 
 
@@ -247,10 +249,7 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::readPressure()
     {
-        int channel = m_command.value("channel").toInt();
-
-        //createPackage("73","1","");
-         createPackage("48","");
+        send("73", m_command.value("channel").toString());
     }
 }}}
 
