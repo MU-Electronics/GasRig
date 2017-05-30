@@ -5,6 +5,7 @@
 #include <QByteArray>
 #include <QVariantMap>
 #include <QThread>
+#include <QTextStream>
 
 namespace App { namespace Hardware { namespace HAL
 {
@@ -58,25 +59,14 @@ namespace App { namespace Hardware { namespace HAL
 
     QString PressureSensor::calculateCheckSum(QStringList dataIn)
     {
-        //QByteArray data = dataIn.toUtf8(); //QString.toUtf8()
         uint16_t crc = 0xFFFF;
         bool b;
 
         for(int pos = 0; pos<dataIn.length();pos++)
         {
             crc ^= (uint16_t) dataIn.at(pos).toInt();
-            //qDebug() << dataIn.at(pos).toInt();
             for( int i = 8; i != 0; i--)
             {
-//                if ((crc & 0x0001) != 0)  // LSB is set
-//                {
-//                    crc >>= 1;            // Shift right
-//                    crc ^= 0xA001;        // XOR 0xA001
-//                }
-//                else
-//                {
-//                    crc >>= 1;            // LSB is not set
-//                }
                 if(crc%2==1)
                     b= true;
                 else
@@ -102,22 +92,30 @@ namespace App { namespace Hardware { namespace HAL
      */
     bool PressureSensor::validate(QStringList package)
     {
-        QString data;
-        for (int i = 0; i < (package.size()-2); ++i)
-        {
-            data.append(package.at(i));
-        }
+        QString checkSum;
 
-        // Remove check sums
+        // Get the hex values from received data
+        QString crcHighHex = QString("%1").arg((int)package.at(package.size()-2).toInt(), 0, 16);
+        QString crcLowHex = QString("%1").arg((int)package.at(package.size()-1).toInt(), 0, 16);
+
+        // Combined the two hex numbers
+        QString combind = "0x" + crcHighHex + crcLowHex;
+
+        // Convert hex value to decimal value
+        int intChecksum = 0;
+        QTextStream convertHex(&combind);
+        convertHex >> intChecksum;
+
+        // Remove check sums from received data
         QStringList dataArray = package;
         dataArray.removeLast();
         dataArray.removeLast();
 
-        // Get the check sum
-        QString checksumAscii = calculateCheckSum(dataArray);
+        // If the differance between the two stirng is zero then check sums match
+        if (checkSumValidation(dataArray, QString::number(intChecksum)))
+            return true;
 
-        qDebug() << "Converted from: " << package << " to:" << data << " Make checksum: " << calculateCheckSum(dataArray);
-
+        // Validation failed
         return false;
     }
 

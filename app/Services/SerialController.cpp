@@ -239,6 +239,7 @@ namespace App { namespace Services
 
         // Check sums are the same
         int validate = QString::compare(newSum, checkSum, Qt::CaseInsensitive);
+        //qDebug() << "Results: " << validate << " calculated crc: " << newSum << "Sent check sum" << checkSum;
 
         // If the differance between the two stirng is zero then check sums match
         if (validate == 0)
@@ -269,7 +270,6 @@ namespace App { namespace Services
             // For each btye we will convert to ascii format then sort in read container
             for (int i = 0; i < data.size(); ++i)
             {
-                qDebug()<<"Adding: "<<data.at(i);
                  m_readData.append(QString::number((unsigned char) data.at(i)));
             }
         }
