@@ -74,9 +74,10 @@ namespace App { namespace Hardware
         connect(&m_vacStation, &HAL::VacStation::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
 
         // Connect pressure sensor HAL connections
-        connect(&m_pressureSensor, &HAL::VacStation::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
-        connect(&m_pressureSensor, &HAL::VacStation::emit_critialSerialError, this, &Access::listen_critialSerialError);
-        connect(&m_pressureSensor, &HAL::VacStation::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
+        connect(&m_pressureSensor, &HAL::PressureSensor::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
+        connect(&m_pressureSensor, &HAL::PressureSensor::emit_critialSerialError, this, &Access::listen_critialSerialError);
+        connect(&m_pressureSensor, &HAL::PressureSensor::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
+        connect(&m_pressureSensor, &HAL::PressureSensor::emit_comConnectionStatus, &m_pressureSensor, &HAL::PressureSensor::confirmInit);
 
         // Connect flow controller HAL connections
 

@@ -153,6 +153,9 @@ namespace App { namespace Hardware { namespace HAL
     {
         QString checkSum;
 
+        if(package.isEmpty() || package.size() < 2)
+            return false;
+
         // Get the hex values from received data
         QString crcHighHex = QString("%1").arg((int)package.at(package.size()-2).toInt(), 0, 16);
         QString crcLowHex = QString("%1").arg((int)package.at(package.size()-1).toInt(), 0, 16);
