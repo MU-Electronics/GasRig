@@ -482,6 +482,8 @@ namespace App { namespace Services
         // Create package to be emitted
         QVariantMap errorPackage;
         errorPackage["responsability"] = m_responsability;
+        errorPackage["method"] = m_method;
+        errorPackage["status"] = false;
         errorPackage["com"] = com;
         errorPackage["comAttempt"] = port;
         errorPackage["error"] = error;
@@ -496,7 +498,7 @@ namespace App { namespace Services
         QVariantMap package;
         package["responsability"] = m_responsability;
         package["com"] = com;
-        package["open"] = status;
+        package["status"] = status;
 
         return package;
     }

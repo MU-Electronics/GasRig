@@ -195,6 +195,8 @@ namespace App { namespace Hardware { namespace HAL
 //        {
 //            qDebug() << readData.at(i);
 //        }
+
+        //QVariantMap
         qDebug() << "Read on port: " << readData;
     }
 
@@ -206,7 +208,19 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::testConnection()
     {
+        // Set the method
+        m_method = "testConnection";
 
+        // Does the com port & connection exist?
+        if(!checkDeviceAvaliable(false))
+        {
+            // Send a critial issue, MOST PROBABLY USB not connected issue
+            //emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_connectionValues.value("com").toString(), "Cant not find the device on this PC, check cable is plugged in."));
+            emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
+
+            // return
+            return;
+        }
     }
 
 
@@ -217,7 +231,29 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::resetConnection()
     {
-        readPressure();
+        // Set the method
+        m_method = "resetConnection";
+
+        // Refresh connection attempt
+        if(!checkDeviceAvaliable(true))
+        {
+            // Send a critial issue, MOST PROBABLY USB not connected issue
+            emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
+
+            return;
+        }
+    }
+
+
+    /**
+     * Init the pressure sensor on connect
+     *
+     * @brief PressureSensor::testConnection
+     */
+    void PressureSensor::connectInitSensor(QVariantMap package)
+    {
+        if(package.value("status").toBool())
+            confirmInit();
     }
 
 
@@ -229,6 +265,10 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::confirmInit()
     {
+        // Set the method
+        m_method = "confirmInit";
+
+        // Send the command
         send("48", "");
     }
 
@@ -240,6 +280,10 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::readSerialNumber()
     {
+        // Set the method
+        m_method = "readSerialNumber";
+
+        // Send the command
         send("69", "");
     }
 
@@ -252,6 +296,10 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::readPressure()
     {
+        // Set the method
+        m_method = "readPressure";
+
+        // Send the command
         send("73", m_command.value("channel").toString());
     }
 }}}

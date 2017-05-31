@@ -24,6 +24,7 @@ namespace App { namespace Hardware { namespace HAL
             void confirmInit();
             void readPressure();
             void readSerialNumber();
+            void connectInitSensor(QVariantMap package);
 
             // Required slots for full HAL Support compliance
             void testConnection();

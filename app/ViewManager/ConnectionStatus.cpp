@@ -117,7 +117,7 @@ namespace App { namespace ViewManager
         m_hardwareConnection.insert(package["responsability"].toString(), "0");
 
         // Connection successfully
-        if(package.value("open").toBool())
+        if(package.value("status").toBool())
         {
             m_hardwareConnection.insert(package["responsability"].toString(), "1");
         }

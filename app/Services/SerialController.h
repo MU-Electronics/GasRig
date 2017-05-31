@@ -24,6 +24,9 @@ namespace App { namespace Services
             // What is the class responsable for?
             QString m_responsability;
 
+            // What is the class responsable for?
+            QString m_method;
+
             // When reading format hex to acsii
             bool m_hexToAcsii = false;
 
