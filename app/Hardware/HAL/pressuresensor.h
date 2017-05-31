@@ -9,16 +9,22 @@
 // Interface for HAL classes
 #include "HALSupport.h"
 
+// Include presure sensor presenter
+#include "Presenters/PressureSensorPresenter.h"
+
 
 namespace App { namespace Hardware { namespace HAL
 {
-    class PressureSensor: public App::Services::SerialController, public HALSupport
+    class PressureSensor: public App::Services::SerialController, public HALSupport, public Presenters::PressureSensorPresenter
     {
         Q_OBJECT
         public:
             PressureSensor(QObject *parent, int id);
 
             void setId(int id);
+
+        signals:
+            void emit_pressureSensorData(QString responable, QString m_method, QStringList halData);
 
         public slots:
             void confirmInit();

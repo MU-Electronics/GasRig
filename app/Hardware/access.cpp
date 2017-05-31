@@ -18,6 +18,9 @@
 #include "HAL/PressureSensor.h"
 #include "HAL/Labjack.h"
 
+// Include presenters
+#include "HAL/Presenters/PressureSensorPresenter.h"
+
 namespace App { namespace Hardware
 {
 
@@ -42,7 +45,10 @@ namespace App { namespace Hardware
             m_vacStation(*new HAL::VacStation(this, 1)),
             m_flowController(*new HAL::FlowController(this)),
             m_pressureSensor(*new HAL::PressureSensor(this, 1)),
-            m_labjack(*new HAL::LabJack(this))
+            m_labjack(*new HAL::LabJack(this)),
+
+          // HAL Presenters
+          m_pressurePresenter(*new HAL::Presenters::PressureSensorPresenter(this))
     {
         // Set possable methods to be ran within this class via the queue
         // None atm set like this: m_avaliableMethods.append("<method name>");
@@ -74,10 +80,12 @@ namespace App { namespace Hardware
         connect(&m_vacStation, &HAL::VacStation::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
 
         // Connect pressure sensor HAL connections
+        connect(&m_pressureSensor, &HAL::PressureSensor::emit_pressureSensorData, this, &Access::proccessDataFromHals);
         connect(&m_pressureSensor, &HAL::PressureSensor::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
         connect(&m_pressureSensor, &HAL::PressureSensor::emit_critialSerialError, this, &Access::listen_critialSerialError);
         connect(&m_pressureSensor, &HAL::PressureSensor::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
         connect(&m_pressureSensor, &HAL::PressureSensor::emit_comConnectionStatus, &m_pressureSensor, &HAL::PressureSensor::connectInitSensor);
+
 
         // Connect flow controller HAL connections
 
@@ -312,6 +320,50 @@ namespace App { namespace Hardware
             // Add to the queue
             m_queue.enqueue(command);
         }
+    }
+
+
+    /**
+     * Takes data from the HALs converts it to useable data via the HAL presenters and
+     * then inkokes the correct slot+signal for the rest of the application to connect to
+     *
+     * @brief Access::proccessDataFromHals
+     * @param responable
+     * @param method
+     * @param halData
+     */
+    void Access::proccessDataFromHals(QString responable, QString method, QStringList halData)
+    {
+        // Hold the presenters data
+        QVariantMap package;
+
+        // Format the data from the HAL package to useable data for the rest of the application
+        if(responable == "PressureSensor")
+            package = m_pressurePresenter->proccess(method, halData);
+
+        // Trigger the correct access class signal
+        QMetaObject::invokeMethod(this, package["method"].toString().toLatin1().data(), Qt::DirectConnection, Q_ARG( QVariantMap, package ));
+    }
+
+
+
+
+
+
+
+
+    // BELOW SHOULD BE ABSTRACTED OUT THE CLASS AS THERE WILL BE A NUMBER OF SLOTS TO DO
+
+
+    /**
+     * Listen for new pressure readings and emits the new data
+     *
+     * @brief Access::listen_pressureSensorOne
+     * @param command
+     */
+    void Access::listen_pressureSensorOne(QVariantMap command)
+    {
+        qDebug() << "I'll be sending that signal for you";
     }
 
 

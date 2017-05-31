@@ -19,6 +19,9 @@
 #include "HAL/PressureSensor.h"
 #include "HAL/VacStation.h"
 
+// Include HAL presenters
+#include "HAL/Presenters/PressureSensorPresenter.h"
+
 
 namespace App { namespace Hardware
 {
@@ -35,11 +38,15 @@ namespace App { namespace Hardware
             void emit_timeoutSerialError(QVariantMap command);
             void emit_critialSerialError(QVariantMap command);
 
+
+
         public slots:
             void hardwareAccess(QVariantMap command);
             void listen_serialComUpdates(QVariantMap command);
             void listen_critialSerialError(QVariantMap command);
             void listen_timeoutSerialError(QVariantMap command);
+
+            void listen_pressureSensorOne(QVariantMap command);
 
             // Access function that can be invoked externally via the queue
             // None atm; for example: void resetAllUSBConnection();
@@ -60,6 +67,9 @@ namespace App { namespace Hardware
             HAL::PressureSensor& m_pressureSensor;
             HAL::LabJack& m_labjack;
 
+            // HAL presenters
+            HAL::Presenters::PressureSensorPresenter& m_pressurePresenter;
+
             // Methods in this class that can be ran externally
             QList<QString> m_avaliableMethods;
 
@@ -68,6 +78,8 @@ namespace App { namespace Hardware
 
             // Runs the correct HAL function
             void executeHalMethods(QVariantMap command);
+
+            void proccessDataFromHals(QString responable, QString method, QStringList halData);
 
             // Check com port connections
             void connectDevices();

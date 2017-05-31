@@ -11,6 +11,7 @@ namespace App { namespace Hardware { namespace HAL
 {
     PressureSensor::PressureSensor(QObject *parent, int id)
         :   SerialController(parent),
+            PressureSensorPresenter(parent),
             m_id(id)
     {
         // Sets what this class is responable for; @NOTE: Could be done in base class
@@ -191,10 +192,8 @@ namespace App { namespace Hardware { namespace HAL
      */
     void PressureSensor::proccessReadData(QStringList readData)
     {
-//        for (int i = 0; i < readData.size(); ++i)
-//        {
-//            qDebug() << readData.at(i);
-//        }
+        // Send the data to the handware access manager
+        emit emit_pressureSensorData(m_responsability, m_method, readData);
 
         //QVariantMap
         qDebug() << "Read on port: " << readData;

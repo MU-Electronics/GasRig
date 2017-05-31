@@ -58,7 +58,8 @@ SOURCES += \
     app/Settings/Container.cpp \
     app/Services/SerialController.cpp \
     app/Hardware/HAL/HALSupport.cpp \
-    app/Settings/Hardware.cpp
+    app/Settings/Hardware.cpp \
+    app/Hardware/HAL/Presenters/PressureSensorPresenter.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -116,4 +117,5 @@ HEADERS += \
     app/Settings/Container.h \
     app/Services/SerialController.h \
     app/Hardware/HAL/HALSupport.h \
-    app/Settings/Hardware.h
+    app/Settings/Hardware.h \
+    app/Hardware/HAL/Presenters/PressureSensorPresenter.h
