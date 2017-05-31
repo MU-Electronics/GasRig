@@ -34,6 +34,7 @@ namespace App { namespace Hardware
      */
     Access::Access(QObject *parent, Settings::Container settings)
         :   Thread(parent, false, false),
+            AccessSignalsSlots(parent),
 
             // System settings container
             m_settings(settings),
@@ -47,8 +48,8 @@ namespace App { namespace Hardware
             m_pressureSensor(*new HAL::PressureSensor(this, 1)),
             m_labjack(*new HAL::LabJack(this)),
 
-          // HAL Presenters
-          m_pressurePresenter(*new HAL::Presenters::PressureSensorPresenter(this))
+           // HAL Presenters
+           m_pressurePresenter(*new HAL::Presenters::PressureSensorPresenter(this))
     {
         // Set possable methods to be ran within this class via the queue
         // None atm set like this: m_avaliableMethods.append("<method name>");
@@ -339,63 +340,11 @@ namespace App { namespace Hardware
 
         // Format the data from the HAL package to useable data for the rest of the application
         if(responable == "PressureSensor")
-            package = m_pressurePresenter->proccess(method, halData);
+            package = m_pressurePresenter.proccess(method, halData);
 
         // Trigger the correct access class signal
-        QMetaObject::invokeMethod(this, package["method"].toString().toLatin1().data(), Qt::DirectConnection, Q_ARG( QVariantMap, package ));
+        QMetaObject::invokeMethod(dynamic_cast<QObject*>(&this->AccessSignalsSlots), package["method"].toString().toLatin1().data(), Qt::DirectConnection, Q_ARG( QVariantMap, package ));
     }
 
-
-
-
-
-
-
-
-    // BELOW SHOULD BE ABSTRACTED OUT THE CLASS AS THERE WILL BE A NUMBER OF SLOTS TO DO
-
-
-    /**
-     * Listen for new pressure readings and emits the new data
-     *
-     * @brief Access::listen_pressureSensorOne
-     * @param command
-     */
-    void Access::listen_pressureSensorOne(QVariantMap command)
-    {
-        qDebug() << "I'll be sending that signal for you";
-    }
-
-
-    /**
-     * Listen to all com updates and emit relivent onces
-     *
-     * @brief Access::listen_serialComUpdates
-     * @param command
-     */
-    void Access::listen_serialComUpdates(QVariantMap command)
-    {
-        emit emit_serialComUpdated(command);
-    }
-
-
-    /**
-     * @brief Access::listen_critialSerialError
-     * @param command
-     */
-    void Access::listen_critialSerialError(QVariantMap command)
-    {
-        emit emit_critialSerialError(command);
-    }
-
-
-    /**
-     * @brief Access::listen_timeoutSerialError
-     * @param command
-     */
-    void Access::listen_timeoutSerialError(QVariantMap command)
-    {
-        emit emit_timeoutSerialError(command);
-    }
 
 }}
