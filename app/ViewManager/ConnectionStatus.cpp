@@ -76,7 +76,8 @@ namespace App { namespace ViewManager
         // Flow controller custom implimentation of SerialController
         else if (item == "FlowControllerOne")
         {
-
+            command["hardware"] = "FlowController";
+            command["method"] = "resetConnection";
         }
         // Flow controller custom implimentation of SerialController
         else if (item == "FlowControllerTwo")

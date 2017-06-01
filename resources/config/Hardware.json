@@ -26,8 +26,8 @@
         },
         "flow_controller":{
             "com": "tty.usbserial-FTWVILT1",
-            "braud": "9600",
-            "timeout": "500",
+            "braud": "19200",
+            "timeout": "1000",
 
             "default": "1",
 

@@ -201,6 +201,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::testConnection()
     {
+        // Set the method
+        m_method = "testConnection";
+
         // Does the com port & connection exist?
         if(!checkDeviceAvaliable(false))
         {
@@ -224,6 +227,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::resetConnection()
     {
+        // Set the method
+        m_method = "resetConnection";
+
         // Refresh connection attempt
         if(!checkDeviceAvaliable(true))
         {
@@ -253,6 +259,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::GetTemperature()
     {
+        // Set the method
+        m_method = "GetTemperature";
+
         // Get the location of temperture
         int location = m_command.value("location").toInt();
 
@@ -288,6 +297,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::GetTurboSpeed()
     {
+        // Set the method
+        m_method = "GetTurboSpeed";
+
         // Set the desired id
         int type = m_command.value("type").toInt();
 
@@ -318,6 +330,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::GetError()
     {
+        // Set the method
+        m_method = "GetError";
+
         // Set the desired id
         int id = m_command.value("line").toInt();
 
@@ -359,6 +374,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::GetGasMode()
     {
+        // Set the method
+        m_method = "GetGasMode";
+
         // Get the correct param type
         QString param = "027";
 
@@ -374,6 +392,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::GetBackingPumpMode()
     {
+        // Set the method
+        m_method = "GetBackingPumpMode";
+
        // Get the correct param type
         QString param = "025";
 
@@ -390,6 +411,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::GetTurboPumpState()
     {
+        // Set the method
+        m_method = "GetTurboPumpState";
+
         // Get the correct param type
         QString param = "023";
 
@@ -406,6 +430,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::GetPumpingState()
     {
+        // Set the method
+        m_method = "GetPumpingState";
+
        // Get the correct param type
        QString param = "010";
 
@@ -422,6 +449,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::SetGasMode()
     {
+        // Set the method
+        m_method = "SetGasMode";
+
         // Set the desired mode
         int mode = m_command.value("mode").toInt();
 
@@ -456,6 +486,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::SetBackingPumpMode()
     {
+        // Set the method
+        m_method = "SetBackingPumpMode";
+
         // Set the desired mode
         int mode = m_command.value("mode").toInt();
 
@@ -490,6 +523,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::SetTurboPumpState()
     {
+        // Set the method
+        m_method = "SetTurboPumpState";
+
         // Get the desired state
         int state = m_command.value("state").toInt();
 
@@ -520,6 +556,9 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::SetPumpingState()
     {
+        // Set the method
+        m_method = "SetPumpingState";
+
         // Get the desired state
         int state = m_command.value("state").toInt();
 

@@ -13,8 +13,6 @@
 // Include thread
 #include "../Services/Thread.h"
 
-#include "AccessSignalsSlots.h"
-
 // Include HALS
 #include "HAL/FlowController.h"
 #include "HAL/Labjack.h"
@@ -27,10 +25,9 @@
 
 namespace App { namespace Hardware
 {
-    class Access: public App::Services::Thread, public AccessSignalsSlots
+    class Access: public App::Services::Thread
     {
         Q_OBJECT
-        Q_INTERFACES(AccessSignalsSlots)
         public:
             Access(QObject *parent, Settings::Container settings);
             ~Access();
@@ -38,8 +35,18 @@ namespace App { namespace Hardware
         signals:
             void emit_methodAttemptResults(QVariantMap status);
 
+            void emit_serialComUpdated(QVariantMap command);
+            void emit_timeoutSerialError(QVariantMap command);
+            void emit_critialSerialError(QVariantMap command);
+
         public slots:
             void hardwareAccess(QVariantMap command);
+
+            void listen_serialComUpdates(QVariantMap command);
+            void listen_critialSerialError(QVariantMap command);
+            void listen_timeoutSerialError(QVariantMap command);
+
+            void listen_pressureSensorOne(QVariantMap command);
 
             // Access function that can be invoked externally via the queue
             // None atm; for example: void resetAllUSBConnection();

@@ -17,12 +17,16 @@ namespace App { namespace Hardware { namespace HAL
         public:
             FlowController(QObject *parent);
 
+            void setId(int id);
+
         private slots:
             // Required slot for full HAL Support compliance
             void testConnection();
             void resetConnection();
 
         private:
+            int m_id;
+
             void proccessReadData(QStringList readData);
             bool validate(QStringList package);
             QString calculateCheckSum(QStringList dataIn);

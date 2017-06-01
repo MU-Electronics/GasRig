@@ -34,7 +34,7 @@ namespace App { namespace Services
             QString findPortName(quint16 productId, quint16 vendorID);
 
             // Bus communications
-            bool open(QString com, int braud, int timeout);
+            bool open(QString com, int braud, int timeout, int parity=0);
             void close();
             bool write(const QByteArray &writeData);
             bool isOpen();

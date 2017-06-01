@@ -55,12 +55,13 @@ namespace App { namespace Services
          * @param braud
          * @return
          */
-    bool SerialController::open(QString com, int braud, int timeout)
+    bool SerialController::open(QString com, int braud, int timeout, int parity)
     {
         // Save connection data
         m_connectionValues["com"] = com;
         m_connectionValues["braud"] = braud;
         m_connectionValues["timeout"] = timeout;
+        m_connectionValues["parity"] = parity;
 
         // Check port avaliable
         if(!checkDeviceAvaliable(false))
@@ -75,7 +76,9 @@ namespace App { namespace Services
         m_serialPort.setPortName(com);
 
         // Set the braud rate
-        m_serialPort.setBaudRate(QSerialPort::Baud9600); // braud
+        QSerialPort::BaudRate braudQt;
+        if(braud == 9600){ braudQt = QSerialPort::Baud9600; } else if(braud == 19200){ braudQt = QSerialPort::Baud19200; } else if(braud == 38400){ braudQt = QSerialPort::Baud38400; }
+        m_serialPort.setBaudRate(braudQt); // braud
 
         // Set the data bit rate
         m_serialPort.setDataBits(QSerialPort::Data8);
@@ -84,7 +87,9 @@ namespace App { namespace Services
         m_serialPort.setFlowControl(QSerialPort::NoFlowControl);
 
         // Set is any parity is being used
-        m_serialPort.setParity(QSerialPort::NoParity);
+        QSerialPort::Parity parityQt;
+        if(parity == 0){ parityQt = QSerialPort::NoParity; } else if(parity == 2){ parityQt = QSerialPort::EvenParity; } else if(parity == 3){ parityQt = QSerialPort::OddParity; }
+        m_serialPort.setParity(parityQt);  //QSerialPort::NoParity
 
         // Set if any stop bits are required
         m_serialPort.setStopBits(QSerialPort::OneStop);
@@ -101,7 +106,7 @@ namespace App { namespace Services
             return false;
         }
 
-        m_serialPort.setDataTerminalReady(true);
+        //m_serialPort.setDataTerminalReady(true);
 
 
 
@@ -406,7 +411,7 @@ namespace App { namespace Services
             m_serialPort.close();
 
             // Reconnect to device
-            open(m_connectionValues.value("com").toString(), m_connectionValues.value("braud").toInt(),  m_connectionValues.value("timeout").toInt());
+            open(m_connectionValues.value("com").toString(), m_connectionValues.value("braud").toInt(),  m_connectionValues.value("timeout").toInt(), m_connectionValues["parity"].toInt());
         }
 
         // If port was found

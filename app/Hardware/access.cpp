@@ -34,7 +34,6 @@ namespace App { namespace Hardware
      */
     Access::Access(QObject *parent, Settings::Container settings)
         :   Thread(parent, false, false),
-            AccessSignalsSlots(parent),
 
             // System settings container
             m_settings(settings),
@@ -89,6 +88,9 @@ namespace App { namespace Hardware
 
 
         // Connect flow controller HAL connections
+        connect(&m_flowController, &HAL::FlowController::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
+        connect(&m_flowController, &HAL::FlowController::emit_critialSerialError, this, &Access::listen_critialSerialError);
+        connect(&m_flowController, &HAL::FlowController::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
 
         // Connect labjack HAL connections
 
@@ -143,6 +145,25 @@ namespace App { namespace Hardware
         }
 
         // Open com port for the flow controllers
+        if(!m_flowController.isOpen())
+        {
+            // Get connection data
+            QVariantMap flowData = m_settings.hardware.usb_connections.value("flow_controller").toMap();
+
+            // Set vac pump id from settings
+            m_flowController.setId(flowData["id"].toInt());
+
+            // Is com port provided?
+            QString flowComPort = flowData["com"].toString();
+            if(flowComPort.isNull())
+            {
+                // Find the com port
+                flowComPort = m_flowController.findPortName(flowData["productId"].toInt(), flowData["vendorId"].toInt());
+            }
+
+            // Connect to port
+            m_flowController.open(flowComPort, flowData["braud"].toInt(), flowData["timeout"].toInt(), 3); // Will open on tty.usbserial-AH02FNCX for my mac
+        }
 
 
         // Open the com port for the labjack
@@ -343,7 +364,51 @@ namespace App { namespace Hardware
             package = m_pressurePresenter.proccess(method, halData);
 
         // Trigger the correct access class signal
-        QMetaObject::invokeMethod(dynamic_cast<QObject*>(&this->AccessSignalsSlots), package["method"].toString().toLatin1().data(), Qt::DirectConnection, Q_ARG( QVariantMap, package ));
+        QMetaObject::invokeMethod(this, package["method"].toString().toLatin1().data(), Qt::DirectConnection, Q_ARG( QVariantMap, package ));
+    }
+
+
+    /**
+     * Listen for new pressure readings and emits the new data
+     *
+     * @brief Access::listen_pressureSensorOne
+     * @param command
+     */
+    void Access::listen_pressureSensorOne(QVariantMap command)
+    {
+        qDebug() << "I'll be sending that signal for you";
+    }
+
+
+    /**
+     * Listen to all com updates and emit relivent onces
+     *
+     * @brief Access::listen_serialComUpdates
+     * @param command
+     */
+    void Access::listen_serialComUpdates(QVariantMap command)
+    {
+        emit emit_serialComUpdated(command);
+    }
+
+
+    /**
+     * @brief Access::listen_critialSerialError
+     * @param command
+     */
+    void Access::listen_critialSerialError(QVariantMap command)
+    {
+        emit emit_critialSerialError(command);
+    }
+
+
+    /**
+     * @brief Access::listen_timeoutSerialError
+     * @param command
+     */
+    void Access::listen_timeoutSerialError(QVariantMap command)
+    {
+        emit emit_timeoutSerialError(command);
     }
 
 
