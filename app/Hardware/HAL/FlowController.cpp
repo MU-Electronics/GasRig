@@ -122,8 +122,8 @@ namespace App { namespace Hardware { namespace HAL
         package[12] = 0xF0;
         package[13] = 0xC7;
         package[14] = 0x0C;
-        package[15] = 0x31;
-        package[16] = 0x3B;
+        package[15] = 0x32;
+        package[16] = 0x38;
 
 //                package.resize(17);
 //                package[0] = "255";
