@@ -121,8 +121,8 @@ namespace App { namespace Hardware { namespace HAL
         // Set the method
         m_method = "resetConnection";
 
-        getIdentifier();
-
+        //getIdentifier();
+        getFlowRate();
     }
 
 
@@ -162,6 +162,48 @@ namespace App { namespace Hardware { namespace HAL
     void FlowController::getFlowRate()
     {
 
+        /*
+         * Manufcaturer: 138  =  0x8A
+         * Device Type:  90   =  0x5A
+         *
+         * Device ID 1: 27    =  0x1B
+         * Device ID 2: 177   =  0xB1
+         * Device ID 3: 138   =  0x89
+         *
+         */
+
+
+        // Set the method
+        m_method = "getFlowRate";
+
+        QByteArray package;
+
+        package.resize(11);
+
+        package[0] = 0xFF;
+        package[1] = 0xFF;
+        package[2] = 0x82;
+        package[3] = 0x8A;
+        package[4] = 0x5A;
+        package[5] = 0x1B;
+        package[6] = 0xB1;
+        package[7] = 0x89;
+        package[8] = 0x01; // COMMAND
+        package[9] = 0x00; // DATA
+        package[10] = 0x70; // CHECKSUM
+
+        qDebug() << package;
+
+        write(package);
+
+        // Convert flow rate received into float value
+        FourByteToFloat.buf[0] = 60;
+        FourByteToFloat.buf[1] = 179;
+        FourByteToFloat.buf[2] = 185;
+        FourByteToFloat.buf[3] = 51;
+
+        // Print float
+        qDebug() << FourByteToFloat.number;
     }
 
 

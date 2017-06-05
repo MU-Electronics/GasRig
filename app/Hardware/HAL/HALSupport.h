@@ -15,6 +15,17 @@ namespace App { namespace Hardware { namespace HAL
 
             void setParams(QVariantMap command);
 
+
+            /*
+             * Helpers
+             */
+            // Convert 4 btyes to float
+            union FourByteToFloat
+            {
+               unsigned char buf[4];
+               float number;
+            }FourByteToFloat;
+
         public slots:
             virtual void testConnection() = 0;
             virtual void resetConnection() = 0;
