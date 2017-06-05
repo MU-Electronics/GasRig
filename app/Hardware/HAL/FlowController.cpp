@@ -10,8 +10,10 @@ namespace App { namespace Hardware { namespace HAL
     FlowController::FlowController(QObject *parent)
         :   SerialController(parent)
     {
+        // What is this class bus responsable for?
         m_responsability = "FlowController";
-        //m_id = 1;
+
+        // Convert incomming btyes from HEX to ASCII?
         m_hexToAcsii = true;
     }
 
@@ -28,13 +30,17 @@ namespace App { namespace Hardware { namespace HAL
      */
     void FlowController::registerController(QString referance, QString manuf, QString type, QString ID1, QString ID2, QString ID3)
     {
+        // Create temp controller container
         QMap<QString, QString> controller;
+
+        // Save information on flow controller to container
         controller.insert("manufacture", manuf);
         controller.insert("type", type);
         controller.insert("id_1", ID1);
         controller.insert("id_2", ID2);
         controller.insert("id_3", ID3);
 
+        // Add the new controller to the list of bus controller
         m_controllers.insert(referance, controller);
     }
 
