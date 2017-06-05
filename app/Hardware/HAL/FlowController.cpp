@@ -69,6 +69,9 @@ namespace App { namespace Hardware { namespace HAL
         // Get the received check sum
         QString recievedChecksum = package.at(package.length() - 1);
 
+        // Remove check sum from package
+        package.removeLast();
+
         // Check if the two check sums match
         if (checkSumValidation(package, recievedChecksum))
             return true;
@@ -91,7 +94,7 @@ namespace App { namespace Hardware { namespace HAL
         unsigned int crc = 0;
 
         // For each byte
-        for ( int i = 0; i < package.size() - 1; i++ )
+        for ( int i = 0; i < package.size(); i++ )
         {
             // Exlusive-or
             crc = crc ^ package.at(i).toInt();
@@ -234,8 +237,17 @@ namespace App { namespace Hardware { namespace HAL
         // Set the method
         m_method = "resetConnection";
 
-        //getIdentifier();
-        getFlowRate();
+
+        m_command.insert("tag_1", "227");
+        m_command.insert("tag_2", "93");
+        m_command.insert("tag_3", "240");
+        m_command.insert("tag_4", "199");
+        m_command.insert("tag_5", "12");
+        m_command.insert("tag_6", "50");
+        getIdentifier();
+
+
+        //getFlowRate();
     }
 
 
@@ -250,32 +262,45 @@ namespace App { namespace Hardware { namespace HAL
         // Set the method
         m_method = "getIdentifier";
 
+        // Create package container
+        QStringList stringPackage;
+        stringPackage.append("255");
+        stringPackage.append("255");
+        stringPackage.append("130");
+        stringPackage.append("0");
+        stringPackage.append("0");
+        stringPackage.append("0");
+        stringPackage.append("0");
+        stringPackage.append("0");
+        stringPackage.append("11");
+        stringPackage.append("6");
+        stringPackage.append(m_command.value("tag_1").toString()); // Tag name byte 1    For example: 0xe3
+        stringPackage.append(m_command.value("tag_2").toString()); // Tag name byte 2    For example: 0x5d
+        stringPackage.append(m_command.value("tag_3").toString()); // Tag name byte 3    For example: 0xF0
+        stringPackage.append(m_command.value("tag_4").toString()); // Tag name byte 4    For example: 0xC7
+        stringPackage.append(m_command.value("tag_5").toString()); // Tag name byte 5    For example: 0x0C
+        stringPackage.append(m_command.value("tag_6").toString()); // Tag name byte 6    For example: 0x32
+
+        // Append the check sum
+        stringPackage.append(calculateCheckSum(stringPackage));
+
+        // Convert string list to hex string
+        QString hex;
+        for ( int i = 0; i < stringPackage.size(); i++ )
+        {
+            hex += QString("%1").arg(stringPackage.at(i).toInt(), 2, 16, QChar('0'));
+        }
+
         // Create container
         QByteArray package;
 
         // Make correct size
-        package.resize(17);
+        package.resize(stringPackage.size());
 
-        // Define bytes
-        package[0] = 0xFF;
-        package[1] = 0xFF;
-        package[2] = 0x82;
-        package[3] = 0x00;
-        package[4] = 0x00;
-        package[5] = 0x00;
-        package[6] = 0x00;
-        package[7] = 0x00;
-        package[8] = 0x0b;
-        package[9] = 0x06;
-        package[10] = 0xe3;
-        package[11] = 0x5d;
-        package[12] = 0xF0;
-        package[13] = 0xC7;
-        package[14] = 0x0C;
-        package[15] = 0x32;
-        package[16] = 0x38;
+        // Insert hex string package into QByteArray
+        package = QByteArray::fromHex(hex.toUtf8());
 
-        // Write the package
+        // Write the data
         write(package);
     }
 
