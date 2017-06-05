@@ -23,11 +23,11 @@ namespace App { namespace ViewManager
         m_hardwareConnection.insert("VacStation", "0");
         m_hardwareConnection.insert("PressureSensor", "0");
         m_hardwareConnection.insert("LabJack", "0");
-        m_hardwareConnection.insert("FlowControllerOne", "0");
-        m_hardwareConnection.insert("FlowControllerTwo", "0");
+        m_hardwareConnection.insert("FlowController", "0");
+        m_hardwareConnection.insert("Supplies", "0");
         m_hardwareConnection.insert("SystemCondition", "0");
         m_hardwareConnection.insert("SafetyMonitor", "0");
-        m_hardwareConnection.insert("Supplies", "0");
+        m_hardwareConnection.insert("HardwareGateway", "0");
     }
 
 
@@ -73,27 +73,23 @@ namespace App { namespace ViewManager
         {
 
         }
-        // Flow controller custom implimentation of SerialController
-        else if (item == "FlowControllerOne")
-        {
-            command["hardware"] = "FlowController";
-            command["method"] = "resetConnection";
-        }
-        // Flow controller custom implimentation of SerialController
-        else if (item == "FlowControllerTwo")
-        {
-
-        }
         // Safety monitor is another thread
         else if (item == "SafetyMonitor")
         {
 
         }
+        // Flow controller custom implimentation of SerialController
+        else if (item == "FlowController")
+        {
+            command["hardware"] = "FlowController";
+            command["controller"] = "FlowControllerOne";
+            command["method"] = "resetConnection";
+        }
         // The rest are using standard implimentation of SerialController
         else
         {
             command["hardware"] = item;
-            command["method"] = "resetConnection";
+            command["method"] = "resetConnection";                   
         }
 
         //qDebug() << command;
@@ -113,8 +109,7 @@ namespace App { namespace ViewManager
      */
     void ConnectionStatus::listen_comConnectionStatus(QVariantMap package)
     {
-        qDebug() << package;
-        // Connection faile
+        // Connection failed
         m_hardwareConnection.insert(package["responsability"].toString(), "0");
 
         // Connection successfully
@@ -136,7 +131,6 @@ namespace App { namespace ViewManager
      */
     void ConnectionStatus::listen_timeoutSerialError(QVariantMap package)
     {
-        qDebug() << package;
         // Set connection to timeout error
         m_hardwareConnection.insert(package["responsability"].toString(), "2");
 
@@ -153,7 +147,6 @@ namespace App { namespace ViewManager
      */
     void ConnectionStatus::listen_critialSerialError(QVariantMap package)
     {
-        qDebug() << package;
         // Set connection to critial error
         m_hardwareConnection.insert(package["responsability"].toString(), "3");
 

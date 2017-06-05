@@ -10,7 +10,7 @@ namespace App { namespace Hardware { namespace HAL
     FlowController::FlowController(QObject *parent)
         :   SerialController(parent)
     {
-        m_responsability = "FlowControllerOne";
+        m_responsability = "FlowController";
         //m_id = 1;
         m_hexToAcsii = true;
     }

@@ -31,14 +31,14 @@ Flickable
         // Pressure sensor, Labjack, Vac station, Flow controller 1, Flow controller 2, 12V supply, 24V supply
         model: ListModel {
             id: toMonitor
-            ListElement { title: qsTr("Pressure Sensor"); desc: qsTr("This shows the status of the connection to the pressure sensor."); hardware: "PressureSensor" }
-            ListElement { title: qsTr("LabJack"); desc: qsTr("This shows the status of the connection to the LabJack."); hardware: "LabJack"  }
-            ListElement { title: qsTr("Vac Station"); desc: qsTr("This shows the status of the connection to the vacuum station."); hardware: "VacStation"}
-            ListElement { title: qsTr("Flow Controller 1"); desc: qsTr("This shows the status of the connection to flow controller one."); hardware: "FlowControllerOne" }
-            ListElement { title: qsTr("Flow Controller 2"); desc: qsTr("This shows the status of the connection to flow controller two."); hardware: "FlowControllerTwo" }
-            ListElement { title: qsTr("System Condition"); desc: qsTr("This shows whether the gas rig is in a state that it can be used."); hardware: "SystemCondition"}
-            ListElement { title: qsTr("Safety Monitor"); desc: qsTr("This shows whether the programs safety monitor is running."); hardware: "SafetyMonitor" }
+            ListElement { title: qsTr("Pressure Sensor Bus"); desc: qsTr("This shows the status of the connection to the pressure sensor."); hardware: "PressureSensor" }
+            ListElement { title: qsTr("LabJack Bus"); desc: qsTr("This shows the status of the connection to the LabJack."); hardware: "LabJack"  }
+            ListElement { title: qsTr("Vac Station Bus"); desc: qsTr("This shows the status of the connection to the vacuum station."); hardware: "VacStation"}
+            ListElement { title: qsTr("Flow Controller Bus"); desc: qsTr("This shows the status of the connection to flow controller one."); hardware: "FlowController" }
             ListElement { title: qsTr("Supplies"); desc: qsTr("This shows whether the 12V and 24V internal power supply is functioning."); hardware: "Supplies" }
+            ListElement { title: qsTr("System Condition"); desc: qsTr("This shows whether the gas rig is in a state that it can be used."); hardware: "SystemCondition"}
+            ListElement { title: qsTr("Safety Monitor"); desc: qsTr("This shows whether the program's safety monitor is running."); hardware: "SafetyMonitor" }
+            ListElement { title: qsTr("Hardware Gateway"); desc: qsTr("This shows whether the program has access to the hardware gateway."); hardware: "HardwareGateway" }
         }
         delegate: Rectangle
         {
