@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QString>
 
 namespace App { namespace Hardware { namespace HAL
 {
@@ -36,14 +37,50 @@ namespace App { namespace Hardware { namespace HAL
      */
     bool FlowController::validate(QStringList package)
     {
-        return true;
+        // Ensure package is big enough to be processed
+        if(package.isEmpty() || package.size() < 2)
+            return false;
+
+
+        // Ensure only two start bytes; could be up to 5
+        while(package.at(2).toInt() == 255)
+        {
+            package.removeFirst();
+        }
+
+        // Get the received check sum
+        QString recievedChecksum = package.at(package.length() - 1);
+
+        // Check if the two check sums match
+        if (checkSumValidation(package, recievedChecksum))
+            return true;
+
+        return false;
     }
 
 
-    QString FlowController::calculateCheckSum(QStringList dataIn)
+    /**
+     * Calculates the check sum in exclusive-or format
+     *
+     * @brief FlowController::calculateCheckSum
+     * @param dataIn
+     * @return
+     */
+    QString FlowController::calculateCheckSum(QStringList package)
     {
 
-        return QString::number(1);
+        // check sum container
+        unsigned int crc = 0;
+
+        // For each byte
+        for ( int i = 0; i < package.size() - 1; i++ )
+        {
+            // Exlusive-or
+            crc = crc ^ package.at(i).toInt();
+        }
+
+        // Return the value
+        return QString::number(crc);
     }
 
 
@@ -56,7 +93,7 @@ namespace App { namespace Hardware { namespace HAL
      */
     void FlowController::proccessReadData(QStringList readData)
     {
-        qDebug() << readData;
+        //qDebug() << readData;
     }
 
 
@@ -115,7 +152,7 @@ namespace App { namespace Hardware { namespace HAL
         package[5] = 0x00;
         package[6] = 0x00;
         package[7] = 0x00;
-        package[8] = 0xb0;
+        package[8] = 0x0b;
         package[9] = 0x06;
         package[10] = 0xe3;
         package[11] = 0x5d;
