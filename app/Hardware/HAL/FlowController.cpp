@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QString>
+#include <QMap>
 
 namespace App { namespace Hardware { namespace HAL
 {
@@ -10,21 +11,33 @@ namespace App { namespace Hardware { namespace HAL
         :   SerialController(parent)
     {
         m_responsability = "FlowControllerOne";
-        m_id = 1;
+        //m_id = 1;
         m_hexToAcsii = true;
     }
 
-
     /**
-     * Sets the ID for the vac pump
+     * Register multiple brooks s-protocal controllers on the bus
      *
-     * @brief VacStation::setId
-     * @param id
+     * @brief FlowController::registerController
+     * @param referance
+     * @param manuf
+     * @param type
+     * @param ID1
+     * @param ID2
+     * @param ID3
      */
-    void FlowController::setId(int id)
+    void FlowController::registerController(QString referance, QString manuf, QString type, QString ID1, QString ID2, QString ID3)
     {
-        m_id = id;
+        QMap<QString, QString> controller;
+        controller.insert("manufacture", manuf);
+        controller.insert("type", type);
+        controller.insert("id_1", ID1);
+        controller.insert("id_2", ID2);
+        controller.insert("id_3", ID3);
+
+        m_controllers.insert(referance, controller);
     }
+
 
     /**
      * This method validate the data before procceeding to proccessReadData
@@ -131,10 +144,13 @@ namespace App { namespace Hardware { namespace HAL
         // Set the method
         m_method = "getIdentifier";
 
+        // Create container
         QByteArray package;
 
+        // Make correct size
         package.resize(17);
 
+        // Define bytes
         package[0] = 0xFF;
         package[1] = 0xFF;
         package[2] = 0x82;
@@ -153,25 +169,19 @@ namespace App { namespace Hardware { namespace HAL
         package[15] = 0x32;
         package[16] = 0x38;
 
-        qDebug() << package;
-
+        // Write the package
         write(package);
+    }
+
+
+    QByteArray FlowController::createPackage(QString selectedController, QString command, QStringList data)
+    {
+
     }
 
 
     void FlowController::getFlowRate()
     {
-
-        /*
-         * Manufcaturer: 138  =  0x8A
-         * Device Type:  90   =  0x5A
-         *
-         * Device ID 1: 27    =  0x1B
-         * Device ID 2: 177   =  0xB1
-         * Device ID 3: 138   =  0x89
-         *
-         */
-
 
         // Set the method
         m_method = "getFlowRate";
@@ -194,6 +204,9 @@ namespace App { namespace Hardware { namespace HAL
 
         write(package);
     }
+
+
+
 
 
     void FlowController::getSetFlowRate()
@@ -222,44 +235,3 @@ namespace App { namespace Hardware { namespace HAL
 
 }}}
 
-
-
-
-// Delete later
-//        package.resize(15);
-//        package[0] = 0xFF;
-//        package[1] = 0xFF;
-//        package[2] = 0xFF;
-//        package[3] = 0xFF;
-//        package[4] = 0xFF;
-//        package[5] = 0x82;
-//        package[6] = 0x8A;
-
-//        package[7] = 0x96;
-
-//        package[8] = 0x5A;
-//        package[9] = 0x1B;
-//        package[10] = 0xB1;
-//        package[11] = 0x8A;
-//        package[12] = 0x01;
-//        package[13] = 0x00;
-//        package[14] = 0xD0;
-
-//                package.resize(17);
-//                package[0] = "255";
-//                package[1] = "255";
-//                package[2] = "130";
-//                package[3] = "0";
-//                package[4] = "0";
-//                package[5] = "0";
-//                package[6] = "0";
-//                package[7] = "0";
-//                package[8] = "176";
-//                package[9] = "6";
-//                package[10] = "227";
-//                package[11] = "93";
-//                package[12] = "240";
-//                package[13] = "199";
-//                package[14] = "12";
-//                package[15] = "49";
-//                package[16] = "59";

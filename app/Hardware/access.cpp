@@ -150,9 +150,6 @@ namespace App { namespace Hardware
             // Get connection data
             QVariantMap flowData = m_settings.hardware.usb_connections.value("flow_controller").toMap();
 
-            // Set vac pump id from settings
-            m_flowController.setId(flowData["id"].toInt());
-
             // Is com port provided?
             QString flowComPort = flowData["com"].toString();
             if(flowComPort.isNull())
@@ -163,6 +160,12 @@ namespace App { namespace Hardware
 
             // Connect to port
             m_flowController.open(flowComPort, flowData["braud"].toInt(), flowData["timeout"].toInt(), 3); // Will open on tty.usbserial-AH02FNCX for my mac
+
+            // Register flow controller one with the class
+            m_flowController.registerController("FlowControllerOne", flowData["1_manufacturer"].toString(), flowData["1_type"].toString(), flowData["1_id_1"].toString(), flowData["1_id_2"].toString(), flowData["1_id_3"].toString());
+
+            // Register flow controller two with the class
+            m_flowController.registerController("FlowControllerTwo", flowData["2_manufacturer"].toString(), flowData["2_type"].toString(), flowData["2_id_1"].toString(), flowData["2_id_2"].toString(), flowData["2_id_3"].toString());
         }
 
 
