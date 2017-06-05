@@ -23,6 +23,15 @@ namespace App { namespace Hardware { namespace HAL
             void emit_flowControllerData(QString responable, QString m_method, QStringList halData);
 
         private slots:
+            void getIdentifier();
+            void getFlowRate();
+            void getSetFlowRate();
+            void getValveOverride();
+
+            void setFlowRate();
+            void setValveOverride();
+
+
             // Required slot for full HAL Support compliance
             void testConnection();
             void resetConnection();

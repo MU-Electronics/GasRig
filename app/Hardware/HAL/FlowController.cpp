@@ -38,7 +38,7 @@ namespace App { namespace Hardware { namespace HAL
     bool FlowController::validate(QStringList package)
     {
         // Ensure package is big enough to be processed
-        if(package.isEmpty() || package.size() < 4)
+        if(package.isEmpty() || package.size() < 5)
             return false;
 
         // Ensure only two start bytes; could be up to 5
@@ -119,7 +119,17 @@ namespace App { namespace Hardware { namespace HAL
     void FlowController::resetConnection()
     {
         // Set the method
-        m_method = "testConnection";
+        m_method = "resetConnection";
+
+        getIdentifier();
+
+    }
+
+
+    void FlowController::getIdentifier()
+    {
+        // Set the method
+        m_method = "getIdentifier";
 
         QByteArray package;
 
@@ -146,8 +156,38 @@ namespace App { namespace Hardware { namespace HAL
         qDebug() << package;
 
         write(package);
+    }
+
+
+    void FlowController::getFlowRate()
+    {
 
     }
+
+
+    void FlowController::getSetFlowRate()
+    {
+
+    }
+
+
+    void FlowController::getValveOverride()
+    {
+
+    }
+
+
+    void FlowController::setFlowRate()
+    {
+
+    }
+
+
+    void FlowController::setValveOverride()
+    {
+
+    }
+
 
 }}}
 
