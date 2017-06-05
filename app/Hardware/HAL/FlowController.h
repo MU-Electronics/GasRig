@@ -19,6 +19,9 @@ namespace App { namespace Hardware { namespace HAL
 
             void setId(int id);
 
+        signals:
+            void emit_flowControllerData(QString responable, QString m_method, QStringList halData);
+
         private slots:
             // Required slot for full HAL Support compliance
             void testConnection();

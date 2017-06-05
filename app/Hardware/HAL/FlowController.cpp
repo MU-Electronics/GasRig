@@ -38,9 +38,8 @@ namespace App { namespace Hardware { namespace HAL
     bool FlowController::validate(QStringList package)
     {
         // Ensure package is big enough to be processed
-        if(package.isEmpty() || package.size() < 2)
+        if(package.isEmpty() || package.size() < 4)
             return false;
-
 
         // Ensure only two start bytes; could be up to 5
         while(package.at(2).toInt() == 255)
@@ -55,6 +54,7 @@ namespace App { namespace Hardware { namespace HAL
         if (checkSumValidation(package, recievedChecksum))
             return true;
 
+        // Validation failed
         return false;
     }
 
@@ -68,8 +68,7 @@ namespace App { namespace Hardware { namespace HAL
      */
     QString FlowController::calculateCheckSum(QStringList package)
     {
-
-        // check sum container
+        // Checksum container
         unsigned int crc = 0;
 
         // For each byte
@@ -93,7 +92,11 @@ namespace App { namespace Hardware { namespace HAL
      */
     void FlowController::proccessReadData(QStringList readData)
     {
-        //qDebug() << readData;
+        // Send the data to the handware access manager
+        emit emit_flowControllerData(m_responsability, m_method, readData);
+
+        //QVariantMap
+        qDebug() << "Read on port: " << readData;
     }
 
 
@@ -118,9 +121,40 @@ namespace App { namespace Hardware { namespace HAL
         // Set the method
         m_method = "testConnection";
 
-        qDebug() << "resetting";
-
         QByteArray package;
+
+        package.resize(17);
+
+        package[0] = 0xFF;
+        package[1] = 0xFF;
+        package[2] = 0x82;
+        package[3] = 0x00;
+        package[4] = 0x00;
+        package[5] = 0x00;
+        package[6] = 0x00;
+        package[7] = 0x00;
+        package[8] = 0x0b;
+        package[9] = 0x06;
+        package[10] = 0xe3;
+        package[11] = 0x5d;
+        package[12] = 0xF0;
+        package[13] = 0xC7;
+        package[14] = 0x0C;
+        package[15] = 0x32;
+        package[16] = 0x38;
+
+        qDebug() << package;
+
+        write(package);
+
+    }
+
+}}}
+
+
+
+
+// Delete later
 //        package.resize(15);
 //        package[0] = 0xFF;
 //        package[1] = 0xFF;
@@ -140,28 +174,6 @@ namespace App { namespace Hardware { namespace HAL
 //        package[13] = 0x00;
 //        package[14] = 0xD0;
 
-
-
-
-        package.resize(17);
-        package[0] = 0xFF;
-        package[1] = 0xFF;
-        package[2] = 0x82;
-        package[3] = 0x00;
-        package[4] = 0x00;
-        package[5] = 0x00;
-        package[6] = 0x00;
-        package[7] = 0x00;
-        package[8] = 0x0b;
-        package[9] = 0x06;
-        package[10] = 0xe3;
-        package[11] = 0x5d;
-        package[12] = 0xF0;
-        package[13] = 0xC7;
-        package[14] = 0x0C;
-        package[15] = 0x32;
-        package[16] = 0x38;
-
 //                package.resize(17);
 //                package[0] = "255";
 //                package[1] = "255";
@@ -180,14 +192,3 @@ namespace App { namespace Hardware { namespace HAL
 //                package[14] = "12";
 //                package[15] = "49";
 //                package[16] = "59";
-
-
-
-
-        qDebug() << package;
-
-        write(package);
-
-    }
-
-}}}

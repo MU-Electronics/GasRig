@@ -96,7 +96,7 @@ namespace App { namespace ViewManager
             command["method"] = "resetConnection";
         }
 
-        qDebug() << command;
+        //qDebug() << command;
         // Send the command to the hardware
         emit emit_hardwareAccess(command);
     }
