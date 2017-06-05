@@ -46,6 +46,7 @@ namespace App { namespace Hardware { namespace HAL
             bool validate(QStringList package);
             QString calculateCheckSum(QStringList package);
             QByteArray createPackage(QString selectedController, QString command, QStringList data);
+            bool send(QString selectedController, QString command, QStringList data);
 
             explicit FlowController(const FlowController& rhs) = delete;
             FlowController& operator= (const FlowController& rhs) = delete;

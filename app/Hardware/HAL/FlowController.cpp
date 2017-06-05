@@ -97,6 +97,100 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
+     * Creates package for sending to the flow controller
+     *
+     * @brief FlowController::createPackage
+     * @param selectedController
+     * @param command
+     * @param data
+     * @return
+     */
+    QByteArray FlowController::createPackage(QString selectedController, QString command, QStringList data)
+    {
+        // Create package container
+        QStringList stringPackage;
+
+        // Set the start bits
+        stringPackage.append("255");
+        stringPackage.append("255");
+
+        // Set delimerter
+        stringPackage.append("130");
+
+        // Set the controller ID
+        stringPackage.append(m_controllers.value(selectedController).value("manufacture"));
+        stringPackage.append(m_controllers.value(selectedController).value("type"));
+        stringPackage.append(m_controllers.value(selectedController).value("id_1"));
+        stringPackage.append(m_controllers.value(selectedController).value("id_2"));
+        stringPackage.append(m_controllers.value(selectedController).value("id_3"));
+
+        // Set command
+        stringPackage.append(command);
+
+        // Set data info
+        if(!data.isEmpty())
+        {
+            // Set data length
+            stringPackage.append(QString::number(data.size()));
+
+            // Set data
+            for ( int i = 0; i < data.size(); i++ )
+            {
+                stringPackage.append(data.at(i));
+            }
+        }
+        else
+        {
+            // Set no data
+            stringPackage.append("0");
+        }
+
+        // Set check sum
+        stringPackage.append(calculateCheckSum(stringPackage));
+
+        // Convert string list to hex string
+        QString hex;
+        for ( int i = 0; i < stringPackage.size(); i++ )
+        {
+            hex += QString("%1").arg(stringPackage.at(i).toInt(), 2, 16, QChar('0'));
+        }
+
+        // Create QByteArray container
+        QByteArray package;
+
+        // Resize to string package size
+        package.resize(stringPackage.size());
+
+        // Add the data into array
+        package = QByteArray::fromHex(hex.toUtf8());
+
+        // Return the package
+        return package;
+    }
+
+
+    /**
+     * Create the relivent package and sends it to the device
+     *
+     * @brief FlowController::send
+     * @param selectedController
+     * @param command
+     * @param data
+     */
+    bool FlowController::send(QString selectedController, QString command, QStringList data)
+    {
+        // Create package to send
+        QByteArray package = createPackage(selectedController, command, data);
+
+        // Write the package to the bus
+        write(package);
+
+        // package write
+        return true;
+    }
+
+
+    /**
      * When data has been recived it will be handled here
      * by this time validation has been performed on the data via a check sum
      *
@@ -139,6 +233,12 @@ namespace App { namespace Hardware { namespace HAL
     }
 
 
+    /**
+     * Gets the identification for a flow controller from the tags
+     * NOTE: This does not follow the createPackage method very well so it done on its own
+     *
+     * @brief FlowController::getIdentifier
+     */
     void FlowController::getIdentifier()
     {
         // Set the method
@@ -174,35 +274,21 @@ namespace App { namespace Hardware { namespace HAL
     }
 
 
-    QByteArray FlowController::createPackage(QString selectedController, QString command, QStringList data)
-    {
-
-    }
-
-
+    /**
+     * Get the current flow rate for the controller
+     *
+     * @brief FlowController::getFlowRate
+     */
     void FlowController::getFlowRate()
     {
-
         // Set the method
         m_method = "getFlowRate";
 
-        QByteArray package;
+        // No data needs to be sent for this request
+        QStringList data;
 
-        package.resize(11);
-
-        package[0] = 0xFF;
-        package[1] = 0xFF;
-        package[2] = 0x82;
-        package[3] = 0x8A;
-        package[4] = 0x5A;
-        package[5] = 0x1B;
-        package[6] = 0xB1;
-        package[7] = 0x89;
-        package[8] = 0x01; // COMMAND
-        package[9] = 0x00; // DATA
-        package[10] = 0x70; // CHECKSUM
-
-        write(package);
+        // Send the package
+        send("FlowControllerOne", "1", data);
     }
 
 
