@@ -192,18 +192,7 @@ namespace App { namespace Hardware { namespace HAL
         package[9] = 0x00; // DATA
         package[10] = 0x70; // CHECKSUM
 
-        qDebug() << package;
-
         write(package);
-
-        // Convert flow rate received into float value
-        FourByteToFloat.buf[0] = 60;
-        FourByteToFloat.buf[1] = 179;
-        FourByteToFloat.buf[2] = 185;
-        FourByteToFloat.buf[3] = 51;
-
-        // Print float
-        qDebug() << FourByteToFloat.number;
     }
 
 

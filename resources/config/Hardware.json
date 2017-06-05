@@ -16,14 +16,6 @@
             "timeout": "500",
             "id": "123"
         },
-        "labJack":{
-            "vendorId": "3285",
-            "productId": "3",
-            "hardware_type": 3,
-            "connection_type": 1,
-            "address": 1,
-            "openFirst": true
-        },
         "flow_controller":{
             "com": "tty.usbserial-FTWVILT1",
             "braud": "19200",
@@ -31,15 +23,25 @@
 
             "default": "1",
 
-            "1_IDH": "11",
-            "1_IDM": "22",
-            "1_IDL": "11",
-            "1_IDS": "A3",
+            "1_manufacturer": "138",
+            "1_type": "90",
+            "1_id_1": "27",
+            "1_id_2": "177",
+            "1_id_3": "138",
 
-            "2_IDH": "11",
-            "2_IDM": "22",
-            "2_IDL": "11",
-            "2_IDS": "A3"
+            "2_manufacturer": "138",
+            "2_type": "90",
+            "2_id_1": "27",
+            "2_id_2": "177",
+            "2_id_3": "138",
+        },
+        "labJack":{
+            "vendorId": "3285",
+            "productId": "3",
+            "hardware_type": 3,
+            "connection_type": 1,
+            "address": 1,
+            "openFirst": true
         }
     },
     "valve_connections":{
