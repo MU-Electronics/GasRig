@@ -29,6 +29,7 @@ namespace App { namespace Hardware { namespace HAL
             void getFlowRate();
             void getSetFlowRate();
             void getValveOverride();
+            void getControllerTemperature();
 
             void setSourceControll();
             void setFlowRate();

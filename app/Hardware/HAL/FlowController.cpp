@@ -257,7 +257,7 @@ namespace App { namespace Hardware { namespace HAL
 //        setSourceControll();
         m_command.insert("controller", "FlowControllerOne");
         m_command.insert("unit", "250");
-        m_command.insert("rate", "100.00");
+        m_command.insert("rate", "10.00");
         setFlowRate();
     }
 
@@ -376,6 +376,25 @@ namespace App { namespace Hardware { namespace HAL
 
         // Send the package
         send(m_command.value("controller").toString(), "230", data);
+    }
+
+
+    /**
+     * Gets the temperature of the flow controller
+     *
+     * @brief FlowController::getValveOverride
+     * @param controller the referance to the registered controller
+     */
+    void FlowController::getControllerTemperature()
+    {
+        // Set the method
+        m_method = "getControllerTemperature";
+
+        // No data needs to be sent for this request
+        QStringList data;
+
+        // Send the package
+        send(m_command.value("controller").toString(), "3", data);
     }
 
 
