@@ -20,11 +20,11 @@ namespace App { namespace Hardware { namespace HAL
              * Helpers
              */
             // Convert 4 btyes to float
-            union FourByteToFloat
+            union FourByteFloatConvertion
             {
-               unsigned char buf[4];
-               float number;
-            }FourByteToFloat;
+                float number;
+                unsigned char buf[4];
+            }FourByteFloatConvertion;
 
         public slots:
             virtual void testConnection() = 0;

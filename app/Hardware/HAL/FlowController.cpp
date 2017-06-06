@@ -238,16 +238,27 @@ namespace App { namespace Hardware { namespace HAL
         m_method = "resetConnection";
 
 
-        m_command.insert("tag_1", "227");
-        m_command.insert("tag_2", "93");
-        m_command.insert("tag_3", "240");
-        m_command.insert("tag_4", "199");
-        m_command.insert("tag_5", "12");
-        m_command.insert("tag_6", "50");
-        getIdentifier();
+//        m_command.insert("tag_1", "227");
+//        m_command.insert("tag_2", "93");
+//        m_command.insert("tag_3", "240");
+//        m_command.insert("tag_4", "199");
+//        m_command.insert("tag_5", "12");
+//        m_command.insert("tag_6", "50");
+//        getIdentifier();
 
-
+        //m_command.insert("controller", "FlowControllerOne");
         //getFlowRate();
+
+//        m_command.insert("controller", "FlowControllerOne");
+//        getSetFlowRate();
+
+//        m_command.insert("controller", "FlowControllerOne");
+//        m_command.insert("source", "3");
+//        setSourceControll();
+        m_command.insert("controller", "FlowControllerOne");
+        m_command.insert("unit", "250");
+        m_command.insert("rate", "100.00");
+        setFlowRate();
     }
 
 
@@ -256,6 +267,12 @@ namespace App { namespace Hardware { namespace HAL
      * NOTE: This does not follow the createPackage method very well so it done on its own
      *
      * @brief FlowController::getIdentifier
+     * @param tag_1 The 1st tag for the device
+     * @param tag_2 The 2nd tag for the device
+     * @param tag_3 The 3rd tag for the device
+     * @param tag_4 The 4th tag for the device
+     * @param tag_5 The 5th tag for the device
+     * @param tag_6 The 6th tag for the device
      */
     void FlowController::getIdentifier()
     {
@@ -309,6 +326,7 @@ namespace App { namespace Hardware { namespace HAL
      * Get the current flow rate for the controller
      *
      * @brief FlowController::getFlowRate
+     * @param controller the referance to the registered controller
      */
     void FlowController::getFlowRate()
     {
@@ -319,36 +337,251 @@ namespace App { namespace Hardware { namespace HAL
         QStringList data;
 
         // Send the package
-        send("FlowControllerOne", "1", data);
+        send(m_command.value("controller").toString(), "1", data);
     }
 
 
-
-
-
+    /**
+     * Gets the set flow rate for the controller
+     *
+     * @brief FlowController::getSetFlowRate
+     * @param controller the referance to the registered controller
+     */
     void FlowController::getSetFlowRate()
     {
+        // Set the method
+        m_method = "getSetFlowRate";
 
+        // No data needs to be sent for this request
+        QStringList data;
+
+        // Send the package
+        send(m_command.value("controller").toString(), "215", data);
     }
 
 
+    /**
+     * Gets the state of the valve for a flow controller
+     *
+     * @brief FlowController::getValveOverride
+     * @param controller the referance to the registered controller
+     */
     void FlowController::getValveOverride()
     {
+        // Set the method
+        m_method = "getValveOverride";
 
+        // No data needs to be sent for this request
+        QStringList data;
+
+        // Send the package
+        send(m_command.value("controller").toString(), "230", data);
     }
 
 
+    /**
+     * Sets the source of controll for the flow controller
+     *
+     * @brief FlowController::setSourceControll
+     * @param controller the referance to the registered controller
+     * @param source the source code
+     *              1-2 = Analog Input
+     *                3 = Digital
+     */
+    void FlowController::setSourceControll()
+    {
+        // Set the method
+        m_method = "setSourceControll";
+
+        // No data needs to be sent for this request
+        QStringList data;
+        data.append(m_command.value("source").toString());
+
+        // Send the package
+        send(m_command.value("controller").toString(), "216", data);
+    }
+
+
+    /**
+     * Sets the flow rate for a flow controller
+     *
+     * @brief FlowController::setFlowRate
+     * @param controller the referance to the registered controller
+     * @param unit the unit for the value being set
+     *              57 = percentage
+     *             250 = No Used E.g relative to the set flow rate unit on the controller
+     * @param rate The rate at which to set the flow rate relative to the unit
+     */
     void FlowController::setFlowRate()
     {
+        // Set the method
+        m_method = "setFlowRate";
 
+        // Convert float to bytes
+        float flowRate = m_command.value("rate").toFloat();
+        FourByteFloatConvertion.number = flowRate;
+
+        // Container for data bytes
+        QStringList data;
+
+        // Set the units for the flow rate
+        data.append(m_command.value("unit").toString());
+
+        // Set the flow rate bytes
+        data.append(QString::number(FourByteFloatConvertion.buf[3])); // MSB
+        data.append(QString::number(FourByteFloatConvertion.buf[2]));
+        data.append(QString::number(FourByteFloatConvertion.buf[1]));
+        data.append(QString::number(FourByteFloatConvertion.buf[0])); // LSB
+
+        // Send the package
+        send(m_command.value("controller").toString(), "236", data);
+
+        // CONVERT BTYES TO FLOAT EXAMPLE
+//        FourByteFloatConvertion.buf[0] = 225; // LSB
+//        FourByteFloatConvertion.buf[1] = 225;
+//        FourByteFloatConvertion.buf[2] = 199;
+//        FourByteFloatConvertion.buf[3] = 66; // MSB
+
+//        qDebug() << QString::number(FourByteFloatConvertion.number);
     }
 
 
+    /**
+     * Sets an override for the valve
+     *
+     * @brief FlowController::setValveOverride
+     * @param controller the referance to the registered controller
+     * @param state the state for the valve override
+     *              0 = override off (default)
+     *              1 = override open
+     *              2 = override closed
+     */
     void FlowController::setValveOverride()
     {
+        // Set the method
+        m_method = "setValveOverride";
 
+        // No data needs to be sent for this request
+        QStringList data;
+        data.append(m_command.value("state").toString());
+
+        // Send the package
+        send(m_command.value("controller").toString(), "231", data);
     }
 
+
+    /**
+     * Defines whether there is a soft start
+     * NOTE: 219 write time for ramp in seconds
+     *
+     * @brief FlowController::setSoftStart
+     * @param controller the referance to the registered controller
+     * @param type code for the wanted option
+     *                  1 = off
+     *                  4 = linear up and down
+     */
+    void FlowController::setSoftStart()
+    {
+        // Set the method
+        m_method = "setSoftStart";
+
+        // No data needs to be sent for this request
+        QStringList data;
+        data.append(m_command.value("type").toString());
+
+        // Send the package
+        send(m_command.value("controller").toString(), "218", data);
+    }
+
+
+    /**
+     * Set the amount of time for the soft start ramp
+     *
+     * @brief FlowController::setSoftStartTime
+     * @param controller the referance to the registered controller
+     * @param seconds detmins the graident of the soft start ramp
+     */
+    void FlowController::setSoftStartTime()
+    {
+        // Set the method
+        m_method = "setSoftStartTime";
+
+        // Data container
+        QStringList data;
+
+        // Convert float to bytes
+        float seconds = m_command.value("seconds").toFloat();
+        FourByteFloatConvertion.number = seconds;
+
+        // Set the flow rate bytes
+        data.append(QString::number(FourByteFloatConvertion.buf[3])); // MSB
+        data.append(QString::number(FourByteFloatConvertion.buf[2]));
+        data.append(QString::number(FourByteFloatConvertion.buf[1]));
+        data.append(QString::number(FourByteFloatConvertion.buf[0])); // LSB
+
+        // Send the package
+        send(m_command.value("controller").toString(), "219", data);
+    }
+
+
+    /**
+     * Defines the flow unit that will be used
+     *
+     * @brief FlowController::setSoftStart
+     * @param controller the referance to the registered controller
+     * @param reference flow voloumn units are reported at a specific referance condition
+     *                  0 = Normal (273.15 Kelvin/1013.33 mBar)
+     *                  1 = Standard (User defined through seperate command)
+     *                  2 = Calibration (As defined at calibration)
+     * @param unit The flow unit selected
+     *              17 = Litres/minute
+     *              19 = Cubic meters/hour
+     *              24 = Litres/second
+     *              28 = Cubic meters/second
+     *              57 = Percent of flow range
+     *             131 = Cubic meters/minute
+     *             138 = Liters/hour
+     *             170 = Millilitres/second
+     *             171 = Millilitres/minute
+     *             172 = Millilitres/hour
+     */
+    void FlowController::setFlowUnit()
+    {
+        // Set the method
+        m_method = "setFlowUnit";
+
+        // No data needs to be sent for this request
+        QStringList data;
+        data.append(m_command.value("reference").toString());
+        data.append(m_command.value("unit").toString());
+
+        // Send the package
+        send(m_command.value("controller").toString(), "196", data);
+    }
+
+
+    /**
+     * Defines whether there is a soft start
+     *
+     * @brief FlowController::setSoftStart
+     * @param controller the referance to the registered controller
+     * @param unit The temperature unit that will be used
+     *              32 = Degrees Celsius
+     *              33 = Degrees Fahrenheit
+     *              35 = Kelvin
+     */
+    void FlowController::setTemperatureUnit()
+    {
+        // Set the method
+        m_method = "setTemperatureUnit";
+
+        // No data needs to be sent for this request
+        QStringList data;
+        data.append(m_command.value("unit").toString());
+
+        // Send the package
+        send(m_command.value("controller").toString(), "197", data);
+    }
 
 }}}
 

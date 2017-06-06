@@ -30,8 +30,13 @@ namespace App { namespace Hardware { namespace HAL
             void getSetFlowRate();
             void getValveOverride();
 
+            void setSourceControll();
             void setFlowRate();
             void setValveOverride();
+            void setSoftStart();
+            void setSoftStartTime();
+            void setFlowUnit();
+            void setTemperatureUnit();
 
 
             // Required slot for full HAL Support compliance
