@@ -223,7 +223,23 @@ namespace App { namespace Hardware { namespace HAL
      */
     void FlowController::testConnection()
     {
+        // Set the method
+        m_method = "testConnection";
 
+        // Does the com port & connection exist?
+        if(!checkDeviceAvaliable(false))
+        {
+            // Send a critial issue, MOST PROBABLY USB not connected issue
+            //emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_connectionValues.value("com").toString(), "Cant not find the device on this PC, check cable is plugged in."));
+            emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
+
+            // return
+            return;
+        }
+
+        // Test sending data works, for now just get the controllers temperature for the first controller
+        m_command.insert("controller", m_controllers.firstKey());
+        getControllerTemperature();
     }
 
 
@@ -237,28 +253,18 @@ namespace App { namespace Hardware { namespace HAL
         // Set the method
         m_method = "resetConnection";
 
+        // Refresh connection attempt
+        if(!checkDeviceAvaliable(true))
+        {
+            // Send a critial issue, MOST PROBABLY USB not connected issue
+            emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
 
-//        m_command.insert("tag_1", "227");
-//        m_command.insert("tag_2", "93");
-//        m_command.insert("tag_3", "240");
-//        m_command.insert("tag_4", "199");
-//        m_command.insert("tag_5", "12");
-//        m_command.insert("tag_6", "50");
-//        getIdentifier();
+            return;
+        }
 
-        //m_command.insert("controller", "FlowControllerOne");
-        //getFlowRate();
-
-//        m_command.insert("controller", "FlowControllerOne");
-//        getSetFlowRate();
-
-//        m_command.insert("controller", "FlowControllerOne");
-//        m_command.insert("source", "3");
-//        setSourceControll();
-        m_command.insert("controller", "FlowControllerOne");
-        m_command.insert("unit", "250");
-        m_command.insert("rate", "10.00");
-        setFlowRate();
+        // Test sending data works, for now just get the controllers temperature for the first controller
+        m_command.insert("controller", m_controllers.firstKey());
+        getControllerTemperature();
     }
 
 
