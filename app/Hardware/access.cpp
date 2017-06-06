@@ -75,6 +75,7 @@ namespace App { namespace Hardware
     void Access::configure(QThread &thread)
     {
         // Connect vac station HAL connections
+        connect(&m_vacStation, &HAL::VacStation::emit_vacStationData, this, &Access::proccessDataFromHals);
         connect(&m_vacStation, &HAL::VacStation::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
         connect(&m_vacStation, &HAL::VacStation::emit_critialSerialError, this, &Access::listen_critialSerialError);
         connect(&m_vacStation, &HAL::VacStation::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
@@ -88,6 +89,7 @@ namespace App { namespace Hardware
 
 
         // Connect flow controller HAL connections
+        connect(&m_flowController, &HAL::FlowController::emit_flowControllerData, this, &Access::proccessDataFromHals);
         connect(&m_flowController, &HAL::FlowController::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
         connect(&m_flowController, &HAL::FlowController::emit_critialSerialError, this, &Access::listen_critialSerialError);
         connect(&m_flowController, &HAL::FlowController::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
@@ -363,12 +365,26 @@ namespace App { namespace Hardware
         QVariantMap package;
 
         // Format the data from the HAL package to useable data for the rest of the application
+        // Pressure sensor presenter
         if(responable == "PressureSensor")
             package = m_pressurePresenter.proccess(method, halData);
 
-        // Trigger the correct access class signal
-        QMetaObject::invokeMethod(this, package["method"].toString().toLatin1().data(), Qt::DirectConnection, Q_ARG( QVariantMap, package ));
+        // Vac station presenter
+
+
+        // Flow controller presenter
+
+
+        // Once the data is formatted run the correct signal
+        if(!package.isEmpty())
+            // Trigger the correct access class signal
+            QMetaObject::invokeMethod(this, package["method"].toString().toLatin1().data(), Qt::DirectConnection, Q_ARG( QVariantMap, package ));
     }
+
+
+
+
+
 
 
     /**
@@ -381,6 +397,11 @@ namespace App { namespace Hardware
     {
         qDebug() << "I'll be sending that signal for you";
     }
+
+
+
+
+
 
 
     /**

@@ -118,7 +118,7 @@ namespace App { namespace Hardware { namespace HAL
      */
     void VacStation::proccessReadData(QStringList package)
     {
-        // Combind all read packages into on string
+       /* // Combind all read packages into on string
         QString readData = package.join("");
 
         // Get the ID
@@ -134,7 +134,10 @@ namespace App { namespace Hardware { namespace HAL
         QString data = readData.mid(10, dataLength.toInt());
 
         // Emit signal to application
-        emit vacStationData(id, param, data);
+        emit vacStationData(id, param, data);*/
+
+        // Send the data to the handware access manager
+        emit emit_vacStationData(m_responsability, m_method, package);
 
         //qDebug() << "Read: " << readData << "ID: " << id << " Param: " << param << " With Lenght: " << dataLength << "Result: " << data;
     }

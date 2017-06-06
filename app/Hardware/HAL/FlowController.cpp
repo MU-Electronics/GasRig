@@ -210,9 +210,6 @@ namespace App { namespace Hardware { namespace HAL
     {
         // Send the data to the handware access manager
         emit emit_flowControllerData(m_responsability, m_method, readData);
-
-        //QVariantMap
-        qDebug() << "Read on port: " << readData;
     }
 
 

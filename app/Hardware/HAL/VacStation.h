@@ -25,7 +25,7 @@ namespace App { namespace Hardware { namespace HAL
             void setId(int id);
 
         signals:
-            void vacStationData(QString id, QString param, QString data);
+            void emit_vacStationData(QString responable, QString m_method, QStringList halData);
 
         private slots:
             // Required slot for full HAL Support compliance
