@@ -16,14 +16,20 @@ win32 {
     DESTDIR_WIN ~= s,/,\\,g
 
     configfiles.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\debug\\config)
+
+    LIBS += "$$PWD/vendor/labjack/windowsUD/LJUDDotNet.dll"
 }
 
 macx {
     configfiles.commands = rsync -av $$PWD/resources/config/* $$OUT_PWD/config
+
+    LIBS += "$$PWD/vendor/labjack/exodriver/liblabjackusb-2.5.2.dylib"
 }
 
 linux {
     configfiles.commands = cp -r $$PWD/resources/config/* $$OUT_PWD/config
+
+    LIBS += "$$PWD/vendor/labjack/exodriver/liblabjackusb-2.5.2.dylib"
 }
 
 QMAKE_EXTRA_TARGETS += configfiles
@@ -59,7 +65,8 @@ SOURCES += \
     app/Services/SerialController.cpp \
     app/Hardware/HAL/HALSupport.cpp \
     app/Settings/Hardware.cpp \
-    app/Hardware/HAL/Presenters/PressureSensorPresenter.cpp
+    app/Hardware/HAL/Presenters/PressureSensorPresenter.cpp \
+    app/Services/LabJackController.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -87,7 +94,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    config/SystemSettings.json \
     readme.md
 
 HEADERS += \
@@ -118,4 +124,7 @@ HEADERS += \
     app/Services/SerialController.h \
     app/Hardware/HAL/HALSupport.h \
     app/Settings/Hardware.h \
-    app/Hardware/HAL/Presenters/PressureSensorPresenter.h
+    app/Hardware/HAL/Presenters/PressureSensorPresenter.h \
+    app/Services/LabJackController.h \
+    vendor/labjack/exodriver/labjackusb.h \
+    vendor/labjack/windowsUD/LabJackUD.h
