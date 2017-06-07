@@ -6,10 +6,10 @@
 // Import correct labjack driver
 #ifdef _WIN32
     // Using labjackUD library for windows as it uses WinUsb
-    #include "vendor/labjack/windowsUD/LabJackUD.h"
+    #include "../../vendor/labjack/windowsUD/LabJackUD.h"
 #else
     // Using the exodriver for everything else as this uses usblib-1.0
-    #include "vendor/labjack/exodriver/labjackusb.h"
+    #include "../../vendor/labjack/exodriver/labjackusb.h"
 #endif
 
 namespace App { namespace Services
@@ -38,6 +38,11 @@ namespace App { namespace Services
             // Using the exodriver
             device = LJUSB_OpenDevice(1, 0, U3_PRODUCT_ID);
         #endif
+
+        if(device)
+            return true;
+
+        return false;
     }
 
 
