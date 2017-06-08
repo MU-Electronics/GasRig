@@ -15,7 +15,14 @@
 namespace App { namespace Services
 {
 
-    LabJackController::LabJackController()
+    LabJackController::LabJackController(QObject *parent)
+        :   QObject(parent)
+    {
+
+    }
+
+
+    LabJackController::~LabJackController()
     {
 
     }
@@ -40,7 +47,21 @@ namespace App { namespace Services
         #endif
 
         if(device)
+        {
+            // Send the connect sucessfull signal
+            emit_comConnectionStatus(comConnectionPackageGenerator("Device1", true));
+
+            // Bus not open
+            isOpen = false;
+
             return true;
+        }
+
+        // Send the connect sucessfull signal
+        emit_comConnectionStatus(comConnectionPackageGenerator("Device1", false));
+
+        // Bus open
+        isOpen = true;
 
         return false;
     }
@@ -61,6 +82,12 @@ namespace App { namespace Services
             // Using the exodriver
             LJUSB_CloseDevice(device);
         #endif
+
+        // Send the connect sucessfull signal
+        emit_comConnectionStatus(comConnectionPackageGenerator("Device1", false));
+
+        // Bus not open
+        isOpen = false;
     }
 
 
@@ -90,6 +117,17 @@ namespace App { namespace Services
             // Using the exodriver
             byteLength = LJUSB_Read(device, &data, byteLength);
         #endif
+
+        // Check for valid data
+        if(data == NULL || data == -1)
+        {
+            // Tell the application we failed
+            emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "Could not read any data from the labjack"));
+
+            // Return empty array
+            QByteArray returnEmpty;
+            return returnEmpty;
+        }
 
         // Format char into QByteArray
         return QByteArray::fromRawData((char*) data, byteLength);
@@ -126,8 +164,46 @@ namespace App { namespace Services
             byteLength = LJUSB_Write(device, &data, byteLength);
         #endif
 
+        // Check for valid data
+        if(byteLength == -1)
+        {
+            // Tell the application we failed
+            emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "Could not write any data to the labjack"));
+
+            // Return empty array
+            QByteArray returnEmpty;
+            return returnEmpty;
+        }
+
         // Format char into QByteArray
         return QByteArray::fromRawData((char*) data, byteLength);
+    }
+
+
+    QVariantMap LabJackController::errorPackageGenerator(QString com, QString port, QString error)
+    {
+        // Create package to be emitted
+        QVariantMap errorPackage;
+        errorPackage["responsability"] = m_responsability;
+        errorPackage["method"] = m_method;
+        errorPackage["status"] = false;
+        errorPackage["com"] = com;
+        errorPackage["comAttempt"] = port;
+        errorPackage["error"] = error;
+
+        return errorPackage;
+    }
+
+
+    QVariantMap LabJackController::comConnectionPackageGenerator(QString com, bool status)
+    {
+        // Create package to be emitted
+        QVariantMap package;
+        package["responsability"] = m_responsability;
+        package["com"] = com;
+        package["status"] = status;
+
+        return package;
     }
 
 

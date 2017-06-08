@@ -2,6 +2,7 @@
 
 // Include external deps
 #include <QByteArray>
+#include <QVariantMap>
 
 // Import correct labjack driver
 #ifdef _WIN32
@@ -14,11 +15,23 @@
 namespace App { namespace Services
 {
 
-    class LabJackController
+    class LabJackController: public QObject
     {
 
+        Q_OBJECT
+
         public:
-            LabJackController();
+            explicit LabJackController(QObject *parent = 0);
+            ~LabJackController();
+
+            // What is the class responsable for?
+            QString m_responsability;
+
+            // Which method is being ran
+            QString m_method;
+
+            // Is the bus open
+            bool isOpen;
 
             #ifdef _WIN32
                 // Using labjackUD library
@@ -33,6 +46,16 @@ namespace App { namespace Services
             void close();
             QByteArray read(int length);
             QByteArray write(QByteArray package);
+
+
+            QVariantMap errorPackageGenerator(QString com, QString port, QString error);
+            QVariantMap comConnectionPackageGenerator(QString com, bool status);
+
+    signals:
+        void emit_critialLabJackError(QVariantMap errorPackage);
+        void emit_comConnectionStatus(QVariantMap package);
+        void emit_timeoutLabJackError(QVariantMap errorPackage);
+
     };
 
 }}

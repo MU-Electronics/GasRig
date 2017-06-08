@@ -6,30 +6,43 @@
 // Include labjack controller making universal cross OS platform
 #include "../../Services/LabJackController.h"
 
+// Interface for HAL classes
+#include "HALSupport.h"
+
 
 namespace App { namespace Hardware { namespace HAL
 {
-    class LabJack: public App::Services::LabJackController
+    class LabJack: public App::Services::LabJackController, public HALSupport
     {
-    public:
-        LabJack(QObject *parent);
+
+        Q_OBJECT
+
+        public:
+            LabJack(QObject *parent);
 
 
-    signals:
-        void emit_labJackData(QString responable, QString m_method, QStringList halData);
+        signals:
+            void emit_labJackData(QString responable, QString m_method, QStringList halData);
 
-    public slots:
-        void configureIO();
+        public slots:
+            void configureIO();
 
-        void setPortDirection();
-        void setDigitalPort();
-        void setAnaloguePort();
+            void setPortDirection();
+            void setDigitalPort();
+            void setAnaloguePort();
 
-        void readPortDirection();
-        void readDigitalPort();
-        void readAnaloguePort();
+            void readPortDirection();
+            void readDigitalPort();
+            void readAnaloguePort();
 
-    private:
+            // Required slots for full HAL Support compliance
+            void testConnection();
+            void resetConnection();
+
+        private:
+
+
+
         //explicit LabJack(const LabJack& rhs) = delete;
         //LabJack& operator= (const LabJack& rhs) = delete;
     };

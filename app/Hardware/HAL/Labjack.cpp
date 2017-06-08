@@ -1,11 +1,43 @@
 #include "Labjack.h"
 
+// Include external deps
+#include <QDebug>
+
 namespace App { namespace Hardware { namespace HAL
 {
 
 
     LabJack::LabJack(QObject *parent)
+        :   LabJackController(parent)
     {
+        // Sets what this class is responable for; @NOTE: Could be done in base class
+        m_responsability = "LabJack";
+    }
+
+
+    /**
+     * Check if the connection is still valid
+     *
+     * @brief LabJack::testConnection
+     */
+    void LabJack::testConnection()
+    {
+        // Which function is being ran?
+        m_method = "testConnection";
+    }
+
+
+    /**
+     * Close the current connection and open a new one
+     *
+     * @brief LabJack::resetConnection
+     */
+    void LabJack::resetConnection()
+    {
+        // Which function is being ran?
+        m_method = "resetConnection";
+
+        qDebug() << "Resetting connection";
     }
 
 
@@ -16,7 +48,10 @@ namespace App { namespace Hardware { namespace HAL
      */
     void LabJack::configureIO()
     {
+        // Which function is being ran?
+        m_method = "configureIO";
 
+        qDebug() << "Configuring IO";
     }
 
 
@@ -28,6 +63,8 @@ namespace App { namespace Hardware { namespace HAL
      */
     void LabJack::setPortDirection()
     {
+        // Which function is being ran?
+        m_method = "setPortDirection";
 
     }
 
@@ -39,6 +76,8 @@ namespace App { namespace Hardware { namespace HAL
      */
     void LabJack::setDigitalPort()
     {
+        // Which function is being ran?
+        m_method = "setDigitalPort";
 
     }
 
@@ -50,6 +89,8 @@ namespace App { namespace Hardware { namespace HAL
      */
     void LabJack::setAnaloguePort()
     {
+        // Which function is being ran?
+        m_method = "setAnaloguePort";
 
     }
 
@@ -61,6 +102,8 @@ namespace App { namespace Hardware { namespace HAL
      */
     void LabJack::readPortDirection()
     {
+        // Which function is being ran?
+        m_method = "readPortDirection";
 
     }
 
@@ -72,6 +115,8 @@ namespace App { namespace Hardware { namespace HAL
      */
     void LabJack::readDigitalPort()
     {
+        // Which function is being ran?
+        m_method = "readDigitalPort";
 
     }
 
@@ -83,6 +128,8 @@ namespace App { namespace Hardware { namespace HAL
      */
     void LabJack::readAnaloguePort()
     {
+        // Which function is being ran?
+        m_method = "readAnaloguePort";
 
     }
 

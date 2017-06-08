@@ -95,6 +95,10 @@ namespace App { namespace Hardware
         connect(&m_flowController, &HAL::FlowController::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
 
         // Connect labjack HAL connections
+        connect(&m_labjack, &HAL::LabJack::emit_labJackData, this, &Access::proccessDataFromHals);
+        connect(&m_labjack, &HAL::LabJack::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
+        connect(&m_labjack, &HAL::LabJack::emit_critialLabJackError, this, &Access::listen_critialSerialError);
+        connect(&m_labjack, &HAL::LabJack::emit_timeoutLabJackError, this, &Access::listen_timeoutSerialError);
 
         // Open com port for all devices
         connectDevices();
@@ -172,6 +176,7 @@ namespace App { namespace Hardware
 
 
         // Open the com port for the labjack
+        m_labjack.open();
     }
 
 
@@ -303,9 +308,24 @@ namespace App { namespace Hardware
         }
         else if (hardware == "LabJack")
         {
-            // Questionable how this will be implimented
-            // Code provided is a bit nasty and not cross platform
-            // May be easier to write only part we require
+            // If the bus is not free we cant procceed
+            if((!m_labjack.isOpen) && method != "resetConnection")
+            {
+                // Re add the method to the queue as this one will be removed
+                m_queue.enqueue(command);
+
+                // Log the issue
+                qDebug() << "Command was relisted due to bus issue: " << command;
+
+                // Return back to worker for next method
+                return;
+            }
+
+            // Set the method params
+            m_labjack.setParams(command);
+
+            // Run the method in the HAL and cache the status
+            status["resulting_status"] = (QMetaObject::invokeMethod(&m_labjack, method.toLatin1().data(), Qt::DirectConnection)) ? true : false;
         }
         else if (hardware == "AccessLayer")
         {
@@ -373,6 +393,9 @@ namespace App { namespace Hardware
 
 
         // Flow controller presenter
+
+
+        // Labjack presenter
 
 
         // Once the data is formatted run the correct signal
