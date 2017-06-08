@@ -37,7 +37,16 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "resetConnection";
 
-        qDebug() << "Resetting connection";
+//        // Close the current connection
+//        close();
+
+//        // Open a new connection
+//        open();
+
+        // The above is the actual method code the below is just a handy place for me to test my code
+
+        configureIO();
+
     }
 
 
@@ -51,7 +60,14 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "configureIO";
 
-        qDebug() << "Configuring IO";
+        //QByteArray setFIO5High = QByteArray::fromHex("0bf802001000000b0500");
+        QByteArray setFIO5High; //= QByteArray::fromHex("0b f8 02 00 10 00 00 0b 05 00");
+        setFIO5High.insert(0, 0x0b); // check sum 8
+
+
+        write(setFIO5High);
+
+        read(10);
     }
 
 

@@ -45,7 +45,7 @@ namespace App { namespace Services
             bool open();
             void close();
             QByteArray read(int length);
-            QByteArray write(QByteArray package);
+            bool write(QByteArray package);
 
 
             QVariantMap errorPackageGenerator(QString com, QString port, QString error);

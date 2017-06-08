@@ -2,6 +2,7 @@
 
 // Include external deps
 #include <QByteArray>
+#include <qDebug>
 
 // Import correct labjack driver
 #ifdef _WIN32
@@ -101,7 +102,7 @@ namespace App { namespace Services
     QByteArray LabJackController::read(int length)
     {
         // Hold the reads data
-        unsigned char data;
+        unsigned char data[10];
 
         // Run the correct method using the correct library
         #ifdef _WIN32
@@ -115,11 +116,11 @@ namespace App { namespace Services
             unsigned long byteLength = (unsigned int) length;
 
             // Using the exodriver
-            byteLength = LJUSB_Read(device, &data, byteLength);
+            byteLength = LJUSB_Read(device, data, 10);
         #endif
 
         // Check for valid data
-        if(data == NULL || data == -1)
+        if(byteLength < length)
         {
             // Tell the application we failed
             emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "Could not read any data from the labjack"));
@@ -128,6 +129,9 @@ namespace App { namespace Services
             QByteArray returnEmpty;
             return returnEmpty;
         }
+
+        // Temp debug message
+        qDebug() << "The data received was: " << QByteArray::fromRawData((char*) data, byteLength) << " Length of: " << byteLength;
 
         // Format char into QByteArray
         return QByteArray::fromRawData((char*) data, byteLength);
@@ -141,10 +145,13 @@ namespace App { namespace Services
      * @param package
      * @return
      */
-    QByteArray LabJackController::write(QByteArray package)
+    bool LabJackController::write(QByteArray package)
     {
         // Convert QBtyeArray to char
-        unsigned char data = *(unsigned char*)(package.data());
+        unsigned char data[package.size()];
+        for (int i = 0; i < package.size(); i++) {
+            data[i] = package.at(i);
+        }
 
         // Get the size of the data
         int length = package.size();
@@ -161,22 +168,24 @@ namespace App { namespace Services
             unsigned long byteLength = (unsigned int) length;
 
             // Using the exodriver
-            byteLength = LJUSB_Write(device, &data, byteLength);
+            byteLength = LJUSB_Write(device, data, byteLength);
         #endif
 
         // Check for valid data
-        if(byteLength == -1)
+        if(byteLength < package.size())
         {
             // Tell the application we failed
             emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "Could not write any data to the labjack"));
 
-            // Return empty array
-            QByteArray returnEmpty;
-            return returnEmpty;
+            // Failure
+            return false;
         }
 
-        // Format char into QByteArray
-        return QByteArray::fromRawData((char*) data, byteLength);
+        // Temp debug message
+        qDebug() << "The data send was: " << QByteArray::fromRawData((char*) data, byteLength) << " Length of: " << byteLength;
+
+        // Success
+        return true;
     }
 
 
