@@ -51,6 +51,51 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
+     * Calcuates the check sum 8 for a given package
+     *
+     * @brief LabJack::checkSumEight
+     * @param package
+     * @return
+     */
+    QString LabJack::checkSumEight(QStringList package)
+    {
+        int i, a, bb;
+
+       //Sums bytes 1 to 5. Sums quotient and remainder of 256 division. Again,
+       //sums quotient and remainder of 256 division.
+       for( i = 1, a = 0; i < 6; i++ )
+           a += (unsigned short) package.at(i).toInt();
+
+       bb=a / 256;
+       a=(a - 256*bb) + bb;
+       bb=a / 256;
+
+       return QString::number(((a - 256*bb) + bb));
+    }
+
+
+    /**
+     * Calcuates the check sum 16 for a given package
+     *
+     * @brief LabJack::checkSumSixteen
+     * @param package
+     * @return
+     */
+    QString LabJack::checkSumSixteen(QStringList package)
+    {
+        int i, a = 0;
+
+        //Sums bytes 6 to n-1 to a unsigned 2 byte value
+        for( i = 3; i < package.size(); i++ )
+        {
+            a += (unsigned short) package.at(i).toInt();
+        }
+
+        return QString::number(a);
+    }
+
+
+    /**
      *
      *
      * @brief LabJack::configureIO
@@ -61,12 +106,57 @@ namespace App { namespace Hardware { namespace HAL
         m_method = "configureIO";
 
         //QByteArray setFIO5High = QByteArray::fromHex("0bf802001000000b0500");
-        QByteArray setFIO5High; //= QByteArray::fromHex("0b f8 02 00 10 00 00 0b 05 00");
-        setFIO5High.insert(0, 0x0b); // check sum 8
+        QStringList stringPackage; //= QByteArray::fromHex("0b f8 02 00 10 00 00 0b 05 00");
+        stringPackage.insert(0, "0"); // check sum 8   QString::number(11))
+        stringPackage.insert(1, "248"); // command byte                (Always 248)
+        stringPackage.insert(2, "2"); // Number of data words        (.5 word for echo and 10.5 words for IO Type + data)
+        stringPackage.insert(3, "0"); // Extended command number     (Always 0)
+        stringPackage.insert(4, "0"); // Checksum 16 LSB      QString::number(16)
+        stringPackage.insert(5, "0"); // Checksum 16 MSB     QString::number(0))
+        stringPackage.insert(6, "0"); // Echo
+        stringPackage.insert(7, "11"); // IO Type                     (current = 11 = BitStateWrite)
+        stringPackage.insert(8, "5"); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+        stringPackage.insert(9, "1"); // Digital port value          (HIGH = 1 and LOW =0)
 
+        // Caclates the check sum 16
+        QString checkSumSixteenHex = QString("%1").arg(checkSumSixteen(stringPackage).toInt(), 0, 16);
 
-        write(setFIO5High);
+        // Sets the checksum 16 LSB
+        QString highCheckSumHex = QStringLiteral("0x") + QString::number((checkSumSixteenHex.toInt()/256) & 0xFF);
+        int highCheckSumDecimal = highCheckSumHex.toInt(__null, 16);
+        stringPackage.replace(5, QString::number(highCheckSumDecimal));
 
+        // Sets the checksum 16 MSB
+        QString lowCheckSumHex = QStringLiteral("0x") + QString::number(checkSumSixteenHex.toUtf8().toInt() & 0xFF);
+        int lowCheckSumDecimal = lowCheckSumHex.toInt(__null, 16);
+        stringPackage.replace(4, QString::number(lowCheckSumDecimal));
+
+        // Calcuate check sum eight
+        QString checkSumEightValue = checkSumEight(stringPackage);
+
+        // Calcuate the checksum 8
+        stringPackage.replace(0, checkSumEightValue);
+
+        // Convert string list to hex string
+        QString hex;
+        for ( int i = 0; i < stringPackage.size(); i++ )
+        {
+            hex += QString("%1").arg(stringPackage.at(i).toInt(), 2, 16, QChar('0'));
+        }
+
+        // Create QByteArray container
+        QByteArray package;
+
+        // Resize to string package size
+        package.resize(stringPackage.size());
+
+        // Add the data into array
+        package = QByteArray::fromHex(hex.toUtf8());
+
+        // Write package
+        write(package);
+
+        // Read the package
         read(10);
     }
 

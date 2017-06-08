@@ -40,7 +40,8 @@ namespace App { namespace Hardware { namespace HAL
             void resetConnection();
 
         private:
-
+            QString checkSumEight(QStringList package);
+            QString checkSumSixteen(QStringList package);
 
 
         //explicit LabJack(const LabJack& rhs) = delete;
