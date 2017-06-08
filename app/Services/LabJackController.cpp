@@ -102,7 +102,7 @@ namespace App { namespace Services
     QByteArray LabJackController::read(int length)
     {
         // Hold the reads data
-        unsigned char data[10];
+        unsigned char data[length];
 
         // Run the correct method using the correct library
         #ifdef _WIN32
@@ -116,7 +116,7 @@ namespace App { namespace Services
             unsigned long byteLength = (unsigned int) length;
 
             // Using the exodriver
-            byteLength = LJUSB_Read(device, data, 10);
+            byteLength = LJUSB_Read(device, data, byteLength);
         #endif
 
         // Check for valid data

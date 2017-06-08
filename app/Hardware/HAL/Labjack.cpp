@@ -66,11 +66,11 @@ namespace App { namespace Hardware { namespace HAL
        for( i = 1, a = 0; i < 6; i++ )
            a += (unsigned short) package.at(i).toInt();
 
-       bb=a / 256;
-       a=(a - 256*bb) + bb;
-       bb=a / 256;
+       bb = a / 256;
+       a = (a - 256 * bb) + bb;
+       bb = a / 256;
 
-       return QString::number(((a - 256*bb) + bb));
+       return QString::number( (a - 256 * bb) + bb );
     }
 
 
@@ -105,18 +105,36 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "configureIO";
 
-        //QByteArray setFIO5High = QByteArray::fromHex("0bf802001000000b0500");
+
+        int sendDWSize, recDWSize;
+        if( ((sendDWSize = 5 + 1)%2) != 0 )
+                sendDWSize++;
+
+        if( ((recDWSize = 0 + 3)%2) != 0 )
+            recDWSize++;
+
+        qDebug() << sendDWSize << " " << recDWSize;
+
         QStringList stringPackage; //= QByteArray::fromHex("0b f8 02 00 10 00 00 0b 05 00");
-        stringPackage.insert(0, "0"); // check sum 8   QString::number(11))
-        stringPackage.insert(1, "248"); // command byte                (Always 248)
-        stringPackage.insert(2, "2"); // Number of data words        (.5 word for echo and 10.5 words for IO Type + data)
+        stringPackage.insert(0, "0"); // check sum 8                 (place holder)
+        stringPackage.insert(1, "248"); // command byte              (Always 248)
+        stringPackage.insert(2, QString::number(sendDWSize/2)); // Number of data words        (.5 word for echo and 10.5 words for IO Type + data)
         stringPackage.insert(3, "0"); // Extended command number     (Always 0)
-        stringPackage.insert(4, "0"); // Checksum 16 LSB      QString::number(16)
-        stringPackage.insert(5, "0"); // Checksum 16 MSB     QString::number(0))
-        stringPackage.insert(6, "0"); // Echo
-        stringPackage.insert(7, "11"); // IO Type                     (current = 11 = BitStateWrite)
-        stringPackage.insert(8, "5"); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
-        stringPackage.insert(9, "1"); // Digital port value          (HIGH = 1 and LOW =0)
+        stringPackage.insert(4, "0"); // Checksum 16 LSB             (place holder)
+        stringPackage.insert(5, "0"); // Checksum 16 MSB             (place holder)
+        stringPackage.insert(6, "0"); // Echo                        (Always 0)
+
+        // Set the pin as digital in
+        stringPackage.insert(7, "13"); // IO Type                    (current = 13 = BitDirWrite)
+        stringPackage.insert(8, QString::number((long) 5 + 128) ); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+        //stringPackage.insert(9, "1"); // Input or output             (OUTPUT = 1 and INPUT =0)
+
+        // Set the pin as digital high
+        stringPackage.insert(9, "11"); // IO Type                    (current = 11 = BitStateWrite)
+        stringPackage.insert(10, QString::number( (long) 5 + (128*0) ) ); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+        //stringPackage.insert(12, "0"); // Digital port value          (HIGH = 1 and LOW =0)
+
+        stringPackage.insert(11, "0");
 
         // Caclates the check sum 16
         QString checkSumSixteenHex = QString("%1").arg(checkSumSixteen(stringPackage).toInt(), 0, 16);
@@ -157,7 +175,7 @@ namespace App { namespace Hardware { namespace HAL
         write(package);
 
         // Read the package
-        read(10);
+        read(package.size() - 1);
     }
 
 
