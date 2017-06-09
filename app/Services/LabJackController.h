@@ -48,18 +48,24 @@ namespace App { namespace Services
             bool write(QByteArray package);
 
 
-            QVariantMap errorPackageGenerator(QString com, QString port, QString error);
-            QVariantMap comConnectionPackageGenerator(QString com, bool status);
+            bool validate(QString type, QStringList package);
+
+            QByteArray createPackageFeedback(QStringList data);
+            QStringList sendReceivePackage(QString type, QStringList data, int receivedBytes);
 
             int portValueFromName(QString name);
 
             QString checkSumEight(QStringList package);
             QString checkSumSixteen(QStringList package);
 
+            QVariantMap errorPackageGenerator(QString com, QString port, QString error);
+            QVariantMap comConnectionPackageGenerator(QString com, bool status);
+
     signals:
         void emit_critialLabJackError(QVariantMap errorPackage);
         void emit_comConnectionStatus(QVariantMap package);
         void emit_timeoutLabJackError(QVariantMap errorPackage);
+        void emit_labJackData(QString responable, QString m_method, QStringList halData);
 
     };
 

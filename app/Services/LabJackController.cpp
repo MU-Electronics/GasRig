@@ -200,6 +200,190 @@ namespace App { namespace Services
     }
 
 
+
+
+
+
+
+
+    /*##################################################
+     #  Below this point are helper functions          #
+     #  and not low level driver controller functions  #
+     ###################################################*/
+
+
+
+
+
+
+    /**
+     * Create a type feedback function package to send to the lab jack
+     *
+     * @brief LabJackController::createPackageFeedback
+     * @return
+     */
+    QByteArray LabJackController::createPackageFeedback(QStringList data)
+    {
+        // Calcuate the data word size ensure no decimals when grouped into 2's
+        int wordLength = data.size() + 1;
+        if( ( (wordLength) % 2 ) != 0 )
+            wordLength++;
+
+        // Create container for data
+        QStringList stringPackage;
+        stringPackage.insert(0, "0");                               // Checksum 8                  (place holder)
+        stringPackage.insert(1, "248");                             // Command byte                (Always 248 for feedback function)
+        stringPackage.insert(2, QString::number(wordLength/2));     // Number of data words        (.5 word for echo and 10.5 words for IO Type + data)
+        stringPackage.insert(3, "0");                               // Extended command number     (Always 0)
+        stringPackage.insert(4, "0");                               // Checksum 16 LSB             (place holder)
+        stringPackage.insert(5, "0");                               // Checksum 16 MSB             (place holder)
+        stringPackage.insert(6, "0");                               // Echo                        (Always 0)
+
+        // Add the data to the package container
+        for(int i = 0; i < data.size(); i++ )
+        {
+            stringPackage.append(data.at(i));
+        }
+
+        // If odd we add an addtion byte
+        if( ( (data.size() + 1) % 2 ) != 0 )
+            stringPackage.append("0");
+
+
+        // Calcuate the check sum 16
+        QString checkSumSixteenHex = QString("%1").arg(checkSumSixteen(stringPackage).toInt(), 4, 16, QChar('0'));
+
+        // Calculate checksum16 MSB
+        QString highCheckSum = QString("%1").arg(checkSumSixteenHex.mid(0,2), 0, 16);
+        int highCheckSumDecimal = highCheckSum.toInt(__null, 16);
+
+        // Calculate checksum16 LSB
+        QString lowCheckSum = QString("%1").arg(checkSumSixteenHex.mid(2,2), 0, 16);
+        int lowCheckSumDecimal = lowCheckSum.toInt(__null, 16);
+
+        // Set MSB and LSB values into the package at the correct position
+        stringPackage.replace(5, QString::number(highCheckSumDecimal));
+        stringPackage.replace(4, QString::number(lowCheckSumDecimal));
+
+
+        // Calcuate check sum eight
+        QString checkSumEightValue = checkSumEight(stringPackage);
+
+        // Set checksum8 at the correct position
+        stringPackage.replace(0, checkSumEightValue);
+
+
+        // Convert string package list to a hex string
+        QString hex;
+        for ( int i = 0; i < stringPackage.size(); i++ )
+        {
+            hex += QString("%1").arg(stringPackage.at(i).toInt(), 2, 16, QChar('0'));
+        }
+
+        // Create QByteArray container
+        QByteArray package;
+
+        // Resize to string package size
+        package.resize(stringPackage.size());
+
+        // Add the data into array
+        package = QByteArray::fromHex(hex.toUtf8());
+
+        // Return the generated package
+        return package;
+    }
+
+
+    /**
+     * Send a package of data and receive the reply. This method is generate the relivent command + checksum bytes and validate the responce
+     *
+     * @brief LabJackController::sendReceivePackage
+     * @param type
+     * @param data
+     * @param receivedBytes
+     * @return
+     */
+    QStringList LabJackController::sendReceivePackage(QString type, QStringList data, int receivedBytes)
+    {
+        // Container for data
+        QStringList returnedData;
+
+        // Multiple different types of package structures
+        if(type == "feedback")
+        {
+            // Calcuate the number of returning btyes
+            receivedBytes = receivedBytes + 3 + 6;
+            if( ( (receivedBytes) %2 ) != 0 )
+                receivedBytes++;
+
+            // Create the package to send
+            QByteArray package = createPackageFeedback(data);
+
+            // Write the package
+            write(package);
+
+            // Read the package
+            returnedData = read(receivedBytes);
+
+            // Check the check sum if it is return with empty responce
+            if(!validate(type, returnedData))
+            {
+                // Print debug message
+                qDebug() << "There was a problem with the check sum validation for the LabJack. Sent Package:" << package << "; Returned Package: " << returnedData;
+
+                // Empty the contain for incorrect data
+                returnedData.clear();
+
+                // Return empty responce
+                return returnedData;
+            }
+        }
+        else // Failed to find correct package type
+        {
+            return returnedData;
+        }
+
+        // Tell the applcation about the data
+        emit_labJackData(m_responsability, m_method, data);
+
+        // Return the data
+        return returnedData;
+    }
+
+
+    /**
+     * Validates a package is correct
+     *
+     * @brief LabJackController::validate
+     */
+    bool LabJackController::validate(QString type, QStringList package)
+    {
+        // Multiple different types of package structures
+        if(type == "feedback")
+        {
+            // Calculate the check sum 16
+            QString checksum16 = checkSumSixteen(package);
+
+            // Find the checksum16 MSB
+            QString highCheckSum = QString("%1").arg(checksum16.mid(0,2), 0, 16);
+            int highCheckSumDecimal = highCheckSum.toInt(__null, 16);
+
+            // Find the checksum16 LSB
+            QString lowCheckSum = QString("%1").arg(checksum16.mid(2,2), 0, 16);
+            int lowCheckSumDecimal = lowCheckSum.toInt(__null, 16);
+
+            // Calculate the check sum 8
+            QString checksum8 = checkSumEight(package);
+
+            // Compare the check sums
+            if( ( package.at(0).toInt() == checksum8.toInt() ) && ( package.at(4).toInt() == lowCheckSumDecimal ) && ( package.at(5).toInt() == highCheckSumDecimal ) )
+                return true;
+        }
+
+        return false;
+    }
+
+
     /**
      * Helper that calculates the check sum 8 for a given package
      *

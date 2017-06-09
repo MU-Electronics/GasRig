@@ -40,10 +40,7 @@ namespace App { namespace Hardware { namespace HAL
             void resetConnection();
 
         private:
-            bool validate(QString type, QStringList package);
 
-            QByteArray createPackageFeedback(QStringList data);
-            QStringList sendReceivePackage(QString type, QStringList data, int receivedBytes);
         //explicit LabJack(const LabJack& rhs) = delete;
         //LabJack& operator= (const LabJack& rhs) = delete;
     };
