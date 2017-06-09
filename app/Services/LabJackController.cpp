@@ -395,7 +395,7 @@ namespace App { namespace Services
             }
 
             // Compare the check sums
-            if( ( package.at(0).toInt() == checksum8.toInt() ) && ( package.at(4).toInt() == lowCheckSumDecimal ) && ( package.at(5).toInt() == highCheckSumDecimal ) )
+            if( ( package.at(0).toInt() == checksum8.toInt() ) && ( package.at(5).toInt() == lowCheckSumDecimal ) && ( package.at(4).toInt() == highCheckSumDecimal ) )
                 return true;
         }
 

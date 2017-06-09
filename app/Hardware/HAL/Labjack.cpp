@@ -46,13 +46,14 @@ namespace App { namespace Hardware { namespace HAL
         // The above is the actual method code the below is just a handy place for me to test my code
 
         m_command.insert("port", "FIO5");
-        m_command.insert("value", "0");
+        m_command.insert("value", "1");
         setDigitalPort();
 
+        m_command.insert("port", "FIO5");
+        readDigitalPort();
+
+
     }
-
-
-
 
 
     /**
@@ -66,20 +67,6 @@ namespace App { namespace Hardware { namespace HAL
         m_method = "configureIO";
 
      }
-
-
-
-    /**
-     *
-     *
-     * @brief LabJack::setPortDirection
-     */
-    void LabJack::setPortDirection()
-    {
-        // Which function is being ran?
-        m_method = "setPortDirection";
-
-    }
 
 
     /**
@@ -127,11 +114,35 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "setAnaloguePort";
 
+        // Port name
+        int port = portValueFromName(m_command.value("port").toString());
+
+        // Value
+        QString valueHex = QString("%1").arg(m_command.value("value").toInt(), 4, 16, QChar('0'));
+        int MSB = valueHex.mid(0,2).toInt();
+        int LSB = valueHex.mid(2,4).toInt();
+
+        // Data container
+        QStringList stringPackage;
+
+        // Set the pin as digital in
+        stringPackage.append("38");                       // IO Type                    (38 = dac16)
+        stringPackage.append(QString::number(port));      // Port Name * Value
+
+        // Set MSB
+        stringPackage.append(QString::number(MSB));
+
+        //Set LSB
+        stringPackage.append(QString::number(LSB));
+
+        // Send the data
+        sendReceivePackage("feedback", stringPackage, 0);
     }
 
 
     /**
-     *
+     * Reads the currently set port direction
+     * WARNING: This can show it as an input when infact the labjack is outputing!
      *
      * @brief LabJack::readPortDirection
      */
@@ -139,6 +150,19 @@ namespace App { namespace Hardware { namespace HAL
     {
         // Which function is being ran?
         m_method = "readPortDirection";
+
+        // Port name
+        int port = portValueFromName(m_command.value("port").toString());
+
+        // Data container
+        QStringList stringPackage;
+
+        // Set the pin as digital in
+        stringPackage.append("12");                       // IO Type                    (12 = BitDirRead)
+        stringPackage.append(QString::number(port));      // Port Name * Value
+
+        // Send the data
+        sendReceivePackage("feedback", stringPackage, 1);
 
     }
 
@@ -153,6 +177,18 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "readDigitalPort";
 
+        // Port name
+        int port = portValueFromName(m_command.value("port").toString());
+
+        // Data container
+        QStringList stringPackage;
+
+        // Set the pin as digital in
+        stringPackage.append("10");                       // IO Type                    (12 = BitDirRead)
+        stringPackage.append(QString::number(port));      // Port Name * Value
+
+        // Send the data
+        qDebug() << sendReceivePackage("feedback", stringPackage, 1);
     }
 
 

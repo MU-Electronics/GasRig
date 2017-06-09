@@ -27,7 +27,6 @@ namespace App { namespace Hardware { namespace HAL
         public slots:
             void configureIO();
 
-            void setPortDirection();
             void setDigitalPort();
             void setAnaloguePort();
 
