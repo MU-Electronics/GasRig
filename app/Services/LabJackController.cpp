@@ -99,7 +99,7 @@ namespace App { namespace Services
      * @param length
      * @return
      */
-    QByteArray LabJackController::read(int length)
+    QStringList LabJackController::read(int length)
     {
         // Hold the reads data
         unsigned char data[length];
@@ -127,15 +127,25 @@ namespace App { namespace Services
             emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "Could not read any data from the labjack"));
 
             // Return empty array
-            QByteArray returnEmpty;
+            QStringList returnEmpty;
             return returnEmpty;
         }
 
+        // Data
+        QByteArray dataArray = QByteArray::fromRawData((char*) data, byteLength);
+
+        // For each btye we will convert to ascii format then sort in read container
+        QStringList asciiContainer;
+        for (int i = 0; i < dataArray.size(); ++i)
+        {
+             asciiContainer.append(QString::number((unsigned char) dataArray.at(i)));
+        }
+
         // Temp debug message
-        qDebug() << "The data received was: " << QByteArray::fromRawData((char*) data, byteLength) << " Length of: " << byteLength;
+        //qDebug() << "The data received was: " << QByteArray::fromRawData((char*) data, byteLength) << " Length of: " << byteLength;
 
         // Format char into QByteArray
-        return QByteArray::fromRawData((char*) data, byteLength);
+        return asciiContainer;
     }
 
 

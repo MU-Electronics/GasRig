@@ -45,7 +45,7 @@ namespace App { namespace Hardware { namespace HAL
 
         // The above is the actual method code the below is just a handy place for me to test my code
 
-        configureIO();
+        setDigitalPort();
 
     }
 
@@ -86,7 +86,6 @@ namespace App { namespace Hardware { namespace HAL
         int i, a = 0;
 
         //Sums bytes 6 to n-1 to a unsigned 2 byte value
-        // was i=3
         for( i = 6; i < package.size(); i++ )
         {
             a += (unsigned short) package.at(i).toInt();
@@ -96,71 +95,65 @@ namespace App { namespace Hardware { namespace HAL
     }
 
 
+
     /**
+     * Create a type feedback function package to send to the lab jack
      *
-     *
-     * @brief LabJack::configureIO
+     * @brief LabJack::createPackageFeedback
+     * @return
      */
-    void LabJack::configureIO()
+    QByteArray LabJack::createPackageFeedback(QStringList data)
     {
-        // Which function is being ran?
-        m_method = "configureIO";
+        // Calcuate the data word size ensure no decimals when grouped into 2's
+        int wordLength = data.size() + 1;
+        if( ( (wordLength) % 2 ) != 0 )
+            wordLength++;
 
-        // Input and output data size
-        int data = 4;
-        int out = 0;
+        // Create container for data
+        QStringList stringPackage;
+        stringPackage.insert(0, "0");                               // Checksum 8                  (place holder)
+        stringPackage.insert(1, "248");                             // Command byte                (Always 248 for feedback function)
+        stringPackage.insert(2, QString::number(wordLength/2));     // Number of data words        (.5 word for echo and 10.5 words for IO Type + data)
+        stringPackage.insert(3, "0");                               // Extended command number     (Always 0)
+        stringPackage.insert(4, "0");                               // Checksum 16 LSB             (place holder)
+        stringPackage.insert(5, "0");                               // Checksum 16 MSB             (place holder)
+        stringPackage.insert(6, "0");                               // Echo                        (Always 0)
+
+        // Add the data to the package container
+        for(int i = 0; i < data.size(); i++ )
+        {
+            stringPackage.append(data.at(i));
+        }
+
+        // If odd we add an addtion byte
+        if( ( (data.size() + 1) % 2 ) != 0 )
+            stringPackage.append("0");
 
 
-        int sendDWSize, recDWSize;
-        if( ((sendDWSize = data + 1)%2) != 0 )
-                sendDWSize++;
-
-        if( ((recDWSize = out + 3)%2) != 0 )
-            recDWSize++;
-
-        qDebug() << sendDWSize << " " << recDWSize;
-
-        QStringList stringPackage; //= QByteArray::fromHex("0b f8 02 00 10 00 00 0b 05 00");
-        stringPackage.insert(0, "0"); // check sum 8                 (place holder)
-        stringPackage.insert(1, "248"); // command byte              (Always 248)
-        stringPackage.insert(2, QString::number(sendDWSize/2)); // Number of data words        (.5 word for echo and 10.5 words for IO Type + data)
-        stringPackage.insert(3, "0"); // Extended command number     (Always 0)
-        stringPackage.insert(4, "0"); // Checksum 16 LSB             (place holder)
-        stringPackage.insert(5, "0"); // Checksum 16 MSB             (place holder)
-        stringPackage.insert(6, "0"); // Echo                        (Always 0)
-
-        // Set the pin as digital in
-        stringPackage.insert(7, "13"); // IO Type                    (current = 13 = BitDirWrite)
-        stringPackage.insert(8, QString::number( (long) 5 + 128) ); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
-        //stringPackage.insert(9, "1"); // Input or output             (OUTPUT = 1 and INPUT =0)
-
-        // Set the pin as digital high
-        stringPackage.insert(9, "11"); // IO Type                    (current = 11 = BitStateWrite)
-        stringPackage.insert(10, QString::number( (long) 5 + (128*1) ) ); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
-        //stringPackage.insert(12, "0"); // Digital port value          (HIGH = 1 and LOW =0)
-
-        stringPackage.insert(11, "0");
-
-        // Caclates the check sum 16
+        // Calcuate the check sum 16
         QString checkSumSixteenHex = QString("%1").arg(checkSumSixteen(stringPackage).toInt(), 4, 16, QChar('0'));
 
-        // Sets the checksum 16 LSB
+        // Calculate checksum16 LSB
         QString highCheckSum = QString("%1").arg(checkSumSixteenHex.mid(0,2), 0, 16);
         int highCheckSumDecimal = highCheckSum.toInt(__null, 16);
-        stringPackage.replace(5, QString::number(highCheckSumDecimal));
 
-        // Sets the checksum 16 MSB
+        // Calculate checksum16 MSB
         QString lowCheckSum = QString("%1").arg(checkSumSixteenHex.mid(2,2), 0, 16);
         int lowCheckSumDecimal = lowCheckSum.toInt(__null, 16);
+
+        // Set MSB and LSB values into the package at the correct position
+        stringPackage.replace(5, QString::number(highCheckSumDecimal));
         stringPackage.replace(4, QString::number(lowCheckSumDecimal));
+
 
         // Calcuate check sum eight
         QString checkSumEightValue = checkSumEight(stringPackage);
 
-        // Calcuate the checksum 8
+        // Set checksum8 at the correct position
         stringPackage.replace(0, checkSumEightValue);
 
-        // Convert string list to hex string
+
+        // Convert string package list to a hex string
         QString hex;
         for ( int i = 0; i < stringPackage.size(); i++ )
         {
@@ -176,12 +169,55 @@ namespace App { namespace Hardware { namespace HAL
         // Add the data into array
         package = QByteArray::fromHex(hex.toUtf8());
 
-        // Write package
-        write(package);
-
-        // Read the package
-        read(recDWSize + 6);
+        // Return the generated package
+        return package;
     }
+
+
+    QStringList LabJack::sendReceivePackage(QString type, QStringList data, int receivedBytes)
+    {
+        // Container for data
+        QStringList returnedData;
+
+        // Multiple different types of package structures
+        if(type == "feedback")
+        {
+            // Calcuate the number of returning btyes
+            receivedBytes = receivedBytes + 3 + 6;
+            if( ( (receivedBytes) %2 ) != 0 )
+                receivedBytes++;
+
+            // Write the package
+            write( createPackageFeedback(data) );
+
+            // Read the package
+            returnedData = read(receivedBytes);
+        }
+        else // Failed to find correct package type
+        {
+            return returnedData;
+        }
+
+        // Tell the applcation about the data
+        emit_labJackData(m_responsability, m_method, data);
+
+        // Return the data
+        return returnedData;
+    }
+
+
+
+    /**
+     *
+     *
+     * @brief LabJack::configureIO
+     */
+    void LabJack::configureIO()
+    {
+        // Which function is being ran?
+        m_method = "configureIO";
+
+     }
 
 
 
@@ -208,6 +244,18 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "setDigitalPort";
 
+        // Data container
+        QStringList stringPackage;
+
+        // Set the pin as digital in
+        stringPackage.append("13");                                     // IO Type                    (current = 13 = BitDirWrite)
+        stringPackage.append(QString::number( (long) 5 + 128) );        // Port Name * Value          (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+
+        // Set the pin as digital high
+        stringPackage.append("11");                                     // IO Type                    (current = 11 = BitStateWrite)
+        stringPackage.append(QString::number( (long) 5 + (128*0) ) );   // Port Name * Value                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+
+        qDebug() << "Reply was:" << sendReceivePackage("feedback", stringPackage, 0);
     }
 
 

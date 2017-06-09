@@ -44,7 +44,7 @@ namespace App { namespace Services
 
             bool open();
             void close();
-            QByteArray read(int length);
+            QStringList read(int length);
             bool write(QByteArray package);
 
 
