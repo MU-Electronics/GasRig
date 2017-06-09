@@ -40,8 +40,7 @@ namespace App { namespace Hardware { namespace HAL
             void resetConnection();
 
         private:
-            QString checkSumEight(QStringList package);
-            QString checkSumSixteen(QStringList package);
+            bool validate(QString type, QStringList package);
 
             QByteArray createPackageFeedback(QStringList data);
             QStringList sendReceivePackage(QString type, QStringList data, int receivedBytes);

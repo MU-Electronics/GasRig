@@ -193,10 +193,55 @@ namespace App { namespace Services
         }
 
         // Temp debug message
-        qDebug() << "The data send was: " << QByteArray::fromRawData((char*) data, byteLength) << " Length of: " << byteLength;
+        //qDebug() << "The data send was: " << QByteArray::fromRawData((char*) data, byteLength) << " Length of: " << byteLength;
 
         // Success
         return true;
+    }
+
+
+    /**
+     * Helper that calculates the check sum 8 for a given package
+     *
+     * @brief LabJackController::checkSumEight
+     * @param package
+     * @return
+     */
+    QString LabJackController::checkSumEight(QStringList package)
+    {
+        int i, a, bb;
+
+       //Sums bytes 1 to 5. Sums quotient and remainder of 256 division. Again,
+       //sums quotient and remainder of 256 division.
+       for( i = 1, a = 0; i < 6; i++ )
+           a += (unsigned short) package.at(i).toInt();
+
+       bb = a / 256;
+       a = (a - 256 * bb) + bb;
+       bb = a / 256;
+
+       return QString::number( (a - 256 * bb) + bb );
+    }
+
+
+    /**
+     * Helper that calcuates the check sum 16 for a given package
+     *
+     * @brief LabJackController::checkSumSixteen
+     * @param package
+     * @return
+     */
+    QString LabJackController::checkSumSixteen(QStringList package)
+    {
+        int i, a = 0;
+
+        //Sums bytes 6 to n-1 to a unsigned 2 byte value
+        for( i = 6; i < package.size(); i++ )
+        {
+            a += (unsigned short) package.at(i).toInt();
+        }
+
+        return QString::number(a);
     }
 
 
@@ -234,6 +279,15 @@ namespace App { namespace Services
     }
 
 
+    /**
+     * Helper method for generating error packages to send to the applcation in the event of a failure
+     *
+     * @brief LabJackController::errorPackageGenerator
+     * @param com
+     * @param port
+     * @param error
+     * @return
+     */
     QVariantMap LabJackController::errorPackageGenerator(QString com, QString port, QString error)
     {
         // Create package to be emitted
@@ -249,6 +303,14 @@ namespace App { namespace Services
     }
 
 
+    /**
+     * Helper method for generating com status packages to send to the applcation in the event of com changes
+     *
+     * @brief LabJackController::comConnectionPackageGenerator
+     * @param com
+     * @param status
+     * @return
+     */
     QVariantMap LabJackController::comConnectionPackageGenerator(QString com, bool status)
     {
         // Create package to be emitted

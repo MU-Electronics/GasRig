@@ -46,56 +46,10 @@ namespace App { namespace Hardware { namespace HAL
         // The above is the actual method code the below is just a handy place for me to test my code
 
         m_command.insert("port", "FIO5");
-        m_command.insert("value", "1");
+        m_command.insert("value", "0");
         setDigitalPort();
 
     }
-
-
-    /**
-     * Calcuates the check sum 8 for a given package
-     *
-     * @brief LabJack::checkSumEight
-     * @param package
-     * @return
-     */
-    QString LabJack::checkSumEight(QStringList package)
-    {
-        int i, a, bb;
-
-       //Sums bytes 1 to 5. Sums quotient and remainder of 256 division. Again,
-       //sums quotient and remainder of 256 division.
-       for( i = 1, a = 0; i < 6; i++ )
-           a += (unsigned short) package.at(i).toInt();
-
-       bb = a / 256;
-       a = (a - 256 * bb) + bb;
-       bb = a / 256;
-
-       return QString::number( (a - 256 * bb) + bb );
-    }
-
-
-    /**
-     * Calcuates the check sum 16 for a given package
-     *
-     * @brief LabJack::checkSumSixteen
-     * @param package
-     * @return
-     */
-    QString LabJack::checkSumSixteen(QStringList package)
-    {
-        int i, a = 0;
-
-        //Sums bytes 6 to n-1 to a unsigned 2 byte value
-        for( i = 6; i < package.size(); i++ )
-        {
-            a += (unsigned short) package.at(i).toInt();
-        }
-
-        return QString::number(a);
-    }
-
 
 
     /**
@@ -189,11 +143,27 @@ namespace App { namespace Hardware { namespace HAL
             if( ( (receivedBytes) %2 ) != 0 )
                 receivedBytes++;
 
+            // Create the package to send
+            QByteArray package = createPackageFeedback(data);
+
             // Write the package
-            write( createPackageFeedback(data) );
+            write(package);
 
             // Read the package
             returnedData = read(receivedBytes);
+
+            // Check the check sum if it is return with empty responce
+            if(!validate(type, returnedData))
+            {
+                // Print debug message
+                qDebug() << "There was a problem with the check sum validation for the LabJack. Sent Package:" << package << "; Returned Package: " << returnedData;
+
+                // Empty the contain for incorrect data
+                returnedData.clear();
+
+                // Return empty responce
+                return returnedData;
+            }
         }
         else // Failed to find correct package type
         {
@@ -205,6 +175,27 @@ namespace App { namespace Hardware { namespace HAL
 
         // Return the data
         return returnedData;
+    }
+
+
+
+    /**
+     * Validates a package is correct
+     *
+     * @brief LabJack::validate
+     */
+    bool LabJack::validate(QString type, QStringList package)
+    {
+        // Multiple different types of package structures
+        if(type == "feedback")
+        {
+
+
+            // Validation successfull
+            return true;
+        }
+
+        return false;
     }
 
 

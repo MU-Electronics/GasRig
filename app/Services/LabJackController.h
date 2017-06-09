@@ -53,6 +53,9 @@ namespace App { namespace Services
 
             int portValueFromName(QString name);
 
+            QString checkSumEight(QStringList package);
+            QString checkSumSixteen(QStringList package);
+
     signals:
         void emit_critialLabJackError(QVariantMap errorPackage);
         void emit_comConnectionStatus(QVariantMap package);
