@@ -119,6 +119,7 @@ namespace App { namespace Services
             byteLength = LJUSB_Read(device, data, byteLength);
         #endif
 
+
         // Check for valid data
         if(byteLength < length)
         {

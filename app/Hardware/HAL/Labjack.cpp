@@ -86,7 +86,8 @@ namespace App { namespace Hardware { namespace HAL
         int i, a = 0;
 
         //Sums bytes 6 to n-1 to a unsigned 2 byte value
-        for( i = 3; i < package.size(); i++ )
+        // was i=3
+        for( i = 6; i < package.size(); i++ )
         {
             a += (unsigned short) package.at(i).toInt();
         }
@@ -105,12 +106,16 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "configureIO";
 
+        // Input and output data size
+        int data = 4;
+        int out = 0;
+
 
         int sendDWSize, recDWSize;
-        if( ((sendDWSize = 5 + 1)%2) != 0 )
+        if( ((sendDWSize = data + 1)%2) != 0 )
                 sendDWSize++;
 
-        if( ((recDWSize = 0 + 3)%2) != 0 )
+        if( ((recDWSize = out + 3)%2) != 0 )
             recDWSize++;
 
         qDebug() << sendDWSize << " " << recDWSize;
@@ -126,27 +131,27 @@ namespace App { namespace Hardware { namespace HAL
 
         // Set the pin as digital in
         stringPackage.insert(7, "13"); // IO Type                    (current = 13 = BitDirWrite)
-        stringPackage.insert(8, QString::number((long) 5 + 128) ); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+        stringPackage.insert(8, QString::number( (long) 5 + 128) ); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
         //stringPackage.insert(9, "1"); // Input or output             (OUTPUT = 1 and INPUT =0)
 
         // Set the pin as digital high
         stringPackage.insert(9, "11"); // IO Type                    (current = 11 = BitStateWrite)
-        stringPackage.insert(10, QString::number( (long) 5 + (128*0) ) ); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+        stringPackage.insert(10, QString::number( (long) 5 + (128*1) ) ); // Port Name                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
         //stringPackage.insert(12, "0"); // Digital port value          (HIGH = 1 and LOW =0)
 
         stringPackage.insert(11, "0");
 
         // Caclates the check sum 16
-        QString checkSumSixteenHex = QString("%1").arg(checkSumSixteen(stringPackage).toInt(), 0, 16);
+        QString checkSumSixteenHex = QString("%1").arg(checkSumSixteen(stringPackage).toInt(), 4, 16, QChar('0'));
 
         // Sets the checksum 16 LSB
-        QString highCheckSumHex = QStringLiteral("0x") + QString::number((checkSumSixteenHex.toInt()/256) & 0xFF);
-        int highCheckSumDecimal = highCheckSumHex.toInt(__null, 16);
+        QString highCheckSum = QString("%1").arg(checkSumSixteenHex.mid(0,2), 0, 16);
+        int highCheckSumDecimal = highCheckSum.toInt(__null, 16);
         stringPackage.replace(5, QString::number(highCheckSumDecimal));
 
         // Sets the checksum 16 MSB
-        QString lowCheckSumHex = QStringLiteral("0x") + QString::number(checkSumSixteenHex.toUtf8().toInt() & 0xFF);
-        int lowCheckSumDecimal = lowCheckSumHex.toInt(__null, 16);
+        QString lowCheckSum = QString("%1").arg(checkSumSixteenHex.mid(2,2), 0, 16);
+        int lowCheckSumDecimal = lowCheckSum.toInt(__null, 16);
         stringPackage.replace(4, QString::number(lowCheckSumDecimal));
 
         // Calcuate check sum eight
@@ -175,7 +180,7 @@ namespace App { namespace Hardware { namespace HAL
         write(package);
 
         // Read the package
-        read(package.size() - 1);
+        read(recDWSize + 6);
     }
 
 
