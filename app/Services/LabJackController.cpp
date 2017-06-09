@@ -358,6 +358,12 @@ namespace App { namespace Services
      */
     bool LabJackController::validate(QString type, QStringList package)
     {
+        // Containers
+        int highCheckSumDecimal;
+        int lowCheckSumDecimal;
+        QString checksum8;
+
+
         // Multiple different types of package structures
         if(type == "feedback")
         {
@@ -366,20 +372,23 @@ namespace App { namespace Services
 
             // Find the checksum16 MSB
             QString highCheckSum = QString("%1").arg(checksum16.mid(0,2), 0, 16);
-            int highCheckSumDecimal = highCheckSum.toInt(__null, 16);
+            highCheckSumDecimal = highCheckSum.toInt(__null, 16);
 
             // Find the checksum16 LSB
             QString lowCheckSum = QString("%1").arg(checksum16.mid(2,2), 0, 16);
-            int lowCheckSumDecimal = lowCheckSum.toInt(__null, 16);
+            lowCheckSumDecimal = lowCheckSum.toInt(__null, 16);
 
             // Calculate the check sum 8
-            QString checksum8 = checkSumEight(package);
+            checksum8 = checkSumEight(package);
 
             // Get the error codes
             if(package.at(7).toInt() != 0)
             {
                 // Log the error
                 qDebug() << "There was an error in the frame data for the LabJack; Error code received was:" << package.at(6).toInt() << "; For frame:" << package.at(7).toInt() << "; In Package:" << package << "; With type:" << type;
+
+                // Tell the application we failed
+                emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "There was an error in the frame data for the LabJack"));
 
                 // Validation failed
                 return false;
@@ -396,6 +405,9 @@ namespace App { namespace Services
                                                                         << "; CheckSum 8:" << package.at(0).toInt() << " Should be:" <<  checksum8.toInt()
                                                                         << "; CheckSum 16 LSB:" << package.at(4).toInt() << " Should be:" << lowCheckSumDecimal
                                                                         << "; CheckSum 16 MSB:" << package.at(5).toInt() << " Should be:" << highCheckSumDecimal;
+
+        // Tell the application we failed
+        emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "There was an checksum error from the LabJack"));
 
         // Validation failed
         return false;
