@@ -51,6 +51,8 @@ namespace App { namespace Services
             QVariantMap errorPackageGenerator(QString com, QString port, QString error);
             QVariantMap comConnectionPackageGenerator(QString com, bool status);
 
+            int portValueFromName(QString name);
+
     signals:
         void emit_critialLabJackError(QVariantMap errorPackage);
         void emit_comConnectionStatus(QVariantMap package);

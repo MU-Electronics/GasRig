@@ -45,6 +45,8 @@ namespace App { namespace Hardware { namespace HAL
 
         // The above is the actual method code the below is just a handy place for me to test my code
 
+        m_command.insert("port", "FIO5");
+        m_command.insert("value", "1");
         setDigitalPort();
 
     }
@@ -244,16 +246,25 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "setDigitalPort";
 
+        // Port name
+        int port = portValueFromName(m_command.value("port").toString());
+
+        // Port value
+        int value = ((m_command.value("value").toInt() > 0) ? 1 : 0);
+
+        // Port direction   @NOTE for output this will always be one as 0 means input
+        int direction = 1;
+
         // Data container
         QStringList stringPackage;
 
         // Set the pin as digital in
-        stringPackage.append("13");                                     // IO Type                    (current = 13 = BitDirWrite)
-        stringPackage.append(QString::number( (long) 5 + 128) );        // Port Name * Value          (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+        stringPackage.append("13");                                                     // IO Type                    (13 = BitDirWrite)
+        stringPackage.append(QString::number( (long) port + (128 * direction) ) );      // Port Name * Value
 
         // Set the pin as digital high
-        stringPackage.append("11");                                     // IO Type                    (current = 11 = BitStateWrite)
-        stringPackage.append(QString::number( (long) 5 + (128*0) ) );   // Port Name * Value                   (0-7=FIO, 8-15=EIO, or 16-19=CIO)
+        stringPackage.append("11");                                                     // IO Type                    (11 = BitStateWrite)
+        stringPackage.append(QString::number( (long) port + (128 * value) ) );          // Port Name * Value
 
         qDebug() << "Reply was:" << sendReceivePackage("feedback", stringPackage, 0);
     }

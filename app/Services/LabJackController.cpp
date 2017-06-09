@@ -200,6 +200,40 @@ namespace App { namespace Services
     }
 
 
+    /**
+     * Helper method to convert acsii port name to int representation
+     *      0-7=FIO
+     *      8-15=EIO
+     *      16-19=CIO
+     *
+     * @brief LabJackController::portValueFromName
+     * @param name
+     * @return
+     */
+    int LabJackController::portValueFromName(QString name)
+    {
+        // Hold the port value
+        int port;
+
+        // Return the correct value
+        if(name.mid(0,3) == "FIO")
+        {
+            return name.mid(3,name.size()).toInt();
+        }
+        else if(name.mid(0,3) == "EIO")
+        {
+            return name.mid(3,name.size()).toInt() + 8;
+        }
+        else if(name.mid(0,3) == "CIO")
+        {
+            return name.mid(3,name.size()).toInt() + 16;
+        }
+
+        // No name found
+        return 999;
+    }
+
+
     QVariantMap LabJackController::errorPackageGenerator(QString com, QString port, QString error)
     {
         // Create package to be emitted
