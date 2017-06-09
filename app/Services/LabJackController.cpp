@@ -375,11 +375,29 @@ namespace App { namespace Services
             // Calculate the check sum 8
             QString checksum8 = checkSumEight(package);
 
+            // Get the error codes
+            if(package.at(7).toInt() != 0)
+            {
+                // Log the error
+                qDebug() << "There was an error in the frame data for the LabJack; Error code received was:" << package.at(6).toInt() << "; For frame:" << package.at(7).toInt() << "; In Package:" << package << "; With type:" << type;
+
+                // Validation failed
+                return false;
+            }
+
             // Compare the check sums
             if( ( package.at(0).toInt() == checksum8.toInt() ) && ( package.at(4).toInt() == lowCheckSumDecimal ) && ( package.at(5).toInt() == highCheckSumDecimal ) )
                 return true;
         }
 
+        // There should never by invalid data here as this is a sync lib
+        qDebug() << "There was an checksum error from the LabJack; "    << "In Package:" << package
+                                                                        << "; With type:" << type
+                                                                        << "; CheckSum 8:" << package.at(0).toInt() << " Should be:" <<  checksum8.toInt()
+                                                                        << "; CheckSum 16 LSB:" << package.at(4).toInt() << " Should be:" << lowCheckSumDecimal
+                                                                        << "; CheckSum 16 MSB:" << package.at(5).toInt() << " Should be:" << highCheckSumDecimal;
+
+        // Validation failed
         return false;
     }
 

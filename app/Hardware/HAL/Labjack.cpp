@@ -83,7 +83,7 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
-     *
+     * Sets a digital port HIGH or LOW
      *
      * @brief LabJack::setDigitalPort
      */
@@ -112,7 +112,8 @@ namespace App { namespace Hardware { namespace HAL
         stringPackage.append("11");                                                     // IO Type                    (11 = BitStateWrite)
         stringPackage.append(QString::number( (long) port + (128 * value) ) );          // Port Name * Value
 
-        qDebug() << "Reply was:" << sendReceivePackage("feedback", stringPackage, 0);
+        // Send the data
+        sendReceivePackage("feedback", stringPackage, 0);
     }
 
 
