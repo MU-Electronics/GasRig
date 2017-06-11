@@ -17,7 +17,8 @@ win32 {
 
     configfiles.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\debug\\config)
 
-    LIBS += "$$PWD/vendor/labjack/windowsUD/LJUDDotNet.dll"
+    LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LJUDDotNet.dll"
+    LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LabJackUD.lib"
 }
 
 macx {

@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
     {
        return app.exec();
     }
-
+    qDebug() << "Applcation could not load!";
     // End app
-    //return -1;
+    return -1;
 }
 
