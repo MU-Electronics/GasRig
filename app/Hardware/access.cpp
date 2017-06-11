@@ -196,17 +196,17 @@ namespace App { namespace Hardware
         //connectDevices();
 
         // Check if any commands need to be ran
-        if(m_queue.isEmpty())
-            return;
+        if(!m_queue.isEmpty())
+        {
+            // Run the command
+            executeHalMethods(m_queue.head());
 
-        // Run the command
-        executeHalMethods(m_queue.head());
+            // Remove item from queue
+            m_queue.dequeue();
+        }
 
-        // Remove item from queue
-        m_queue.dequeue();
-
-        // Sleep the thread for a while
-        thread()->usleep(1);
+        // Sleep the thread for a while; this reduces cpu usage massivly 15-20%!
+        thread()->usleep(50);
     }
 
 

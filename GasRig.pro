@@ -7,7 +7,6 @@ QT += qml quick quickcontrols2 widgets serialport
 CONFIG += c++11
 
 
-
 # Copy config files to build dir
 win32 {
     PWD_WIN = $${PWD}
