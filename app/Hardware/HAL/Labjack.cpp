@@ -48,7 +48,7 @@ namespace App { namespace Hardware { namespace HAL
 
         qDebug() << "Config IO";
         m_command.insert("FIO7", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO6", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO6", "1"); // 1 = Analgue Input;    0 = Digital IO
         m_command.insert("FIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
         m_command.insert("FIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
         m_command.insert("EIO7", "0"); // 1 = Analgue Input;    0 = Digital IO
@@ -105,19 +105,15 @@ namespace App { namespace Hardware { namespace HAL
 
         qDebug() << "Writing a analogue voltage";
         m_command.insert("port", "DAC1");
-        m_command.insert("value", "20000"); //65535
+        m_command.insert("value", "20020"); //65535
         setAnaloguePort();
 
         m_command.clear();
         qDebug() << "";qDebug() << "";
 
-
-//        m_command.insert("port", "FIO5");
-//        readPortDirection();
-
-//       m_command.insert("port", "DAC0");
-//       m_command.insert("value", "35535");
-//       setAnaloguePort();
+        qDebug() << "Reading a analogue value";
+       m_command.insert("port", "FIO6");
+       readAnaloguePort();
 
 
     }
@@ -325,6 +321,55 @@ namespace App { namespace Hardware { namespace HAL
     {
         // Which function is being ran?
         m_method = "readAnaloguePort";
+
+        // Port name
+        int port = portValueFromName(m_command.value("port").toString());
+
+        // Allow long settings
+        int settling = 0;
+        if(m_command.value("settling").toInt() == 1 )
+            settling = 1;
+
+        // Allow quick sampling
+        int quick = 0;
+        if(m_command.value("quick").toInt() == 1 )
+            quick = 1;
+
+        // Set negative or signle ended
+        int negative = 31; // Single ended
+        if(!m_command.value("negative").isNull())
+            negative = m_command.value("negative").toInt();
+
+        // Data container
+        QStringList stringPackage;
+
+        // Set IOType
+        stringPackage.append("1");
+
+        // Set the ADC settlings
+        int ADCSettings = port + (settling*64) + (quick*128);
+        stringPackage.append(QString::number(ADCSettings));
+
+        // Allow select the negative channe;
+        stringPackage.append(QString::number(negative));
+
+        // Send the data
+        QStringList data = sendReceivePackage("feedback", stringPackage, 11);
+        qDebug() << "Reading analogue port: " << data << " 9:" << data.at(9).toInt() << " 10:" << data.at(10).toInt();
+
+        // get voltage bits
+        double voltage = data.at(9).toInt() + (data.at(10).toInt()*256);
+
+        // Un calibrated voltage
+        double voltageUncal = ( voltage / 65536) * 2.44;
+
+        // Find cal voltage
+        double slope = 	3.7231E-05;
+        double offset = 0.0000E+00;
+        double voltageCal = ( slope * voltage ) + offset;
+
+        // Compare the voltages
+        qDebug() << voltage << "; rought voltage: " << voltageUncal << " Accurate voltage: " << voltageCal;
 
     }
 
