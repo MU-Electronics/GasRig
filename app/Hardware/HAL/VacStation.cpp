@@ -137,7 +137,7 @@ namespace App { namespace Hardware { namespace HAL
         emit vacStationData(id, param, data);*/
 
         // Send the data to the handware access manager
-        emit emit_vacStationData(m_responsability, m_method, package);
+        emit emit_vacStationData(m_responsability, m_method, m_command, package);
 
         //qDebug() << "Read: " << readData << "ID: " << id << " Param: " << param << " With Lenght: " << dataLength << "Result: " << data;
     }

@@ -11,7 +11,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         public:
             PressureSensorPresenter(QObject *parent);
 
-            QVariantMap proccess(QString method, QStringList package);
+            QVariantMap proccess(QString method, QVariantMap commands, QStringList package);
     };
 
 }}}}

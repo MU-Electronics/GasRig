@@ -24,7 +24,7 @@ namespace App { namespace Hardware { namespace HAL
             void setId(int id);
 
         signals:
-            void emit_pressureSensorData(QString responable, QString m_method, QStringList halData);
+            void emit_pressureSensorData(QString responable, QString m_method, QVariantMap m_command, QStringList halData);
 
         public slots:
             void confirmInit();

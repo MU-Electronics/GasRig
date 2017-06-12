@@ -22,7 +22,7 @@ namespace App { namespace Hardware { namespace HAL
             void registerController(QString referance, QString manuf, QString type, QString ID1, QString ID2, QString ID3);
 
         signals:
-            void emit_flowControllerData(QString responable, QString m_method, QStringList halData);
+            void emit_flowControllerData(QString responable, QString m_method, QVariantMap m_command, QStringList halData);
 
         private slots:
             void getIdentifier();

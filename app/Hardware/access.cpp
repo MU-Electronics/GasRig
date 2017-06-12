@@ -379,7 +379,7 @@ namespace App { namespace Hardware
      * @param method
      * @param halData
      */
-    void Access::proccessDataFromHals(QString responable, QString method, QStringList halData)
+    void Access::proccessDataFromHals(QString responable, QString method, QVariantMap commands, QStringList halData)
     {
         // Hold the presenters data
         QVariantMap package;
@@ -387,7 +387,7 @@ namespace App { namespace Hardware
         // Format the data from the HAL package to useable data for the rest of the application
         // Pressure sensor presenter
         if(responable == "PressureSensor")
-            package = m_pressurePresenter.proccess(method, halData);
+            package = m_pressurePresenter.proccess(method, commands, halData);
 
         // Vac station presenter
 

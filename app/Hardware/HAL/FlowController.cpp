@@ -209,7 +209,7 @@ namespace App { namespace Hardware { namespace HAL
     void FlowController::proccessReadData(QStringList readData)
     {
         // Send the data to the handware access manager
-        emit emit_flowControllerData(m_responsability, m_method, readData);
+        emit emit_flowControllerData(m_responsability, m_method, m_command, readData);
     }
 
 

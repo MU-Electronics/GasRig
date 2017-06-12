@@ -79,7 +79,7 @@ namespace App { namespace Hardware
             // Runs the correct HAL function
             void executeHalMethods(QVariantMap command);
 
-            void proccessDataFromHals(QString responable, QString method, QStringList halData);
+            void proccessDataFromHals(QString responable, QString method, QVariantMap commands, QStringList halData);
 
             // Check com port connections
             void connectDevices();

@@ -22,7 +22,7 @@ namespace App { namespace Hardware { namespace HAL
 
 
         signals:
-            void emit_labJackData(QString responable, QString m_method, QStringList halData);
+            void emit_labJackData(QString responable, QString m_method, QVariantMap m_command, QStringList halData);
 
         public slots:
             void configureIO();

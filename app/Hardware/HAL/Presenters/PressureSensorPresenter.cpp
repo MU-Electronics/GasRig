@@ -11,7 +11,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
     }
 
-    QVariantMap PressureSensorPresenter::proccess(QString method, QStringList package)
+    QVariantMap PressureSensorPresenter::proccess(QString method, QVariantMap commands, QStringList package)
     {
         QVariantMap presented;
         presented["method"] = "listen_pressureSensorOne";
