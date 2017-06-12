@@ -46,33 +46,70 @@ namespace App { namespace Hardware { namespace HAL
         // The above is the actual method code the below is just a handy place for me to test my code
 
 
-
-        m_command.insert("FIO7", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO6", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO5", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO4", "1"); // 1 = Analgue Input;    0 = Digital IO
-
-        m_command.insert("EIO7", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO6", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO5", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO4", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO3", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO2", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO1", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO0", "1"); // 1 = Analgue Input;    0 = Digital IO
-
+        qDebug() << "Config IO";
+        m_command.insert("FIO7", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO6", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO7", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO6", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO3", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO2", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO1", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO0", "0"); // 1 = Analgue Input;    0 = Digital IO
         configureIO();
 
+        m_command.clear();
+        qDebug() << "";qDebug() << "";
+
+        qDebug() << "Setting FIO7 as input";
+        m_command.insert("port", "FIO7");
+        m_command.insert("value", "-1");
+        setDigitalPort();
+
+        m_command.clear();
+        qDebug() << "";qDebug() << "";
+
+        qDebug() << "Setting FIO5 LOW";
         m_command.insert("port", "FIO5");
         m_command.insert("value", "0");
         setDigitalPort();
 
-        m_command.insert("port", "FIO5");
-        readPortDirection();
+        m_command.clear();
+        qDebug() << "";qDebug() << "";
 
-       m_command.insert("port", "DAC0");
-       m_command.insert("value", "35535");
-       setAnaloguePort();
+        qDebug() << "Reading FIO7";
+        m_command.insert("port", "FIO7");
+        readDigitalPort();
+
+        m_command.clear();
+        qDebug() << "";qDebug() << "";
+
+
+        qDebug() << "Setting FIO5 HIGH";
+        m_command.insert("port", "FIO5");
+        m_command.insert("value", "1");
+        setDigitalPort();
+
+        m_command.clear();
+        qDebug() << "";qDebug() << "";
+
+        qDebug() << "Reading FIO7";
+        m_command.insert("port", "FIO7");
+        readDigitalPort();
+
+        m_command.clear();
+        qDebug() << "";qDebug() << "";
+
+
+//        m_command.insert("port", "FIO5");
+//        readPortDirection();
+
+//       m_command.insert("port", "DAC0");
+//       m_command.insert("value", "35535");
+//       setAnaloguePort();
 
 
     }
@@ -92,7 +129,7 @@ namespace App { namespace Hardware { namespace HAL
         customise.insert("extended_command", "11");
 
         // Customise bit 6 of the package to use as write mask
-        customise.insert("bit_6", "14");
+        customise.insert("bit_6", "12"); //=   0   0    1   1    0    0  =   Write UART Related settings      Reserved, Pass 0        EIOAnalog      FIOAnalog      DAC1Enable      TimerCounterConfig
 
         // Data container
         QStringList stringPackage;
@@ -111,30 +148,31 @@ namespace App { namespace Hardware { namespace HAL
 
         // FIO Analogue
         QString binaryFIOConfig;
-        binaryFIOConfig += m_command.value("FIO7").toString();
-        binaryFIOConfig += m_command.value("FIO6").toString();
-        binaryFIOConfig += m_command.value("FIO5").toString();
-        binaryFIOConfig += m_command.value("FIO4").toString();
-        binaryFIOConfig = "1111"; // FIO0, FIO1, FIO2, FIO3 can only be analogue inputs
+        binaryFIOConfig.append(m_command.value("FIO7").toString());
+        binaryFIOConfig.append(m_command.value("FIO6").toString());
+        binaryFIOConfig.append(m_command.value("FIO5").toString());
+        binaryFIOConfig.append(m_command.value("FIO4").toString());
+        binaryFIOConfig.append("1111"); // FIO0, FIO1, FIO2, FIO3 can only be analogue inputs
         // Convert and append
         int FIOConfigValue = binaryFIOConfig.toInt(__null, 2);
         stringPackage.append(QString::number(FIOConfigValue));
 
+
         // EIO Analogue
         QString binaryEIOConfig;
-        binaryEIOConfig += m_command.value("EIO7").toString();
-        binaryEIOConfig += m_command.value("EIO6").toString();
-        binaryEIOConfig += m_command.value("EIO5").toString();
-        binaryEIOConfig += m_command.value("EIO4").toString();
-        binaryEIOConfig += m_command.value("EIO3").toString();
-        binaryEIOConfig += m_command.value("EIO2").toString();
-        binaryEIOConfig += m_command.value("EIO1").toString();
-        binaryEIOConfig += m_command.value("EIO0").toString();
+        binaryEIOConfig.append(m_command.value("EIO7").toString());
+        binaryEIOConfig.append(m_command.value("EIO6").toString());
+        binaryEIOConfig.append(m_command.value("EIO5").toString());
+        binaryEIOConfig.append(m_command.value("EIO4").toString());
+        binaryEIOConfig.append(m_command.value("EIO3").toString());
+        binaryEIOConfig.append(m_command.value("EIO2").toString());
+        binaryEIOConfig.append(m_command.value("EIO1").toString());
+        binaryEIOConfig.append(m_command.value("EIO0").toString());
         // Convert and append
         int EIOConfigValue = binaryEIOConfig.toInt(__null, 2);
         stringPackage.append(QString::number(EIOConfigValue));
 
-        qDebug() << sendReceivePackage("config", stringPackage, 12);
+        qDebug() << "Config IO" << sendReceivePackage("config", stringPackage, 12);
      }
 
 
@@ -156,20 +194,26 @@ namespace App { namespace Hardware { namespace HAL
 
         // Port direction   @NOTE for output this will always be one as 0 means input
         int direction = 1;
+        if(m_command.value("direction").toInt() == -1 )
+            direction = 0;
 
         // Data container
         QStringList stringPackage;
 
-        // Set the pin as digital in
+        // Set the pin as digital in / out
         stringPackage.append("13");                                                     // IO Type                    (13 = BitDirWrite)
         stringPackage.append(QString::number( (long) port + (128 * direction) ) );      // Port Name * Value
 
-        // Set the pin as digital high
-        stringPackage.append("11");                                                     // IO Type                    (11 = BitStateWrite)
-        stringPackage.append(QString::number( (long) port + (128 * value) ) );          // Port Name * Value
+        // If digital port is ment to be output set the level, low or high
+        if(m_command.value("value").toInt() != -1)
+        {
+            stringPackage.append("11");                                                     // IO Type                    (11 = BitStateWrite)
+            stringPackage.append(QString::number( (long) port + (128 * value) ) );          // Port Name * Value
+        }
+
 
         // Send the data
-        sendReceivePackage("feedback", stringPackage, 9);
+        qDebug() << "Setting digital IO " << sendReceivePackage("feedback", stringPackage, 9);
     }
 
 
@@ -253,11 +297,15 @@ namespace App { namespace Hardware { namespace HAL
         QStringList stringPackage;
 
         // Set the pin as digital in
+        stringPackage.append("13");
+        stringPackage.append(QString::number(port));
+
+        // Set the pin as digital in
         stringPackage.append("10");                       // IO Type                    (12 = BitDirRead)
         stringPackage.append(QString::number(port));      // Port Name * Value
 
         // Send the data
-        qDebug() << sendReceivePackage("feedback", stringPackage, 10);
+        qDebug() << "Reading digital port" << sendReceivePackage("feedback", stringPackage, 10);
     }
 
 
