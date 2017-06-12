@@ -2,6 +2,12 @@
 
 This program was developed to control a gas rig developed by the electronics section within The University of Manchester.
 
+The program will work across platform, but is not reccomened for embeded devices as no resource or speed optimisation
+will or have taken place (due to time limits).
+
+![alt text](https://raw.githubusercontent.com/MU-Electronics/GasRig/e862c2cc87d1d5243a4ab0f16e54518d2c5078e1/resources/assets/images/connections_view.png "Home Status View")
+
+
 # Install
 
 ```
