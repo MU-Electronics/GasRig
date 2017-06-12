@@ -24,6 +24,12 @@ namespace App { namespace Hardware { namespace HAL
     {
         // Which function is being ran?
         m_method = "testConnection";
+
+        // Close the current connection
+        close();
+
+        // Open a new connection
+        open();
     }
 
 
@@ -37,84 +43,11 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "resetConnection";
 
-//        // Close the current connection
-//        close();
+        // Close the current connection
+        close();
 
-//        // Open a new connection
-//        open();
-
-        // The above is the actual method code the below is just a handy place for me to test my code
-
-
-        qDebug() << "Config IO";
-        m_command.insert("FIO7", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO6", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO7", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO6", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO3", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO2", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO1", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO0", "0"); // 1 = Analgue Input;    0 = Digital IO
-        configureIO();
-
-        m_command.clear();
-        qDebug() << "";qDebug() << "";
-
-        qDebug() << "Setting FIO7 as input";
-        m_command.insert("port", "FIO7");
-        m_command.insert("value", "-1");
-        setDigitalPort();
-
-        m_command.clear();
-        qDebug() << "";qDebug() << "";
-
-        qDebug() << "Setting FIO5 LOW";
-        m_command.insert("port", "FIO5");
-        m_command.insert("value", "0");
-        setDigitalPort();
-
-        m_command.clear();
-        qDebug() << "";qDebug() << "";
-
-        qDebug() << "Reading FIO7";
-        m_command.insert("port", "FIO7");
-        readDigitalPort();
-
-        m_command.clear();
-        qDebug() << "";qDebug() << "";
-
-
-        qDebug() << "Setting FIO5 HIGH";
-        m_command.insert("port", "FIO5");
-        m_command.insert("value", "1");
-        setDigitalPort();
-
-        m_command.clear();
-        qDebug() << "";qDebug() << "";
-
-        qDebug() << "Reading FIO7";
-        m_command.insert("port", "FIO7");
-        readDigitalPort();
-
-        m_command.clear();
-        qDebug() << "";qDebug() << "";
-
-        qDebug() << "Writing a analogue voltage";
-        m_command.insert("port", "DAC1");
-        m_command.insert("value", "20020"); //65535
-        setAnaloguePort();
-
-        m_command.clear();
-        qDebug() << "";qDebug() << "";
-
-        qDebug() << "Reading a analogue value";
-       m_command.insert("port", "FIO6");
-       readAnaloguePort();
-
+        // Open a new connection
+        open();
 
     }
 
@@ -176,7 +109,11 @@ namespace App { namespace Hardware { namespace HAL
         int EIOConfigValue = binaryEIOConfig.toInt(__null, 2);
         stringPackage.append(QString::number(EIOConfigValue));
 
-        qDebug() << "Config IO" << sendReceivePackage("config", stringPackage, 12);
+        // Send the data and get the reply
+        QStringList data = sendReceivePackage("config", stringPackage, 12);
+
+        // Emit the data to the resest of the application
+        emit emit_labJackData(m_responsability, m_method, m_command, data);
      }
 
 
@@ -215,9 +152,11 @@ namespace App { namespace Hardware { namespace HAL
             stringPackage.append(QString::number( (long) port + (128 * value) ) );          // Port Name * Value
         }
 
+        // Send the data and get the reply
+        QStringList data = sendReceivePackage("feedback", stringPackage, 9);
 
-        // Send the data
-        qDebug() << "Setting digital IO " << sendReceivePackage("feedback", stringPackage, 9);
+        // Emit the data to the resest of the application
+        emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 
@@ -251,8 +190,11 @@ namespace App { namespace Hardware { namespace HAL
         //Set LSB
         stringPackage.append(QString::number(MSB));
 
-        // Send the data
-        qDebug() << sendReceivePackage("feedback", stringPackage, 9);
+        // Send the data and get the reply
+        QStringList data = sendReceivePackage("feedback", stringPackage, 9);
+
+        // Emit the data to the resest of the application
+        emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 
@@ -277,9 +219,11 @@ namespace App { namespace Hardware { namespace HAL
         stringPackage.append("12");                       // IO Type                    (12 = BitDirRead)
         stringPackage.append(QString::number(port));      // Port Name * Value
 
-        // Send the data
-        qDebug() << sendReceivePackage("feedback", stringPackage, 10);
+        // Send the data and get the reply
+        QStringList data = sendReceivePackage("feedback", stringPackage, 10);
 
+        // Emit the data to the resest of the application
+        emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 
@@ -307,8 +251,11 @@ namespace App { namespace Hardware { namespace HAL
         stringPackage.append("10");                       // IO Type                    (12 = BitDirRead)
         stringPackage.append(QString::number(port));      // Port Name * Value
 
-        // Send the data
-        qDebug() << "Reading digital port" << sendReceivePackage("feedback", stringPackage, 10);
+        // Send the data and get the reply
+        QStringList data = sendReceivePackage("feedback", stringPackage, 10);
+
+        // Emit the data to the resest of the application
+        emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 
@@ -353,24 +300,11 @@ namespace App { namespace Hardware { namespace HAL
         // Allow select the negative channe;
         stringPackage.append(QString::number(negative));
 
-        // Send the data
+        // Send the data and get the reply
         QStringList data = sendReceivePackage("feedback", stringPackage, 11);
-        qDebug() << "Reading analogue port: " << data << " 9:" << data.at(9).toInt() << " 10:" << data.at(10).toInt();
 
-        // get voltage bits
-        double voltage = data.at(9).toInt() + (data.at(10).toInt()*256);
-
-        // Un calibrated voltage
-        double voltageUncal = ( voltage / 65536) * 2.44;
-
-        // Find cal voltage
-        double slope = 	3.7231E-05;
-        double offset = 0.0000E+00;
-        double voltageCal = ( slope * voltage ) + offset;
-
-        // Compare the voltages
-        qDebug() << voltage << "; rought voltage: " << voltageUncal << " Accurate voltage: " << voltageCal;
-
+        // Emit the data to the resest of the application
+        emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 }}}
