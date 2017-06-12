@@ -41,6 +41,8 @@ namespace App { namespace Services
                 HANDLE device;
             #endif
 
+            QMap<QString, QString> customise;
+
 
             bool open();
             void close();

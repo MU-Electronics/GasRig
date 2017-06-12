@@ -45,12 +45,35 @@ namespace App { namespace Hardware { namespace HAL
 
         // The above is the actual method code the below is just a handy place for me to test my code
 
+
+
+        m_command.insert("FIO7", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO6", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
+
+        m_command.insert("EIO7", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO6", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO3", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO2", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO1", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO0", "0"); // 1 = Analgue Input;    0 = Digital IO
+
+        configureIO();
+
+
         m_command.insert("port", "FIO5");
-        m_command.insert("value", "1");
+        m_command.insert("value", "0");
         setDigitalPort();
 
         m_command.insert("port", "FIO5");
-        readDigitalPort();
+        readPortDirection();
+
+       m_command.insert("port", "DAC0");
+       m_command.insert("value", "35535");
+       setAnaloguePort();
 
 
     }
@@ -66,6 +89,53 @@ namespace App { namespace Hardware { namespace HAL
         // Which function is being ran?
         m_method = "configureIO";
 
+        // Customise the package extended command
+        customise.insert("extended_command", "11");
+
+        // Customise bit 6 of the package to use as write mask
+        customise.insert("bit_6", "14");
+
+        // Data container
+        QStringList stringPackage;
+
+        // Reserver byte
+        stringPackage.append(QString::number(0));
+
+        // Timer Config (we will not configure timers in this function, could be expanded later to do this)
+        stringPackage.append(QString::number(0));
+
+        // Enable DAC 1?
+        QString binaryDacConfig = "001";
+        // Convert and append
+        int DACConfigValue = binaryDacConfig.toInt(__null, 2);
+        stringPackage.append(QString::number(DACConfigValue));
+
+        // FIO Analogue
+        QString binaryFIOConfig;
+        binaryFIOConfig += m_command.value("FIO7").toString();
+        binaryFIOConfig += m_command.value("FIO6").toString();
+        binaryFIOConfig += m_command.value("FIO5").toString();
+        binaryFIOConfig += m_command.value("FIO4").toString();
+        binaryFIOConfig = "1111"; // FIO0, FIO1, FIO2, FIO3 can only be analogue inputs
+        // Convert and append
+        int FIOConfigValue = binaryFIOConfig.toInt(__null, 2);
+        stringPackage.append(QString::number(FIOConfigValue));
+
+        // EIO Analogue
+        QString binaryEIOConfig;
+        binaryEIOConfig += m_command.value("EIO7").toString();
+        binaryEIOConfig += m_command.value("EIO6").toString();
+        binaryEIOConfig += m_command.value("EIO5").toString();
+        binaryEIOConfig += m_command.value("EIO4").toString();
+        binaryEIOConfig += m_command.value("EIO3").toString();
+        binaryEIOConfig += m_command.value("EIO2").toString();
+        binaryEIOConfig += m_command.value("EIO1").toString();
+        binaryEIOConfig += m_command.value("EIO0").toString();
+        // Convert and append
+        int EIOConfigValue = binaryEIOConfig.toInt(__null, 2);
+        stringPackage.append(QString::number(EIOConfigValue));
+
+        qDebug() << sendReceivePackage("config", stringPackage, 12);
      }
 
 
@@ -100,7 +170,7 @@ namespace App { namespace Hardware { namespace HAL
         stringPackage.append(QString::number( (long) port + (128 * value) ) );          // Port Name * Value
 
         // Send the data
-        sendReceivePackage("feedback", stringPackage, 0);
+        sendReceivePackage("feedback", stringPackage, 9);
     }
 
 
@@ -130,13 +200,13 @@ namespace App { namespace Hardware { namespace HAL
         stringPackage.append(QString::number(port));      // Port Name * Value
 
         // Set MSB
-        stringPackage.append(QString::number(MSB));
-
-        //Set LSB
         stringPackage.append(QString::number(LSB));
 
+        //Set LSB
+        stringPackage.append(QString::number(MSB));
+
         // Send the data
-        sendReceivePackage("feedback", stringPackage, 0);
+        qDebug() << sendReceivePackage("feedback", stringPackage, 9);
     }
 
 
@@ -162,7 +232,7 @@ namespace App { namespace Hardware { namespace HAL
         stringPackage.append(QString::number(port));      // Port Name * Value
 
         // Send the data
-        sendReceivePackage("feedback", stringPackage, 1);
+        qDebug() << sendReceivePackage("feedback", stringPackage, 10);
 
     }
 
@@ -188,7 +258,7 @@ namespace App { namespace Hardware { namespace HAL
         stringPackage.append(QString::number(port));      // Port Name * Value
 
         // Send the data
-        qDebug() << sendReceivePackage("feedback", stringPackage, 1);
+        qDebug() << sendReceivePackage("feedback", stringPackage, 10);
     }
 
 
