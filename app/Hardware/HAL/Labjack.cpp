@@ -103,6 +103,14 @@ namespace App { namespace Hardware { namespace HAL
         m_command.clear();
         qDebug() << "";qDebug() << "";
 
+        qDebug() << "Writing a analogue voltage";
+        m_command.insert("port", "DAC1");
+        m_command.insert("value", "20000"); //65535
+        setAnaloguePort();
+
+        m_command.clear();
+        qDebug() << "";qDebug() << "";
+
 
 //        m_command.insert("port", "FIO5");
 //        readPortDirection();
@@ -177,7 +185,7 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
-     * Sets a digital port HIGH or LOW
+     * Sets a digital port HIGH or LOW or as an input
      *
      * @brief LabJack::setDigitalPort
      */
@@ -218,7 +226,7 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
-     *
+     * Sets a analogue value for DAC0 or DAC1
      *
      * @brief LabJack::setAnaloguePort
      */
@@ -230,17 +238,16 @@ namespace App { namespace Hardware { namespace HAL
         // Port name
         int port = portValueFromName(m_command.value("port").toString());
 
-        // Value
-        QString valueHex = QString("%1").arg(m_command.value("value").toInt(), 4, 16, QChar('0'));
-        int MSB = valueHex.mid(0,2).toInt();
-        int LSB = valueHex.mid(2,4).toInt();
+        // Get the MSB and LSB of the value wanted
+        int value = m_command.value("value").toInt();
+        int LSB = value & 255;
+        int MSB = (value & 65280) / 256;
 
         // Data container
         QStringList stringPackage;
 
         // Set the pin as digital in
-        stringPackage.append("38");                       // IO Type                    (38 = dac16)
-        stringPackage.append(QString::number(port));      // Port Name * Value
+        stringPackage.append(QString::number(38 + port));                       // IO Type                    (38 = dac16)
 
         // Set MSB
         stringPackage.append(QString::number(LSB));
@@ -281,7 +288,7 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
-     *
+     * Reads whether a digital port is logic high or low
      *
      * @brief LabJack::readDigitalPort
      */

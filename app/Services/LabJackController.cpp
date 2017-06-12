@@ -491,19 +491,39 @@ namespace App { namespace Services
         // Return the correct value
         if(name.mid(0,3) == "FIO")
         {
-            return name.mid(3,name.size()).toInt();
+            // Get port name
+            port = name.mid(3,name.size()).toInt();
+
+            // Ensure with allowed range
+            if(port >= 0 && port <= 7)
+                return port;
         }
         else if(name.mid(0,3) == "EIO")
         {
-            return name.mid(3,name.size()).toInt() + 8;
+            // Get port name
+            port = name.mid(3,name.size()).toInt();
+
+            // Ensure with allowed range
+            if(port >= 0 && port <= 7)
+                return port + 8;
         }
         else if(name.mid(0,3) == "CIO")
         {
-            return name.mid(3,name.size()).toInt() + 16;
+            // Get port name
+            port = name.mid(3,name.size()).toInt();
+
+            // Ensure with allowed range
+            if(port >= 0 && port <= 3)
+                return port + 16;
         }
         else if(name.mid(0,3) == "DAC")
         {
-            return name.mid(3,name.size()).toInt();
+            // Get port name
+            port = name.mid(3,name.size()).toInt();
+
+            // There are only 2 DACs
+            if(port == 0 || port == 1)
+                return port;
         }
 
         // No name found
