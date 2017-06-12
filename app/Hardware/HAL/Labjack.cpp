@@ -48,21 +48,20 @@ namespace App { namespace Hardware { namespace HAL
 
 
         m_command.insert("FIO7", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO6", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("FIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO6", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO5", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("FIO4", "1"); // 1 = Analgue Input;    0 = Digital IO
 
-        m_command.insert("EIO7", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO6", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO5", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO4", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO3", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO7", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO6", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO5", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO4", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO3", "1"); // 1 = Analgue Input;    0 = Digital IO
         m_command.insert("EIO2", "1"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO1", "0"); // 1 = Analgue Input;    0 = Digital IO
-        m_command.insert("EIO0", "0"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO1", "1"); // 1 = Analgue Input;    0 = Digital IO
+        m_command.insert("EIO0", "1"); // 1 = Analgue Input;    0 = Digital IO
 
         configureIO();
-
 
         m_command.insert("port", "FIO5");
         m_command.insert("value", "0");

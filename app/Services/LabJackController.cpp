@@ -384,15 +384,13 @@ namespace App { namespace Services
         if(type == "feedback" || type == "config")
         {
             // Calculate the check sum 16
-            QString checksum16 = checkSumSixteen(package); // QString checksum16 = QString("%1").arg(checkSumSixteen(package).toInt(), 4, 10, QChar('0'));
+            QString checksum16 = QString("%1").arg(checkSumSixteen(package).toInt(), 0, 10);  // QString checksum16 = QString("%1").arg(checkSumSixteen(package).toInt(), 4, 10, QChar('0'));        checkSumSixteen(package);
 
             // Find the checksum16 MSB
-            QString highCheckSum = checksum16.mid(0,2); //QString("%1").arg(checksum16.mid(0,2), 0, 16);
-            highCheckSumDecimal = highCheckSum.toInt(__null, 10); //highCheckSum.toInt(__null, 16);
+            highCheckSumDecimal = (int)((checksum16.toInt(__null, 10) / 256 ) & 0xff);
 
             // Find the checksum16 LSB
-            QString lowCheckSum = checksum16.mid(2,2); // QString("%1").arg(checksum16.mid(2,2), 0, 16);
-            lowCheckSumDecimal = lowCheckSum.toInt(__null, 10); // lowCheckSum.toInt(__null, 16);
+            lowCheckSumDecimal = (int)(checksum16.toInt(__null, 10) & 0xff);
 
             // Calculate the check sum 8
             checksum8 = checkSumEight(package);
@@ -411,7 +409,7 @@ namespace App { namespace Services
             }
 
             // Compare the check sums
-            if( ( package.at(0).toInt() == checksum8.toInt() ) && ( package.at(5).toInt() == lowCheckSumDecimal ) && ( package.at(4).toInt() == highCheckSumDecimal ) )
+            if( ( package.at(0).toInt() == checksum8.toInt() ) && ( package.at(4).toInt() == lowCheckSumDecimal ) && ( package.at(5).toInt() == highCheckSumDecimal ) )
                 return true;
         }
 
