@@ -32,11 +32,17 @@ namespace App { namespace ViewManager
             void hardwareRequest(QVariantMap command);
 
         public slots:
-            void requestVacuum(bool onOff);
+            // Requests comming from the views
+            void requestBackingPump(bool onOff);
+            void requestTurboPump(bool onOff);
+
             void requestPressureConfirmation();
+            void requestPressureReading();
 
 
+            // Returned actions
             void pressureSensorInit(QVariantMap command);
+            void pressureSensorReading(QVariantMap command);
 
         private:
             QQmlApplicationEngine* m_root;

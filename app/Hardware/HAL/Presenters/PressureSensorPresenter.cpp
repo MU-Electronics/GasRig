@@ -130,7 +130,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         fValue = *(float*)(&bteArr[0]);
 
         // Assign the float value
-        presented["pressure"] = QString::number(fValue);
+        presented["pressure"] = fValue;
 
         // Return the presenter data
         return presented;

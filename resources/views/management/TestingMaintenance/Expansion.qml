@@ -5,14 +5,31 @@ import QtQuick.Controls.Material 2.1
 Item {
     id: expTab
 
-    Button
+    Row
     {
-        id: pressureSensorInit
-        text: "Confirm Pressure Sensor Init"
-        onClicked:
+        spacing: 5;
+        Button
         {
-            // Check pressure sensor is init
-            TestingManager.requestPressureConfirmation();
+            id: pressureSensorInit
+            text: qsTr("Confirm Pressure Sensor Init")
+            onClicked:
+            {
+                // Check pressure sensor is init
+                TestingManager.requestPressureConfirmation();
+            }
+        }
+
+        Button
+        {
+            id: pressureSensorReading
+            text: qsTr("Pressure Sensor Reading")
+            onClicked:
+            {
+                // Check pressure sensor is init
+                TestingManager.requestPressureReading();
+            }
         }
     }
+
+
 }

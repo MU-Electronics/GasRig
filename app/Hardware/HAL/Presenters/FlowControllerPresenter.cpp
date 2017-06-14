@@ -2,6 +2,7 @@
 
 #include <QStringList>
 #include <QVariantMap>
+#include <QDebug>
 
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {

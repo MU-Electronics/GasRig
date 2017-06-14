@@ -2,6 +2,7 @@
 
 #include <QStringList>
 #include <QVariantMap>
+#include <QDebug>
 
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
@@ -84,6 +85,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::getTemperature(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -106,6 +110,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::getTurboSpeed(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -129,6 +136,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::getError(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -152,6 +162,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::getGasMode(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -175,6 +188,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::getBackingPumpMode(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -198,6 +214,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::getTurboPumpState(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -221,6 +240,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::getPumpingState(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -243,6 +265,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::setGasMode(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -266,6 +291,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::setBackingPumpMode(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
@@ -289,12 +317,27 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::setTurboPumpState(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_setTurboPumpState";
 
+        // ID of pump
+        presented.insert("id", data.value("id").toInt());
+
+        // State of pumo
+        if(data.value("data").toString() == "111111")
+        {
+            presented.insert("state", true);
+        }
+        else
+        {
+            presented.insert("state", false);
+        }
 
         // Return the presenter data
         return presented;
@@ -312,16 +355,61 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::setPumpingState(QVariantMap commands, QStringList package)
     {
+        // Parse data
+        QVariantMap data = parse(package);
+
         // Container for returned data
         QVariantMap presented;
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_setPumpingState";
 
+        // ID of pump
+        presented.insert("id", data.value("id").toInt());
+
+        // State of pumo
+        if(data.value("data").toString() == "111111")
+        {
+            presented.insert("state", true);
+        }
+        else
+        {
+            presented.insert("state", false);
+        }
 
         // Return the presenter data
         return presented;
     }
 
+
+    /**
+     * PRIVATE: Parse the stirng list
+     *
+     * @brief VacStationPresenter::praseData
+     * @param package
+     * @return
+     */
+    QVariantMap VacStationPresenter::parse(QStringList package)
+    {
+        // Combind the data
+        QString readData = package.join("");
+
+        // Container to return
+        QVariantMap toReturn;
+
+        // Get the ID
+        toReturn["id"] = readData.mid(0, 3);
+
+        // Get the parameter number
+        toReturn["param"] = readData.mid(5, 3);
+
+        // Find how long the data part is
+        toReturn["dataLength"] = readData.mid(8, 2);
+
+        // Get the data
+        toReturn["data"] = readData.mid(10, toReturn["dataLength"].toInt());
+
+        return toReturn;
+    }
 
 }}}}

@@ -32,6 +32,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             QVariantMap setTurboPumpState(QVariantMap commands, QStringList package);
             QVariantMap setPumpingState(QVariantMap commands, QStringList package);
 
+        private:
+            QVariantMap parse(QStringList package);
+
     };
 
 }}}}
