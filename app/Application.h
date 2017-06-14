@@ -18,6 +18,9 @@
 #include "Safety/Monitor.h"
 #include "Hardware/Access.h"
 
+// Include the expeirment engine
+#include "Experiment/Engine.h"
+
 namespace App
 {
     class Application:  public QObject
@@ -44,6 +47,9 @@ namespace App
             Safety::Monitor& monitor;
             Hardware::Access& hardware;
 
+            // Hold the instance of expeirment engine
+            Experiment::Engine& experiment_engine;
+
             // View managers
             ViewManager::Testing& manager_testing;
             ViewManager::ConnectionStatus& manager_connection;
@@ -54,6 +60,7 @@ namespace App
             void startAddtionalThread();
             void connectThreads();
             void connectViewToThreads();
+            void connectEngineToThreads();
 
             void debug();
 

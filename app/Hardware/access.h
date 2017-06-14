@@ -39,14 +39,24 @@ namespace App { namespace Hardware
             void emit_timeoutSerialError(QVariantMap command);
             void emit_critialSerialError(QVariantMap command);
 
+            // Possable signals from pressure sensor presenter
+            void emit_pressureSensorInit(QVariantMap command);
+            void emit_pressureSensorSerialNumber(QVariantMap command);
+            void emit_pressureSensorPressure(QVariantMap command);
+
+            // Possable signals from the flow controller presenter
+
+            // Possable signals from the vac station presenter
+
+            // Possable signals from the labjack presenter
+
+
         public slots:
             void hardwareAccess(QVariantMap command);
 
             void listen_serialComUpdates(QVariantMap command);
             void listen_critialSerialError(QVariantMap command);
             void listen_timeoutSerialError(QVariantMap command);
-
-            void listen_pressureSensorOne(QVariantMap command);
 
             // Access function that can be invoked externally via the queue
             // None atm; for example: void resetAllUSBConnection();

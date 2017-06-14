@@ -407,26 +407,6 @@ namespace App { namespace Hardware
 
 
 
-
-
-
-    /**
-     * Listen for new pressure readings and emits the new data
-     *
-     * @brief Access::listen_pressureSensorOne
-     * @param command
-     */
-    void Access::listen_pressureSensorOne(QVariantMap command)
-    {
-        qDebug() << "I'll be sending that signal for you";
-    }
-
-
-
-
-
-
-
     /**
      * Listen to all com updates and emit relivent onces
      *

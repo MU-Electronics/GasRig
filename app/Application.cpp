@@ -21,6 +21,9 @@
 // Include the setting contain
 #include "Settings/container.h"
 
+// Include the expeirment engine
+#include "Experiment/Engine.h"
+
 // For debugging only to be removed
 
 
@@ -52,6 +55,9 @@ namespace App
           monitor(*new Safety::Monitor(this, settings_container)),
           hardware(*new Hardware::Access(this, settings_container)),
 
+          // Include the expeirment engine
+          experiment_engine(*new Experiment::Engine(this, settings_container)),
+
           // Create instance for each view manager
           manager_testing(*new ViewManager::Testing(parent, engine, settings_container)),
           manager_connection(*new ViewManager::ConnectionStatus(parent, engine, settings_container)),
@@ -59,6 +65,9 @@ namespace App
     {
         // Load all managers
         registerManagers();
+
+        // Register experiment engine threads
+        connectEngineToThreads();
 
         // Connect view managers to threads
         connectViewToThreads();
@@ -169,6 +178,18 @@ namespace App
         manager_connection.makeConnections(hardware, monitor);
 
     }
+
+
+    /**
+     * Connects the experiment engine to the threads
+     *
+     * @brief Application::connectEngineToThreads
+     */
+    void Application::connectEngineToThreads()
+    {
+        experiment_engine.makeConnections(hardware, monitor);
+    }
+
 
     /**
      * Connect the safety thread to IO thread via the Qt connect method

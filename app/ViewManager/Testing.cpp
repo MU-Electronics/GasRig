@@ -27,7 +27,16 @@ namespace App { namespace ViewManager
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &Testing::hardwareRequest, &hardware, &Hardware::Access::hardwareAccess);
+
+        connect(&hardware, &Hardware::Access::emit_pressureSensorInit, this, &Testing::pressureSensorInit);
     }
+
+
+    void Testing::pressureSensorInit(QVariantMap command)
+    {
+        qDebug() << "Pressure sensor was init" << command;
+    }
+
 
 
     void Testing::requestVacuum(bool onOff)

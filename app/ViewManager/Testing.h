@@ -35,6 +35,9 @@ namespace App { namespace ViewManager
             void requestVacuum(bool onOff);
             void requestPressureConfirmation();
 
+
+            void pressureSensorInit(QVariantMap command);
+
         private:
             QQmlApplicationEngine* m_root;
             Settings::Container m_settings;
