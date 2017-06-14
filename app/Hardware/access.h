@@ -21,7 +21,9 @@
 
 // Include HAL presenters
 #include "HAL/Presenters/PressureSensorPresenter.h"
-
+#include "HAL/Presenters/LabJackPresenter.h"
+#include "HAL/Presenters/FlowControllerPresenter.h"
+#include "HAL/Presenters/VacStationPresenter.h"
 
 namespace App { namespace Hardware
 {
@@ -79,6 +81,9 @@ namespace App { namespace Hardware
 
             // HAL presenters
             HAL::Presenters::PressureSensorPresenter& m_pressurePresenter;
+            HAL::Presenters::LabJackPresenter& m_labJackPresenter;
+            HAL::Presenters::FlowControllerPresenter& m_flowControllerPresenter;
+            HAL::Presenters::VacStationPresenter& m_vacStationPresenter;
 
             // Methods in this class that can be ran externally
             QList<QString> m_avaliableMethods;

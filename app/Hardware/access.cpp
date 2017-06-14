@@ -20,6 +20,9 @@
 
 // Include presenters
 #include "HAL/Presenters/PressureSensorPresenter.h"
+#include "HAL/Presenters/LabJackPresenter.h"
+#include "HAL/Presenters/FlowControllerPresenter.h"
+#include "HAL/Presenters/VacStationPresenter.h"
 
 namespace App { namespace Hardware
 {
@@ -48,7 +51,10 @@ namespace App { namespace Hardware
             m_labjack(*new HAL::LabJack(this)),
 
            // HAL Presenters
-           m_pressurePresenter(*new HAL::Presenters::PressureSensorPresenter(this))
+           m_pressurePresenter(*new HAL::Presenters::PressureSensorPresenter(this)),
+           m_labJackPresenter(*new HAL::Presenters::LabJackPresenter(this)),
+           m_flowControllerPresenter(*new HAL::Presenters::FlowControllerPresenter(this)),
+           m_vacStationPresenter(*new HAL::Presenters::VacStationPresenter(this))
     {
         // Set possable methods to be ran within this class via the queue
         // None atm set like this: m_avaliableMethods.append("<method name>");
@@ -390,21 +396,23 @@ namespace App { namespace Hardware
             package = m_pressurePresenter.proccess(method, commands, halData);
 
         // Vac station presenter
-
+        if(responable == "VacStation")
+            package = m_vacStationPresenter.proccess(method, commands, halData);
 
         // Flow controller presenter
+        if(responable == "FlowController")
+            package = m_flowControllerPresenter.proccess(method, commands, halData);
 
 
         // Labjack presenter
-
+        if(responable == "LabJack")
+            package = m_labJackPresenter.proccess(method, commands, halData);
 
         // Once the data is formatted run the correct signal
-        if(!package.isEmpty())
+        if(!package.isEmpty() && !package["method"].isNull())
             // Trigger the correct access class signal
             QMetaObject::invokeMethod(this, package["method"].toString().toLatin1().data(), Qt::DirectConnection, Q_ARG( QVariantMap, package ));
     }
-
-
 
 
     /**

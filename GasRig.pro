@@ -66,7 +66,10 @@ SOURCES += \
     app/Hardware/HAL/HALSupport.cpp \
     app/Settings/Hardware.cpp \
     app/Hardware/HAL/Presenters/PressureSensorPresenter.cpp \
-    app/Services/LabJackController.cpp
+    app/Services/LabJackController.cpp \
+    app/Hardware/HAL/Presenters/FlowControllerPresenter.cpp \
+    app/Hardware/HAL/Presenters/LabJackPresenter.cpp \
+    app/Hardware/HAL/Presenters/VacStationPresenter.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -127,4 +130,7 @@ HEADERS += \
     app/Hardware/HAL/Presenters/PressureSensorPresenter.h \
     app/Services/LabJackController.h \
     vendor/labjack/exodriver/labjackusb.h \
-    vendor/labjack/windowsUD/LabJackUD.h
+    vendor/labjack/windowsUD/LabJackUD.h \
+    app/Hardware/HAL/Presenters/LabJackPresenter.h \
+    app/Hardware/HAL/Presenters/VacStationPresenter.h \
+    app/Hardware/HAL/Presenters/FlowControllerPresenter.h
