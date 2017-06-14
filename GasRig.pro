@@ -36,6 +36,9 @@ QMAKE_EXTRA_TARGETS += configfiles
 POST_TARGETDEPS += configfiles
 
 
+# Application is very dynamic in nature to allow for easy expantion and since there is no worry of resource
+# As such paramaters are passed to methods that they may not use but are required to keep a tidy format or for reflection
+QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
 
 
 SOURCES += \
@@ -69,7 +72,8 @@ SOURCES += \
     app/Services/LabJackController.cpp \
     app/Hardware/HAL/Presenters/FlowControllerPresenter.cpp \
     app/Hardware/HAL/Presenters/LabJackPresenter.cpp \
-    app/Hardware/HAL/Presenters/VacStationPresenter.cpp
+    app/Hardware/HAL/Presenters/VacStationPresenter.cpp \
+    app/Hardware/HAL/Presenters/PresenterSupport.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -133,4 +137,5 @@ HEADERS += \
     vendor/labjack/windowsUD/LabJackUD.h \
     app/Hardware/HAL/Presenters/LabJackPresenter.h \
     app/Hardware/HAL/Presenters/VacStationPresenter.h \
-    app/Hardware/HAL/Presenters/FlowControllerPresenter.h
+    app/Hardware/HAL/Presenters/FlowControllerPresenter.h \
+    app/Hardware/HAL/Presenters/PresenterSupport.h

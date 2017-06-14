@@ -1,11 +1,15 @@
 #pragma once
 
+// Include external deps
 #include <QObject>
+
+// Include the interface
+#include "PresenterSupport.h"
 
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
 
-    class PressureSensorPresenter
+    class PressureSensorPresenter   :   public PresenterSupport
     {
 
         public:
