@@ -2,6 +2,7 @@
 
 #include <QStringList>
 #include <QVariantMap>
+#include <QDebug>
 
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
@@ -54,12 +55,21 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         QVariantMap presented;
 
         // Which signal should be triggered by the access thread
-        presented["method"] = "emit_pressureSensorInit";
+        presented["method"] = "emit_pressureSensorInit";            
 
-        // Sucessfully inited
-        presented["status"] = "true";
+        // Assum pressure sensor was not initalised in the past
+        presented["was_initalised"] = "false";
+        if(package.at(7).toInt() == 1)
+            // Sucessfully inited
+            presented["was_initalised"] = "true";
 
-        // Return the correctly formatted data
+        // Check that the pressure sensor is a series 30
+        presented["hardware_correct"] = "false";
+        if(package.at(2).toInt() == 5)
+            // Sucessfully inited
+            presented["hardware_correct"] = "true";
+
+        // Return the presenter data
         return presented;
     }
 
@@ -78,11 +88,12 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         QVariantMap presented;
 
         // Which signal should be triggered by the access thread
-        presented["method"] = "emit_pressureSensorSerialNumber";
+        presented["method"] = "emit_pressureSensorPressure";
 
+        // Calculate the serial number from the package
+        presented["serial"] = QString::number(((256^3)*package.at(2).toInt()) + ((256^2)*package.at(3).toInt()) + ((256)*package.at(4).toInt()) + package.at(0).toInt());
 
-        presented["value"] = (float) 1.2025;
-
+        // Return the presenter data
         return presented;
     }
 
@@ -103,9 +114,25 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_pressureSensorPressure";
 
+        // Flaot to hold the pressure value
+        float fValue;
 
-        presented["value"] = (float) 1.2025;
+        // Container to hold the bytes
+        unsigned char bteArr[4];
 
+        // Assined the bytes to the container
+        bteArr[0] = package.at(5).toInt();
+        bteArr[1] = package.at(4).toInt();
+        bteArr[2] = package.at(3).toInt();
+        bteArr[3] = package.at(2).toInt();
+
+        // Convert the char container to float value
+        fValue = *(float*)(&bteArr[0]);
+
+        // Assign the float value
+        presented["pressure"] = QString::number(fValue);
+
+        // Return the presenter data
         return presented;
     }
 
