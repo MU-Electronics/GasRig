@@ -19,6 +19,18 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             QVariantMap proccess(QString method, QVariantMap commands, QStringList package);
 
             // Presenters
+            QVariantMap getTemperature(QVariantMap commands, QStringList package);
+            QVariantMap getTurboSpeed(QVariantMap commands, QStringList package);
+            QVariantMap getError(QVariantMap commands, QStringList package);
+            QVariantMap getGasMode(QVariantMap commands, QStringList package);
+            QVariantMap getBackingPumpMode(QVariantMap commands, QStringList package);
+            QVariantMap getTurboPumpState(QVariantMap commands, QStringList package);
+            QVariantMap getPumpingState(QVariantMap commands, QStringList package);
+
+            QVariantMap setGasMode(QVariantMap commands, QStringList package);
+            QVariantMap setBackingPumpMode(QVariantMap commands, QStringList package);
+            QVariantMap setTurboPumpState(QVariantMap commands, QStringList package);
+            QVariantMap setPumpingState(QVariantMap commands, QStringList package);
 
     };
 

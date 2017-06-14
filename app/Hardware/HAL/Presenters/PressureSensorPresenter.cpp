@@ -77,7 +77,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
     /**
      * Convert the readSerialNumber raw package to actual data
      *
-     * @brief PressureSensorPresenter::confirmInit
+     * @brief PressureSensorPresenter::readSerialNumber
      * @param commands
      * @param package
      * @return
@@ -101,7 +101,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
     /**
      * Convert the readPressure raw package to actual data
      *
-     * @brief PressureSensorPresenter::confirmInit
+     * @brief PressureSensorPresenter::readPressure
      * @param commands
      * @param package
      * @return

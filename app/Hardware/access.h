@@ -37,6 +37,7 @@ namespace App { namespace Hardware
         signals:
             void emit_methodAttemptResults(QVariantMap status);
 
+            // Serial controller erros
             void emit_serialComUpdated(QVariantMap command);
             void emit_timeoutSerialError(QVariantMap command);
             void emit_critialSerialError(QVariantMap command);
@@ -49,6 +50,17 @@ namespace App { namespace Hardware
             // Possable signals from the flow controller presenter
 
             // Possable signals from the vac station presenter
+            void emit_getTemperature(QVariantMap command);
+            void emit_getTurboSpeed(QVariantMap command);
+            void emit_getError(QVariantMap command);
+            void emit_getGasMode(QVariantMap command);
+            void emit_getBackingPumpMode(QVariantMap command);
+            void emit_getTurboPumpState(QVariantMap command);
+            void emit_getPumpingState(QVariantMap command);
+            void emit_setGasMode(QVariantMap command);
+            void emit_setBackingPumpMode(QVariantMap command);
+            void emit_setTurboPumpState(QVariantMap command);
+            void emit_setPumpingState(QVariantMap command);
 
             // Possable signals from the labjack presenter
 

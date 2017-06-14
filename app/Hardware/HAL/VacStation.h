@@ -33,19 +33,19 @@ namespace App { namespace Hardware { namespace HAL
             void resetConnection();
 
             // Get vac pump data
-            void GetTemperature();
-            void GetTurboSpeed();
-            void GetError();
-            void GetGasMode();
-            void GetBackingPumpMode();
-            void GetTurboPumpState();
-            void GetPumpingState();
+            void getTemperature();
+            void getTurboSpeed();
+            void getError();
+            void getGasMode();
+            void getBackingPumpMode();
+            void getTurboPumpState();
+            void getPumpingState();
 
             // Set vac pump params
-            void SetGasMode();
-            void SetBackingPumpMode();
-            void SetTurboPumpState();
-            void SetPumpingState();
+            void setGasMode();
+            void setBackingPumpMode();
+            void setTurboPumpState();
+            void setPumpingState();
 
         private:
             int m_id;

@@ -44,7 +44,7 @@ namespace App { namespace ViewManager
         // Create command for HAL
         QVariantMap command;
         command.insert("hardware", "VacStation");
-        command.insert("method", "SetPumpingState");
+        command.insert("method", "setPumpingState");
         command.insert("state", onOff);
 
         // Emit siganl to HAL

@@ -219,7 +219,7 @@ namespace App { namespace Hardware { namespace HAL
         }
 
         // Test sending data works, for now just use get gas mode
-        GetGasMode();
+        getGasMode();
     }
 
 
@@ -244,7 +244,7 @@ namespace App { namespace Hardware { namespace HAL
 
         // Test sending data works, for now just use get gas mode
         // Other method will send out relivent success
-        GetGasMode();
+        getGasMode();
 
     }
 
@@ -260,10 +260,10 @@ namespace App { namespace Hardware { namespace HAL
      *							4 = Motor
      * @return void
      */
-    void VacStation::GetTemperature()
+    void VacStation::getTemperature()
     {
         // Set the method
-        m_method = "GetTemperature";
+        m_method = "getTemperature";
 
         // Get the location of temperture
         int location = m_command.value("location").toInt();
@@ -298,10 +298,10 @@ namespace App { namespace Hardware { namespace HAL
      *							4 = Motor
      * @return double
      */
-    void VacStation::GetTurboSpeed()
+    void VacStation::getTurboSpeed()
     {
         // Set the method
-        m_method = "GetTurboSpeed";
+        m_method = "getTurboSpeed";
 
         // Set the desired id
         int type = m_command.value("type").toInt();
@@ -331,10 +331,10 @@ namespace App { namespace Hardware { namespace HAL
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      * @paramPackage int id 1-10 error history list
      */
-    void VacStation::GetError()
+    void VacStation::getError()
     {
         // Set the method
-        m_method = "GetError";
+        m_method = "getError";
 
         // Set the desired id
         int id = m_command.value("line").toInt();
@@ -375,10 +375,10 @@ namespace App { namespace Hardware { namespace HAL
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      */
-    void VacStation::GetGasMode()
+    void VacStation::getGasMode()
     {
         // Set the method
-        m_method = "GetGasMode";
+        m_method = "getGasMode";
 
         // Get the correct param type
         QString param = "027";
@@ -393,10 +393,10 @@ namespace App { namespace Hardware { namespace HAL
      *
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      */
-    void VacStation::GetBackingPumpMode()
+    void VacStation::getBackingPumpMode()
     {
         // Set the method
-        m_method = "GetBackingPumpMode";
+        m_method = "getBackingPumpMode";
 
        // Get the correct param type
         QString param = "025";
@@ -412,10 +412,10 @@ namespace App { namespace Hardware { namespace HAL
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      * @return bool
      */
-    void VacStation::GetTurboPumpState()
+    void VacStation::getTurboPumpState()
     {
         // Set the method
-        m_method = "GetTurboPumpState";
+        m_method = "getTurboPumpState";
 
         // Get the correct param type
         QString param = "023";
@@ -431,10 +431,10 @@ namespace App { namespace Hardware { namespace HAL
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      * @return bool
      */
-    void VacStation::GetPumpingState()
+    void VacStation::getPumpingState()
     {
         // Set the method
-        m_method = "GetPumpingState";
+        m_method = "getPumpingState";
 
        // Get the correct param type
        QString param = "010";
@@ -450,10 +450,10 @@ namespace App { namespace Hardware { namespace HAL
      * @author Sam Mottley <sam.mottley@manchester.ac.uk>
      * @return bool
      */
-    void VacStation::SetGasMode()
+    void VacStation::setGasMode()
     {
         // Set the method
-        m_method = "SetGasMode";
+        m_method = "setGasMode";
 
         // Set the desired mode
         int mode = m_command.value("mode").toInt();
@@ -487,10 +487,10 @@ namespace App { namespace Hardware { namespace HAL
      *					3 = Delayed + Intermittent
      * @return bool
      */
-    void VacStation::SetBackingPumpMode()
+    void VacStation::setBackingPumpMode()
     {
         // Set the method
-        m_method = "SetBackingPumpMode";
+        m_method = "setBackingPumpMode";
 
         // Set the desired mode
         int mode = m_command.value("mode").toInt();
@@ -524,10 +524,10 @@ namespace App { namespace Hardware { namespace HAL
      *					1 = on
      * @return bool
      */
-    void VacStation::SetTurboPumpState()
+    void VacStation::setTurboPumpState()
     {
         // Set the method
-        m_method = "SetTurboPumpState";
+        m_method = "setTurboPumpState";
 
         // Get the desired state
         int state = m_command.value("state").toInt();
@@ -557,10 +557,10 @@ namespace App { namespace Hardware { namespace HAL
      *					1 = on
      * @return bool
      */
-    void VacStation::SetPumpingState()
+    void VacStation::setPumpingState()
     {
         // Set the method
-        m_method = "SetPumpingState";
+        m_method = "setPumpingState";
 
         // Get the desired state
         int state = m_command.value("state").toInt();
