@@ -94,7 +94,7 @@ Item {
                           onClicked:
                           {
                               var toggle = false;
-                              if(ConnectionStatusManager.valveState[model.number] === "0")
+                              if(ConnectionStatusManager.valveState[model.number] == 0)
                                   toggle = true;
 
                               console.log(ConnectionStatusManager.valveState[model.number])
