@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.1
 
 
@@ -8,12 +8,16 @@ import Fluid.Controls 1.0 as FluidControls
 import Fluid.Material 1.0 as FluidMaterial
 import Fluid.Core 1.0 as FluidCore
 
-Item {
+import "../../parts"
+
+Item
+{
     id: vacuumTab
 
     // Define vars for interface state
     property bool backingpumpstate: false
     property bool turbopumpstate: false
+    property int backingPumpModeState: false
 
     width: parent.width-10
 
@@ -32,26 +36,12 @@ Item {
             spacing: 10
             width: parent.width
 
-            Rectangle
+            AlertBox
             {
-                color: Material.color(Material.Red, Material.Shade800)
-                border.color: Material.color(Material.Red, Material.Shade300)
-                border.width: 1
-
                 height: 30
                 width: parent.width
-
-                Text {
-                    text: "WARNING: Do not enable the turbo untill the vacuum is lower than X10^-3"
-                    color: Material.color(Material.Grey, Material.Shade100)
-                    font.pixelSize: 13
-                    font.weight: Font.Bold
-
-                    anchors.top: parent.top
-                    anchors.topMargin: 7
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                }
+                type: "Danger"
+                textContent: "Do not enable the turbo untill vacuum has reached 1mBar"
             }
 
             Row
@@ -109,23 +99,44 @@ Item {
         {
             spacing: 2
 
+            ButtonGroup
+            {
+                id: gasTypes
+            }
+
             Column
             {
                 RadioButton {
                     checked: true
                     text: qsTr("Continuous")
+                    ButtonGroup.group: gasTypes
+                    onClicked: {
+                        backingPumpModeState = 0;
+                    }
                 }
                 RadioButton {
                     text: qsTr("Intermittent")
+                    ButtonGroup.group: gasTypes
+                    onClicked: {
+                        backingPumpModeState = 1;
+                    }
                 }
             }
             Column
             {
                 RadioButton {
                     text: qsTr("Delayed")
+                    ButtonGroup.group: gasTypes
+                    onClicked: {
+                        backingPumpModeState = 2;
+                    }
                 }
                 RadioButton {
                     text: qsTr("Delayed + Intermittent")
+                    ButtonGroup.group: gasTypes
+                    onClicked: {
+                        backingPumpModeState = 3;
+                    }
                 }
             }
             Button
@@ -137,11 +148,8 @@ Item {
                 Material.foreground: Material.color(Material.Grey, Material.Shade100)
                 onClicked:
                 {
-                    // Save state
-                    turbopumpstate = !turbopumpstate
-
-                    // Set vac pump
-                    TestingManager.requestTurboPump(turbopumpstate);
+                   // Set vac pump
+                    TestingManager.requestBackingPumpMode(backingPumpModeState);
                 }
             }
         }

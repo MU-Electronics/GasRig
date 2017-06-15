@@ -32,5 +32,6 @@
         <file>config/General.json</file>
         <file>config/Hardware.json</file>
         <file>config/View.json</file>
+        <file>views/parts/AlertBox.qml</file>
     </qresource>
 </RCC>

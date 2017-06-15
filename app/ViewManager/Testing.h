@@ -35,6 +35,7 @@ namespace App { namespace ViewManager
             // Requests comming from the views
             void requestBackingPump(bool onOff);
             void requestTurboPump(bool onOff);
+            void requestBackingPumpMode(int mode);
 
             void requestPressureConfirmation();
             void requestPressureReading();

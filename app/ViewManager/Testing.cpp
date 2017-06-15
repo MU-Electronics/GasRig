@@ -97,6 +97,24 @@ namespace App { namespace ViewManager
         emit hardwareRequest(command);
     }
 
+    /**
+     * Request that the vacuum pump is turned on
+     *
+     * @brief Testing::requestVacuum
+     * @param onOff
+     */
+    void Testing::requestBackingPumpMode(int mode)
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "VacStation");
+        command.insert("method", "setBackingPumpMode");
+        command.insert("mode", mode);
+
+        // Emit siganl to HAL
+        emit hardwareRequest(command);
+    }
+
 
 
 
