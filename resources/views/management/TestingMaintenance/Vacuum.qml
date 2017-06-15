@@ -15,12 +15,17 @@ Item
     id: vacuumTab
 
     // Define vars for interface state
-    property bool backingpumpstate: false
-    property bool turbopumpstate: false
-    property int backingPumpModeState: false
+    property bool backingPumpState: false
+    property bool turboPumpState: false
+    property int backingPumpModeState: 0
+    property int gasTypeModeState: 0
 
     width: parent.width-10
 
+
+    /**
+     * Set the backing pump mode
+     */
     FluidControls.Card
     {
         id: pumpControl
@@ -53,15 +58,15 @@ Item
                     id: backingpump
                     objectName: "backingPumpControl"
                     text: "Backing Pump"
-                    Material.background: if(vacuumTab.backingpumpstate){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
-                    Material.foreground: if(vacuumTab.backingpumpstate){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
+                    Material.background: if(vacuumTab.backingPumpState){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                    Material.foreground: if(vacuumTab.backingPumpState){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                     onClicked:
                     {
                         // Save state
-                        backingpumpstate = !backingpumpstate
+                        backingPumpState = !backingPumpState
 
                         // Set vac pump
-                        TestingManager.requestBackingPump(backingpumpstate);
+                        TestingManager.requestBackingPump(backingPumpState);
                     }
                 }
 
@@ -70,15 +75,15 @@ Item
                     id: turboPump
                     objectName: "turboPumpControl"
                     text: "Turbo Pump Enable / Disable"
-                    Material.background: if(vacuumTab.turbopumpstate){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
-                    Material.foreground: if(vacuumTab.turbopumpstate){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
+                    Material.background: if(vacuumTab.turboPumpState){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                    Material.foreground: if(vacuumTab.turboPumpState){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                     onClicked:
                     {
                         // Save state
-                        turbopumpstate = !turbopumpstate
+                        turboPumpState = !turboPumpState
 
                         // Set vac pump
-                        TestingManager.requestTurboPump(turbopumpstate);
+                        TestingManager.requestTurboPump(turboPumpState);
                     }
                 }
             }
@@ -86,8 +91,14 @@ Item
     }
 
 
+
+    /**
+     * Set the backing pump mode
+     */
     FluidControls.Card
     {
+        id: backPumpMode
+
         anchors.top: pumpControl.bottom
         anchors.topMargin: 25
 
@@ -101,7 +112,7 @@ Item
 
             ButtonGroup
             {
-                id: gasTypes
+                id: pumpModeTypeGroup
             }
 
             Column
@@ -109,14 +120,14 @@ Item
                 RadioButton {
                     checked: true
                     text: qsTr("Continuous")
-                    ButtonGroup.group: gasTypes
+                    ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
                         backingPumpModeState = 0;
                     }
                 }
                 RadioButton {
                     text: qsTr("Intermittent")
-                    ButtonGroup.group: gasTypes
+                    ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
                         backingPumpModeState = 1;
                     }
@@ -126,14 +137,14 @@ Item
             {
                 RadioButton {
                     text: qsTr("Delayed")
-                    ButtonGroup.group: gasTypes
+                    ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
                         backingPumpModeState = 2;
                     }
                 }
                 RadioButton {
                     text: qsTr("Delayed + Intermittent")
-                    ButtonGroup.group: gasTypes
+                    ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
                         backingPumpModeState = 3;
                     }
@@ -154,4 +165,75 @@ Item
             }
         }
     }
+
+
+
+
+    /**
+     * Set the gas mode
+     */
+    FluidControls.Card
+    {
+        id: gasMode
+
+        anchors.top: backPumpMode.bottom
+        anchors.topMargin: 25
+
+        width: parent.width-10
+
+        padding:5
+
+        Row
+        {
+            spacing: 2
+
+            ButtonGroup
+            {
+                id: gasModesGroup
+            }
+
+            Column
+            {
+                RadioButton {
+                    checked: true
+                    text: qsTr("Molecular mass great than or equal to 39 (E.g Argon)")
+                    ButtonGroup.group: gasModesGroup
+                    onClicked: {
+                        gasTypeModeState = 0;
+                    }
+                }
+                RadioButton {
+                    text: qsTr("Molecular mass less than 39 (E.g Methane)")
+                    ButtonGroup.group: gasModesGroup
+                    onClicked: {
+                        gasTypeModeState = 1;
+                    }
+                }
+                RadioButton {
+                    text: qsTr("Helium Gas")
+                    ButtonGroup.group: gasModesGroup
+                    onClicked: {
+                        gasTypeModeState = 2;
+                    }
+                }
+                Button
+                {
+                    text: "Set Gas Type"
+                    Material.background: Material.color(Material.Blue, Material.Shade500)
+                    Material.foreground: Material.color(Material.Grey, Material.Shade100)
+                    onClicked:
+                    {
+                       // Set vac pump
+                       TestingManager.requestGasMode(gasTypeModeState);
+                    }
+                }
+            }
+
+        }
+    }
+
+
+
+
+
 }

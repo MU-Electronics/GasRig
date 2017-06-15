@@ -19,7 +19,14 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             QVariantMap proccess(QString method, QVariantMap commands, QStringList package);
 
             // Presenters
+            QVariantMap configureIO(QVariantMap commands, QStringList package);
 
+            QVariantMap setDigitalPort(QVariantMap commands, QStringList package);
+            QVariantMap setAnaloguePort(QVariantMap commands, QStringList package);
+
+            QVariantMap readPortDirection(QVariantMap commands, QStringList package);
+            QVariantMap readDigitalPort(QVariantMap commands, QStringList package);
+            QVariantMap readAnaloguePort(QVariantMap commands, QStringList package);
 
     };
 

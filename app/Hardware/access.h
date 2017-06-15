@@ -63,6 +63,12 @@ namespace App { namespace Hardware
             void emit_setPumpingState(QVariantMap command);
 
             // Possable signals from the labjack presenter
+            void emit_configureIO(QVariantMap commands);
+            void emit_setDigitalPort(QVariantMap commands);
+            void emit_setAnaloguePort(QVariantMap commands);
+            void emit_readPortDirection(QVariantMap commands);
+            void emit_readDigitalPort(QVariantMap commands);
+            void emit_readAnaloguePort(QVariantMap commands);
 
 
         public slots:

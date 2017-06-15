@@ -45,15 +45,15 @@
         }
     },
     "valve_connections":{
-        "1": "EIO1",
+        "1": "EIO0",
         "2": "EIO1",
-        "3": "EIO1",
-        "4": "EIO1",
-        "5": "EIO1",
-        "6": "EIO1",
-        "7": "EIO1",
-        "8": "EIO1",
-        "9": "EIO1"
+        "3": "EIO2",
+        "4": "EIO3",
+        "5": "EIO4",
+        "6": "EIO5",
+        "7": "EIO6",
+        "8": "EIO7",
+        "9": "CIO1"
     },
     "absoulte_maximums": {
         "pressure": "90",

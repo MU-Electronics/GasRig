@@ -30,20 +30,38 @@ namespace App { namespace ViewManager
 
         signals:
             void hardwareRequest(QVariantMap command);
+            void emit_testingMaintenanceReply(QString reply);
 
         public slots:
             // Requests comming from the views
             void requestBackingPump(bool onOff);
             void requestTurboPump(bool onOff);
             void requestBackingPumpMode(int mode);
+            void requestGasMode(int mode);
 
             void requestPressureConfirmation();
             void requestPressureReading();
+            void requestPressureSerialNumber();
+
+            void requestLabJackConfig();
+            void requestValveState(int port, bool state);
+            void requestVacuumPressure();
 
 
             // Returned actions
-            void pressureSensorInit(QVariantMap command);
-            void pressureSensorReading(QVariantMap command);
+            void receiveVacSetPump(QVariantMap command);
+            void receiveVacSetTurbo(QVariantMap command);
+            void receiveVacSetGasMode(QVariantMap command);
+            void receiveVacSetPumpMode(QVariantMap command);
+
+            void receivePressureSensorInit(QVariantMap command);
+            void receivePressureSensorReading(QVariantMap command);
+            void receivePressureSensorSerialNumber(QVariantMap command);
+
+            void receiveValveStatus(QVariantMap command);
+            void receiveLabJackConfig(QVariantMap command);
+            void receiveVacuumReading(QVariantMap command);
+
 
         private:
             QQmlApplicationEngine* m_root;

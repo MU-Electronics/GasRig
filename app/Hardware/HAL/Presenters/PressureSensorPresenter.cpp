@@ -88,10 +88,10 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         QVariantMap presented;
 
         // Which signal should be triggered by the access thread
-        presented["method"] = "emit_pressureSensorPressure";
+        presented["method"] = "emit_pressureSensorSerialNumber";
 
         // Calculate the serial number from the package
-        presented["serial"] = QString::number(((256^3)*package.at(2).toInt()) + ((256^2)*package.at(3).toInt()) + ((256)*package.at(4).toInt()) + package.at(0).toInt());
+        presented["serial"] = 256*65536*package.at(2).toInt()+65536*package.at(3).toInt()+256*package.at(4).toInt()+package.at(0).toInt();
 
         // Return the presenter data
         return presented;

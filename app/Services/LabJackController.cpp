@@ -52,8 +52,8 @@ namespace App { namespace Services
             // Send the connect sucessfull signal
             emit_comConnectionStatus(comConnectionPackageGenerator("Device1", true));
 
-            // Bus not open
-            isOpen = false;
+            // Bus open
+            isOpen = true;
 
             return true;
         }
@@ -61,8 +61,8 @@ namespace App { namespace Services
         // Send the connect sucessfull signal
         emit_comConnectionStatus(comConnectionPackageGenerator("Device1", false));
 
-        // Bus open
-        isOpen = true;
+        // Bus closed
+        isOpen = false;
 
         return false;
     }

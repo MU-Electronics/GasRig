@@ -6,6 +6,7 @@
 #include "Manager.h"
 #include <QString>
 #include <QMap>
+#include <QVariantMap>
 #include "../Utilities/Properties.h"
 
 // Include settings container
@@ -24,6 +25,10 @@ namespace App { namespace ViewManager
         // USB connection statuses
         Q_PROPERTY(QVariantMap hardwareConnection READ hardwareConnection NOTIFY emit_hardwareConnectionChanged)
 
+        // Valve statuses
+        Q_PROPERTY(QVariantMap valveState READ valveState NOTIFY emit_valveStateChanged)
+
+
         public:
             ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
 
@@ -33,10 +38,13 @@ namespace App { namespace ViewManager
             // Return the data for the connection statuses
             QVariantMap hardwareConnection() const { return m_hardwareConnection; }
 
-
+            // Return the data for the valve statuses
+            QVariantMap valveState() const { return m_valveState; }
 
         signals:
             void emit_hardwareConnectionChanged(QVariantMap);
+            void emit_valveStateChanged(QVariantMap);
+
             void emit_hardwareAccess(QVariantMap command);
 
         public slots:
@@ -46,6 +54,9 @@ namespace App { namespace ViewManager
 
             void request_reconnect(QString item);
 
+
+            void receiveValveStatus(QVariantMap package);
+
         private:
             QQmlApplicationEngine* m_root;
 
@@ -54,6 +65,9 @@ namespace App { namespace ViewManager
 
             // Holds the connection statuses for all the hardware
             QVariantMap m_hardwareConnection;
+
+            // Holds the valve statuses for all the valves
+            QVariantMap m_valveState;
     };
 }}
 

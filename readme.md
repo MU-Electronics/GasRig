@@ -8,6 +8,11 @@ will or have taken place (due to time limits).
 ![alt text](https://raw.githubusercontent.com/MU-Electronics/GasRig/e862c2cc87d1d5243a4ab0f16e54518d2c5078e1/resources/assets/images/connections_view.png "Home Status View")
 
 
+# Qt Framework
+
+This project was designed to run on Qt5.9+.
+
+
 # Install
 
 ```
