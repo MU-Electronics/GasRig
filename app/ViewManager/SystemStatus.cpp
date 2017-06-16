@@ -37,6 +37,8 @@ namespace App { namespace ViewManager
         // Default flow controller values
         m_flowController.insert("controller_1_override", 0);
         m_flowController.insert("controller_2_override", 0);
+        m_flowController.insert("controller_1_set_flowrate", 0);
+        m_flowController.insert("controller_2_set_flowrate", 0);
     }
 
     void SystemStatus::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
@@ -52,7 +54,8 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setBackingPumpMode, this, &SystemStatus::receiveVacSetPumpMode);
 
         // Flow controller statuses
-        connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &SystemStatus::receiveFlowControllerValveOverride);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &SystemStatus::receiveSetFlowControllerValveOverride);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerFlowRate, this, &SystemStatus::receiveSetFlowControllerFlowRate);
     }
 
 
@@ -151,7 +154,7 @@ namespace App { namespace ViewManager
 
 
 
-    void SystemStatus::receiveFlowControllerValveOverride(QVariantMap command)
+    void SystemStatus::receiveSetFlowControllerValveOverride(QVariantMap command)
     {
         // Select controller
         if(command["controller"] == "FlowControllerOne")
@@ -168,6 +171,25 @@ namespace App { namespace ViewManager
         // Update the display
         emit_flowControllerStateChanged(m_flowController);
     }
+
+    void SystemStatus::receiveSetFlowControllerFlowRate(QVariantMap command)
+    {
+        // Select controller
+        if(command["controller"] == "FlowControllerOne")
+        {
+            // Update the mode
+            m_flowController["controller_1_set_flowrate"] = command.value("flow").toInt();
+        }
+        else if(command["controller"] == "FlowControllerTwo")
+        {
+            // Update the mode
+            m_flowController["controller_2_set_flowrate"] = command.value("flow").toInt();
+        }
+
+        // Update the display
+        emit_flowControllerStateChanged(m_flowController);
+    }
+
 }}
 
 

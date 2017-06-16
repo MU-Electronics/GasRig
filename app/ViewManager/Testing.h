@@ -48,6 +48,7 @@ namespace App { namespace ViewManager
             void requestVacuumPressure();
 
             void requestFlowControllerValveOverride(QString controller, int state);
+            void requestFlowControllerFlowRate(QString controller, int flowrate);
 
 
             // Returned actions
@@ -65,6 +66,8 @@ namespace App { namespace ViewManager
             void receiveVacuumReading(QVariantMap command);
 
             void receiveFlowControllerValveOverride(QVariantMap command);
+            void receiveSetFlowControllerFlowRate(QVariantMap command);
+
 
         private:
             QQmlApplicationEngine* m_root;

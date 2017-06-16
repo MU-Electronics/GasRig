@@ -46,6 +46,7 @@ namespace App { namespace ViewManager
 
         // Connect incomming signals to actions for the flow controllers
         connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &Testing::receiveFlowControllerValveOverride);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerFlowRate, this, &Testing::receiveSetFlowControllerFlowRate);
 
     }
 
@@ -59,6 +60,17 @@ namespace App { namespace ViewManager
     void Testing::receiveFlowControllerValveOverride(QVariantMap command)
     {
         emit emit_testingMaintenanceReply("Valve override set to " + command.value("override_verbal").toString() + " for " + command.value("controller").toString());
+    }
+
+    /**
+     * Debug method for flow controller set flow rate
+     *
+     * @brief Testing::pressureSensorInit
+     * @param command
+     */
+    void Testing::receiveSetFlowControllerFlowRate(QVariantMap command)
+    {
+        emit emit_testingMaintenanceReply("Flow rate set to " + command.value("flow").toString() + " for " + command.value("controller").toString());
     }
 
 
@@ -107,6 +119,13 @@ namespace App { namespace ViewManager
     {
         emit emit_testingMaintenanceReply("Pressure sensor was reading was: " + command.value("pressure").toString());
     }
+
+
+
+
+
+
+
 
 
 
@@ -162,6 +181,12 @@ namespace App { namespace ViewManager
 
 
 
+
+
+
+
+
+
     /**
      * Debug method for setting the valve status
      *
@@ -206,6 +231,10 @@ namespace App { namespace ViewManager
     {
         emit emit_testingMaintenanceReply("The LabJack config is: "/* + command.value("state_verbal").toString()*/);
     }
+
+
+
+
 
 
 
@@ -296,6 +325,10 @@ namespace App { namespace ViewManager
 
 
 
+
+
+
+
     /**
      * Request that the pressure sensor init
      *
@@ -345,6 +378,12 @@ namespace App { namespace ViewManager
         // Emit siganl to HAL
         emit hardwareRequest(command);
     }
+
+
+
+
+
+
 
 
 
@@ -435,8 +474,12 @@ namespace App { namespace ViewManager
 
 
 
+
+
+
+
     /**
-     * Request valve status change
+     * Request a valve override on the flow controllers
      *
      * @brief Testing::requestPressureConfirmation
      */
@@ -450,6 +493,30 @@ namespace App { namespace ViewManager
 
         // Set the state of the overrie
         command.insert("state", QString::number(state));
+
+        // Emit siganl to HAL
+        emit hardwareRequest(command);
+    }
+
+
+    /**
+     * Request flow rate
+     *
+     * @brief Testing::requestPressureConfirmation
+     */
+    void Testing::requestFlowControllerFlowRate(QString controller, int flowrate)
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "FlowController");
+        command.insert("controller", controller);
+        command.insert("method", "setFlowRate");
+
+        // Set relative to the flow unit
+        command.insert("unit", "250");
+
+        // Set the flow rate
+        command.insert("rate", QString::number(flowrate));
 
         // Emit siganl to HAL
         emit hardwareRequest(command);

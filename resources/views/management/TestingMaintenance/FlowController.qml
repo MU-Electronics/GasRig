@@ -169,6 +169,7 @@ Item
                         validator: IntValidator { bottom:0; top: 2000}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: parent.width - 285
+                        text: SystemStatusManager.flowControllerState["controller_1_set_flowrate"]
                     }
 
                     Button
@@ -176,8 +177,8 @@ Item
                         text: qsTr("Set Flow Rate For Controller 1")
                         onClicked:
                         {
-                            // set the flow rate
-                            //TestingManager.requestPressureConfirmation();
+                            // Set the flow rate
+                            TestingManager.requestFlowControllerFlowRate("FlowControllerOne", flowRateController1.text);
                         }
                     }
                 }
@@ -193,6 +194,7 @@ Item
                         validator: IntValidator { bottom:0; top: 2000}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: parent.width - 285
+                        text: SystemStatusManager.flowControllerState["controller_2_set_flowrate"]
                     }
 
                     Button
@@ -200,8 +202,8 @@ Item
                         text: qsTr("Set Flow Rate For Controller 2")
                         onClicked:
                         {
-                            // set the flow rate
-                            //TestingManager.requestPressureConfirmation();
+                            // Set the flow rate
+                            TestingManager.requestFlowControllerFlowRate("FlowControllerTwo", flowRateController2.text);
                         }
                     }
                 }
