@@ -32,6 +32,8 @@ Item
         TabBar {
             id: testingModeTabBar
             width: parent.width
+            z: 5
+
             TabButton {
                 text: qsTr("Valves")
             }

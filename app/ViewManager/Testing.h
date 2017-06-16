@@ -47,6 +47,8 @@ namespace App { namespace ViewManager
             void requestValveState(int port, bool state);
             void requestVacuumPressure();
 
+            void requestValveOverride(QString controller, int state);
+
 
             // Returned actions
             void receiveVacSetPump(QVariantMap command);

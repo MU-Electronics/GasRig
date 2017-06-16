@@ -35,6 +35,9 @@ namespace App { namespace ViewManager
         // Vacuum statuses
         Q_PROPERTY(QVariantMap vacuumState READ vacuumState NOTIFY emit_vacuumStateChanged)
 
+        // Flow controller statuses
+        Q_PROPERTY(QVariantMap flowControllerState READ flowControllerState NOTIFY emit_flowControllerStateChanged)
+
         public:
             // constructure and destructor
             SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
@@ -47,15 +50,20 @@ namespace App { namespace ViewManager
             // Return the data for the vacuum statuses
             QVariantMap vacuumState() const { return m_vacuumState; }
 
-
+            // Return the data for the flow controller statuses
+            QVariantMap flowControllerState() const { return m_flowController; }
 
         signals:
             void emit_valveStateChanged(QVariantMap);
             void emit_vacuumStateChanged(QVariantMap);
+            void emit_flowControllerStateChanged(QVariantMap);
 
         public slots:
             // Listen for labjack events
             void receiveValveStatus(QVariantMap package);
+
+            // Listen for flow controller events
+            void receiveFlowControllerValveOverride(QVariantMap command);
 
             // Listen for vacuum events
             void receiveVacSetPump(QVariantMap command);
@@ -74,6 +82,9 @@ namespace App { namespace ViewManager
 
             // Holds the vacuum statuses for all values
             QVariantMap m_vacuumState;
+
+            // Holds the flow controller statuses for all values
+            QVariantMap m_flowController;
 
     };
 }}

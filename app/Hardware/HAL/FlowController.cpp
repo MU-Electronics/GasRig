@@ -214,6 +214,17 @@ namespace App { namespace Hardware { namespace HAL
 
 
     /**
+     * Init flow controller on connect
+     *
+     * @brief FlowControllers::connectInitControllers
+     */
+    void FlowController::connectInitControllers()
+    {
+
+    }
+
+
+    /**
      * Test whether the connection is working
      *
      * @brief FlowController::testConnection

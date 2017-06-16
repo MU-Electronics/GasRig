@@ -45,7 +45,7 @@ Item
                 height: 30
                 width: parent.width
                 type: "Danger"
-                textContent: "Do not enable the turbo untill vacuum has reached 1mBar"
+                textContent: qsTr("Do not enable the turbo untill vacuum has reached 1mBar")
             }
 
             Row

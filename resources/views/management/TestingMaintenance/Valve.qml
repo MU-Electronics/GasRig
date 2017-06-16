@@ -35,7 +35,7 @@ Item {
              height: 30
              width: parent.width
              type: "Warning"
-             textContent: "Be carefully there is no automated protection in this mode!"
+             textContent: qsTr("Be carefully there is no automated protection in this mode!")
          }
 
          Item

@@ -99,6 +99,7 @@ namespace App { namespace Hardware
         connect(&m_flowController, &HAL::FlowController::emit_comConnectionStatus, this, &Access::listen_serialComUpdates);
         connect(&m_flowController, &HAL::FlowController::emit_critialSerialError, this, &Access::listen_critialSerialError);
         connect(&m_flowController, &HAL::FlowController::emit_timeoutSerialError, this, &Access::listen_timeoutSerialError);
+        connect(&m_flowController, &HAL::FlowController::emit_comConnectionStatus, &m_flowController, &HAL::FlowController::connectInitControllers);
 
         // Connect labjack HAL connections
         connect(&m_labjack, &HAL::LabJack::emit_labJackData, this, &Access::proccessDataFromHals);
@@ -170,14 +171,14 @@ namespace App { namespace Hardware
                 flowComPort = m_flowController.findPortName(flowData["productId"].toInt(), flowData["vendorId"].toInt());
             }
 
-            // Connect to port
-            m_flowController.open(flowComPort, flowData["braud"].toInt(), flowData["timeout"].toInt(), 3); // Will open on tty.usbserial-AH02FNCX for my mac
-
             // Register flow controller one with the class
             m_flowController.registerController("FlowControllerOne", flowData["1_manufacturer"].toString(), flowData["1_type"].toString(), flowData["1_id_1"].toString(), flowData["1_id_2"].toString(), flowData["1_id_3"].toString());
 
             // Register flow controller two with the class
             m_flowController.registerController("FlowControllerTwo", flowData["2_manufacturer"].toString(), flowData["2_type"].toString(), flowData["2_id_1"].toString(), flowData["2_id_2"].toString(), flowData["2_id_3"].toString());
+
+            // Connect to port
+            m_flowController.open(flowComPort, flowData["braud"].toInt(), flowData["timeout"].toInt(), 3); // Will open on tty.usbserial-AH02FNCX for my mac
         }
 
 

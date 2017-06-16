@@ -48,6 +48,18 @@ namespace App { namespace Hardware
             void emit_pressureSensorPressure(QVariantMap command);
 
             // Possable signals from the flow controller presenter
+            void emit_getFlowControllerIdentifier(QVariantMap command);
+            void emit_getFlowControllerFlowRate(QVariantMap command);
+            void emit_getFlowControllerSetFlowRate(QVariantMap command);
+            void emit_getFlowControllerValveOverride(QVariantMap command);
+            void emit_getFlowControllerTemperature(QVariantMap command);
+            void emit_setFlowControllerSourceControll(QVariantMap command);
+            void emit_setFlowControllerFlowRate(QVariantMap command);
+            void emit_setFlowControllerValveOverride(QVariantMap command);
+            void emit_setFlowControllerSoftStart(QVariantMap command);
+            void emit_setFlowControllerSoftStartTime(QVariantMap command);
+            void emit_setFlowControllerFlowUnit(QVariantMap command);
+            void emit_setFlowControllerTemperatureUnit(QVariantMap command);
 
             // Possable signals from the vac station presenter
             void emit_getTemperature(QVariantMap command);

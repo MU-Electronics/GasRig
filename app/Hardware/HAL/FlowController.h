@@ -21,6 +21,8 @@ namespace App { namespace Hardware { namespace HAL
             //void setId(int id);
             void registerController(QString referance, QString manuf, QString type, QString ID1, QString ID2, QString ID3);
 
+            void connectInitControllers();
+
         signals:
             void emit_flowControllerData(QString responable, QString m_method, QVariantMap m_command, QStringList halData);
 

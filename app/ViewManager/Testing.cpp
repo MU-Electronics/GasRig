@@ -397,5 +397,35 @@ namespace App { namespace ViewManager
         emit hardwareRequest(command);
     }
 
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Request valve status change
+     *
+     * @brief Testing::requestPressureConfirmation
+     */
+    void Testing::requestValveOverride(QString controller, int state)
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "FlowController");
+        command.insert("controller", controller);
+        command.insert("method", "setValveOverride");
+
+        // Set the state of the overrie
+        command.insert("state", QString::number(state));
+
+        // Emit siganl to HAL
+        emit hardwareRequest(command);
+    }
+
 }}
 

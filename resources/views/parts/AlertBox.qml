@@ -11,6 +11,8 @@ Item {
 
     state: alertBox.type
 
+    height: alertText.y + alertText.height + 7;
+
     states: [
         State {
             name: "Danger"
@@ -39,12 +41,20 @@ Item {
         border.color: Material.color(Material.Red, Material.Shade300)
         border.width: 1
 
-        height: parent.height
+        //height: parent.height
+        height: alertText.y + alertText.height + 7;
         width: parent.width
 
         Text {
+            id: alertText
+
             text: alertBox.textContent
+
+            width: parent.width - 20
+            wrapMode: Text.WordWrap
+
             color: Material.color(Material.Grey, Material.Shade100)
+
             font.pixelSize: 13
             font.weight: Font.Bold
 

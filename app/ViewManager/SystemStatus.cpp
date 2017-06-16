@@ -34,11 +34,14 @@ namespace App { namespace ViewManager
         m_vacuumState.insert("backing_pump_mode", 0);
         m_vacuumState.insert("gas_type_mode", 1);
 
+        // Default flow controller values
+        m_flowController.insert("controller_1_override", 0);
+        m_flowController.insert("controller_2_override", 0);
     }
 
     void SystemStatus::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
     {
-        // Valve status
+        // Labjack statuses
         connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &SystemStatus::receiveValveStatus);
         //connect(&hardware, &Hardware::Access::emit_setAnaloguePort, this, &ConnectionStatus::receiveVacuumReading);
 
@@ -47,6 +50,9 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setTurboPumpState, this, &SystemStatus::receiveVacSetTurbo);
         connect(&hardware, &Hardware::Access::emit_setGasMode, this, &SystemStatus::receiveVacSetGasMode);
         connect(&hardware, &Hardware::Access::emit_setBackingPumpMode, this, &SystemStatus::receiveVacSetPumpMode);
+
+        // Flow controller statuses
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &SystemStatus::receiveFlowControllerValveOverride);
     }
 
 
@@ -136,6 +142,31 @@ namespace App { namespace ViewManager
 
         // Update the display
         emit_vacuumStateChanged(m_vacuumState);
+    }
+
+
+
+
+
+
+
+
+    void SystemStatus::receiveFlowControllerValveOverride(QVariantMap command)
+    {
+        // Select controller
+        if(command["controller"] == "FlowControllerOne")
+        {
+            // Update the mode
+            m_flowController["controller_1_override"] = command.value("override").toInt();
+        }
+        else if(command["controller"] == "FlowControllerTwo")
+        {
+            // Update the mode
+            m_flowController["controller_2_override"] = command.value("override").toInt();
+        }
+
+        // Update the display
+        emit_flowControllerStateChanged(m_flowController);
     }
 }}
 
