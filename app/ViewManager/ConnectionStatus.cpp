@@ -29,16 +29,6 @@ namespace App { namespace ViewManager
         m_hardwareConnection.insert("SafetyMonitor", "0");
         m_hardwareConnection.insert("HardwareGateway", "0");
 
-        // Default valves values
-        m_valveState.insert("1", "0");
-        m_valveState.insert("2", "0");
-        m_valveState.insert("3", "0");
-        m_valveState.insert("4", "0");
-        m_valveState.insert("5", "0");
-        m_valveState.insert("6", "0");
-        m_valveState.insert("7", "0");
-        m_valveState.insert("8", "0");
-        m_valveState.insert("9", "0");
     }
 
 
@@ -64,10 +54,6 @@ namespace App { namespace ViewManager
 
         // Requests for hardware reconnects
         connect(this, &ConnectionStatus::emit_hardwareAccess, &hardware, &Hardware::Access::hardwareAccess);
-
-        // Valve status
-        connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &ConnectionStatus::receiveValveStatus);
-        //connect(&hardware, &Hardware::Access::emit_setAnaloguePort, this, &ConnectionStatus::receiveVacuumReading);
     }
 
 
@@ -170,17 +156,6 @@ namespace App { namespace ViewManager
     }
 
 
-    void ConnectionStatus::receiveValveStatus(QVariantMap package)
-    {
-        QString portNumber = package.value("port").toString().mid(3,1);
-
-        // Update valve value
-        m_valveState[portNumber] = package.value("value").toInt();
-
-        qDebug() << "Port Number: " << portNumber << "Value: " << package.value("value").toInt() << "In Array:" <<m_valveState[portNumber];
-
-        emit emit_valveStateChanged(m_valveState);
-    }
 
 }}
 

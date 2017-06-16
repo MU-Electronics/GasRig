@@ -53,7 +53,7 @@
         "6": "EIO5",
         "7": "EIO6",
         "8": "EIO7",
-        "9": "CIO1"
+        "9": "CIO0"
     },
     "absoulte_maximums": {
         "pressure": "90",

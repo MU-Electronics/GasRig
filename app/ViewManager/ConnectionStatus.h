@@ -22,12 +22,9 @@ namespace App { namespace ViewManager
     class ConnectionStatus : public QObject, public App::ViewManager::Manager
     {
         Q_OBJECT
+
         // USB connection statuses
         Q_PROPERTY(QVariantMap hardwareConnection READ hardwareConnection NOTIFY emit_hardwareConnectionChanged)
-
-        // Valve statuses
-        Q_PROPERTY(QVariantMap valveState READ valveState NOTIFY emit_valveStateChanged)
-
 
         public:
             ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
@@ -38,24 +35,19 @@ namespace App { namespace ViewManager
             // Return the data for the connection statuses
             QVariantMap hardwareConnection() const { return m_hardwareConnection; }
 
-            // Return the data for the valve statuses
-            QVariantMap valveState() const { return m_valveState; }
-
         signals:
             void emit_hardwareConnectionChanged(QVariantMap);
-            void emit_valveStateChanged(QVariantMap);
 
             void emit_hardwareAccess(QVariantMap command);
 
         public slots:
+            // Listen for com statues
             void listen_comConnectionStatus(QVariantMap package);
             void listen_critialSerialError(QVariantMap package);
             void listen_timeoutSerialError(QVariantMap package);
-
             void request_reconnect(QString item);
 
 
-            void receiveValveStatus(QVariantMap package);
 
         private:
             QQmlApplicationEngine* m_root;
@@ -66,8 +58,6 @@ namespace App { namespace ViewManager
             // Holds the connection statuses for all the hardware
             QVariantMap m_hardwareConnection;
 
-            // Holds the valve statuses for all the valves
-            QVariantMap m_valveState;
     };
 }}
 

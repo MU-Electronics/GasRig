@@ -142,7 +142,19 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveValveStatus(QVariantMap command)
     {
-        emit emit_testingMaintenanceReply("The valve status is: "/* + command.value("state_verbal").toString()*/);
+        // Get the port name
+        QString portNumber  = m_settings.hardware.valve_connections.key(command.value("port").toString());
+
+        if(!portNumber.isNull())
+        {
+            // Get verbal value
+            QString value = "closed";
+            if(command.value("value").toBool())
+                value = "open";
+
+            // Update the displays
+            emit emit_testingMaintenanceReply("The status of valve " + portNumber + " was updated to " + value);
+        }
     }
 
     /**

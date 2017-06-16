@@ -14,14 +14,13 @@ Item
 {
     id: vacuumTab
 
-    // Define vars for interface state
-    property bool backingPumpState: false
-    property bool turboPumpState: false
-    property int backingPumpModeState: 0
-    property int gasTypeModeState: 0
-
     width: parent.width-10
 
+    // Hold the select value for backing pump mode
+    property int backingPumpModeState: SystemStatusManager.vacuumState["backing_pump_mode"]
+
+    // Hold the select value for gas type mode
+    property int gasTypeModeState: SystemStatusManager.vacuumState["gas_type_mode"]
 
     /**
      * Set the backing pump mode
@@ -58,15 +57,15 @@ Item
                     id: backingpump
                     objectName: "backingPumpControl"
                     text: "Backing Pump"
-                    Material.background: if(vacuumTab.backingPumpState){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
-                    Material.foreground: if(vacuumTab.backingPumpState){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
+                    Material.background: if(SystemStatusManager.vacuumState["backing_pump"]){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                    Material.foreground: if(SystemStatusManager.vacuumState["backing_pump"]){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                     onClicked:
                     {
-                        // Save state
-                        backingPumpState = !backingPumpState
+                        // Toggle the state
+                        var toggle = !SystemStatusManager.vacuumState["backing_pump"];
 
                         // Set vac pump
-                        TestingManager.requestBackingPump(backingPumpState);
+                        TestingManager.requestBackingPump(toggle);
                     }
                 }
 
@@ -75,15 +74,15 @@ Item
                     id: turboPump
                     objectName: "turboPumpControl"
                     text: "Turbo Pump Enable / Disable"
-                    Material.background: if(vacuumTab.turboPumpState){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
-                    Material.foreground: if(vacuumTab.turboPumpState){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
+                    Material.background: if(SystemStatusManager.vacuumState["turbo_pump"]){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                    Material.foreground: if(SystemStatusManager.vacuumState["turbo_pump"]){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                     onClicked:
                     {
                         // Save state
-                        turboPumpState = !turboPumpState
+                        var toggle = !SystemStatusManager.vacuumState["turbo_pump"];
 
                         // Set vac pump
-                        TestingManager.requestTurboPump(turboPumpState);
+                        TestingManager.requestTurboPump(toggle);
                     }
                 }
             }
@@ -118,7 +117,7 @@ Item
             Column
             {
                 RadioButton {
-                    checked: true
+                    checked: (SystemStatusManager.vacuumState["backing_pump_mode"] === 0) ? true : false;
                     text: qsTr("Continuous")
                     ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
@@ -126,6 +125,7 @@ Item
                     }
                 }
                 RadioButton {
+                    checked: (SystemStatusManager.vacuumState["backing_pump_mode"] === 1) ? true : false;
                     text: qsTr("Intermittent")
                     ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
@@ -136,6 +136,7 @@ Item
             Column
             {
                 RadioButton {
+                    checked: (SystemStatusManager.vacuumState["backing_pump_mode"] === 2) ? true : false;
                     text: qsTr("Delayed")
                     ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
@@ -143,6 +144,7 @@ Item
                     }
                 }
                 RadioButton {
+                    checked: (SystemStatusManager.vacuumState["backing_pump_mode"] === 3) ? true : false;
                     text: qsTr("Delayed + Intermittent")
                     ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
@@ -160,7 +162,7 @@ Item
                 onClicked:
                 {
                    // Set vac pump
-                    TestingManager.requestBackingPumpMode(backingPumpModeState);
+                   TestingManager.requestBackingPumpMode(backingPumpModeState);
                 }
             }
         }
@@ -195,7 +197,7 @@ Item
             Column
             {
                 RadioButton {
-                    checked: true
+                    checked: (SystemStatusManager.vacuumState["gas_type_mode"] === 0) ? true : false;
                     text: qsTr("Molecular mass great than or equal to 39 (E.g Argon)")
                     ButtonGroup.group: gasModesGroup
                     onClicked: {
@@ -203,6 +205,7 @@ Item
                     }
                 }
                 RadioButton {
+                    checked: (SystemStatusManager.vacuumState["gas_type_mode"] === 1) ? true : false;
                     text: qsTr("Molecular mass less than 39 (E.g Methane)")
                     ButtonGroup.group: gasModesGroup
                     onClicked: {
@@ -210,6 +213,7 @@ Item
                     }
                 }
                 RadioButton {
+                    checked: (SystemStatusManager.vacuumState["gas_type_mode"] === 2) ? true : false;
                     text: qsTr("Helium Gas")
                     ButtonGroup.group: gasModesGroup
                     onClicked: {

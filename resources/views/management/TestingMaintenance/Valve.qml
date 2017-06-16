@@ -13,12 +13,7 @@ import "../../parts"
 Item {
      id: valveTab
 
-     // Define vars for interface state
-     property var valveStatuses: [false, false, 0, 0, 0, 0, 0, 0, 0]
-
-
      width: parent.width - 10
-
 
      /**
       * Set the valve status
@@ -89,15 +84,12 @@ Item {
                       {
                           text: model.name
                           objectName: "valveButton"
-                          Material.background: if(ConnectionStatusManager.valveState[model.number] === "1"){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
-                          Material.foreground: if(ConnectionStatusManager.valveState[model.number] === "1"){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
+                          Material.background: if(SystemStatusManager.valveState[model.number] == 1){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                          Material.foreground: if(SystemStatusManager.valveState[model.number] == 1){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                           onClicked:
                           {
-                              var toggle = false;
-                              if(ConnectionStatusManager.valveState[model.number] == 0)
-                                  toggle = true;
-
-                              console.log(ConnectionStatusManager.valveState[model.number])
+                              // Toggle the state
+                              var toggle = !SystemStatusManager.valveState[model.number];
 
                               // Set vac pump
                               TestingManager.requestValveState(model.number, toggle);
