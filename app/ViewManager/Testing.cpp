@@ -44,7 +44,35 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_configureIO, this, &Testing::receiveLabJackConfig);
         connect(&hardware, &Hardware::Access::emit_setAnaloguePort, this, &Testing::receiveVacuumReading);
 
+        // Connect incomming signals to actions for the flow controllers
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &Testing::receiveFlowControllerValveOverride);
+
     }
+
+
+    /**
+     * Debug method for flow controller set valve override
+     *
+     * @brief Testing::pressureSensorInit
+     * @param command
+     */
+    void Testing::receiveFlowControllerValveOverride(QVariantMap command)
+    {
+        emit emit_testingMaintenanceReply("Valve override set to " + command.value("override_verbal").toString() + " for " + command.value("controller").toString());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**
@@ -412,7 +440,7 @@ namespace App { namespace ViewManager
      *
      * @brief Testing::requestPressureConfirmation
      */
-    void Testing::requestValveOverride(QString controller, int state)
+    void Testing::requestFlowControllerValveOverride(QString controller, int state)
     {
         // Create command for HAL
         QVariantMap command;

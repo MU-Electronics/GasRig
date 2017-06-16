@@ -83,7 +83,7 @@ Item
                         onClicked:
                         {
                             // set the over ride status
-                            TestingManager.requestValveOverride("FlowControllerOne", controller1Override);
+                            TestingManager.requestFlowControllerValveOverride("FlowControllerOne", controller1Override);
                         }
                     }
                 }
@@ -119,7 +119,7 @@ Item
                         onClicked:
                         {
                             // set the over ride status
-                            TestingManager.requestValveOverride("FlowControllerTwo", controller2Override);
+                            TestingManager.requestFlowControllerValveOverride("FlowControllerTwo", controller2Override);
                         }
                     }
                 }

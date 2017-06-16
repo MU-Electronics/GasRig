@@ -47,7 +47,7 @@ namespace App { namespace ViewManager
             void requestValveState(int port, bool state);
             void requestVacuumPressure();
 
-            void requestValveOverride(QString controller, int state);
+            void requestFlowControllerValveOverride(QString controller, int state);
 
 
             // Returned actions
@@ -64,6 +64,7 @@ namespace App { namespace ViewManager
             void receiveLabJackConfig(QVariantMap command);
             void receiveVacuumReading(QVariantMap command);
 
+            void receiveFlowControllerValveOverride(QVariantMap command);
 
         private:
             QQmlApplicationEngine* m_root;

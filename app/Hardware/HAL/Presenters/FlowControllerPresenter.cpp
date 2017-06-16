@@ -295,9 +295,20 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         presented["controller"] = commands["controller"];
 
         // Get the override value
-        presented["override"] = package.at(12).toInt();
+        int override = package.at(12).toInt();
+        presented["override"] = override;
 
-        qDebug() << presented << package;
+        if(override == 0)
+            presented["override_verbal"] = "off";
+
+        if(override == 1)
+            presented["override_verbal"] = "open";
+
+        if(override == 2)
+            presented["override_verbal"] = "close";
+
+        if(override == 3)
+            presented["override_verbal"] = "manual (read only)";
 
         // Return the presenter data
         return presented;
