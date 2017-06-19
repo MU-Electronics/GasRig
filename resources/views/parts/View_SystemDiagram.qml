@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
+import QtQuick.Window 2.2
 import "../../assets/js/QtCanvasHelper.js" as CanvasHelper
 
 
@@ -11,49 +12,64 @@ Item
     width: parent.width
     height: parent.height
 
+    // Redraw diagram on valve update
+    Connections {
+        target: SystemStatusManager
+        onEmit_valveStateChanged: {
+            systemDrawing.paint_canvas();
+        }
+    }
+
     Canvas {
         id: systemDrawing
 
-        width: parent.width
-        height: parent.height /2
 
-        function paint_canvas(){
+        width: parent.width
+        height: parent.height
+
+
+        antialiasing: true
+        transformOrigin: Item.TopLeft
+
+        function paint_canvas(width, height){
             var ctx = systemDrawing.getContext('2d');
 
             // Draw pipes
-            CanvasHelper.pipe(ctx, 50, 50, 100, 50);
-            CanvasHelper.pipe(ctx, 100, 50, 200, 50);
-            CanvasHelper.pipe(ctx, 200, 50, 300, 50);
-            CanvasHelper.pipe(ctx, 300, 50, 350, 50);
+            CanvasHelper.drawPipes(ctx, systemDrawing.width);
 
             // Draw valves
-            CanvasHelper.valve(ctx, 100, 50, SystemStatusManager.valveState[1]);
-            CanvasHelper.valve(ctx, 200, 50, SystemStatusManager.valveState[2]);
-            CanvasHelper.valve(ctx, 300, 50, SystemStatusManager.valveState[3]);
+            CanvasHelper.drawValves(ctx, systemDrawing.width, SystemStatusManager.valveState[1],
+                                                              SystemStatusManager.valveState[2],
+                                                              SystemStatusManager.valveState[3],
+                                                              SystemStatusManager.valveState[4],
+                                                              SystemStatusManager.valveState[5],
+                                                              SystemStatusManager.valveState[6],
+                                                              SystemStatusManager.valveState[7],
+                                                              SystemStatusManager.valveState[8],
+                                                              SystemStatusManager.valveState[9]);
 
-            //ctx.moveTo(110,75);
             systemDrawing.requestPaint();
         }
 
         function clear_canvas(){
-            var ctx = systemDrawing.getContext('2d');
+            //var ctx = systemDrawing.getContext('2d');
             //ctx.reset();
             //ctx.clearRect(0,0,50,50);
-            CanvasHelper.valve(ctx, 50, 50, SystemStatusManager.valveState[1]);
-            systemDrawing.requestPaint();
+            //CanvasHelper.valve(ctx, 50, 50, SystemStatusManager.valveState[1]);
+            //systemDrawing.requestPaint();
         }
 
         onWidthChanged: {
             // Dont draw on bootup
             if(bootup == true)
-                systemDrawing.paint_canvas();
+                systemDrawing.paint_canvas(parent.width, parent.height);
 
             // After inital bootup
             bootup = true;
         }
 
        onPaint: {
-            systemDrawing.paint_canvas();
+            systemDrawing.paint_canvas(parent.width, parent.height);
         }
     }
 }

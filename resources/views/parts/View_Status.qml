@@ -6,6 +6,6 @@ Item {
     View_SystemDiagram
     {
         anchors.top: parent.top
-        anchors.topMargin: 200
+        anchors.topMargin: 100
     }
 }
