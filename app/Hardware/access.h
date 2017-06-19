@@ -53,7 +53,7 @@ namespace App { namespace Hardware
             void emit_getFlowControllerSetFlowRate(QVariantMap command);
             void emit_getFlowControllerValveOverride(QVariantMap command);
             void emit_getFlowControllerTemperature(QVariantMap command);
-            void emit_setFlowControllerSourceControll(QVariantMap command);
+            void emit_setFlowControllerSourceControl(QVariantMap command);
             void emit_setFlowControllerFlowRate(QVariantMap command);
             void emit_setFlowControllerValveOverride(QVariantMap command);
             void emit_setFlowControllerSoftStart(QVariantMap command);

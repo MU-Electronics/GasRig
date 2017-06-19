@@ -65,6 +65,9 @@ namespace App { namespace ViewManager
             // Listen for flow controller events
             void receiveSetFlowControllerValveOverride(QVariantMap command);
             void receiveSetFlowControllerFlowRate(QVariantMap command);
+            void receiveSetFlowControllerSoftStart(QVariantMap command);
+            void receiveSetFlowControllerSoftStartTime(QVariantMap command);
+            void receiveSetFlowControllerSourceControl(QVariantMap command);
 
             // Listen for vacuum events
             void receiveVacSetPump(QVariantMap command);

@@ -57,14 +57,18 @@ namespace App { namespace Hardware { namespace HAL
     bool FlowController::validate(QStringList package)
     {
         // Ensure package is big enough to be processed
-        if(package.isEmpty() || package.size() < 5)
+        if(package.isEmpty() || package.size() < 6)
             return false;
 
         // Ensure only two start bytes; could be up to 5
-        while(package.at(2).toInt() == 255)
+        while(package.at(2).toInt() == 255 && package.size() > 3)
         {
             package.removeFirst();
         }
+
+        // Ensure package is big enough to be processed
+        if(package.isEmpty() || package.size() < 3)
+            return false;
 
         // Get the received check sum
         QString recievedChecksum = package.at(package.length() - 1);

@@ -5,44 +5,55 @@ import "../../assets/js/QtCanvasHelper.js" as CanvasHelper
 
 Item
 {
+    // Hold the select value for backing pump mode
+    property bool bootup: false
+
+    width: parent.width
+    height: parent.height
 
     Canvas {
-        id:canvas
-        width: 400
-        height: 400
+        id: systemDrawing
+
+        width: parent.width
+        height: parent.height /2
+
         function paint_canvas(){
-            var ctx = canvas.getContext('2d');
+            var ctx = systemDrawing.getContext('2d');
 
-            CanvasHelper.valve(ctx, 50, 50, SystemStatusManager.valves[1]);
+            // Draw pipes
+            CanvasHelper.pipe(ctx, 50, 50, 100, 50);
+            CanvasHelper.pipe(ctx, 100, 50, 200, 50);
+            CanvasHelper.pipe(ctx, 200, 50, 300, 50);
+            CanvasHelper.pipe(ctx, 300, 50, 350, 50);
 
-            CanvasHelper.valve(ctx, 200, 50, SystemStatusManager.valves[2]);
+            // Draw valves
+            CanvasHelper.valve(ctx, 100, 50, SystemStatusManager.valveState[1]);
+            CanvasHelper.valve(ctx, 200, 50, SystemStatusManager.valveState[2]);
+            CanvasHelper.valve(ctx, 300, 50, SystemStatusManager.valveState[3]);
 
             //ctx.moveTo(110,75);
-            canvas.requestPaint();
+            systemDrawing.requestPaint();
         }
 
         function clear_canvas(){
-            var ctx = canvas.getContext('2d');
+            var ctx = systemDrawing.getContext('2d');
             //ctx.reset();
             //ctx.clearRect(0,0,50,50);
-            CanvasHelper.valve(ctx, 50, 50, SystemStatusManager.valves[1]);
-            canvas.requestPaint();
+            CanvasHelper.valve(ctx, 50, 50, SystemStatusManager.valveState[1]);
+            systemDrawing.requestPaint();
+        }
+
+        onWidthChanged: {
+            // Dont draw on bootup
+            if(bootup == true)
+                systemDrawing.paint_canvas();
+
+            // After inital bootup
+            bootup = true;
+        }
+
+       onPaint: {
+            systemDrawing.paint_canvas();
         }
     }
-
-    Row{
-        Button{
-            text: 'Clear Canvas'
-            onClicked: {
-                canvas.clear_canvas();
-            }
-        }
-        Button{
-            text: 'Draw Canvas'
-            onClicked: {
-                canvas.paint_canvas();
-            }
-        }
-    }
-
 }

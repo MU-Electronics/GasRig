@@ -39,6 +39,12 @@ namespace App { namespace ViewManager
         m_flowController.insert("controller_2_override", 0);
         m_flowController.insert("controller_1_set_flowrate", 0);
         m_flowController.insert("controller_2_set_flowrate", 0);
+        m_flowController.insert("controller_1_set_softstart", 0);
+        m_flowController.insert("controller_2_set_softstart", 0);
+        m_flowController.insert("controller_1_set_softstart_time", 0);
+        m_flowController.insert("controller_2_set_softstart_time", 0);
+        m_flowController.insert("controller_1_set_source", 0);
+        m_flowController.insert("controller_2_set_source", 0);
     }
 
     void SystemStatus::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
@@ -56,6 +62,10 @@ namespace App { namespace ViewManager
         // Flow controller statuses
         connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &SystemStatus::receiveSetFlowControllerValveOverride);
         connect(&hardware, &Hardware::Access::emit_setFlowControllerFlowRate, this, &SystemStatus::receiveSetFlowControllerFlowRate);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStart, this, &SystemStatus::receiveSetFlowControllerSoftStart);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStartTime, this, &SystemStatus::receiveSetFlowControllerSoftStartTime);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerSourceControl, this, &SystemStatus::receiveSetFlowControllerSourceControl);
+
     }
 
 
@@ -189,6 +199,62 @@ namespace App { namespace ViewManager
         // Update the display
         emit_flowControllerStateChanged(m_flowController);
     }
+
+    void SystemStatus::receiveSetFlowControllerSoftStart(QVariantMap command)
+    {
+
+        // Select controller
+        if(command["controller"] == "FlowControllerOne")
+        {
+            // Update the mode
+            m_flowController["controller_1_set_softstart"] = command.value("state").toInt();
+        }
+        else if(command["controller"] == "FlowControllerTwo")
+        {
+            // Update the mode
+            m_flowController["controller_2_set_softstart"] = command.value("state").toInt();
+        }
+
+        // Update the display
+        emit_flowControllerStateChanged(m_flowController);
+    }
+
+    void SystemStatus::receiveSetFlowControllerSoftStartTime(QVariantMap command)
+    {
+        // Select controller
+        if(command["controller"] == "FlowControllerOne")
+        {
+            // Update the mode
+            m_flowController["controller_1_set_softstart_time"] = command.value("seconds").toInt();
+        }
+        else if(command["controller"] == "FlowControllerTwo")
+        {
+            // Update the mode
+            m_flowController["controller_2_set_softstart_time"] = command.value("seconds").toInt();
+        }
+
+        // Update the display
+        emit_flowControllerStateChanged(m_flowController);
+    }
+
+    void SystemStatus::receiveSetFlowControllerSourceControl(QVariantMap command)
+    {
+        // Select controller
+        if(command["controller"] == "FlowControllerOne")
+        {
+            // Update the mode
+            m_flowController["controller_1_set_source"] = command.value("source").toInt();
+        }
+        else if(command["controller"] == "FlowControllerTwo")
+        {
+            // Update the mode
+            m_flowController["controller_2_set_source"] = command.value("source").toInt();
+        }
+
+        // Update the display
+        emit_flowControllerStateChanged(m_flowController);
+    }
+
 
 }}
 

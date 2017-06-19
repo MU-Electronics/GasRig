@@ -47,6 +47,10 @@ namespace App { namespace ViewManager
         // Connect incomming signals to actions for the flow controllers
         connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &Testing::receiveFlowControllerValveOverride);
         connect(&hardware, &Hardware::Access::emit_setFlowControllerFlowRate, this, &Testing::receiveSetFlowControllerFlowRate);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStart, this, &Testing::receiveSetFlowControllerSoftStart);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStartTime, this, &Testing::receiveSetFlowControllerSoftStartTime);
+        connect(&hardware, &Hardware::Access::emit_setFlowControllerSourceControl, this, &Testing::receiveSetFlowControllerSourceControl);
+
 
     }
 
@@ -73,10 +77,46 @@ namespace App { namespace ViewManager
         emit emit_testingMaintenanceReply("Flow rate set to " + command.value("flow").toString() + " for " + command.value("controller").toString());
     }
 
+    /**
+     * Debug method for flow controller set soft start
+     *
+     * @brief SystemStatus::receiveSetFlowControllerSoftStart
+     * @param command
+     */
+    void Testing::receiveSetFlowControllerSoftStart(QVariantMap command)
+    {
+        QString softstart = "disabled";
+        if(command.value("state").toInt() == 4)
+            softstart = "linear ramp";
 
+        emit emit_testingMaintenanceReply("Flow controller's soft start set to " + softstart + " for " + command.value("controller").toString());
+    }
 
+    /**
+     * Debug method for flow controller set soft start time
+     *
+     * @brief SystemStatus::receiveSetFlowControllerSoftStartTime
+     * @param command
+     */
+    void Testing::receiveSetFlowControllerSoftStartTime(QVariantMap command)
+    {
+        emit emit_testingMaintenanceReply("Flow controller's soft start time constant set to " + command.value("seconds").toString() + " seconds for " + command.value("controller").toString());
+    }
 
+    /**
+     * Debug method for flow controller set source
+     *
+     * @brief Testing::receiveSetFlowControllerSourceControl
+     * @param command
+     */
+    void Testing::receiveSetFlowControllerSourceControl(QVariantMap command)
+    {
+        QString source = "digital";
+        if(command.value("source").toInt() == 1)
+            QString source = "analogue";
+        emit emit_testingMaintenanceReply("Flow controller's source set to " + source + " for " + command.value("controller").toString());
 
+    }
 
 
 
@@ -517,6 +557,69 @@ namespace App { namespace ViewManager
 
         // Set the flow rate
         command.insert("rate", QString::number(flowrate));
+
+        // Emit siganl to HAL
+        emit hardwareRequest(command);
+    }
+
+    /**
+     * Request flow rate soft start enable
+     *
+     * @brief Testing::requestPressureConfirmation
+     */
+    void Testing::requestFlowControllerSoftStart(QString controller, int state)
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "FlowController");
+        command.insert("controller", controller);
+        command.insert("method", "setSoftStart");
+
+        // Enabled / disabled
+        if(state == 4)
+        {
+            command.insert("type", "4");
+        }
+        else
+        {
+            command.insert("type", "1");
+        }
+
+        // Emit siganl to HAL
+        emit hardwareRequest(command);
+    }
+
+    /**
+     * Request flow rate soft start in seconds
+     *
+     * @brief Testing::requestPressureConfirmation
+     */
+    void Testing::requestFlowControllerSoftStartTime(QString controller, int seconds)
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "FlowController");
+        command.insert("controller", controller);
+        command.insert("method", "setSoftStartTime");
+
+        // Set number of seconds
+        command.insert("seconds", QString::number(seconds));
+
+        // Emit siganl to HAL
+        emit hardwareRequest(command);
+    }
+
+
+    void Testing::requestSetFlowControllerSourceControl(QString controller, int source)
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "FlowController");
+        command.insert("controller", controller);
+        command.insert("method", "setSourceControll");
+
+        // Set number of seconds
+        command.insert("source", QString::number(source));
 
         // Emit siganl to HAL
         emit hardwareRequest(command);

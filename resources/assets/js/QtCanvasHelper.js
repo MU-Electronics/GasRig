@@ -29,4 +29,21 @@ function valve(ctx, x, y, state)
     ctx.closePath();
 }
 
+function pipe(ctx, x, y, tox, toy)
+{
+    var radius = 20;
+
+    ctx.beginPath();
+
+    ctx.moveTo(x, y);
+    ctx.lineTo(tox, toy);
+    ctx.lineWidth = 15;
+
+    ctx.strokeStyle = '#6a6b6d';
+    ctx.stroke();
+
+    ctx.closePath();
+
+}
+
 

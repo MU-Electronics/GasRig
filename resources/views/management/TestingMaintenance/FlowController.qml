@@ -20,11 +20,15 @@ Item
     property int controller1Override: SystemStatusManager.flowControllerState["controller_1_override"]
     property int controller2Override: SystemStatusManager.flowControllerState["controller_2_override"]
 
+    // Hold the selected source value
+    property int controller1Source: SystemStatusManager.flowControllerState["controller_1_set_source"]
+    property int controller2Source: SystemStatusManager.flowControllerState["controller_1_set_source"]
+
     Flickable {
         width: parent.width
         height: window.height - 180
         contentWidth: parent.width
-        contentHeight: flowController.height + flowRate.height + softStart.height
+        contentHeight: flowController.height + flowRate.height + softStart.height + flowControllerSource.height
 
         /**
           * Set the flow rate
@@ -252,6 +256,7 @@ Item
                         validator: IntValidator { bottom:0; top: 60}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: parent.width - 285
+                        text: SystemStatusManager.flowControllerState["controller_1_set_softstart_time"]
                     }
 
                     Button
@@ -259,8 +264,8 @@ Item
                         text: qsTr("Set Soft Start Controller 1")
                         onClicked:
                         {
-                            // set the flow rate
-                            //TestingManager.requestPressureConfirmation();
+                            // Set the soft start time
+                            TestingManager.requestFlowControllerSoftStartTime("FlowControllerOne", softStartTimeController1.text);
                         }
                     }
                 }
@@ -277,6 +282,7 @@ Item
                         validator: IntValidator { bottom:0; top: 60}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: parent.width - 285
+                        text: SystemStatusManager.flowControllerState["controller_2_set_softstart_time"]
                     }
 
                     Button
@@ -284,8 +290,8 @@ Item
                         text: qsTr("Set Soft Start Controller 2")
                         onClicked:
                         {
-                            // set the flow rate
-                            //TestingManager.requestPressureConfirmation();
+                            // Set the soft start time
+                            TestingManager.requestFlowControllerSoftStartTime("FlowControllerTwo", softStartTimeController2.text);
                         }
                     }
                 }
@@ -298,24 +304,140 @@ Item
                     Button
                     {
                         text: qsTr("Soft Start Controller 1")
+                        Material.background: if(SystemStatusManager.flowControllerState["controller_1_set_softstart"] === 4){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                        Material.foreground: if(SystemStatusManager.flowControllerState["controller_1_set_softstart"] === 4){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                         onClicked:
                         {
-                            // set the flow rate
-                            //TestingManager.requestPressureConfirmation();
+                            // Toggle the state
+                            var toggle;
+                            if(SystemStatusManager.flowControllerState["controller_1_set_softstart"] === 4)
+                            {
+                                toggle = 1;
+                            }
+                            else
+                            {
+                                toggle = 4;
+                            }
+
+                            // Set vac pump
+                            TestingManager.requestFlowControllerSoftStart("FlowControllerOne", toggle);
                         }
                     }
 
                     Button
                     {
                         text: qsTr("Soft Start Controller 2")
+                        Material.background: if(SystemStatusManager.flowControllerState["controller_2_set_softstart"] === 4){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                        Material.foreground: if(SystemStatusManager.flowControllerState["controller_2_set_softstart"] === 4){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                         onClicked:
                         {
-                            // set the flow rate
-                            //TestingManager.requestPressureConfirmation();
+                            // Toggle the state
+                            var toggle;
+                            if(SystemStatusManager.flowControllerState["controller_2_set_softstart"] === 4)
+                            {
+                                toggle = 1;
+                            }
+                            else
+                            {
+                                toggle = 4;
+                            }
+
+                            // Set vac pump
+                            TestingManager.requestFlowControllerSoftStart("FlowControllerTwo", toggle);
                         }
                     }
                 }
             }
+        }
+
+
+
+        /**
+          * Set the flow rate
+          */
+        FluidControls.Card
+        {
+            id: flowControllerSource
+
+            anchors.topMargin: 15
+            anchors.top: softStart.bottom
+
+            width: parent.width-10
+            height: 170
+
+            padding: 5
+
+            Column
+            {
+                spacing: 15
+                width: parent.width
+                AlertBox
+                {
+                    height: 30
+                    width: parent.width
+                    type: "Danger"
+                    textContent: qsTr("If setting the below to analogue the program wont be able to control the flow controller; but you can always change it back to digital.")
+                }
+                Row
+                {
+                    spacing: 20;
+                    width: parent.width
+
+                    RadioButton {
+                        checked: (SystemStatusManager.flowControllerState["controller_1_set_source"] === 0) ? true : false;
+                        text: qsTr("Analogue")
+                        onClicked: {
+                            controller1Source = 0;
+                        }
+                    }
+                    RadioButton {
+                        checked: (SystemStatusManager.flowControllerState["controller_1_set_source"] === 3) ? true : false;
+                        text: qsTr("Digital")
+                        onClicked: {
+                            controller1Source = 3;
+                        }
+                    }
+                    Button
+                    {
+                        text: qsTr("Set Controller 1")
+                        onClicked:
+                        {
+                            // set the over ride status
+                            TestingManager.requestSetFlowControllerSourceControl("FlowControllerOne", controller1Source);
+                        }
+                    }
+                }
+                Row
+                {
+                    spacing: 20;
+                    width: parent.width
+
+                    RadioButton {
+                        checked: (SystemStatusManager.flowControllerState["controller_2_set_source"] === 0) ? true : false;
+                        text: qsTr("Analogue")
+                        onClicked: {
+                            controller2Source = 0;
+                        }
+                    }
+                    RadioButton {
+                        checked: (SystemStatusManager.flowControllerState["controller_2_set_source"] === 3) ? true : false;
+                        text: qsTr("Digital")
+                        onClicked: {
+                            controller2Source = 3;
+                        }
+                    }
+                    Button
+                    {
+                        text: qsTr("Set Controller 2")
+                        onClicked:
+                        {
+                            // set the over ride status
+                            TestingManager.requestSetFlowControllerSourceControl("FlowControllerTwo", controller2Source);
+                        }
+                    }
+                }
+            }
+
         }
     }
 

@@ -102,6 +102,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getFlowControllerIdentifier";
 
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
         qDebug() << package;
 
         // Return the presenter data
@@ -127,6 +130,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getFlowControllerFlowRate";
+
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
 
         qDebug() << package;
 
@@ -154,6 +160,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getFlowControllerSetFlowRate";
 
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
         qDebug() << package;
 
         // Return the presenter data
@@ -180,6 +189,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getFlowControllerValveOverride";
 
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
         // Return the presenter data
         return presented;
     }
@@ -203,6 +215,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getFlowControllerTemperature";
+
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
 
         qDebug() << package;
 
@@ -237,7 +252,13 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         QVariantMap presented;
 
         // Which signal should be triggered by the access thread
-        presented["method"] = "emit_setFlowControllerSourceControll";
+        presented["method"] = "emit_setFlowControllerSourceControl";
+
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
+        // New source value
+        presented["source"] = package.at(12).toInt();
 
         qDebug() << package;
 
@@ -353,7 +374,11 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_setFlowControllerSoftStart";
 
-        qDebug() << package;
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
+        // Set the new state
+        presented["state"] = package.at(12).toInt();
 
         // Return the presenter data
         return presented;
@@ -379,7 +404,17 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_setFlowControllerSoftStartTime";
 
-        qDebug() << package;
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
+        // Set the flow rate bytes
+        FourByteFloatConvertion.buf[0] = package.at(15).toInt(); // MSB
+        FourByteFloatConvertion.buf[1] = package.at(14).toInt();
+        FourByteFloatConvertion.buf[2] = package.at(13).toInt();
+        FourByteFloatConvertion.buf[3] = package.at(12).toInt(); // LSB
+
+        // Convert float to bytes
+        presented["seconds"] = FourByteFloatConvertion.number;
 
         // Return the presenter data
         return presented;
@@ -404,6 +439,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_setFlowControllerFlowUnit";
+
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
 
         qDebug() << package;
 
@@ -430,6 +468,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_setFlowControllerTemperatureUnit";
+
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
 
         qDebug() << package;
 

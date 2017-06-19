@@ -49,6 +49,9 @@ namespace App { namespace ViewManager
 
             void requestFlowControllerValveOverride(QString controller, int state);
             void requestFlowControllerFlowRate(QString controller, int flowrate);
+            void receiveSetFlowControllerSoftStart(QVariantMap command);
+            void receiveSetFlowControllerSoftStartTime(QVariantMap command);
+            void receiveSetFlowControllerSourceControl(QVariantMap command);
 
 
             // Returned actions
@@ -67,6 +70,9 @@ namespace App { namespace ViewManager
 
             void receiveFlowControllerValveOverride(QVariantMap command);
             void receiveSetFlowControllerFlowRate(QVariantMap command);
+            void requestFlowControllerSoftStartTime(QString controller, int seconds);
+            void requestFlowControllerSoftStart(QString controller, int state);
+            void requestSetFlowControllerSourceControl(QString controller, int source);
 
 
         private:
