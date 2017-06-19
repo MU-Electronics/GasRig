@@ -133,10 +133,44 @@ function pipe(ctx, x, y, tox, toy)
 /**
  * Draws the pressure sensor
  */
-function pressureSensor(ctx, x, y, pressure)
+function pressureSensor(ctx, pressure)
 {
+    var x = 50;
+    var y = 145.5;
+    var width = 100;
+    var height = 90;
+
+    ctx.beginPath();
+
+    ctx.rect(x, y, width, height);
+
+    ctx.fillStyle = '#d4d5d8';
+    ctx.fill();
+
+    ctx.lineWidth = 7;
+    ctx.strokeStyle = '#c8cace';
+    ctx.stroke();
+
+    // Pressure
+    ctx.font = 'bold 18pt Calibri';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#5e5f63';
+    ctx.fillText("Pressure", x+45, y+25);
+
+    // Sensor
+    ctx.font = 'bold 18pt Calibri';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#5e5f63';
+    ctx.fillText("Sensor", x+45, y+45);
+
+    // value
+    ctx.font = 'bold 18pt Calibri';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#5e5f63';
+    ctx.fillText(parseFloat(pressure).toFixed(4), x+45, y+75);
 
 
+    ctx.closePath();
 }
 
 
