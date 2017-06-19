@@ -28,11 +28,15 @@ namespace App { namespace ViewManager
         m_valveState.insert("8", 0);
         m_valveState.insert("9", 0);
 
+        // Pressure reading
+        m_pressureSensor.insert("vacuum", 0);
+
         // Default vacuum states
         m_vacuumState.insert("backing_pump", 0);
         m_vacuumState.insert("turbo_pump", 0);
         m_vacuumState.insert("backing_pump_mode", 0);
         m_vacuumState.insert("gas_type_mode", 1);
+        m_vacuumState.insert("vacuum", 250.356);
 
         // Default flow controller values
         m_flowController.insert("controller_1_override", 0);
@@ -53,6 +57,10 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &SystemStatus::receiveValveStatus);
         //connect(&hardware, &Hardware::Access::emit_setAnaloguePort, this, &ConnectionStatus::receiveVacuumReading);
 
+        // Pressure sensor
+        m_pressureSensor.insert("vacuum", 0);
+        connect(&hardware, &Hardware::Access::emit_pressureSensorPressure, this, &SystemStatus::receivePressureSensorPressure);
+
         // Vacuum status
         connect(&hardware, &Hardware::Access::emit_setPumpingState, this, &SystemStatus::receiveVacSetPump);
         connect(&hardware, &Hardware::Access::emit_setTurboPumpState, this, &SystemStatus::receiveVacSetTurbo);
@@ -67,6 +75,27 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSourceControl, this, &SystemStatus::receiveSetFlowControllerSourceControl);
 
     }
+
+
+    /**
+     * Update the most recent pressure reading
+     *
+     * @brief SystemStatus::receivePressureSensorPressure
+     * @param package
+     */
+    void SystemStatus::receivePressureSensorPressure(QVariantMap package)
+    {
+        // Update the pressure @todo moving average
+        m_pressureSensor["vacuum"] = package["pressure"];
+
+        // Tell the views we've updated
+        emit_pressureSensorChanged(m_pressureSensor);
+    }
+
+
+
+
+
 
 
     /**

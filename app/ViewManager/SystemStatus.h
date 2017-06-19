@@ -38,6 +38,9 @@ namespace App { namespace ViewManager
         // Flow controller statuses
         Q_PROPERTY(QVariantMap flowControllerState READ flowControllerState NOTIFY emit_flowControllerStateChanged)
 
+        // Flow controller statuses
+        Q_PROPERTY(QVariantMap pressureSensor READ pressureSensor NOTIFY emit_pressureSensorChanged)
+
         public:
             // constructure and destructor
             SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
@@ -53,14 +56,21 @@ namespace App { namespace ViewManager
             // Return the data for the flow controller statuses
             QVariantMap flowControllerState() const { return m_flowController; }
 
+            // Return the data for the pressure sensor statuses
+            QVariantMap pressureSensor() const { return m_pressureSensor; }
+
         signals:
             void emit_valveStateChanged(QVariantMap);
             void emit_vacuumStateChanged(QVariantMap);
             void emit_flowControllerStateChanged(QVariantMap);
+            void emit_pressureSensorChanged(QVariantMap);
 
         public slots:
             // Listen for labjack events
             void receiveValveStatus(QVariantMap package);
+
+            // Listen for pressure sensor events
+            void receivePressureSensorPressure(QVariantMap package);
 
             // Listen for flow controller events
             void receiveSetFlowControllerValveOverride(QVariantMap command);
@@ -90,6 +100,8 @@ namespace App { namespace ViewManager
             // Holds the flow controller statuses for all values
             QVariantMap m_flowController;
 
+            // Holds the pressure sensor statuses for all values
+            QVariantMap m_pressureSensor;
     };
 }}
 

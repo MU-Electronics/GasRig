@@ -18,6 +18,9 @@ Item
         onEmit_valveStateChanged: {
             systemDrawing.paint_canvas();
         }
+        onEmit_pressureSensorChanged: {
+            systemDrawing.paint_canvas();
+        }
     }
 
     Canvas {
@@ -47,6 +50,8 @@ Item
                                                               SystemStatusManager.valveState[7],
                                                               SystemStatusManager.valveState[8],
                                                               SystemStatusManager.valveState[9]);
+            // Draw pressure sensor
+            CanvasHelper.pressureSensor(ctx, SystemStatusManager.pressureSensor["vacuum"]);
 
             systemDrawing.requestPaint();
         }
