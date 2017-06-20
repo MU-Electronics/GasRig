@@ -29,7 +29,7 @@ namespace App { namespace ViewManager
         m_valveState.insert("9", 0);
 
         // Pressure reading
-        m_pressureSensor.insert("vacuum", 0);
+        m_pressureSensor.insert("pressure", 50);
 
         // Default vacuum states
         m_vacuumState.insert("backing_pump", 0);
@@ -39,16 +39,19 @@ namespace App { namespace ViewManager
         m_vacuumState.insert("vacuum", 250.356);
 
         // Default flow controller values
-        m_flowController.insert("controller_1_override", 0);
-        m_flowController.insert("controller_2_override", 0);
         m_flowController.insert("controller_1_set_flowrate", 0);
         m_flowController.insert("controller_2_set_flowrate", 0);
-        m_flowController.insert("controller_1_set_softstart", 0);
-        m_flowController.insert("controller_2_set_softstart", 0);
-        m_flowController.insert("controller_1_set_softstart_time", 0);
-        m_flowController.insert("controller_2_set_softstart_time", 0);
-        m_flowController.insert("controller_1_set_source", 0);
-        m_flowController.insert("controller_2_set_source", 0);
+        m_flowController.insert("controller_1_flow", 0);
+        m_flowController.insert("controller_2_flow", 0);
+        m_flowController.insert("controller_1_override", 0);
+        m_flowController.insert("controller_2_override", 0);
+        m_flowController.insert("controller_1_source", 0);
+        m_flowController.insert("controller_2_source", 0);
+        m_flowController.insert("controller_1_softstart", 0);
+        m_flowController.insert("controller_2_softstart", 0);
+        m_flowController.insert("controller_1_softstart_time", 0);
+        m_flowController.insert("controller_2_softstart_time", 0);
+
     }
 
     void SystemStatus::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
@@ -86,7 +89,7 @@ namespace App { namespace ViewManager
     void SystemStatus::receivePressureSensorPressure(QVariantMap package)
     {
         // Update the pressure @todo moving average
-        m_pressureSensor["vacuum"] = package["pressure"];
+        m_pressureSensor["pressure"] = package["pressure"];
 
         // Tell the views we've updated
         emit_pressureSensorChanged(m_pressureSensor);
@@ -236,12 +239,12 @@ namespace App { namespace ViewManager
         if(command["controller"] == "FlowControllerOne")
         {
             // Update the mode
-            m_flowController["controller_1_set_softstart"] = command.value("state").toInt();
+            m_flowController["controller_1_softstart"] = command.value("state").toInt();
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the mode
-            m_flowController["controller_2_set_softstart"] = command.value("state").toInt();
+            m_flowController["controller_2_softstart"] = command.value("state").toInt();
         }
 
         // Update the display
@@ -254,12 +257,12 @@ namespace App { namespace ViewManager
         if(command["controller"] == "FlowControllerOne")
         {
             // Update the mode
-            m_flowController["controller_1_set_softstart_time"] = command.value("seconds").toInt();
+            m_flowController["controller_1_softstart_time"] = command.value("seconds").toInt();
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the mode
-            m_flowController["controller_2_set_softstart_time"] = command.value("seconds").toInt();
+            m_flowController["controller_2_softstart_time"] = command.value("seconds").toInt();
         }
 
         // Update the display
@@ -272,12 +275,12 @@ namespace App { namespace ViewManager
         if(command["controller"] == "FlowControllerOne")
         {
             // Update the mode
-            m_flowController["controller_1_set_source"] = command.value("source").toInt();
+            m_flowController["controller_1_source"] = command.value("source").toInt();
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the mode
-            m_flowController["controller_2_set_source"] = command.value("source").toInt();
+            m_flowController["controller_2_source"] = command.value("source").toInt();
         }
 
         // Update the display

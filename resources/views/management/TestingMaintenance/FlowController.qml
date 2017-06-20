@@ -21,8 +21,8 @@ Item
     property int controller2Override: SystemStatusManager.flowControllerState["controller_2_override"]
 
     // Hold the selected source value
-    property int controller1Source: SystemStatusManager.flowControllerState["controller_1_set_source"]
-    property int controller2Source: SystemStatusManager.flowControllerState["controller_1_set_source"]
+    property int controller1Source: SystemStatusManager.flowControllerState["controller_1_source"]
+    property int controller2Source: SystemStatusManager.flowControllerState["controller_1_source"]
 
     Flickable {
         width: parent.width
@@ -256,7 +256,7 @@ Item
                         validator: IntValidator { bottom:0; top: 60}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: parent.width - 285
-                        text: SystemStatusManager.flowControllerState["controller_1_set_softstart_time"]
+                        text: SystemStatusManager.flowControllerState["controller_1_softstart_time"]
                     }
 
                     Button
@@ -282,7 +282,7 @@ Item
                         validator: IntValidator { bottom:0; top: 60}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: parent.width - 285
-                        text: SystemStatusManager.flowControllerState["controller_2_set_softstart_time"]
+                        text: SystemStatusManager.flowControllerState["controller_2_softstart_time"]
                     }
 
                     Button
@@ -304,13 +304,13 @@ Item
                     Button
                     {
                         text: qsTr("Soft Start Controller 1")
-                        Material.background: if(SystemStatusManager.flowControllerState["controller_1_set_softstart"] === 4){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
-                        Material.foreground: if(SystemStatusManager.flowControllerState["controller_1_set_softstart"] === 4){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
+                        Material.background: if(SystemStatusManager.flowControllerState["controller_1_softstart"] === 4){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                        Material.foreground: if(SystemStatusManager.flowControllerState["controller_1_softstart"] === 4){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                         onClicked:
                         {
                             // Toggle the state
                             var toggle;
-                            if(SystemStatusManager.flowControllerState["controller_1_set_softstart"] === 4)
+                            if(SystemStatusManager.flowControllerState["controller_1_softstart"] === 4)
                             {
                                 toggle = 1;
                             }
@@ -327,13 +327,13 @@ Item
                     Button
                     {
                         text: qsTr("Soft Start Controller 2")
-                        Material.background: if(SystemStatusManager.flowControllerState["controller_2_set_softstart"] === 4){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
-                        Material.foreground: if(SystemStatusManager.flowControllerState["controller_2_set_softstart"] === 4){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
+                        Material.background: if(SystemStatusManager.flowControllerState["controller_2_softstart"] === 4){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                        Material.foreground: if(SystemStatusManager.flowControllerState["controller_2_softstart"] === 4){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                         onClicked:
                         {
                             // Toggle the state
                             var toggle;
-                            if(SystemStatusManager.flowControllerState["controller_2_set_softstart"] === 4)
+                            if(SystemStatusManager.flowControllerState["controller_2_softstart"] === 4)
                             {
                                 toggle = 1;
                             }
@@ -384,14 +384,14 @@ Item
                     width: parent.width
 
                     RadioButton {
-                        checked: (SystemStatusManager.flowControllerState["controller_1_set_source"] === 0) ? true : false;
+                        checked: (SystemStatusManager.flowControllerState["controller_1_source"] === 0) ? true : false;
                         text: qsTr("Analogue")
                         onClicked: {
                             controller1Source = 0;
                         }
                     }
                     RadioButton {
-                        checked: (SystemStatusManager.flowControllerState["controller_1_set_source"] === 3) ? true : false;
+                        checked: (SystemStatusManager.flowControllerState["controller_1_source"] === 3) ? true : false;
                         text: qsTr("Digital")
                         onClicked: {
                             controller1Source = 3;
@@ -413,14 +413,14 @@ Item
                     width: parent.width
 
                     RadioButton {
-                        checked: (SystemStatusManager.flowControllerState["controller_2_set_source"] === 0) ? true : false;
+                        checked: (SystemStatusManager.flowControllerState["controller_2_source"] === 0) ? true : false;
                         text: qsTr("Analogue")
                         onClicked: {
                             controller2Source = 0;
                         }
                     }
                     RadioButton {
-                        checked: (SystemStatusManager.flowControllerState["controller_2_set_source"] === 3) ? true : false;
+                        checked: (SystemStatusManager.flowControllerState["controller_2_source"] === 3) ? true : false;
                         text: qsTr("Digital")
                         onClicked: {
                             controller2Source = 3;

@@ -24,6 +24,9 @@ Item
         onEmit_vacuumStateChanged: {
             systemDrawing.paint_canvas();
         }
+        onEmit_flowControllerStateChanged: {
+            systemDrawing.paint_canvas();
+        }
     }
 
     Canvas {
@@ -54,7 +57,7 @@ Item
                                                               SystemStatusManager.valveState[8],
                                                               SystemStatusManager.valveState[9]);
             // Draw pressure sensor
-            CanvasHelper.pressureSensor(ctx, systemDrawing.width, SystemStatusManager.pressureSensor["vacuum"]);
+            CanvasHelper.pressureSensor(ctx, systemDrawing.width, SystemStatusManager.pressureSensor["pressure"]);
 
             // Draw output
             CanvasHelper.outputPort(ctx, systemDrawing.width);
@@ -78,6 +81,22 @@ Item
             // Draw nitrogen pressure
             CanvasHelper.nitrogenPressureInput(ctx, systemDrawing.width);
 
+            // Draw flow controller one
+            CanvasHelper.flowController(ctx, systemDrawing.width, 1, SystemStatusManager.flowControllerState["controller_1_set_flowrate"],
+                                                                     SystemStatusManager.flowControllerState["controller_1_flow"],
+                                                                     SystemStatusManager.flowControllerState["controller_1_override"],
+                                                                     SystemStatusManager.flowControllerState["controller_1_softstart"],
+                                                                     SystemStatusManager.flowControllerState["controller_1_softstart_time"]);
+
+            // Draw flow controller two
+            CanvasHelper.flowController(ctx, systemDrawing.width, 2, SystemStatusManager.flowControllerState["controller_2_set_flowrate"],
+                                                                     SystemStatusManager.flowControllerState["controller_2_flow"],
+                                                                     SystemStatusManager.flowControllerState["controller_2_override"],
+                                                                     SystemStatusManager.flowControllerState["controller_2_softstart"],
+                                                                     SystemStatusManager.flowControllerState["controller_2_softstart_time"]);
+
+            // Draw filters
+            CanvasHelper.filters(ctx, systemDrawing.width);
 
             // Repaint canvas
             systemDrawing.requestPaint();

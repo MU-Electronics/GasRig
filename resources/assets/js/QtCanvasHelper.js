@@ -25,8 +25,8 @@ function drawPipes(ctx, windowWidth)
 
     // 4nd row of horizonal pipes
     pipe(ctx, 31+leftPadding, 350, 100+leftPadding+widthPadding, 350);
-    pipe(ctx, 100+leftPadding+widthPadding, 350, 200+leftPadding+widthPadding, 350);
-    pipe(ctx, 200+leftPadding+widthPadding, 350, 350+leftPadding+widthPadding, 350);
+    pipe(ctx, 100+leftPadding+widthPadding, 350, 250+leftPadding+widthPadding, 350);
+    pipe(ctx, 200+leftPadding+widthPadding, 350, 400+leftPadding+widthPadding, 350);
 
 
     // First coloumn of vertial pipes
@@ -41,8 +41,8 @@ function drawPipes(ctx, windowWidth)
 
     // Third colomn of vertical pipes
     pipe(ctx, 150+leftPadding+widthPadding / 3.75, 350, 150+leftPadding+widthPadding / 3.75, 400);
-    pipe(ctx, 275+leftPadding+widthPadding/1.3, 350, 275+leftPadding+widthPadding/1.3, 400);
-    pipe(ctx, 342.5+leftPadding+widthPadding, 350, 342.5+leftPadding+widthPadding, 400);
+    pipe(ctx, 295+leftPadding+widthPadding/1.3, 350, 295+leftPadding+widthPadding/1.3, 400);
+    pipe(ctx, 392.5+leftPadding+widthPadding, 350, 392.5+leftPadding+widthPadding, 400);
 
     pipe(ctx, 47.5+leftPadding / 4, 350, 47.5+leftPadding / 4, 400);
 }
@@ -146,25 +146,35 @@ function pressureSensor(ctx, windowWidth, pressure)
 
     ctx.beginPath();
 
+    // Fix colour
+    //ctx.fillStyle = '#d4d5d8';
+    //ctx.strokeStyle = '#c8cace';
+
+
+    var colorBackground = "#"+getColorForPercentage(pressure/100);
+    var colorStoke = colorLuminance("#"+colorBackground, -0.005);
+    var colorText = getColorByBgColor(colorBackground);
+
+    ctx.fillStyle = colorBackground;
+    ctx.strokeStyle = colorText;
+
     ctx.rect(x, y, width, height);
 
-    ctx.fillStyle = '#d4d5d8';
     ctx.fill();
 
     ctx.lineWidth = 4;
-    ctx.strokeStyle = '#c8cace';
     ctx.stroke();
 
     // Pressure
     ctx.font = 'bold 15pt Calibri';
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#5e5f63';
+    ctx.fillStyle = colorLuminance(colorText, -0.2);
     ctx.fillText("Pressure Sensor", x+55, y+25);
 
     // value
     ctx.font = 'bold 15pt Calibri';
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#5e5f63';
+    ctx.fillStyle = colorText;
     ctx.fillText(parseFloat(pressure).toFixed(4), x+55, y+45);
 
 
@@ -186,9 +196,12 @@ function exhaustPort(ctx, windowWidth)
 
     ctx.beginPath();
 
+    // Fix colour
+    ctx.fillStyle = '#d4d5d8';
+    ctx.strokeStyle = '#c8cace';
+
     ctx.rect(x, y, width, height);
 
-    ctx.fillStyle = '#d4d5d8';
     ctx.fill();
 
     ctx.lineWidth = 4;
@@ -220,9 +233,12 @@ function outputPort(ctx, windowWidth)
 
     ctx.beginPath();
 
+    // Fix colour
+    ctx.fillStyle = '#d4d5d8';
+    ctx.strokeStyle = '#c8cace';
+
     ctx.rect(x, y, width, height);
 
-    ctx.fillStyle = '#d4d5d8';
     ctx.fill();
 
     ctx.lineWidth = 4;
@@ -254,6 +270,10 @@ function vacuumOutPort(ctx, windowWidth)
 
     ctx.beginPath();
 
+    // Fix colour
+    ctx.fillStyle = '#d4d5d8';
+    ctx.strokeStyle = '#c8cace';
+
     ctx.rect(x, y, width, height);
 
     ctx.fillStyle = '#d4d5d8';
@@ -271,17 +291,6 @@ function vacuumOutPort(ctx, windowWidth)
 
 
     ctx.closePath();
-}
-
-
-/**
- * Draws the flow controller
- */
-function flowController(ctx, windowWidth, setFlowRate, flowRate, valveOverride, softStart, softStartTime)
-{
-
-    var widthScaling = (windowWidth-514);
-
 }
 
 
@@ -340,7 +349,7 @@ function nitrogenPressureInput(ctx, windowWidth)
 {
     var widthScaling = (windowWidth-514);
 
-    var rectX = 123+widthScaling/3.75;
+    var rectX = 121.5+widthScaling/3.75;
     var rectY = 440;
     var rectWidth = 80;
     var rectHeight = 120;
@@ -402,13 +411,13 @@ function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gas
     var strokeVac = '#c8cace';
     if(backingPump && !turbo)
     {
-        backgroundVac = '#e5960d';
-        strokeVac = '#ce860a';
+        backgroundVac = '#FF9800';
+        strokeVac = '#FB8C00';
     }
     else if(backingPump && turbo)
     {
-        backgroundVac = '#dd1a1a';
-        strokeVac = '#ce0909';
+        backgroundVac = '#EF5350';
+        strokeVac = '#E53935';
     }
 
     ctx.fillStyle = backgroundVac;
@@ -424,11 +433,201 @@ function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gas
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Vacuum Station", x+70, y+20);
 
+    // Turbo
+    ctx.font = 'bold 13pt Calibri';
+    ctx.fillText("Turbo: "+(turbo ? 'enabled' : 'disabled'), x+70, y+45);
+
+    // Vacuum pressure
+    ctx.fillText("Vacuum: "+vacuumPressure, x+70, y+65);
+
+    // Gas mode
+    var mode;
+    if(gasMode === 0) { mode = '>= 39'; }else if(gasMode === 1) { mode = '< 39'; }else if(gasMode === 2) { mode = 'helium'; }
+    ctx.fillText("Gas Mode: "+mode, x+70, y+85);
 
     ctx.closePath();
 
 }
 
 
+/**
+ * Draws the flow controller
+ */
+function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverride, softStart, softStartTime)
+{
+    var widthScaling = (windowWidth-514);
+
+    // Set id 1 if not 2
+    var x = 210 + widthScaling;
+    var y = 395;
+    if(id === 2)
+    {
+        x = 360 + widthScaling;
+        y = 395;
+    }
 
 
+    var width = 140;
+    var height = 170;
+
+    ctx.beginPath();
+
+    ctx.rect(x, y, width, height);
+
+    var background = '#d4d5d8';
+    var stroke = '#c8cace';
+    if(valveOverride === 1)
+    {
+        background = '#EF5350';
+        stroke = '#E53935';
+    }
+    else if(setFlowRate > 0)
+    {
+        background = '#FF9800';
+        stroke = '#FB8C00';
+    }
+
+    ctx.fillStyle = background;
+    ctx.fill();
+
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = stroke;
+    ctx.stroke();
+
+    // Flow Controller ID
+    ctx.font = 'bold 15pt Calibri';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#5e5f63';
+    ctx.fillText("Flow Controller "+id, x+70, y+20);
+
+    // Flow
+    ctx.font = 'bold 13pt Calibri';
+    ctx.fillText("Flow: " + flowRate + "ml/min", x+70, y+45);
+
+    // Set flow
+    ctx.fillText("Set: " + setFlowRate + "ml/min", x+70, y+65);
+
+    // Soft start state
+    ctx.fillText("Soft Start: " + (softStart ? 'enabled' : 'disabled'), x+70, y+95);
+
+    // Soft start time
+    ctx.fillText("Soft Start time: " + softStartTime + "s", x+70, y+115);
+
+    // Valve override
+    var overrideVerbal;
+    if(valveOverride === 0){ overrideVerbal = "off"; } else if(valveOverride === 1){ overrideVerbal = "open"; } else if(valveOverride === 2){ overrideVerbal = "closed"; }
+    ctx.fillText("Override: " + overrideVerbal, x+70, y+145);
+
+    ctx.closePath();
+}
+
+
+
+/**
+ * Draw the filters
+ */
+function filters(ctx, windowWidth)
+{
+    var widthScaling = (windowWidth-514);
+
+    // Set style
+    ctx.font = 'bold 15pt Calibri';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffffff';
+
+    // Draw filter
+    ctx.fillText("F", 250+widthScaling/1.8, 55);
+
+    // Draw filter
+    ctx.fillText("F", 250+widthScaling/1.8, 155);
+
+    // Draw filter
+    ctx.fillText("F", 144, 355);
+
+    // Draw filter
+    ctx.fillText("F", 164+widthScaling/3.8, 373);
+
+    // Description
+    ctx.font = 'bold 10pt Calibri';
+    ctx.fillText("(fast)", 265+widthScaling/1.8, 55);
+    ctx.fillText("(slow)", 265+widthScaling/1.8, 155);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Convets number to hex
+ */
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+/**
+ * Convets percentage to colour
+ */
+function getColorForPercentage(pct)
+{
+    var percentColors = [
+        { pct: 0.0, color: { r: 0x00, g: 0xff, b: 0 } },
+        { pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
+        { pct: 1.0, color: { r: 0xff, g: 0x00, b: 0 } } ];
+
+    for (var i = 1; i < percentColors.length - 1; i++) {
+        if (pct < percentColors[i].pct) {
+            break;
+        }
+    }
+    var lower = percentColors[i - 1];
+    var upper = percentColors[i];
+    var range = upper.pct - lower.pct;
+    var rangePct = (pct - lower.pct) / range;
+    var pctLower = 1 - rangePct;
+    var pctUpper = rangePct;
+    var color = {
+        r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+        g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+        b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+    };
+    //return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+    return componentToHex(color.r)+componentToHex(color.g)+componentToHex(color.b);
+}
+
+
+/**
+ * Lightens or darkens a colour
+ */
+function colorLuminance(color, percent) {
+
+    var num = parseInt(color,16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) + amt,
+        B = (num >> 8 & 0x00FF) + amt,
+        G = (num & 0x0000FF) + amt;
+
+    return "#"+(0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+
+}
+
+/**
+ * Get correct text color for background
+ */
+function getColorByBgColor(bgColor) {
+    if (!bgColor) { return ''; }
+    return (parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2) ? '#000' : '#fff';
+}

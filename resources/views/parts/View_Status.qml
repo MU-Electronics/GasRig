@@ -42,7 +42,7 @@ Item
             height: parent.height
             currentIndex: statusTabBar.currentIndex
             anchors.top: statusTabBar.bottom
-            anchors.topMargin: 20
+            anchors.topMargin: 10
             anchors.left: statusTabBar.left
             anchors.leftMargin: 10
             Item {
