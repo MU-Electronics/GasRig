@@ -21,6 +21,9 @@ Item
         onEmit_pressureSensorChanged: {
             systemDrawing.paint_canvas();
         }
+        onEmit_vacuumStateChanged: {
+            systemDrawing.paint_canvas();
+        }
     }
 
     Canvas {
@@ -51,8 +54,32 @@ Item
                                                               SystemStatusManager.valveState[8],
                                                               SystemStatusManager.valveState[9]);
             // Draw pressure sensor
-            CanvasHelper.pressureSensor(ctx, SystemStatusManager.pressureSensor["vacuum"]);
+            CanvasHelper.pressureSensor(ctx, systemDrawing.width, SystemStatusManager.pressureSensor["vacuum"]);
 
+            // Draw output
+            CanvasHelper.outputPort(ctx, systemDrawing.width);
+
+            // Draw exhuast
+            CanvasHelper.exhaustPort(ctx, systemDrawing.width);
+
+            // Draw vac out
+            CanvasHelper.vacuumOutPort(ctx, systemDrawing.width);
+
+            // Draw vac pump
+            CanvasHelper.vaccumStation(ctx, systemDrawing.width, SystemStatusManager.vacuumState["backing_pump"],
+                                                                 SystemStatusManager.vacuumState["turbo_pump"],
+                                                                 SystemStatusManager.vacuumState["vacuum"],
+                                                                 SystemStatusManager.vacuumState["gas_type_mode"] ,
+                                                                 SystemStatusManager.vacuumState["backing_pump_mode"]);
+
+            // Draw high pressure
+            CanvasHelper.highPressureInput(ctx, systemDrawing.width);
+
+            // Draw nitrogen pressure
+            CanvasHelper.nitrogenPressureInput(ctx, systemDrawing.width);
+
+
+            // Repaint canvas
             systemDrawing.requestPaint();
         }
 

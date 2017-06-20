@@ -225,6 +225,17 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getTurboPumpState";
 
+        // State of pump
+//        if(data.value("data").toString() == "111111")
+//        {
+//            presented.insert("state", true);
+//            presented.insert("state_verbal", "on");
+//        }
+//        else
+//        {
+//            presented.insert("state", false);
+//            presented.insert("state_verbal", "off");
+//        }
 
         // Return the presenter data
         return presented;

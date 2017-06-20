@@ -94,11 +94,11 @@ Item
         anchors.right: parent.right
         anchors.top: parent.top
         RigStatus{
-            width: ((parent.width)) - 20
+            width: ((parent.width)) //- 20
             height: parent.height
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.topMargin: 20
+            //anchors.topMargin: 20
         }
     }
 
