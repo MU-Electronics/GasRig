@@ -64,30 +64,24 @@ Item
                         checked: (SystemStatusManager.flowControllerState["controller_1_override"] === 0) ? true : false;
                         text: qsTr("Off")
                         onClicked: {
-                            controller1Override = 0;
+                            // set the over ride status
+                            TestingManager.requestFlowControllerValveOverride("FlowControllerOne", 0);
                         }
                     }
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_1_override"] === 1) ? true : false;
                         text: qsTr("Open")
                         onClicked: {
-                            controller1Override = 1;
+                            // set the over ride status
+                            TestingManager.requestFlowControllerValveOverride("FlowControllerOne", 1);
                         }
                     }
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_1_override"] === 2) ? true : false;
                         text: qsTr("Closed")
                         onClicked: {
-                            controller1Override = 2;
-                        }
-                    }
-                    Button
-                    {
-                        text: qsTr("Set Controller 1")
-                        onClicked:
-                        {
                             // set the over ride status
-                            TestingManager.requestFlowControllerValveOverride("FlowControllerOne", controller1Override);
+                            TestingManager.requestFlowControllerValveOverride("FlowControllerOne", 2);
                         }
                     }
                 }
@@ -100,30 +94,24 @@ Item
                         checked: (SystemStatusManager.flowControllerState["controller_2_override"] === 0) ? true : false;
                         text: qsTr("Off")
                         onClicked: {
-                            controller2Override = 0;
+                            // set the over ride status
+                            TestingManager.requestFlowControllerValveOverride("FlowControllerTwo", 0);
                         }
                     }
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_2_override"] === 1) ? true : false;
                         text: qsTr("Open")
                         onClicked: {
-                            controller2Override = 1;
+                            // set the over ride status
+                            TestingManager.requestFlowControllerValveOverride("FlowControllerTwo", 1);
                         }
                     }
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_2_override"] === 2) ? true : false;
                         text: qsTr("Closed")
                         onClicked: {
-                            controller2Override = 2;
-                        }
-                    }
-                    Button
-                    {
-                        text: qsTr("Set Controller 2")
-                        onClicked:
-                        {
                             // set the over ride status
-                            TestingManager.requestFlowControllerValveOverride("FlowControllerTwo", controller2Override);
+                            TestingManager.requestFlowControllerValveOverride("FlowControllerTwo", 2);
                         }
                     }
                 }
@@ -387,23 +375,16 @@ Item
                         checked: (SystemStatusManager.flowControllerState["controller_1_source"] === 0) ? true : false;
                         text: qsTr("Analogue")
                         onClicked: {
-                            controller1Source = 0;
+                            // set the over ride status
+                            TestingManager.requestSetFlowControllerSourceControl("FlowControllerOne", 0);
                         }
                     }
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_1_source"] === 3) ? true : false;
                         text: qsTr("Digital")
                         onClicked: {
-                            controller1Source = 3;
-                        }
-                    }
-                    Button
-                    {
-                        text: qsTr("Set Controller 1")
-                        onClicked:
-                        {
                             // set the over ride status
-                            TestingManager.requestSetFlowControllerSourceControl("FlowControllerOne", controller1Source);
+                            TestingManager.requestSetFlowControllerSourceControl("FlowControllerOne", 3);
                         }
                     }
                 }
@@ -416,25 +397,19 @@ Item
                         checked: (SystemStatusManager.flowControllerState["controller_2_source"] === 0) ? true : false;
                         text: qsTr("Analogue")
                         onClicked: {
-                            controller2Source = 0;
+                            // set the over ride status
+                            TestingManager.requestSetFlowControllerSourceControl("FlowControllerTwo", 0);
                         }
                     }
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_2_source"] === 3) ? true : false;
                         text: qsTr("Digital")
                         onClicked: {
-                            controller2Source = 3;
-                        }
-                    }
-                    Button
-                    {
-                        text: qsTr("Set Controller 2")
-                        onClicked:
-                        {
                             // set the over ride status
-                            TestingManager.requestSetFlowControllerSourceControl("FlowControllerTwo", controller2Source);
+                            TestingManager.requestSetFlowControllerSourceControl("FlowControllerTwo", 3);
                         }
                     }
+
                 }
             }
 

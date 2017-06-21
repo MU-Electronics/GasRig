@@ -162,8 +162,24 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
-
         qDebug() << package;
+        // Get set flow rate in unit (12)
+        FourByteFloatConvertion.buf[0] = package.at(21).toInt(); // LSB
+        FourByteFloatConvertion.buf[1] = package.at(20).toInt();
+        FourByteFloatConvertion.buf[2] = package.at(19).toInt();
+        FourByteFloatConvertion.buf[3] = package.at(18).toInt(); // MSB
+
+        presented["flow"] = FourByteFloatConvertion.number;
+        presented["flow_unit"] = package.at(17).toInt();
+
+        // Get set flow rate in percentage
+        FourByteFloatConvertion.buf[0] = package.at(16).toInt(); // LSB
+        FourByteFloatConvertion.buf[1] = package.at(15).toInt();
+        FourByteFloatConvertion.buf[2] = package.at(14).toInt();
+        FourByteFloatConvertion.buf[3] = package.at(13).toInt(); // MSB
+
+        presented["percentage"] = FourByteFloatConvertion.number;
+        presented["percentage_code"] = package.at(12).toInt();
 
         // Return the presenter data
         return presented;
@@ -191,6 +207,22 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
+
+        // Get the override value
+        int override = package.at(12).toInt();
+        presented["override"] = override;
+
+        if(override == 0)
+            presented["override_verbal"] = "off";
+
+        if(override == 1)
+            presented["override_verbal"] = "open";
+
+        if(override == 2)
+            presented["override_verbal"] = "close";
+
+        if(override == 3)
+            presented["override_verbal"] = "manual (read only)";
 
         // Return the presenter data
         return presented;

@@ -173,6 +173,22 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getGasMode";
 
+        // State of backing pump mode
+        if(data.value("data").toString() == "000")
+        {
+            presented.insert("mode", 0);
+            presented.insert("mode_verbal", "molecular mass greater than or equal to 39");
+        }
+        else if(data.value("data").toString() == "001")
+        {
+            presented.insert("mode", 1);
+            presented.insert("mode_verbal", "molecular mass less than 39");
+        }
+        else if(data.value("data").toString() == "002")
+        {
+            presented.insert("mode", 2);
+            presented.insert("mode_verbal", "helium gas only");
+        }
 
         // Return the presenter data
         return presented;
@@ -199,6 +215,27 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getBackingPumpMode";
 
+        // State of backing pump mode
+        if(data.value("data").toString() == "000")
+        {
+            presented.insert("mode", 0);
+            presented.insert("mode_verbal", "continuous");
+        }
+        else if(data.value("data").toString() == "001")
+        {
+            presented.insert("mode", 1);
+            presented.insert("mode_verbal", "intermittent");
+        }
+        else if(data.value("data").toString() == "002")
+        {
+            presented.insert("mode", 2);
+            presented.insert("mode_verbal", "delayed");
+        }
+        else if(data.value("data").toString() == "003")
+        {
+            presented.insert("mode", 3);
+            presented.insert("mode_verbal", "delayed + intermittent");
+        }
 
         // Return the presenter data
         return presented;

@@ -374,7 +374,8 @@ namespace App { namespace Hardware { namespace HAL
         QStringList data;
 
         // Send the package
-        send(m_command.value("controller").toString(), "215", data);
+        //send(m_command.value("controller").toString(), "215", data);
+        send(m_command.value("controller").toString(), "235", data);
     }
 
 

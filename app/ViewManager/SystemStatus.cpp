@@ -66,19 +66,30 @@ namespace App { namespace ViewManager
         // Connect object signals to hardware slots and visa versa
         connect(this, &SystemStatus::emit_hardwareRequest, &hardware, &Hardware::Access::hardwareAccess);
 
+
+
         // Labjack statuses
         connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &SystemStatus::receiveValveStatus);
         connect(&hardware, &Hardware::Access::emit_readAnaloguePort, this, &SystemStatus::receiveVacuumPressure);
 
+
+
         // Pressure sensor
         m_pressureSensor.insert("vacuum", 0);
         connect(&hardware, &Hardware::Access::emit_pressureSensorPressure, this, &SystemStatus::receivePressureSensorPressure);
+
+
 
         // Vacuum status
         connect(&hardware, &Hardware::Access::emit_setPumpingState, this, &SystemStatus::receiveVacSetPump);
         connect(&hardware, &Hardware::Access::emit_setTurboPumpState, this, &SystemStatus::receiveVacSetTurbo);
         connect(&hardware, &Hardware::Access::emit_setGasMode, this, &SystemStatus::receiveVacSetGasMode);
         connect(&hardware, &Hardware::Access::emit_setBackingPumpMode, this, &SystemStatus::receiveVacSetPumpMode);
+
+        connect(&hardware, &Hardware::Access::emit_getGasMode, this, &SystemStatus::receiveVacSetGasMode);
+        connect(&hardware, &Hardware::Access::emit_getBackingPumpMode, this, &SystemStatus::receiveVacSetPumpMode);
+
+
 
         // Flow controller statuses
         connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &SystemStatus::receiveSetFlowControllerValveOverride);
@@ -87,22 +98,40 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStartTime, this, &SystemStatus::receiveSetFlowControllerSoftStartTime);
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSourceControl, this, &SystemStatus::receiveSetFlowControllerSourceControl);
 
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerValveOverride, this, &SystemStatus::receiveSetFlowControllerValveOverride);
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerSetFlowRate, this, &SystemStatus::receiveSetFlowControllerFlowRate);
+
+
+
+
+        // Ensure lab jack configured
+        emit emit_hardwareRequest(m_commandConstructor.setLabJackConfig(0,0,0,0,0,0,0,0,0,0,0,0));
         // Get current values for pressure and vacuum
         emit emit_hardwareRequest(m_commandConstructor.getPressureReading(1));
-        emit emit_hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings.hardware.vacuum_guage.value("connection").toString(),
-                                                                     m_settings.hardware.vacuum_guage.value("slope").toDouble(),
-                                                                     m_settings.hardware.vacuum_guage.value("offset").toDouble()));
+        emit emit_hardwareRequest(m_commandConstructor.getVacuumPressure(   m_settings.hardware.vacuum_guage.value("connection").toString(),
+                                                                            m_settings.hardware.vacuum_guage.value("slope").toDouble(),
+                                                                            m_settings.hardware.vacuum_guage.value("offset").toDouble()));
         // Ensure all valves are closed
         for(int i=1; i<=9; i++)
             emit emit_hardwareRequest(m_commandConstructor.setValveState(m_settings.hardware.valve_connections.value(QString::number(i)).toString(), false));
 
+
+
+        // Disable turbo and backing pump
+        emit emit_hardwareRequest(m_commandConstructor.setBackingPump(false));
+        emit emit_hardwareRequest(m_commandConstructor.setTurboPump(false));
         // Get the currently backing pump and gas type mode from vac station
+        emit emit_hardwareRequest(m_commandConstructor.getGasMode());
+        emit emit_hardwareRequest(m_commandConstructor.getBackingPumpMode());
 
 
-        // Get the flow controllers override values
 
-        // Get the flow controllers flow rates
 
+        // Ensure the flow controller are set to closed
+        emit emit_hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerOne", 2));
+        emit emit_hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerTwo", 2));
+        // Get the flow controllers set flow rates
+        emit emit_hardwareRequest(m_commandConstructor.getSetFlowControllerFlowRate("FlowControllerOne"));
         // Get the flow controllers soft start enabled / disabled
 
         // Get the flow controllers soft start times
@@ -265,6 +294,7 @@ namespace App { namespace ViewManager
 
     void SystemStatus::receiveSetFlowControllerFlowRate(QVariantMap command)
     {
+        qDebug() << command;
         // Select controller
         if(command["controller"] == "FlowControllerOne")
         {

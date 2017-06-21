@@ -16,12 +16,6 @@ Item
 
     width: parent.width-10
 
-    // Hold the select value for backing pump mode
-    property int backingPumpModeState: SystemStatusManager.vacuumState["backing_pump_mode"]
-
-    // Hold the select value for gas type mode
-    property int gasTypeModeState: SystemStatusManager.vacuumState["gas_type_mode"]
-
     /**
      * Turn pump and turbo on and off
      */
@@ -142,7 +136,7 @@ Item
         Row
         {
             spacing: 2
-
+            width: parent.width
             ButtonGroup
             {
                 id: pumpModeTypeGroup
@@ -155,7 +149,8 @@ Item
                     text: qsTr("Continuous")
                     ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
-                        backingPumpModeState = 0;
+                        // Set vac pump
+                        TestingManager.requestBackingPumpMode(0);
                     }
                 }
                 RadioButton {
@@ -163,7 +158,8 @@ Item
                     text: qsTr("Intermittent")
                     ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
-                        backingPumpModeState = 1;
+                        // Set vac pump
+                        TestingManager.requestBackingPumpMode(1);
                     }
                 }
             }
@@ -174,7 +170,8 @@ Item
                     text: qsTr("Delayed")
                     ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
-                        backingPumpModeState = 2;
+                        // Set vac pump
+                        TestingManager.requestBackingPumpMode(2);
                     }
                 }
                 RadioButton {
@@ -182,21 +179,9 @@ Item
                     text: qsTr("Delayed + Intermittent")
                     ButtonGroup.group: pumpModeTypeGroup
                     onClicked: {
-                        backingPumpModeState = 3;
+                        // Set vac pump
+                        TestingManager.requestBackingPumpMode(3);
                     }
-                }
-            }
-            Button
-            {
-                id: backingPumpModeMode
-                text: "Set Backing Pump Mode"
-                anchors.bottom: parent.bottom
-                Material.background: Material.color(Material.Blue, Material.Shade500)
-                Material.foreground: Material.color(Material.Grey, Material.Shade100)
-                onClicked:
-                {
-                   // Set vac pump
-                   TestingManager.requestBackingPumpMode(backingPumpModeState);
                 }
             }
         }
@@ -235,7 +220,8 @@ Item
                     text: qsTr("Molecular mass great than or equal to 39 (E.g Argon)")
                     ButtonGroup.group: gasModesGroup
                     onClicked: {
-                        gasTypeModeState = 0;
+                        // Set vac pump
+                        TestingManager.requestGasMode(0);
                     }
                 }
                 RadioButton {
@@ -243,7 +229,8 @@ Item
                     text: qsTr("Molecular mass less than 39 (E.g Methane)")
                     ButtonGroup.group: gasModesGroup
                     onClicked: {
-                        gasTypeModeState = 1;
+                        // Set vac pump
+                        TestingManager.requestGasMode(1);
                     }
                 }
                 RadioButton {
@@ -251,18 +238,8 @@ Item
                     text: qsTr("Helium Gas")
                     ButtonGroup.group: gasModesGroup
                     onClicked: {
-                        gasTypeModeState = 2;
-                    }
-                }
-                Button
-                {
-                    text: "Set Gas Type"
-                    Material.background: Material.color(Material.Blue, Material.Shade500)
-                    Material.foreground: Material.color(Material.Grey, Material.Shade100)
-                    onClicked:
-                    {
-                       // Set vac pump
-                       TestingManager.requestGasMode(gasTypeModeState);
+                        // Set vac pump
+                        TestingManager.requestGasMode(2);
                     }
                 }
             }

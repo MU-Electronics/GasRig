@@ -198,10 +198,7 @@ namespace App { namespace Hardware
         QVariantMap command;
         command.insert("hardware", "FlowController");
         command.insert("controller", controller);
-        command.insert("method", "");
-
-
-
+        command.insert("method", "getSetFlowRate");
 
         // Return the package
         return command;
@@ -213,10 +210,7 @@ namespace App { namespace Hardware
         QVariantMap command;
         command.insert("hardware", "FlowController");
         command.insert("controller", controller);
-        command.insert("method", "");
-
-
-
+        command.insert("method", "getValveOverride");
 
         // Return the package
         return command;
@@ -309,9 +303,7 @@ namespace App { namespace Hardware
         // Create command for HAL
         QVariantMap command;
         command.insert("hardware", "VacStation");
-        command.insert("method", "");
-
-
+        command.insert("method", "getGasMode");
 
         // Return the package
         return command;
@@ -322,9 +314,7 @@ namespace App { namespace Hardware
         // Create command for HAL
         QVariantMap command;
         command.insert("hardware", "VacStation");
-        command.insert("method", "");
-
-
+        command.insert("method", "getBackingPumpMode");
 
         // Return the package
         return command;
@@ -335,9 +325,7 @@ namespace App { namespace Hardware
         // Create command for HAL
         QVariantMap command;
         command.insert("hardware", "VacStation");
-        command.insert("method", "");
-
-
+        command.insert("method", "getTurboPumpState");
 
         // Return the package
         return command;
@@ -348,9 +336,7 @@ namespace App { namespace Hardware
         // Create command for HAL
         QVariantMap command;
         command.insert("hardware", "VacStation");
-        command.insert("method", "");
-
-
+        command.insert("method", "getPumpingState");
 
         // Return the package
         return command;
