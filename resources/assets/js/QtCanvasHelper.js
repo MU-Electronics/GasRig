@@ -175,7 +175,7 @@ function pressureSensor(ctx, windowWidth, pressure)
     ctx.font = 'bold 15pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = colorText;
-    ctx.fillText(parseFloat(pressure).toFixed(4), x+55, y+45);
+    ctx.fillText(parseFloat(pressure).toFixed(4)+" Bar", x+55, y+45);
 
 
     ctx.closePath();
@@ -438,7 +438,7 @@ function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gas
     ctx.fillText("Turbo: "+(turbo ? 'enabled' : 'disabled'), x+70, y+45);
 
     // Vacuum pressure
-    ctx.fillText("Vacuum: "+vacuumPressure, x+70, y+65);
+    ctx.fillText("Vacuum: "+vacuumPressure.toExponential(3)+" mBar", x+70, y+65);
 
     // Gas mode
     var mode;
@@ -508,7 +508,7 @@ function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverri
     ctx.fillText("Set: " + setFlowRate + "ml/min", x+70, y+65);
 
     // Soft start state
-    ctx.fillText("Soft Start: " + (softStart ? 'enabled' : 'disabled'), x+70, y+95);
+    ctx.fillText("Soft Start: " + (softStart === 4 ? 'enabled' : 'disabled'), x+70, y+95);
 
     // Soft start time
     ctx.fillText("Soft Start time: " + softStartTime + "s", x+70, y+115);

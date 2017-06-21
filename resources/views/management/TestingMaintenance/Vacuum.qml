@@ -23,7 +23,7 @@ Item
     property int gasTypeModeState: SystemStatusManager.vacuumState["gas_type_mode"]
 
     /**
-     * Set the backing pump mode
+     * Turn pump and turbo on and off
      */
     FluidControls.Card
     {
@@ -89,6 +89,40 @@ Item
         }
     }
 
+    /**
+     * Turn pump and turbo on and off
+     */
+    FluidControls.Card
+    {
+        id: readPressureReading
+
+        anchors.top: pumpControl.bottom
+        anchors.topMargin: 25
+
+        width: parent.width-10
+
+        height: 60
+
+        padding: 5
+
+        Row
+        {
+            spacing: 10
+
+            Button
+            {
+                id: getVacuum
+                text: "Get Vacuum"
+                onClicked:
+                {
+                    // Set vac pump
+                    TestingManager.requestVacuumPressure();
+                }
+            }
+        }
+
+    }
+
 
 
     /**
@@ -98,7 +132,7 @@ Item
     {
         id: backPumpMode
 
-        anchors.top: pumpControl.bottom
+        anchors.top: readPressureReading.bottom
         anchors.topMargin: 25
 
         width: parent.width-10

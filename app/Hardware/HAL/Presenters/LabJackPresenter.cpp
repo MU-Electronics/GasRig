@@ -135,6 +135,8 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_readPortDirection";
 
+        qDebug() << package;
+
         // Return the presenter data
         return presented;
     }
@@ -154,6 +156,8 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_readDigitalPort";
 
+        qDebug() << package;
+
         // Return the presenter data
         return presented;
     }
@@ -172,6 +176,21 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_readAnaloguePort";
+
+        // Which signal should be triggered by the access thread
+        presented["port"] = commands["port"];
+
+        // Get the voltage in digital form
+        unsigned short bytes = package.at(9).toInt() + (package.at(10).toInt()*256);
+        double voltage = (double) bytes;
+
+        // Find cal voltage
+        double slope = 	commands["slope"].toDouble();
+        double offset = commands["offset"].toDouble();
+        double voltageCalibrated = ( slope * voltage ) + offset;
+
+        // Save the calibrated voltage
+        presented["calibrated"] = voltageCalibrated;
 
         // Return the presenter data
         return presented;

@@ -28,6 +28,9 @@ namespace App { namespace Settings
         // Store valve connections
         valve_connections = rootMap["valve_connections"].toMap();
 
+        // Store valve connections
+        vacuum_guage = rootMap["vacuum_guage"].toMap();
+
         // Store absolute maxmiums
         absoulte_maximums = rootMap["absoulte_maximums"].toMap();
 

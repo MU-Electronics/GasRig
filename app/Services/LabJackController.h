@@ -67,7 +67,6 @@ namespace App { namespace Services
         void emit_critialLabJackError(QVariantMap errorPackage);
         void emit_comConnectionStatus(QVariantMap package);
         void emit_timeoutLabJackError(QVariantMap errorPackage);
-        void emit_labJackData(QString responable, QString m_method, QStringList halData);
 
     };
 

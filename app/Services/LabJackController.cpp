@@ -250,7 +250,7 @@ namespace App { namespace Services
             returnedData = read(receivedBytes);
 
             // Check the check sum if it is return with empty responce
-            if(!validate(type, returnedData))
+            if(returnedData.isEmpty() || !validate(type, returnedData))
             {
                 // Print debug message
                 qDebug() << "There was a problem with the check sum validation for the LabJack. Sent Package:" << package << "; Returned Package: " << returnedData;
@@ -266,9 +266,6 @@ namespace App { namespace Services
         {
             return returnedData;
         }
-
-        // Tell the applcation about the data
-        emit_labJackData(m_responsability, m_method, data);
 
         // Return the data
         return returnedData;
@@ -523,6 +520,15 @@ namespace App { namespace Services
 
             // There are only 2 DACs
             if(port == 0 || port == 1)
+                return port;
+        }
+        else if(name.mid(0,3) == "AIN")
+        {
+            // Get port name
+            port = name.mid(3,name.size()).toInt();
+
+            // Ensure with allowed range
+            if(port >= 0 && port <= 7)
                 return port;
         }
 

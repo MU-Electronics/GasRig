@@ -55,6 +55,11 @@
         "8": "EIO7",
         "9": "CIO0"
     },
+    "vacuum_guage":{
+        "connection": "AIN0",
+        "slope": "3.1400E-4",
+        "offset": "-10.3"
+    },
     "absoulte_maximums": {
         "pressure": "90",
         "value_timing": "0.2",

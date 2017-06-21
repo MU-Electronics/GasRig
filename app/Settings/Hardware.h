@@ -17,6 +17,7 @@ namespace App { namespace Settings{
         QVariantMap valve_connections;
         QVariantMap absoulte_maximums;
         QVariantMap polling_times;
+        QVariantMap vacuum_guage;
 
         void read(const QJsonObject &json);
         void write(QJsonObject &json) const;

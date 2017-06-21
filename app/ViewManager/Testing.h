@@ -16,12 +16,14 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
+// Include command constructor
+#include "../Hardware/CommandConstructor.h"
+
 namespace App { namespace ViewManager
 {
     class Testing : public QObject, public App::ViewManager::Manager
     {
         Q_OBJECT
-        AUTO_PROPERTY (QString, exampleVar)
 
         public:
             Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
@@ -77,7 +79,12 @@ namespace App { namespace ViewManager
 
         private:
             QQmlApplicationEngine* m_root;
+
+            // Holds the settings container
             Settings::Container m_settings;
+
+            // Hold instance of command constructor
+            Hardware::CommandConstructor m_commandConstructor;
 
     };
 }}

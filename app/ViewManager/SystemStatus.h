@@ -21,6 +21,9 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
+// Include command constructor
+#include "../Hardware/CommandConstructor.h"
+
 namespace App { namespace ViewManager
 {
 
@@ -60,6 +63,8 @@ namespace App { namespace ViewManager
             QVariantMap pressureSensor() const { return m_pressureSensor; }
 
         signals:
+            void emit_hardwareRequest(QVariantMap command);
+
             void emit_valveStateChanged(QVariantMap);
             void emit_vacuumStateChanged(QVariantMap);
             void emit_flowControllerStateChanged(QVariantMap);
@@ -84,12 +89,16 @@ namespace App { namespace ViewManager
             void receiveVacSetTurbo(QVariantMap command);
             void receiveVacSetGasMode(QVariantMap command);
             void receiveVacSetPumpMode(QVariantMap command);
+            void receiveVacuumPressure(QVariantMap command);
 
         private:
             QQmlApplicationEngine* m_root;
 
             // Holds the application settings
             Settings::Container m_settings;
+
+            // Hold instance of command constructor
+            Hardware::CommandConstructor m_commandConstructor;
 
             // Holds the valve statuses for all the valves
             QVariantMap m_valveState;

@@ -113,7 +113,8 @@ namespace App { namespace Hardware { namespace HAL
         QStringList data = sendReceivePackage("config", stringPackage, 12);
 
         // Emit the data to the resest of the application
-        emit emit_labJackData(m_responsability, m_method, m_command, data);
+        if(!data.isEmpty())
+            emit emit_labJackData(m_responsability, m_method, m_command, data);
      }
 
 
@@ -156,7 +157,8 @@ namespace App { namespace Hardware { namespace HAL
         QStringList data = sendReceivePackage("feedback", stringPackage, 9);
 
         // Emit the data to the resest of the application
-        emit emit_labJackData(m_responsability, m_method, m_command, data);
+        if(!data.isEmpty())
+            emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 
@@ -194,7 +196,8 @@ namespace App { namespace Hardware { namespace HAL
         QStringList data = sendReceivePackage("feedback", stringPackage, 9);
 
         // Emit the data to the resest of the application
-        emit emit_labJackData(m_responsability, m_method, m_command, data);
+        if(!data.isEmpty())
+            emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 
@@ -223,7 +226,8 @@ namespace App { namespace Hardware { namespace HAL
         QStringList data = sendReceivePackage("feedback", stringPackage, 10);
 
         // Emit the data to the resest of the application
-        emit emit_labJackData(m_responsability, m_method, m_command, data);
+        if(!data.isEmpty())
+            emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 
@@ -255,7 +259,8 @@ namespace App { namespace Hardware { namespace HAL
         QStringList data = sendReceivePackage("feedback", stringPackage, 10);
 
         // Emit the data to the resest of the application
-        emit emit_labJackData(m_responsability, m_method, m_command, data);
+        if(!data.isEmpty())
+            emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 
@@ -304,7 +309,8 @@ namespace App { namespace Hardware { namespace HAL
         QStringList data = sendReceivePackage("feedback", stringPackage, 11);
 
         // Emit the data to the resest of the application
-        emit emit_labJackData(m_responsability, m_method, m_command, data);
+        if(!data.isEmpty())
+            emit emit_labJackData(m_responsability, m_method, m_command, data);
     }
 
 }}}

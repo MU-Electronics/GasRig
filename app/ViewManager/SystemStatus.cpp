@@ -1,4 +1,7 @@
 #include "SystemStatus.h"
+
+#include <cmath>
+
 #include <QVariantMap>
 #include <QString>
 #include <QtGlobal>
@@ -10,12 +13,16 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
+// Include command constructor
+#include "../Hardware/CommandConstructor.h"
+
 namespace App { namespace ViewManager
 {
     SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings)
         : QObject(parent),
           m_root(root),
-          m_settings(settings)
+          m_settings(settings),
+          m_commandConstructor(*new Hardware::CommandConstructor)
     {
         // Default valves values
         m_valveState.insert("1", 0);
@@ -36,7 +43,7 @@ namespace App { namespace ViewManager
         m_vacuumState.insert("turbo_pump", 0);
         m_vacuumState.insert("backing_pump_mode", 0);
         m_vacuumState.insert("gas_type_mode", 1);
-        m_vacuumState.insert("vacuum", 250.356);
+        m_vacuumState.insert("vacuum", 0);
 
         // Default flow controller values
         m_flowController.insert("controller_1_set_flowrate", 0);
@@ -56,9 +63,12 @@ namespace App { namespace ViewManager
 
     void SystemStatus::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
     {
+        // Connect object signals to hardware slots and visa versa
+        connect(this, &SystemStatus::emit_hardwareRequest, &hardware, &Hardware::Access::hardwareAccess);
+
         // Labjack statuses
         connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &SystemStatus::receiveValveStatus);
-        //connect(&hardware, &Hardware::Access::emit_setAnaloguePort, this, &ConnectionStatus::receiveVacuumReading);
+        connect(&hardware, &Hardware::Access::emit_readAnaloguePort, this, &SystemStatus::receiveVacuumPressure);
 
         // Pressure sensor
         m_pressureSensor.insert("vacuum", 0);
@@ -77,6 +87,25 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStartTime, this, &SystemStatus::receiveSetFlowControllerSoftStartTime);
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSourceControl, this, &SystemStatus::receiveSetFlowControllerSourceControl);
 
+        // Get current values for pressure and vacuum
+        emit emit_hardwareRequest(m_commandConstructor.getPressureReading(1));
+        emit emit_hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings.hardware.vacuum_guage.value("connection").toString(),
+                                                                     m_settings.hardware.vacuum_guage.value("slope").toDouble(),
+                                                                     m_settings.hardware.vacuum_guage.value("offset").toDouble()));
+        // Ensure all valves are closed
+        for(int i=1; i<=9; i++)
+            emit emit_hardwareRequest(m_commandConstructor.setValveState(m_settings.hardware.valve_connections.value(QString::number(i)).toString(), false));
+
+        // Get the currently backing pump and gas type mode from vac station
+
+
+        // Get the flow controllers override values
+
+        // Get the flow controllers flow rates
+
+        // Get the flow controllers soft start enabled / disabled
+
+        // Get the flow controllers soft start times
     }
 
 
@@ -130,9 +159,9 @@ namespace App { namespace ViewManager
 
 
     /**
-     * Debug method for setting gas mode
+     * Sets the gas mode varaible and informs views
      *
-     * @brief ConnectionStatus::receiveVacSetGasMode
+     * @brief SystemStatus::receiveVacSetGasMode
      * @param command
      */
     void SystemStatus::receiveVacSetGasMode(QVariantMap command)
@@ -145,9 +174,9 @@ namespace App { namespace ViewManager
     }
 
     /**
-     * Debug method for setting gas mode
+     * Sets the pump mode variable and informs views
      *
-     * @brief ConnectionStatus::receiveVacSetGasMode
+     * @brief SystemStatus::receiveVacSetPumpMode
      * @param command
      */
     void SystemStatus::receiveVacSetPumpMode(QVariantMap command)
@@ -160,9 +189,9 @@ namespace App { namespace ViewManager
     }
 
     /**
-     * Debug method for setting gas mode
+     * Setsn the pumping state variable and informs views
      *
-     * @brief ConnectionStatus::receiveVacSetGasMode
+     * @brief SystemStatus::receiveVacSetPump
      * @param command
      */
     void SystemStatus::receiveVacSetPump(QVariantMap command)
@@ -175,9 +204,9 @@ namespace App { namespace ViewManager
     }
 
     /**
-     * Debug method for setting gas mode
+     * Sets the turbo state variable and informs views
      *
-     * @brief ConnectionStatus::receiveVacSetGasMode
+     * @brief SystemStatus::receiveVacSetTurbo
      * @param command
      */
     void SystemStatus::receiveVacSetTurbo(QVariantMap command)
@@ -187,6 +216,26 @@ namespace App { namespace ViewManager
 
         // Update the display
         emit_vacuumStateChanged(m_vacuumState);
+    }
+
+    /**
+     * Sets the vacuum pressure variable and informs views
+     *
+     * @brief SystemStatus::receiveVacuumPressure
+     * @param command
+     */
+    void SystemStatus::receiveVacuumPressure(QVariantMap command)
+    {
+        // If port is the same as the vacuum guage port
+        if(command["port"] == m_settings.hardware.vacuum_guage.value("connection").toString())
+        {
+            // Update vacuum reading
+            double pressure = (std::pow(10, (1.667*command.value("calibrated").toDouble()-9.333)))/100;
+            m_vacuumState["vacuum"] = pressure;
+
+            // Update the display
+            emit_vacuumStateChanged(m_vacuumState);
+        }
     }
 
 

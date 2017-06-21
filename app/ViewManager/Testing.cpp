@@ -1,5 +1,7 @@
 #include "Testing.h"
 
+#include <cmath>
+
 #include <QObject>
 #include <QDebug>
 #include <QVariantMap>
@@ -12,14 +14,18 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
+// Include command constructor
+#include "../Hardware/CommandConstructor.h"
+
 namespace App { namespace ViewManager
 {
     Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings)
         : QObject(parent),
           m_root(root),
-          m_settings(settings)
+          m_settings(settings),
+          m_commandConstructor(*new Hardware::CommandConstructor)
     {
-        exampleVar("Hello from C++");
+
     }
 
 
@@ -42,7 +48,7 @@ namespace App { namespace ViewManager
         // Connect incomming signals to actions for the LabJack
         connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &Testing::receiveValveStatus);
         connect(&hardware, &Hardware::Access::emit_configureIO, this, &Testing::receiveLabJackConfig);
-        connect(&hardware, &Hardware::Access::emit_setAnaloguePort, this, &Testing::receiveVacuumReading);
+        connect(&hardware, &Hardware::Access::emit_readAnaloguePort, this, &Testing::receiveVacuumReading);
 
         // Connect incomming signals to actions for the flow controllers
         connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &Testing::receiveFlowControllerValveOverride);
@@ -197,7 +203,7 @@ namespace App { namespace ViewManager
     /**
      * Debug method for setting gas mode
      *
-     * @brief Testing::receiveVacSetGasMode
+     * @brief Testing::receiveVacSetPump
      * @param command
      */
     void Testing::receiveVacSetPump(QVariantMap command)
@@ -208,7 +214,7 @@ namespace App { namespace ViewManager
     /**
      * Debug method for setting gas mode
      *
-     * @brief Testing::receiveVacSetGasMode
+     * @brief Testing::receiveVacSetTurbo
      * @param command
      */
     void Testing::receiveVacSetTurbo(QVariantMap command)
@@ -264,12 +270,17 @@ namespace App { namespace ViewManager
     /**
      * Debug method for reading the vacuum sensor
      *
-     * @brief Testing::receiveVacSetGasMode
+     * @brief Testing::receiveVacuumReading
      * @param command
      */
     void Testing::receiveVacuumReading(QVariantMap command)
     {
-        emit emit_testingMaintenanceReply("The LabJack config is: "/* + command.value("state_verbal").toString()*/);
+        // If port is the same as the vacuum guage port
+        if(command["port"] == m_settings.hardware.vacuum_guage.value("connection").toString())
+        {
+            double pressure = (std::pow(10, (1.667*command.value("calibrated").toDouble()-9.333)))/100;
+            emit emit_testingMaintenanceReply("Vacuum pressure is: " + QString::number(pressure));
+        }
     }
 
 
@@ -292,14 +303,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestBackingPump(bool onOff)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "VacStation");
-        command.insert("method", "setPumpingState");
-        command.insert("state", onOff);
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setBackingPump(onOff));
     }
 
     /**
@@ -310,14 +315,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestTurboPump(bool onOff)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "VacStation");
-        command.insert("method", "setTurboPumpState");
-        command.insert("state", onOff);
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setTurboPump(onOff));
     }
 
     /**
@@ -328,14 +327,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestBackingPumpMode(int mode)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "VacStation");
-        command.insert("method", "setBackingPumpMode");
-        command.insert("mode", mode);
-
-        // Emit siganl to HAL
-        emit hardwareRequest(command);
+       // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.setBackingPumpMode(mode));
     }
 
     /**
@@ -346,14 +339,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestGasMode(int mode)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "VacStation");
-        command.insert("method", "setGasMode");
-        command.insert("mode", mode);
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setGasMode(mode));
     }
 
 
@@ -376,14 +363,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestPressureConfirmation()
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "PressureSensor");
-        command.insert("method", "confirmInit");
-        command.insert("channel", "1");
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.pressureConfirmation());
     }
 
     /**
@@ -393,14 +374,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestPressureReading()
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "PressureSensor");
-        command.insert("method", "readPressure");
-        command.insert("channel", "1");
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.getPressureReading(1));
     }
 
     /**
@@ -410,13 +385,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestPressureSerialNumber()
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "PressureSensor");
-        command.insert("method", "readSerialNumber");
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.getPressureSerialNumber());
     }
 
 
@@ -440,27 +410,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestLabJackConfig()
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "LabJack");
-        command.insert("method", "configureIO");
-
-        // Config for gas rig
-        command.insert("FIO7", 0);
-        command.insert("FIO6", 0);
-        command.insert("FIO5", 0);
-        command.insert("FIO4", 0);
-        command.insert("EIO7", 0);
-        command.insert("EIO6", 0);
-        command.insert("EIO5", 0);
-        command.insert("EIO4", 0);
-        command.insert("EIO3", 0);
-        command.insert("EIO2", 0);
-        command.insert("EIO1", 0);
-        command.insert("EIO0", 0);
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setLabJackConfig(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
     }
 
 
@@ -474,15 +425,8 @@ namespace App { namespace ViewManager
         // Find the correct valve name
         QString valveName = m_settings.hardware.valve_connections.value(QString::number(port)).toString();
 
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "LabJack");
-        command.insert("method", "setDigitalPort");
-        command.insert("port", valveName);
-        command.insert("value", state);
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setValveState(valveName, state));
     }
 
 
@@ -494,14 +438,10 @@ namespace App { namespace ViewManager
      */
     void Testing::requestVacuumPressure()
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "LabJack");
-        command.insert("method", "readAnaloguePort");
-        command.insert("port", "AIN0");
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings.hardware.vacuum_guage.value("connection").toString(),
+                                                                     m_settings.hardware.vacuum_guage.value("slope").toDouble(),
+                                                                     m_settings.hardware.vacuum_guage.value("offset").toDouble()));
     }
 
 
@@ -525,19 +465,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerValveOverride(QString controller, int state)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "FlowController");
-        command.insert("controller", controller);
-        command.insert("method", "setValveOverride");
-
-        // Set the state of the overrie
-        command.insert("state", QString::number(state));
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setFlowControllerValveOverride(controller, state));
     }
-
 
     /**
      * Request flow rate
@@ -546,20 +476,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerFlowRate(QString controller, int flowrate)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "FlowController");
-        command.insert("controller", controller);
-        command.insert("method", "setFlowRate");
-
-        // Set relative to the flow unit
-        command.insert("unit", "250");
-
-        // Set the flow rate
-        command.insert("rate", QString::number(flowrate));
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setFlowControllerFlowRate(controller, flowrate));
     }
 
     /**
@@ -569,24 +487,8 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerSoftStart(QString controller, int state)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "FlowController");
-        command.insert("controller", controller);
-        command.insert("method", "setSoftStart");
-
-        // Enabled / disabled
-        if(state == 4)
-        {
-            command.insert("type", "4");
-        }
-        else
-        {
-            command.insert("type", "1");
-        }
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setFlowControllerSoftStart(controller, state));
     }
 
     /**
@@ -596,33 +498,15 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerSoftStartTime(QString controller, int seconds)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "FlowController");
-        command.insert("controller", controller);
-        command.insert("method", "setSoftStartTime");
-
-        // Set number of seconds
-        command.insert("seconds", QString::number(seconds));
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setFlowControllerSoftStartTime(controller, seconds));
     }
 
 
     void Testing::requestSetFlowControllerSourceControl(QString controller, int source)
     {
-        // Create command for HAL
-        QVariantMap command;
-        command.insert("hardware", "FlowController");
-        command.insert("controller", controller);
-        command.insert("method", "setSourceControll");
-
-        // Set number of seconds
-        command.insert("source", QString::number(source));
-
         // Emit siganl to HAL
-        emit hardwareRequest(command);
+        emit hardwareRequest(m_commandConstructor.setFlowControllerSourceControl(controller, source));
     }
 
 }}
