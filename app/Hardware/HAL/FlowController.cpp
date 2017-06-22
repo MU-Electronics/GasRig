@@ -339,6 +339,57 @@ namespace App { namespace Hardware { namespace HAL
         write(package);
     }
 
+    /**
+     * Request the source control
+     *
+     * @brief FlowController::getSourceControl
+     */
+    void FlowController::getSourceControl()
+    {
+        // Set the method
+        m_method = "getSourceControl";
+
+        // No data needs to be sent for this request
+        QStringList data;
+
+        // Send the package
+        send(m_command.value("controller").toString(), "215", data);
+    }
+
+    /**
+     * Requests the soft start status
+     *
+     * @brief FlowController::getSoftStart
+     */
+    void FlowController::getSoftStart()
+    {
+        // Set the method
+        m_method = "getSoftStart";
+
+        // No data needs to be sent for this request
+        QStringList data;
+
+        // Send the package
+        send(m_command.value("controller").toString(), "215", data);
+    }
+
+    /**
+     * Request the soft start time ramp value
+     *
+     * @brief FlowController::getSoftStartTime
+     */
+    void FlowController::getSoftStartTime()
+    {
+        // Set the method
+        m_method = "getSoftStartTime";
+
+        // No data needs to be sent for this request
+        QStringList data;
+
+        // Send the package
+        send(m_command.value("controller").toString(), "215", data);
+    }
+
 
     /**
      * Get the current flow rate for the controller
@@ -515,7 +566,7 @@ namespace App { namespace Hardware { namespace HAL
      * @brief FlowController::setSoftStart
      * @param controller the referance to the registered controller
      * @param type code for the wanted option
-     *                  1 = off
+     *                  0 = off
      *                  4 = linear up and down
      */
     void FlowController::setSoftStart()

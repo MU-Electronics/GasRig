@@ -487,6 +487,7 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerSoftStart(QString controller, int state)
     {
+        qDebug() << state;
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setFlowControllerSoftStart(controller, state));
     }

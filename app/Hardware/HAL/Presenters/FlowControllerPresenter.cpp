@@ -25,12 +25,24 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap FlowControllerPresenter::proccess(QString method, QVariantMap commands, QStringList package)
     {
+
         // Select the correct presenter
         if(method == "getIdentifier")
         {
             return getIdentifier(commands, package);
         }
-        else if (method == "getFlowRate")
+        else if (method == "getSourceControl")
+        {
+            return getSourceControl(commands, package);
+        }
+        else if (method == "getSoftStart")
+        {
+            return getSoftStart(commands, package);
+        }
+        else if (method == "getSoftStartTime")
+        {
+            return getSoftStartTime(commands, package);
+        }else if (method == "getFlowRate")
         {
             return getFlowRate(commands, package);
         }
@@ -107,6 +119,120 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         qDebug() << package;
 
+
+
+
+
+
+
+        // Return the presenter data
+        return presented;
+    }
+
+
+    /**
+     *
+     *
+     * @brief FlowControllerPresenter::getSourceControl
+     * @param commands
+     * @param package
+     * @return
+     */
+    QVariantMap FlowControllerPresenter::getSourceControl(QVariantMap commands, QStringList package)
+    {
+        // Prep package
+        parse(package);
+
+        // Container for returned data
+        QVariantMap presented;
+
+        // Which signal should be triggered by the access thread
+        presented["method"] = "emit_getFlowControllerSourceControl";
+
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
+        // Convert float to bytes
+        presented["source"] = package.at(12).toInt();
+
+        // Return the presenter data
+        return presented;
+    }
+
+
+    /**
+     *
+     *
+     * @brief FlowControllerPresenter::getSoftStart
+     * @param commands
+     * @param package
+     * @return
+     */
+    QVariantMap FlowControllerPresenter::getSoftStart(QVariantMap commands, QStringList package)
+    {
+        // Prep package
+        parse(package);
+
+        // Container for returned data
+        QVariantMap presented;
+
+        // Which signal should be triggered by the access thread
+        presented["method"] = "emit_getFlowControllerSoftStart";
+
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
+        // Set the flow rate bytes
+        FourByteFloatConvertion.buf[0] = package.at(25).toInt(); // MSB
+        FourByteFloatConvertion.buf[1] = package.at(24).toInt();
+        FourByteFloatConvertion.buf[2] = package.at(23).toInt();
+        FourByteFloatConvertion.buf[3] = package.at(22).toInt(); // LSB
+
+        // Convert float to bytes
+        presented["state"] = package.at(21).toInt();
+
+        // Convert float to bytes
+        presented["seconds"] = FourByteFloatConvertion.number;
+
+        // Return the presenter data
+        return presented;
+    }
+
+
+    /**
+     *
+     *
+     * @brief getSoftStartTime
+     * @param commands
+     * @param package
+     * @return
+     */
+    QVariantMap FlowControllerPresenter::getSoftStartTime(QVariantMap commands, QStringList package)
+    {
+        // Prep package
+        parse(package);
+
+        // Container for returned data
+        QVariantMap presented;
+
+        // Which signal should be triggered by the access thread
+        presented["method"] = "emit_getFlowControllerSoftStartTime";
+
+        // Which signal should be triggered by the access thread
+        presented["controller"] = commands["controller"];
+
+        // Set the flow rate bytes
+        FourByteFloatConvertion.buf[0] = package.at(25).toInt(); // MSB
+        FourByteFloatConvertion.buf[1] = package.at(24).toInt();
+        FourByteFloatConvertion.buf[2] = package.at(23).toInt();
+        FourByteFloatConvertion.buf[3] = package.at(22).toInt(); // LSB
+
+        // Convert float to bytes
+        presented["state"] = package.at(21).toInt();
+
+        // Convert float to bytes
+        presented["seconds"] = FourByteFloatConvertion.number;
+
         // Return the presenter data
         return presented;
     }
@@ -136,6 +262,12 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         qDebug() << package;
 
+
+
+
+
+
+
         // Return the presenter data
         return presented;
     }
@@ -162,7 +294,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
-        qDebug() << package;
+
         // Get set flow rate in unit (12)
         FourByteFloatConvertion.buf[0] = package.at(21).toInt(); // LSB
         FourByteFloatConvertion.buf[1] = package.at(20).toInt();
@@ -253,6 +385,11 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         qDebug() << package;
 
+
+
+
+
+
         // Return the presenter data
         return presented;
     }
@@ -291,8 +428,6 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // New source value
         presented["source"] = package.at(12).toInt();
-
-        qDebug() << package;
 
         // Return the presenter data
         return presented;
@@ -477,6 +612,11 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         qDebug() << package;
 
+
+
+
+
+
         // Return the presenter data
         return presented;
     }
@@ -505,6 +645,11 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         presented["controller"] = commands["controller"];
 
         qDebug() << package;
+
+
+
+
+
 
         // Return the presenter data
         return presented;

@@ -27,6 +27,10 @@ Item {
             PropertyChanges { target: container; color: Material.color(Material.Blue, Material.Shade800); border.color: Material.color(Material.Blue, Material.Shade300)}
         },
         State {
+            name: "Success"
+            PropertyChanges { target: container; color: Material.color(Material.Green, Material.Shade800); border.color: Material.color(Material.Green, Material.Shade300)}
+        },
+        State {
             name: "Primary"
             PropertyChanges { target: container; color: Material.color(Material.Grey, Material.Shade800); border.color: Material.color(Material.Grey, Material.Shade300)}
         }

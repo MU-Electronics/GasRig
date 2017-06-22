@@ -111,6 +111,8 @@ namespace App { namespace ViewManager
 
             // Holds the pressure sensor statuses for all values
             QVariantMap m_pressureSensor;
+
+            void setInitialValues();
     };
 }}
 

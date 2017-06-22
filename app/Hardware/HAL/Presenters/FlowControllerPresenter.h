@@ -19,6 +19,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             QVariantMap proccess(QString method, QVariantMap commands, QStringList package);
 
             // Presenters
+            QVariantMap getSoftStart(QVariantMap commands, QStringList package);
+            QVariantMap getSoftStartTime(QVariantMap commands, QStringList package);
+            QVariantMap getSourceControl(QVariantMap commands, QStringList package);
             QVariantMap getIdentifier(QVariantMap commands, QStringList package);
             QVariantMap getFlowRate(QVariantMap commands, QStringList package);
             QVariantMap getSetFlowRate(QVariantMap commands, QStringList package);

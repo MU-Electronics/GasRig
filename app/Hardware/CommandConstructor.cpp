@@ -92,7 +92,7 @@ namespace App { namespace Hardware
         }
         else
         {
-            command.insert("type", "1");
+            command.insert("type", "0");
         }
 
         // Return the package
@@ -144,7 +144,14 @@ namespace App { namespace Hardware
 
     QVariantMap CommandConstructor::getFlowControllerSourceControl(QString controller)
     {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "FlowController");
+        command.insert("controller", controller);
+        command.insert("method", "getSourceControl");
 
+        // Return the package
+        return command;
     }
 
     QVariantMap CommandConstructor::getFlowControllerSoftStartTime(QString controller)
@@ -153,10 +160,7 @@ namespace App { namespace Hardware
         QVariantMap command;
         command.insert("hardware", "FlowController");
         command.insert("controller", controller);
-        command.insert("method", "");
-
-
-
+        command.insert("method", "getSoftStartTime");
 
         // Return the package
         return command;
@@ -168,10 +172,7 @@ namespace App { namespace Hardware
         QVariantMap command;
         command.insert("hardware", "FlowController");
         command.insert("controller", controller);
-        command.insert("method", "");
-
-
-
+        command.insert("method", "getSoftStart");
 
         // Return the package
         return command;
@@ -184,6 +185,7 @@ namespace App { namespace Hardware
         command.insert("hardware", "FlowController");
         command.insert("controller", controller);
         command.insert("method", "");
+
 
 
 

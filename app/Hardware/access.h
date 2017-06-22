@@ -49,6 +49,9 @@ namespace App { namespace Hardware
 
             // Possable signals from the flow controller presenter
             void emit_getFlowControllerIdentifier(QVariantMap command);
+            void emit_getFlowControllerSoftStartTime(QVariantMap command);
+            void emit_getFlowControllerSoftStart(QVariantMap command);
+            void emit_getFlowControllerSourceControl(QVariantMap command);
             void emit_getFlowControllerFlowRate(QVariantMap command);
             void emit_getFlowControllerSetFlowRate(QVariantMap command);
             void emit_getFlowControllerValveOverride(QVariantMap command);

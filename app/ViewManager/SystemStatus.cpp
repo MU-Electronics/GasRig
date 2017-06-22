@@ -5,6 +5,7 @@
 #include <QVariantMap>
 #include <QString>
 #include <QtGlobal>
+#include <QTimer>
 
 // Include settings container
 #include "../Settings/container.h"
@@ -100,14 +101,28 @@ namespace App { namespace ViewManager
 
         connect(&hardware, &Hardware::Access::emit_getFlowControllerValveOverride, this, &SystemStatus::receiveSetFlowControllerValveOverride);
         connect(&hardware, &Hardware::Access::emit_getFlowControllerSetFlowRate, this, &SystemStatus::receiveSetFlowControllerFlowRate);
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerSoftStart, this, &SystemStatus::receiveSetFlowControllerSoftStart);
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerSoftStartTime, this, &SystemStatus::receiveSetFlowControllerSoftStartTime);
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerSourceControl, this, &SystemStatus::receiveSetFlowControllerSourceControl);
 
 
 
 
+
+
+        // Set initial values
+        setInitialValues();
+    }
+
+
+
+
+
+    void SystemStatus::setInitialValues()
+    {
         // Ensure lab jack configured
         emit emit_hardwareRequest(m_commandConstructor.setLabJackConfig(0,0,0,0,0,0,0,0,0,0,0,0));
-        // Get current values for pressure and vacuum
-        emit emit_hardwareRequest(m_commandConstructor.getPressureReading(1));
+        // Get current values for vacuum
         emit emit_hardwareRequest(m_commandConstructor.getVacuumPressure(   m_settings.hardware.vacuum_guage.value("connection").toString(),
                                                                             m_settings.hardware.vacuum_guage.value("slope").toDouble(),
                                                                             m_settings.hardware.vacuum_guage.value("offset").toDouble()));
@@ -127,15 +142,35 @@ namespace App { namespace ViewManager
 
 
 
-        // Ensure the flow controller are set to closed
+        // Ensure the flow controllers are set to closed
         emit emit_hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerOne", 2));
         emit emit_hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerTwo", 2));
         // Get the flow controllers set flow rates
-        emit emit_hardwareRequest(m_commandConstructor.getSetFlowControllerFlowRate("FlowControllerOne"));
+        emit emit_hardwareRequest(m_commandConstructor.setFlowControllerFlowRate("FlowControllerOne", 0));
+        emit emit_hardwareRequest(m_commandConstructor.setFlowControllerFlowRate("FlowControllerTwo", 0));
         // Get the flow controllers soft start enabled / disabled
-
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerSoftStart("FlowControllerOne"));
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerSoftStart("FlowControllerTwo"));
         // Get the flow controllers soft start times
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerSoftStartTime("FlowControllerOne"));
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerSoftStartTime("FlowControllerTwo"));
+        // Get the source of control for the flow controller
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerSourceControl("FlowControllerOne"));
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerSourceControl("FlowControllerTwo"));
+
+
+
+        // Pressure sensor likes time to settle after initialisation
+        QTimer::singleShot(5000, [this]() {
+            // Get current values for pressure
+            emit emit_hardwareRequest(m_commandConstructor.getPressureReading(1));
+        });
     }
+
+
+
+
+
 
 
     /**

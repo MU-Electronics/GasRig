@@ -28,7 +28,52 @@ Item
         width: parent.width
         height: window.height - 180
         contentWidth: parent.width
-        contentHeight: flowController.height + flowRate.height + softStart.height + flowControllerSource.height
+        contentHeight: flowController.height + flowRate.height + softStart.height + flowControllerSource.height + safeFlowControllerFunctions.height + 50
+
+
+        /**
+         * Turn pump and turbo on and off
+         */
+        FluidControls.Card
+        {
+            id: safeFlowControllerFunctions
+
+
+
+            width: parent.width-10
+
+            height: 85
+
+            padding: 5
+
+            Column
+            {
+                width: parent.width
+                AlertBox
+                {
+                    id: alertBoxSafeFunction
+                    width: parent.width
+                    type: "Notice"
+                    textContent: qsTr("This container contains safe functions for the flow controller.")
+                }
+
+                Row {
+                    spacing: 6
+
+                    Button
+                    {
+                        id: getFlow
+                        text: "Get Flow Rate"
+                        onClicked:
+                        {
+
+                        }
+                    }
+                }
+            }
+
+        }
+
 
         /**
           * Set the flow rate
@@ -37,7 +82,8 @@ Item
         {
             id: flowController
 
-            anchors.topMargin: 15
+            anchors.top: safeFlowControllerFunctions.bottom
+            anchors.topMargin: 25
 
             width: parent.width-10
             height: 170
@@ -300,7 +346,7 @@ Item
                             var toggle;
                             if(SystemStatusManager.flowControllerState["controller_1_softstart"] === 4)
                             {
-                                toggle = 1;
+                                toggle = 0;
                             }
                             else
                             {
@@ -323,7 +369,7 @@ Item
                             var toggle;
                             if(SystemStatusManager.flowControllerState["controller_2_softstart"] === 4)
                             {
-                                toggle = 1;
+                                toggle = 0;
                             }
                             else
                             {
