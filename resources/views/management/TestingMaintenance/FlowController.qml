@@ -42,12 +42,13 @@ Item
 
             width: parent.width-10
 
-            height: 85
+            height: flowControllerReadings.height + 15
 
             padding: 5
 
             Column
             {
+                id: flowControllerReadings
                 width: parent.width
                 AlertBox
                 {
@@ -62,8 +63,42 @@ Item
 
                     Button
                     {
-                        id: getFlow
-                        text: "Get Flow Rate"
+                        id: getFlowControllerOne
+                        text: "Get Flow Rate Controller 1"
+                        onClicked:
+                        {
+
+                        }
+                    }
+
+                    Button
+                    {
+                        id: getTemperatureControllerOne
+                        text: "Get Temperature Controller 1"
+                        onClicked:
+                        {
+
+                        }
+                    }
+
+                }
+                Row{
+                    spacing: 6
+
+                    Button
+                    {
+                        id: getFlowControllerTwo
+                        text: "Get Flow Rate Controller 2"
+                        onClicked:
+                        {
+
+                        }
+                    }
+
+                    Button
+                    {
+                        id: getTemperatureControllerTwo
+                        text: "Get Temperature Controller 2"
                         onClicked:
                         {
 

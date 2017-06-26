@@ -458,7 +458,7 @@ function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverri
     var widthScaling = (windowWidth-514);
 
     // Set id 1 if not 2
-    var x = 210 + widthScaling;
+    var x = 210 + widthScaling / 1.3;
     var y = 395;
     if(id === 2)
     {
