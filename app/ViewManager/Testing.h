@@ -85,6 +85,8 @@ namespace App { namespace ViewManager
             void receiveLabJackConfig(QVariantMap command);
             void receiveVacuumReading(QVariantMap command);
 
+            void receiveFlowControllerTemperature(QVariantMap command);
+            void receiveFlowControllerFlowRate(QVariantMap command);
             void receiveFlowControllerValveOverride(QVariantMap command);
             void receiveSetFlowControllerFlowRate(QVariantMap command);
             void receiveSetFlowControllerSoftStart(QVariantMap command);

@@ -51,6 +51,8 @@ namespace App { namespace ViewManager
         m_flowController.insert("controller_2_set_flowrate", 0);
         m_flowController.insert("controller_1_flow", 0);
         m_flowController.insert("controller_2_flow", 0);
+        m_flowController.insert("controller_1_temperature", 0);
+        m_flowController.insert("controller_2_temperature", 0);
         m_flowController.insert("controller_1_override", 0);
         m_flowController.insert("controller_2_override", 0);
         m_flowController.insert("controller_1_source", 0);
@@ -99,6 +101,8 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStartTime, this, &SystemStatus::receiveSetFlowControllerSoftStartTime);
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSourceControl, this, &SystemStatus::receiveSetFlowControllerSourceControl);
 
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerFlowRate, this, &SystemStatus::receiveFlowControllerFlowRate);
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerTemperature, this, &SystemStatus::receiveFlowControllerTemperature);
         connect(&hardware, &Hardware::Access::emit_getFlowControllerValveOverride, this, &SystemStatus::receiveSetFlowControllerValveOverride);
         connect(&hardware, &Hardware::Access::emit_getFlowControllerSetFlowRate, this, &SystemStatus::receiveSetFlowControllerFlowRate);
         connect(&hardware, &Hardware::Access::emit_getFlowControllerSoftStart, this, &SystemStatus::receiveSetFlowControllerSoftStart);
@@ -308,7 +312,41 @@ namespace App { namespace ViewManager
 
 
 
+    void SystemStatus::receiveFlowControllerTemperature(QVariantMap command)
+    {
+        // Select controller
+        if(command["controller"] == "FlowControllerOne")
+        {
+            // Update the flowrate
+            m_flowController["controller_1_temperature"] = 2; //command.value("override").toInt();
+        }
+        else if(command["controller"] == "FlowControllerTwo")
+        {
+            // Update the flowrate
+            m_flowController["controller_2_temperature"] = 3; //command.value("override").toInt();
+        }
 
+        // Update the display
+        emit_flowControllerStateChanged(m_flowController);
+    }
+
+    void SystemStatus::receiveFlowControllerFlowRate(QVariantMap command)
+    {
+        // Select controller
+        if(command["controller"] == "FlowControllerOne")
+        {
+            // Update the flowrate
+            m_flowController["controller_1_flow"] = 2; //command.value("override").toInt();
+        }
+        else if(command["controller"] == "FlowControllerTwo")
+        {
+            // Update the flowrate
+            m_flowController["controller_2_flow"] = 3; //command.value("override").toInt();
+        }
+
+        // Update the display
+        emit_flowControllerStateChanged(m_flowController);
+    }
     void SystemStatus::receiveSetFlowControllerValveOverride(QVariantMap command)
     {
         // Select controller

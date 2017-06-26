@@ -83,6 +83,8 @@ namespace App { namespace ViewManager
             void receiveSetFlowControllerSoftStart(QVariantMap command);
             void receiveSetFlowControllerSoftStartTime(QVariantMap command);
             void receiveSetFlowControllerSourceControl(QVariantMap command);
+            void receiveFlowControllerTemperature(QVariantMap command);
+            void receiveFlowControllerFlowRate(QVariantMap command);
 
             // Listen for vacuum events
             void receiveVacSetPump(QVariantMap command);

@@ -56,10 +56,35 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStart, this, &Testing::receiveSetFlowControllerSoftStart);
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSoftStartTime, this, &Testing::receiveSetFlowControllerSoftStartTime);
         connect(&hardware, &Hardware::Access::emit_setFlowControllerSourceControl, this, &Testing::receiveSetFlowControllerSourceControl);
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerFlowRate, this, &Testing::receiveFlowControllerFlowRate);
+        connect(&hardware, &Hardware::Access::emit_getFlowControllerTemperature, this, &Testing::receiveFlowControllerTemperature);
 
+        // Connect the experiment function signals
 
     }
 
+
+    /**
+     * Debug method for flow controller temperature
+     *
+     * @brief Testing::receiveFlowControllerTemperature
+     * @param command
+     */
+    void Testing::receiveFlowControllerTemperature(QVariantMap command)
+    {
+        emit emit_testingMaintenanceReply("The flow controller's temperature is: ");
+    }
+
+    /**
+     * Debug method for flow controller current flow rate
+     *
+     * @brief Testing::receiveFlowControllerFlowRate
+     * @param command
+     */
+    void Testing::receiveFlowControllerFlowRate(QVariantMap command)
+    {
+        emit emit_testingMaintenanceReply("The flow controller's flow rate is: ");
+    }
 
     /**
      * Debug method for flow controller set valve override
