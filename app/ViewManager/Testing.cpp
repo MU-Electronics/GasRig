@@ -510,5 +510,42 @@ namespace App { namespace ViewManager
         emit hardwareRequest(m_commandConstructor.setFlowControllerSourceControl(controller, source));
     }
 
+
+
+
+
+
+
+
+    void Testing::requestHighPressure(QString pressure)
+    {
+        qDebug() << "Running high pressure";
+    }
+
+    void Testing::requestExhuast(int filterType, int frequency)
+    {
+        qDebug() << "Running exhuast";
+    }
+
+    void Testing::requestOutputPressure(int frequency)
+    {
+        qDebug() << "Running output pressure";
+    }
+
+    void Testing::requestPurgeSystemMethodOne(bool outputValve, int cycles, QString pressure)
+    {
+        qDebug() << "Running purging with method one";
+    }
+
+    void Testing::requestPurgeSystemMethodTwo(int minutes, QString pressure)
+    {
+        qDebug() << "Running purging with method two";
+    }
+
+    void Testing::requestValveStateSafe(int port, bool state)
+    {
+        qDebug() << "Running valve safe method";
+    }
+
 }}
 

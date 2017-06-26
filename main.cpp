@@ -54,7 +54,8 @@ void fileMessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
 int main(int argc, char *argv[])
 {
     // Start app
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
+    //QApplication   QGuiApplication
 
     // Attach message handler
     //qInstallMessageHandler(fileMessageHandler);

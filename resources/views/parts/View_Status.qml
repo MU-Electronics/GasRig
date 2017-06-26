@@ -6,6 +6,9 @@ import QtQuick.Layouts 1.3
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Core 1.0 as FluidCore
 
+import "system_status"
+
+
 Item
 {
     width: parent.width
@@ -49,7 +52,7 @@ Item
                 id: systemStatus
                 width: (parent.width)
                 height: parent.height
-                View_SystemDiagram
+                SystemDiagram
                 {
                     height: parent.height
                     width: (parent.width)
@@ -59,7 +62,13 @@ Item
             }
             Item {
                 id: vacuumGraph
-
+                VacuumDiagram
+                {
+                    height: parent.height
+                    width: (parent.width)
+                    anchors.top: parent.top
+                    anchors.topMargin: 20
+                }
             }
             Item {
                 id: pressureGraph

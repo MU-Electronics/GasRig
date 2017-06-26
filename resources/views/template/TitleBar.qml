@@ -9,7 +9,7 @@ TabbedPage {
         title: window.title
 
         leftAction: Action {
-            text: qsTr("JFET Services")
+            text: qsTr("Electronic Services")
             iconSource: "qrc:/assets/images/favicon.svg"
         }
 

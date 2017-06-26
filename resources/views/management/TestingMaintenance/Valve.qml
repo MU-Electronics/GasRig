@@ -113,7 +113,7 @@ Item {
                         enabled: (setHighPressure_confirm.checked) ? true : false;
                         onClicked:
                         {
-
+                            TestingManager.requestHighPressure(setHighPressure_pressure.text);
                         }
                     }
                 }
@@ -154,17 +154,17 @@ Item {
                     RadioButton {
                         checked: false
                         id: exhuastSystem_valveSlow
-                        text: qsTr("Slow")
+                        text: qsTr("Slow filter")
                     }
                     RadioButton {
                         checked: false
                         id: exhuastSystem_valveFast
-                        text: qsTr("Fast")
+                        text: qsTr("Fast filter")
                     }
                     RadioButton {
                         checked: true
                         id: exhuastSystem_valveCombo
-                        text: qsTr("Combination of fast + slow")
+                        text: qsTr("Combination of fast + slow filter")
                     }
                 }
                 Row
@@ -213,7 +213,15 @@ Item {
                         enabled: (exhuastSystem_confirm.checked) ? true : false;
                         onClicked:
                         {
+                            var filterType;
+                            if(exhuastSystem_valveSlow.checked)
+                                filterType = 1;
+                            if(exhuastSystem_valveFast.checked)
+                                filterType = 2;
+                            if(exhuastSystem_valveCombo.checked)
+                                filterType = 3;
 
+                            TestingManager.requestExhuast(filterType, exhuastSystem_frequency.text);
                         }
                     }
                 }
@@ -297,7 +305,7 @@ Item {
                         enabled: (outputHighPressure_confirm.checked) ? true : false;
                         onClicked:
                         {
-
+                            TestingManager.requestOutputPressure(outputHighPressure_frequency.text);
                         }
                     }
                 }
@@ -358,6 +366,9 @@ Item {
                         id: purgeMethodOne
                         text: qsTr("1: Pressurise with nitrogren, then exhuast, then vac down and repeat")
                         ButtonGroup.group: purgingMethodGroup
+                        onClicked: {
+                            purgeMethod_confirm.checked = false
+                        }
                     }
                     Column
                     {
@@ -437,6 +448,9 @@ Item {
                         checked: false
                         text: qsTr("2: Continuous nitrogen flow")
                         ButtonGroup.group:purgingMethodGroup
+                        onClicked: {
+                            purgeMethod_confirm.checked = false
+                        }
                     }
                     Column
                     {
@@ -494,14 +508,52 @@ Item {
                                 width: parent.width - 270
                             }
                         }
+                        Row
+                        {
+                            anchors.leftMargin: 100
+                            anchors.left: parent.left
+                            height: (!purgeMethodTwo.checked) ? 0 : 50;
+                            spacing: 10
+                            width: parent.width - 110
+                            Text {
+                                text: qsTr("Maximum nitrogen pressure in bar: ")
+                                color: "#777777"
+                                visible: parent.opacity
+                                font.pixelSize: 16
+                                verticalAlignment : Text.AlignVCenter
+                                height: parent.height
+                            }
+                            TextField
+                            {
+                                id:purgeMethodTwo_nitrogenPressure
+                                validator: IntValidator { bottom:0; top: 90}
+                                inputMethodHints: Qt.ImhDigitsOnly
+                                height: parent.height
+                                width: parent.width - 270
+                            }
+                        }
                     }
                 }
                 Column
                 {
                     Row
                     {
-                        height: (purgeMethodTwo.checked || purgeMethodOne.checked) ? 50 : 0;
-                        opacity: (purgeMethodTwo.checked || purgeMethodOne.checked) ? 1 : 0;
+                        id: purgeSubmittion
+                        property int methodSelected: {
+                            if(purgeMethodTwo.checked && purgeMethodTwo_time.text && purgeMethodTwo_nitrogenPressure.text)
+                            {
+                                return 2;
+                            }
+                            if(purgeMethodOne.checked && purgeMethodOne_numberCycles.text && purgeMethodOne_nitrogenPressure.text)
+                            {
+                                return 1;
+                            }
+
+                            return 0;
+                        }
+
+                        height: ( methodSelected > 0 ) ? 50 : 0;
+                        opacity: ( methodSelected > 0 ) ? 1 : 0;
 
                         Behavior on opacity {
                             NumberAnimation {
@@ -521,7 +573,14 @@ Item {
                             enabled: (purgeMethod_confirm.checked) ? true : false;
                             onClicked:
                             {
-
+                                if(purgeSubmittion.methodSelected == 1)
+                                {
+                                    TestingManager.requestPurgeSystemMethodOne(purgeMethodOne_outputValve.text, purgeMethodOne_numberCycles.text, purgeMethodOne_nitrogenPressure.text);
+                                }
+                                else if (purgeSubmittion.methodSelected == 2)
+                                {
+                                    TestingManager.requestPurgeSystemMethodTwo(purgeMethodTwo_time.text, purgeMethodTwo_nitrogenPressure.text);
+                                }
                             }
                         }
                     }
@@ -620,8 +679,16 @@ Item {
                                     // Toggle the state
                                     var toggle = !SystemStatusManager.valveState[model.number];
 
-                                    // Set vac pump
-                                    TestingManager.requestValveState(model.number, toggle);
+                                    if(valveSafeMode.checked)
+                                    {
+                                        // Set vac pump
+                                        TestingManager.requestValveStateSafe(model.number, toggle);
+                                    }
+                                    else
+                                    {
+                                        // Set vac pump
+                                        TestingManager.requestValveState(model.number, toggle);
+                                    }
                                 }
                             }
                         }

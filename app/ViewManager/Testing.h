@@ -51,9 +51,18 @@ namespace App { namespace ViewManager
 
             void requestFlowControllerValveOverride(QString controller, int state);
             void requestFlowControllerFlowRate(QString controller, int flowrate);
-            void receiveSetFlowControllerSoftStart(QVariantMap command);
-            void receiveSetFlowControllerSoftStartTime(QVariantMap command);
-            void receiveSetFlowControllerSourceControl(QVariantMap command);
+            void requestFlowControllerSoftStartTime(QString controller, int seconds);
+            void requestFlowControllerSoftStart(QString controller, int state);
+            void requestSetFlowControllerSourceControl(QString controller, int source);
+
+            void requestHighPressure(QString pressure);
+            void requestExhuast(int filterType, int frequency);
+            void requestPurgeSystemMethodOne(bool outputValve, int cycles, QString pressure);
+            void requestPurgeSystemMethodTwo(int minutes, QString pressure);
+            void requestValveStateSafe(int port, bool state);
+            void requestOutputPressure(int frequency);
+
+
 
 
             // Returned actions
@@ -72,9 +81,10 @@ namespace App { namespace ViewManager
 
             void receiveFlowControllerValveOverride(QVariantMap command);
             void receiveSetFlowControllerFlowRate(QVariantMap command);
-            void requestFlowControllerSoftStartTime(QString controller, int seconds);
-            void requestFlowControllerSoftStart(QString controller, int state);
-            void requestSetFlowControllerSourceControl(QString controller, int source);
+            void receiveSetFlowControllerSoftStart(QVariantMap command);
+            void receiveSetFlowControllerSoftStartTime(QVariantMap command);
+            void receiveSetFlowControllerSourceControl(QVariantMap command);
+
 
 
         private:

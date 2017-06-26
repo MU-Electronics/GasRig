@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
 import QtQuick.Window 2.2
-import "../../assets/js/QtCanvasHelper.js" as CanvasHelper
+import "../../../assets/js/QtCanvasHelper.js" as CanvasHelper
 
 
 Item

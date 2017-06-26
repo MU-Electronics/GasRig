@@ -25,7 +25,6 @@
         <file>views/management/TestingMaintenance/Valve.qml</file>
         <file>views/management/ConnectionStatus.qml</file>
         <file>views/parts/Mode_NotSupported.qml</file>
-        <file>views/parts/View_SystemDiagram.qml</file>
         <file>views/parts/View_Status.qml</file>
         <file>assets/js/QtCanvasHelper.js</file>
         <file>config/Safety.json</file>
@@ -33,5 +32,7 @@
         <file>config/Hardware.json</file>
         <file>config/View.json</file>
         <file>views/parts/AlertBox.qml</file>
+        <file>views/parts/system_status/SystemDiagram.qml</file>
+        <file>views/parts/system_status/VacuumDiagram.qml</file>
     </qresource>
 </RCC>

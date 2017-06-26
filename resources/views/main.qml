@@ -24,7 +24,7 @@ ApplicationWindow {
     minimumHeight: 725 // my laptops a bit smaller :S
     //visibility: "Maximized"
 
-    title: qsTr("JFET Services: Gas Rig")
+    title: qsTr("Electronic Services: Gas Rig Controller")
 
     appBar.maxActionCount: 1
 
