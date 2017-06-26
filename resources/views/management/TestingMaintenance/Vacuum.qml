@@ -55,7 +55,7 @@ Item
                         text: "Get Vacuum"
                         onClicked:
                         {
-                            // Set vac pump
+                            // Get the vacuum pressure
                             TestingManager.requestVacuumPressure();
                         }
                     }
@@ -65,8 +65,8 @@ Item
                         text: "Get Turbo Speed"
                         onClicked:
                         {
-                            // Set vac pump
-                            //TestingManager.requestVacuumPressure();
+                            // Get the turbo speed
+                            TestingManager.requestTurboSpeed();
                         }
                     }
                     Button
@@ -76,7 +76,7 @@ Item
                         onClicked:
                         {
                             // Set vac pump
-                            //TestingManager.requestVacuumPressure();
+                            TestingManager.requestTurboBearingTemperature();
                         }
                     }
                 }
@@ -90,7 +90,7 @@ Item
                     spacing: 20;
                     TextField
                     {
-                        id: vacDownTimeTextbox
+                        id: vacDown_time
                         placeholderText: qsTr("Time in minutes")
                         validator: IntValidator { bottom:0; top: 10000}
                         inputMethodHints: Qt.ImhDigitsOnly
@@ -98,6 +98,7 @@ Item
                     }
 
                     CheckBox {
+                        id: vacDown_turbo
                         checked: false
                         text: qsTr("Turbo")
                     }
@@ -105,9 +106,10 @@ Item
                     Button
                     {
                         text: qsTr("Vac down")
+                        enabled: (vacDown_time.text) ? 1 : 0;
                         onClicked:
                         {
-
+                            TestingManager.requestVacDown(vacDown_time.text, vacDown_turbo.checked);
                         }
                     }
                 }

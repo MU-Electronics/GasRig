@@ -67,7 +67,7 @@ Item
                         text: "Get Flow Rate Controller 1"
                         onClicked:
                         {
-
+                            TestingManager.requestActualFlowControllerFlowRate("FlowControllerOne");
                         }
                     }
 
@@ -77,7 +77,7 @@ Item
                         text: "Get Temperature Controller 1"
                         onClicked:
                         {
-
+                            TestingManager.requestFlowControllerTemperature("FlowControllerOne");
                         }
                     }
 
@@ -91,7 +91,7 @@ Item
                         text: "Get Flow Rate Controller 2"
                         onClicked:
                         {
-
+                            TestingManager.requestActualFlowControllerFlowRate("FlowControllerTwo");
                         }
                     }
 
@@ -101,7 +101,7 @@ Item
                         text: "Get Temperature Controller 2"
                         onClicked:
                         {
-
+                            TestingManager.requestFlowControllerTemperature("FlowControllerTwo");
                         }
                     }
                 }

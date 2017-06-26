@@ -308,7 +308,7 @@ namespace App { namespace ViewManager
     }
 
     /**
-     * Request that the vacuum pump is turned on
+     * Request that the turbo pump is enabled
      *
      * @brief Testing::requestVacuum
      * @param onOff
@@ -320,7 +320,7 @@ namespace App { namespace ViewManager
     }
 
     /**
-     * Request that the vacuum pump is turned on
+     * Request a new backing pump mode
      *
      * @brief Testing::requestVacuum
      * @param onOff
@@ -332,7 +332,7 @@ namespace App { namespace ViewManager
     }
 
     /**
-     * Request that the vacuum pump is turned on
+     * Request to set a new gas mode
      *
      * @brief Testing::requestVacuum
      * @param onOff
@@ -343,6 +343,27 @@ namespace App { namespace ViewManager
         emit hardwareRequest(m_commandConstructor.setGasMode(mode));
     }
 
+    /**
+     * Request the turbo speed
+     *
+     * @brief Testing::requestTurboSpeed
+     */
+    void Testing::requestTurboSpeed()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getTurboSpeed());
+    }
+
+    /**
+     * Request the bearning temperature
+     *
+     * @brief Testing::requestTurboSpeed
+     */
+    void Testing::requestTurboBearingTemperature()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getTurboBearingTemperature());
+    }
 
 
 
@@ -457,6 +478,27 @@ namespace App { namespace ViewManager
 
 
 
+    /**
+     * Request current flow rate
+     *
+     * @brief Testing::requestActualFlowControllerFlowRate
+     */
+    void Testing::requestActualFlowControllerFlowRate(QString controller)
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getFlowControllerFlowRate(controller));
+    }
+
+    /**
+     * Request current flow rate
+     *
+     * @brief Testing::requestFlowControllerTemperature
+     */
+    void Testing::requestFlowControllerTemperature(QString controller)
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getFlowControllerTemperature(controller));
+    }
 
     /**
      * Request a valve override on the flow controllers
@@ -487,7 +529,6 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerSoftStart(QString controller, int state)
     {
-        qDebug() << state;
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setFlowControllerSoftStart(controller, state));
     }
@@ -545,6 +586,11 @@ namespace App { namespace ViewManager
     void Testing::requestValveStateSafe(int port, bool state)
     {
         qDebug() << "Running valve safe method";
+    }
+
+    void Testing::requestVacDown(int mintues, bool turbo)
+    {
+        qDebug() << "Running vac down method";
     }
 
 }}

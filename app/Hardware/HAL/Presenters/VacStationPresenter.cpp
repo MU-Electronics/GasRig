@@ -97,6 +97,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         presented["method"] = "emit_getTemperature";
 
 
+        qDebug() << "GET TEMPERATURE NEEDS IMPLIMENTING IN PRESENTER";
+
+
         // Return the presenter data
         return presented;
     }
@@ -120,6 +123,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getTurboSpeed";
+
+
+        qDebug() << "GET TURBO SPEED NEEDS IMPLIMENTING IN PRESENTER";
 
 
         // Return the presenter data
@@ -146,6 +152,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getError";
+
+
+        qDebug() << "GET ERROR MESSAGE NEEDS IMPLIMENTING IN PRESENTER";
 
 
         // Return the presenter data
@@ -261,6 +270,8 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
 
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getTurboPumpState";
+
+        qDebug() << "GET TURBO STATE NEEDS IMPLIMENTING IN PRESENTER";
 
         // State of pump
 //        if(data.value("data").toString() == "111111")

@@ -40,6 +40,8 @@ namespace App { namespace ViewManager
             void requestTurboPump(bool onOff);
             void requestBackingPumpMode(int mode);
             void requestGasMode(int mode);
+            void requestTurboSpeed();
+            void requestTurboBearingTemperature();
 
             void requestPressureConfirmation();
             void requestPressureReading();
@@ -54,13 +56,17 @@ namespace App { namespace ViewManager
             void requestFlowControllerSoftStartTime(QString controller, int seconds);
             void requestFlowControllerSoftStart(QString controller, int state);
             void requestSetFlowControllerSourceControl(QString controller, int source);
+            void requestActualFlowControllerFlowRate(QString controller);
+            void requestFlowControllerTemperature(QString controller);
 
+            // Request experiment methods
             void requestHighPressure(QString pressure);
             void requestExhuast(int filterType, int frequency);
             void requestPurgeSystemMethodOne(bool outputValve, int cycles, QString pressure);
             void requestPurgeSystemMethodTwo(int minutes, QString pressure);
             void requestValveStateSafe(int port, bool state);
             void requestOutputPressure(int frequency);
+            void requestVacDown(int mintues, bool turbo);
 
 
 

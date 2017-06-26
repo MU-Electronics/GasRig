@@ -184,11 +184,18 @@ namespace App { namespace Hardware
         QVariantMap command;
         command.insert("hardware", "FlowController");
         command.insert("controller", controller);
-        command.insert("method", "");
+        command.insert("method", "getFlowRate");
 
-
-
-
+        // Return the package
+        return command;
+    }
+    QVariantMap CommandConstructor::getFlowControllerTemperature(QString controller)
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "FlowController");
+        command.insert("controller", controller);
+        command.insert("method", "getControllerTemperature");
 
         // Return the package
         return command;
@@ -344,6 +351,29 @@ namespace App { namespace Hardware
         return command;
     }
 
+    QVariantMap CommandConstructor::getTurboSpeed()
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "VacStation");
+        command.insert("method", "getTurboSpeed");
+        command.insert("type", "2");
+
+        // Return the package
+        return command;
+    }
+
+    QVariantMap CommandConstructor::getTurboBearingTemperature()
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "VacStation");
+        command.insert("method", "getTemperature");
+        command.insert("location", "3");
+
+        // Return the package
+        return command;
+    }
 
 
 

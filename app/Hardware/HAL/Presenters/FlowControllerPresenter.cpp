@@ -117,7 +117,10 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
 
-        qDebug() << package;
+
+
+
+        qDebug() << "Flow controller get identifiers need implimenting"  << package;
 
 
 
@@ -260,7 +263,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
 
-        qDebug() << package;
+
+
+        qDebug() << "Flow controller gte flow rate need implimenting" << package;
 
 
 
@@ -383,9 +388,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
 
-        qDebug() << package;
 
 
+        qDebug() << "Flow controller temperature need implimenting" << package;
 
 
 

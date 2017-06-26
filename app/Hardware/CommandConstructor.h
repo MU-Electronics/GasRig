@@ -34,6 +34,8 @@ namespace App { namespace Hardware
             QVariantMap getBackingPumpMode();
             QVariantMap getTurboPump();
             QVariantMap getBackingPump();
+            QVariantMap getTurboSpeed();
+            QVariantMap getTurboBearingTemperature();
 
             QVariantMap setGasMode(int mode);
             QVariantMap setBackingPumpMode(int mode);
@@ -49,6 +51,7 @@ namespace App { namespace Hardware
             QVariantMap getFlowControllerFlowRate(QString controller);
             QVariantMap getSetFlowControllerFlowRate(QString controller);
             QVariantMap getFlowControllerValveOverride(QString controller);
+            QVariantMap getFlowControllerTemperature(QString controller);
 
             QVariantMap setFlowControllerSourceControl(QString controller, int source);
             QVariantMap setFlowControllerSoftStartTime(QString controller, int seconds);
