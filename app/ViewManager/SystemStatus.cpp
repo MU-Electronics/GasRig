@@ -161,8 +161,12 @@ namespace App { namespace ViewManager
         // Get the source of control for the flow controller
         emit emit_hardwareRequest(m_commandConstructor.getFlowControllerSourceControl("FlowControllerOne"));
         emit emit_hardwareRequest(m_commandConstructor.getFlowControllerSourceControl("FlowControllerTwo"));
-
-
+        // Get the temperature of the flow controller
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerTemperature("FlowControllerOne"));
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerTemperature("FlowControllerTwo"));
+        // Get the actual flow for the flow controllers
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerFlowRate("FlowControllerOne"));
+        emit emit_hardwareRequest(m_commandConstructor.getFlowControllerFlowRate("FlowControllerTwo"));
 
         // Pressure sensor likes time to settle after initialisation
         QTimer::singleShot(5000, [this]() {
@@ -318,12 +322,12 @@ namespace App { namespace ViewManager
         if(command["controller"] == "FlowControllerOne")
         {
             // Update the flowrate
-            m_flowController["controller_1_temperature"] = 2; //command.value("override").toInt();
+            m_flowController["controller_1_temperature"] = command.value("temperature").toDouble();
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the flowrate
-            m_flowController["controller_2_temperature"] = 3; //command.value("override").toInt();
+            m_flowController["controller_2_temperature"] = command.value("temperature").toDouble();
         }
 
         // Update the display
@@ -336,12 +340,12 @@ namespace App { namespace ViewManager
         if(command["controller"] == "FlowControllerOne")
         {
             // Update the flowrate
-            m_flowController["controller_1_flow"] = 2; //command.value("override").toInt();
+            m_flowController["controller_1_flow"] = command.value("flow").toDouble();
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the flowrate
-            m_flowController["controller_2_flow"] = 3; //command.value("override").toInt();
+            m_flowController["controller_2_flow"] = command.value("flow").toDouble();
         }
 
         // Update the display
@@ -367,17 +371,16 @@ namespace App { namespace ViewManager
 
     void SystemStatus::receiveSetFlowControllerFlowRate(QVariantMap command)
     {
-        qDebug() << command;
         // Select controller
         if(command["controller"] == "FlowControllerOne")
         {
             // Update the mode
-            m_flowController["controller_1_set_flowrate"] = command.value("flow").toInt();
+            m_flowController["controller_1_set_flowrate"] = command.value("flow").toDouble();
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the mode
-            m_flowController["controller_2_set_flowrate"] = command.value("flow").toInt();
+            m_flowController["controller_2_set_flowrate"] = command.value("flow").toDouble();
         }
 
         // Update the display

@@ -71,7 +71,30 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_configureIO";
 
-        qDebug() << package;
+        // Convert setting to binary
+        QString FIOConfigWord = QString("%1").arg(package.at(10).toInt(), 8, 2, QChar('0'));
+        QString EIOConfigWord = QString("%1").arg(package.at(11).toInt(), 8, 2, QChar('0'));
+
+        // Get the data for FIO ports
+        presented["FIO0"] = FIOConfigWord.at(7);
+        presented["FIO1"] = FIOConfigWord.at(6);
+        presented["FIO2"] = FIOConfigWord.at(5);
+        presented["FIO3"] = FIOConfigWord.at(4);
+        presented["FIO4"] = FIOConfigWord.at(3);
+        presented["FIO5"] = FIOConfigWord.at(2);
+        presented["FIO6"] = FIOConfigWord.at(1);
+        presented["FIO7"] = FIOConfigWord.at(0);
+
+        // Get the data for EIO ports
+        presented["EIO0"] = EIOConfigWord.at(7);
+        presented["EIO1"] = EIOConfigWord.at(6);
+        presented["EIO2"] = EIOConfigWord.at(5);
+        presented["EIO3"] = EIOConfigWord.at(4);
+        presented["EIO4"] = EIOConfigWord.at(3);
+        presented["EIO5"] = EIOConfigWord.at(2);
+        presented["EIO6"] = EIOConfigWord.at(1);
+        presented["EIO7"] = EIOConfigWord.at(0);
+
 
         // Return the presenter data
         return presented;
@@ -114,7 +137,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_setAnaloguePort";
 
-        qDebug() << package;
+        qDebug() << "Set analgoue port presenter is currently not implimented" <<package;
 
         // Return the presenter data
         return presented;
@@ -135,7 +158,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_readPortDirection";
 
-        qDebug() << package;
+        qDebug() << "Read port direction presenter is currently not implimented" << package;
 
         // Return the presenter data
         return presented;
@@ -156,7 +179,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_readDigitalPort";
 
-        qDebug() << package;
+        qDebug() << "Read digital port presenter is currently not implimented" << package;
 
         // Return the presenter data
         return presented;

@@ -5,7 +5,7 @@
             "productId": "1288",
             "com": "tty.usbserial-FTZ6KPLP",
             "braud": "9600",
-            "timeout": "1000",
+            "timeout": "2000",
             "id": "1"
         },
         "vacuum_station":{
@@ -23,12 +23,16 @@
 
             "default": "1",
 
+            "2_name": "Flow Controller One",
+            "2_system_name": "FlowControllerOne",
             "1_manufacturer": "138",
             "1_type": "90",
             "1_id_1": "27",
             "1_id_2": "177",
             "1_id_3": "137",
 
+            "2_name": "Flow Controller Two",
+            "2_system_name": "FlowControllerTwo",
             "2_manufacturer": "138",
             "2_type": "90",
             "2_id_1": "27",
@@ -59,6 +63,25 @@
         "connection": "AIN0",
         "slope": "3.1400E-4",
         "offset": "-10.3"
+    },
+    "flow_controller_units":{
+        "temperature": {
+            "32": "Degres Celsius",
+            "33": "Degres Fahrenheit",
+            "35": "Kelvin"
+        },
+        "flow": {
+            "17": "l/min",
+            "19": "m^3/h",
+            "24": "l/s",
+            "28": "m^3/s",
+            "57": "%",
+            "131": "m^3/min",
+            "138": "l/h",
+            "170": "ml/s",
+            "171": "ml/min",
+            "172": "ml/h"
+        }
     },
     "absoulte_maximums": {
         "pressure": "90",

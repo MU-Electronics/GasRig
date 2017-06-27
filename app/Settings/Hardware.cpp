@@ -31,6 +31,11 @@ namespace App { namespace Settings
         // Store valve connections
         vacuum_guage = rootMap["vacuum_guage"].toMap();
 
+        // Store flow controller units
+        auto flowControllerUnits = rootMap["flow_controller_units"].toMap();
+        flow_controller_units["temperature"] = flowControllerUnits["temperature"].toMap();
+        flow_controller_units["flow"] = flowControllerUnits["flow"].toMap();
+
         // Store absolute maxmiums
         absoulte_maximums = rootMap["absoulte_maximums"].toMap();
 

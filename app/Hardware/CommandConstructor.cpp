@@ -54,7 +54,7 @@ namespace App { namespace Hardware
      *
      * @brief CommandConstructor::setFlowControllerFlowRate
      */
-    QVariantMap CommandConstructor::setFlowControllerFlowRate(QString controller, int flowrate)
+    QVariantMap CommandConstructor::setFlowControllerFlowRate(QString controller, double flowrate)
     {
         // Create command for HAL
         QVariantMap command;
@@ -357,7 +357,7 @@ namespace App { namespace Hardware
         QVariantMap command;
         command.insert("hardware", "VacStation");
         command.insert("method", "getTurboSpeed");
-        command.insert("type", "2");
+        command.insert("type", "1");
 
         // Return the package
         return command;

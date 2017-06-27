@@ -96,9 +96,22 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getTemperature";
 
+        // Set which area
+        presented.insert("location", commands.value("location").toInt());
 
-        qDebug() << "GET TEMPERATURE NEEDS IMPLIMENTING IN PRESENTER";
+        // Get the verbal location
+        presented.insert("location_verbal", "unknown");
+        if(presented["location"] == 1)
+            presented.insert("location_verbal", "pump bottom");
+        if(presented["location"] == 2)
+            presented.insert("location_verbal", "electronics");
+        if(presented["location"] == 3)
+            presented.insert("location_verbal", "bearing");
+        if(presented["location"] == 4)
+            presented.insert("location_verbal", "motor");
 
+        // Get the temperature
+        presented.insert("temperature", data.value("data").toDouble());
 
         // Return the presenter data
         return presented;
@@ -124,9 +137,33 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getTurboSpeed";
 
+        // Save the turbo speed
+        presented.insert("speed", data.value("data").toDouble());
 
-        qDebug() << "GET TURBO SPEED NEEDS IMPLIMENTING IN PRESENTER";
+        // Set which area
+        presented.insert("type", commands.value("type").toInt());
 
+        // Get the unit
+        presented.insert("type_unit", "rpm");
+
+        // Get the verbal location
+        presented.insert("location_verbal", "unknown");
+        if(presented["type"] == 1)
+        {
+            presented.insert("type_desc_verbal", "accel-decel");
+        }
+        else if(presented["type"] == 2)
+        {
+            presented.insert("type_desc_verbal", "actual rotation");
+        }
+        else if(presented["type"] == 3)
+        {
+            presented.insert("type_desc_verbal", "nominal");
+        }
+        else if(presented["type"] == 4)
+        {
+            presented.insert("type_desc_verbal", "set rotation");
+        }
 
         // Return the presenter data
         return presented;

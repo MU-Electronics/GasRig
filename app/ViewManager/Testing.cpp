@@ -44,6 +44,8 @@ namespace App { namespace ViewManager
         connect(&hardware, &Hardware::Access::emit_setTurboPumpState, this, &Testing::receiveVacSetTurbo);
         connect(&hardware, &Hardware::Access::emit_setGasMode, this, &Testing::receiveVacSetGasMode);
         connect(&hardware, &Hardware::Access::emit_setBackingPumpMode, this, &Testing::receiveVacSetPumpMode);
+        connect(&hardware, &Hardware::Access::emit_getTemperature, this, &Testing::receiveVacTemperature);
+        connect(&hardware, &Hardware::Access::emit_getTurboSpeed, this, &Testing::receiveVacTurboSpeed);
 
         // Connect incomming signals to actions for the LabJack
         connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &Testing::receiveValveStatus);
@@ -72,7 +74,12 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveFlowControllerTemperature(QVariantMap command)
     {
-        emit emit_testingMaintenanceReply("The flow controller's temperature is: ");
+        // Get the flow units
+        auto flowUnits = m_settings.hardware.flow_controller_units.value("temperature").toMap();
+        QString unit = " " + flowUnits.value(command.value("temperature_unit").toString()).toString();
+
+        // Display message
+        emit emit_testingMaintenanceReply("The temperature is " + command.value("temperature").toString() + unit + " for "+ command.value("controller").toString());
     }
 
     /**
@@ -83,7 +90,12 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveFlowControllerFlowRate(QVariantMap command)
     {
-        emit emit_testingMaintenanceReply("The flow controller's flow rate is: ");
+        // Get the flow units
+        auto flowUnits = m_settings.hardware.flow_controller_units.value("flow").toMap();
+        QString unit = " " + flowUnits.value(command.value("flow_unit").toString()).toString();
+
+        // Display message
+        emit emit_testingMaintenanceReply("The flow rate is "+ command.value("flow").toString() + unit + " for "+ command.value("controller").toString());
     }
 
     /**
@@ -201,7 +213,27 @@ namespace App { namespace ViewManager
 
 
 
+    /**
+     * Debug method for getting temperature of vac station
+     *
+     * @brief Testing::receiveVacTurboSpeed
+     * @param command
+     */
+    void Testing::receiveVacTurboSpeed(QVariantMap command)
+    {
+        emit emit_testingMaintenanceReply("The " + command.value("type_desc_verbal").toString() + " speed of the turbo is " + command.value("speed").toString() + " " + command.value("type_unit").toString());
+    }
 
+    /**
+     * Debug method for getting temperature of vac station
+     *
+     * @brief Testing::receiveVacTemperature
+     * @param command
+     */
+    void Testing::receiveVacTemperature(QVariantMap command)
+    {
+        emit emit_testingMaintenanceReply("The temperature of " + command.value("location_verbal").toString() + " is " + command.value("temperature").toString() + " Degrees Celsius");
+    }
 
     /**
      * Debug method for setting gas mode
@@ -304,7 +336,7 @@ namespace App { namespace ViewManager
         if(command["port"] == m_settings.hardware.vacuum_guage.value("connection").toString())
         {
             double pressure = (std::pow(10, (1.667*command.value("calibrated").toDouble()-9.333)))/100;
-            emit emit_testingMaintenanceReply("Vacuum pressure is: " + QString::number(pressure));
+            emit emit_testingMaintenanceReply("Vacuum pressure is: " + QString::number(pressure) + " mbar");
         }
     }
 
@@ -541,7 +573,7 @@ namespace App { namespace ViewManager
      *
      * @brief Testing::requestPressureConfirmation
      */
-    void Testing::requestFlowControllerFlowRate(QString controller, int flowrate)
+    void Testing::requestFlowControllerFlowRate(QString controller, double flowrate)
     {
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setFlowControllerFlowRate(controller, flowrate));

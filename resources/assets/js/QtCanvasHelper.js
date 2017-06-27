@@ -502,10 +502,10 @@ function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverri
 
     // Flow
     ctx.font = 'bold 13pt Calibri';
-    ctx.fillText("Flow: " + flowRate + "ml/min", x+70, y+45);
+    ctx.fillText("Flow: " + flowRate.toExponential(3) + "ml/min", x+70, y+45);
 
     // Set flow
-    ctx.fillText("Set: " + setFlowRate + "ml/min", x+70, y+65);
+    ctx.fillText("Set: " + setFlowRate.toExponential(3) + "ml/min", x+70, y+65);
 
     // Soft start state
     ctx.fillText("Soft Start: " + (softStart === 4 ? 'enabled' : 'disabled'), x+70, y+95);

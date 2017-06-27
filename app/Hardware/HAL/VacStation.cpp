@@ -295,7 +295,7 @@ namespace App { namespace Hardware { namespace HAL
      *							1 = Accel-Decel
      *							2 = Actual Rotation Speed
      *							3 = Nominal Speed
-     *							4 = Motor
+     *							4 = Set rotation speed
      * @return double
      */
     void VacStation::getTurboSpeed()

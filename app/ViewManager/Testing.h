@@ -52,7 +52,7 @@ namespace App { namespace ViewManager
             void requestVacuumPressure();
 
             void requestFlowControllerValveOverride(QString controller, int state);
-            void requestFlowControllerFlowRate(QString controller, int flowrate);
+            void requestFlowControllerFlowRate(QString controller, double flowrate);
             void requestFlowControllerSoftStartTime(QString controller, int seconds);
             void requestFlowControllerSoftStart(QString controller, int state);
             void requestSetFlowControllerSourceControl(QString controller, int source);
@@ -84,6 +84,8 @@ namespace App { namespace ViewManager
             void receiveValveStatus(QVariantMap command);
             void receiveLabJackConfig(QVariantMap command);
             void receiveVacuumReading(QVariantMap command);
+            void receiveVacTemperature(QVariantMap command);
+            void receiveVacTurboSpeed(QVariantMap command);
 
             void receiveFlowControllerTemperature(QVariantMap command);
             void receiveFlowControllerFlowRate(QVariantMap command);

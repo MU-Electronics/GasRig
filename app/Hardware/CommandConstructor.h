@@ -56,7 +56,7 @@ namespace App { namespace Hardware
             QVariantMap setFlowControllerSourceControl(QString controller, int source);
             QVariantMap setFlowControllerSoftStartTime(QString controller, int seconds);
             QVariantMap setFlowControllerSoftStart(QString controller, int state);
-            QVariantMap setFlowControllerFlowRate(QString controller, int flowrate);
+            QVariantMap setFlowControllerFlowRate(QString controller, double flowrate);
             QVariantMap setFlowControllerValveOverride(QString controller, int state);
 
     };

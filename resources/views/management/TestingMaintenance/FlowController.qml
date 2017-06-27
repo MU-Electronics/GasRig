@@ -239,7 +239,7 @@ Item
                     {
                         id: flowRateController1
                         placeholderText: qsTr("In millilitre per minute")
-                        validator: IntValidator { bottom:0; top: 2000}
+                        validator: DoubleValidator { bottom:0; top: 2000; decimals: 4; notation: DoubleValidator.StandardNotation}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: parent.width - 285
                         text: SystemStatusManager.flowControllerState["controller_1_set_flowrate"]
@@ -264,7 +264,7 @@ Item
                     {
                         id: flowRateController2
                         placeholderText: qsTr("In millilitre per minute")
-                        validator: IntValidator { bottom:0; top: 2000}
+                        validator: DoubleValidator { bottom:0; top: 2000; decimals: 4; notation: DoubleValidator.StandardNotation}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: parent.width - 285
                         text: SystemStatusManager.flowControllerState["controller_2_set_flowrate"]
