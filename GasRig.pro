@@ -74,7 +74,8 @@ SOURCES += \
     app/Hardware/HAL/Presenters/LabJackPresenter.cpp \
     app/Hardware/HAL/Presenters/VacStationPresenter.cpp \
     app/Hardware/HAL/Presenters/PresenterSupport.cpp \
-    app/Hardware/CommandConstructor.cpp
+    app/Hardware/CommandConstructor.cpp \
+    app/Experiment/Methods/VacDown.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -140,4 +141,5 @@ HEADERS += \
     app/Hardware/HAL/Presenters/VacStationPresenter.h \
     app/Hardware/HAL/Presenters/FlowControllerPresenter.h \
     app/Hardware/HAL/Presenters/PresenterSupport.h \
-    app/Hardware/CommandConstructor.h
+    app/Hardware/CommandConstructor.h \
+    app/Experiment/Methods/VacDown.h

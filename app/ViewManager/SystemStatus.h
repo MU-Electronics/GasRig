@@ -24,6 +24,9 @@
 // Include command constructor
 #include "../Hardware/CommandConstructor.h"
 
+// Experiment Engine with state machine methods
+#include "../Experiment/Engine.h"
+
 namespace App { namespace ViewManager
 {
 
@@ -46,7 +49,7 @@ namespace App { namespace ViewManager
 
         public:
             // constructure and destructor
-            SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
+            SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, App::Experiment::Engine *experimentEngine);
 
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 

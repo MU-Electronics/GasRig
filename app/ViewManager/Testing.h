@@ -16,6 +16,9 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
+// Experiment Engine with state machine methods
+#include "../Experiment/Engine.h"
+
 // Include command constructor
 #include "../Hardware/CommandConstructor.h"
 
@@ -26,7 +29,7 @@ namespace App { namespace ViewManager
         Q_OBJECT
 
         public:
-            Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
+            Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine* experimentEngine);
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
 

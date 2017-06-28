@@ -19,6 +19,8 @@ namespace App { namespace Experiment
         public:
             Engine(QObject *parent, Settings::Container settings);
 
+            ~Engine();
+
             void makeConnections(Hardware::Access &hardware, Safety::Monitor &safety);
 
         private:

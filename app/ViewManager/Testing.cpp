@@ -14,12 +14,15 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
+// Experiment Engine with state machine methods
+#include "../Experiment/Engine.h"
+
 // Include command constructor
 #include "../Hardware/CommandConstructor.h"
 
 namespace App { namespace ViewManager
 {
-    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings)
+    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine *experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings),

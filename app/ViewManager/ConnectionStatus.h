@@ -16,6 +16,9 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
+// Experiment Engine with state machine methods
+#include "../Experiment/Engine.h"
+
 namespace App { namespace ViewManager
 {
 
@@ -27,7 +30,7 @@ namespace App { namespace ViewManager
         Q_PROPERTY(QVariantMap hardwareConnection READ hardwareConnection NOTIFY emit_hardwareConnectionChanged)
 
         public:
-            ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings);
+            ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine *experimentEngine);
 
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);

@@ -16,8 +16,10 @@ namespace App { namespace Experiment
         :   QObject(parent),
             m_settings(settings)
     {
+
     }
 
+    Engine::~Engine(){}
 
     /**
      * Make connections to other parts of the application

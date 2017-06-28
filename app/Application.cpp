@@ -56,12 +56,12 @@ namespace App
           hardware(*new Hardware::Access(this, settings_container)),
 
           // Include the expeirment engine
-          experiment_engine(*new Experiment::Engine(this, settings_container)),
+          experiment_engine(new Experiment::Engine(this, settings_container)),
 
           // Create instance for each view manager
-          manager_testing(*new ViewManager::Testing(parent, engine, settings_container)),
-          manager_connection(*new ViewManager::ConnectionStatus(parent, engine, settings_container)),
-          manager_systemStatus(*new ViewManager::SystemStatus(parent, engine, settings_container))
+          manager_testing(*new ViewManager::Testing(parent, engine, settings_container, experiment_engine)),
+          manager_connection(*new ViewManager::ConnectionStatus(parent, engine, settings_container, experiment_engine)),
+          manager_systemStatus(*new ViewManager::SystemStatus(parent, engine, settings_container, experiment_engine))
     {
         // Load all managers
         registerManagers();
@@ -187,7 +187,7 @@ namespace App
      */
     void Application::connectEngineToThreads()
     {
-        experiment_engine.makeConnections(hardware, monitor);
+        experiment_engine->makeConnections(hardware, monitor);
     }
 
 

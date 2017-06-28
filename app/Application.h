@@ -48,7 +48,7 @@ namespace App
             Hardware::Access& hardware;
 
             // Hold the instance of expeirment engine
-            Experiment::Engine& experiment_engine;
+            Experiment::Engine* experiment_engine;
 
             // View managers
             ViewManager::Testing& manager_testing;
