@@ -16,7 +16,7 @@
 
 namespace App { namespace ViewManager
 {
-    ConnectionStatus::ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine* experimentEngine)
+    ConnectionStatus::ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings)

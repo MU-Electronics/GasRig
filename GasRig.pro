@@ -75,7 +75,9 @@ SOURCES += \
     app/Hardware/HAL/Presenters/VacStationPresenter.cpp \
     app/Hardware/HAL/Presenters/PresenterSupport.cpp \
     app/Hardware/CommandConstructor.cpp \
-    app/Experiment/Methods/VacDown.cpp
+    app/Experiment/Machines/VacDown.cpp \
+    app/Experiment/Machines/MachineStates.cpp \
+    app/Experiment/Machines/CommandValidatorState.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -142,4 +144,6 @@ HEADERS += \
     app/Hardware/HAL/Presenters/FlowControllerPresenter.h \
     app/Hardware/HAL/Presenters/PresenterSupport.h \
     app/Hardware/CommandConstructor.h \
-    app/Experiment/Methods/VacDown.h
+    app/Experiment/Machines/VacDown.h \
+    app/Experiment/Machines/MachineStates.h \
+    app/Experiment/Machines/CommandValidatorState.h

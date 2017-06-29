@@ -29,7 +29,7 @@ namespace App { namespace ViewManager
         Q_OBJECT
 
         public:
-            Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine* experimentEngine);
+            Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
 
@@ -105,6 +105,9 @@ namespace App { namespace ViewManager
 
             // Holds the settings container
             Settings::Container m_settings;
+
+            // Hold experiment engine
+            Experiment::Engine& m_experimentEngine;
 
             // Hold instance of command constructor
             Hardware::CommandConstructor m_commandConstructor;

@@ -22,7 +22,7 @@
 
 namespace App { namespace ViewManager
 {
-    SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine* experimentEngine)
+    SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings),

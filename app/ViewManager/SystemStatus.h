@@ -49,7 +49,7 @@ namespace App { namespace ViewManager
 
         public:
             // constructure and destructor
-            SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, App::Experiment::Engine *experimentEngine);
+            SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
 
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 

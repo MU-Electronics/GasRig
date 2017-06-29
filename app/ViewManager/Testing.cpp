@@ -22,10 +22,11 @@
 
 namespace App { namespace ViewManager
 {
-    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine *experimentEngine)
+    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings),
+          m_experimentEngine(experimentEngine),
           m_commandConstructor(*new Hardware::CommandConstructor)
     {
 
@@ -650,6 +651,7 @@ namespace App { namespace ViewManager
 
     void Testing::requestVacDown(int mintues, bool turbo)
     {
+        m_experimentEngine.VacDown();
         qDebug() << "Running vac down method";
     }
 

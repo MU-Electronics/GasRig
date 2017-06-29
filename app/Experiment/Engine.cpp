@@ -10,11 +10,17 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
+// Include state machine
+#include "Machines/VacDown.h"
+
 namespace App { namespace Experiment
 {
-    Engine::Engine(QObject *parent, Settings::Container settings)
+    Engine::Engine(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   QObject(parent),
-            m_settings(settings)
+            m_settings(settings),
+            m_hardware(hardware),
+            m_safety(safety)
+        ,   m_vacDown(*new Machines::VacDown(parent, settings, hardware, safety))
     {
 
     }
@@ -26,8 +32,13 @@ namespace App { namespace Experiment
      *
      * @brief Engine::makeConnections
      */
-    void Engine::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
+    void Engine::makeConnections()
     {
 
+    }
+
+    void Engine::VacDown()
+    {
+        m_vacDown.buildMachine();
     }
 }}
