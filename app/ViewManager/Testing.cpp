@@ -649,9 +649,9 @@ namespace App { namespace ViewManager
         qDebug() << "Running valve safe method";
     }
 
-    void Testing::requestVacDown(int mintues, bool turbo)
+    void Testing::requestVacDown(int mintues, bool turbo,int gasMode)
     {
-        m_experimentEngine.VacDown();
+        m_experimentEngine.VacDown(mintues, turbo, gasMode);
         qDebug() << "Running vac down method";
     }
 

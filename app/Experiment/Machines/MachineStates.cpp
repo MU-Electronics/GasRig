@@ -19,6 +19,7 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
+
     MachineStates::MachineStates(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety)
         :   QObject(parent)
         ,   m_settings(settings)
@@ -31,8 +32,17 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_vacTime(parent)
 
             // Check the system pressure
-        ,   sm_systemPressure(&machine),
-            sm_validate_requestSystemPressure(&machine)
+        ,   sm_systemPressure(&machine)
+        ,   sm_validatePressureForVacuum(&machine)
+
+            // Close the high pressure valve
+        ,   sm_closeHighPressureInput(&machine)
+        ,   sm_validateCloseHighPressureInput(&machine)
+        ,   sm_closeHighPressureNitrogen(&machine)
+        ,   sm_validateCloseHighPressureNitrogen(&machine)
+        ,   sm_closeFlowController(&machine)
+        ,   sm_validateCloseFlowController(&machine)
+
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &MachineStates::hardwareRequest, &m_hardware, &Hardware::Access::hardwareAccess);
@@ -45,7 +55,6 @@ namespace App { namespace Experiment { namespace Machines
     }
 
 
-
     /**
      * Connect states to their matching methods
      *      NOTE: Methods are virtual so can be overloaded in machine classes
@@ -54,11 +63,14 @@ namespace App { namespace Experiment { namespace Machines
      */
     void MachineStates::connectStatesToMethods()
     {
+        // Pressure related states
         connect(&sm_systemPressure, &QState::entered, this, &MachineStates::systemPressure);
-        connect(&sm_validate_requestSystemPressure, &CommandValidatorState::entered, this, &MachineStates::validateSystemPressure);
+        connect(&sm_validatePressureForVacuum, &CommandValidatorState::entered, this, &MachineStates::validatePressureForVacuum);
 
+        // Valve related states
+        connect(&sm_closeHighPressureInput, &QState::entered, this, &MachineStates::closeHighPressureInput);
+        connect(&sm_validateCloseHighPressureInput, &CommandValidatorState::entered, this, &MachineStates::validateCloseHighPressureInput);
     }
-
 
 
     /**
@@ -73,6 +85,50 @@ namespace App { namespace Experiment { namespace Machines
     }
 
 
+
+
+
+    /**
+     * Request closing of the high pressure input valve
+     *
+     * @brief MachineStates::systemPressure
+     */
+    void MachineStates::closeHighPressureInput()
+    {
+        // Find the correct valve name
+        QString valveName = m_settings.hardware.valve_connections.value("7").toString();
+
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.setValveState(valveName, false));
+    }
+
+    /**
+     * Request closing of the high pressure input valve
+     *
+     * @brief MachineStates::systemPressure
+     */
+    void MachineStates::validateCloseHighPressureInput()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        qDebug() << package;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Request a reading of the system pressure
      *
@@ -83,12 +139,13 @@ namespace App { namespace Experiment { namespace Machines
         emit hardwareRequest(m_commandConstructor.getPressureReading(1));
     }
 
+
     /**
      * Validate a reading of the system pressure
      *
      * @brief MachineStates::validateSystemPressure
      */
-    void MachineStates::validateSystemPressure()
+    void MachineStates::validatePressureForVacuum()
     {
         // Get the validator state instance
         CommandValidatorState* state = (CommandValidatorState*)sender();
@@ -96,17 +153,34 @@ namespace App { namespace Experiment { namespace Machines
         // Get the package data from the instance
         QVariantMap package = state->package;
 
+        // Get the pressure
+        float pressure = package.value("pressure").toFloat();
+
+        // Get the max pressure allowed
+        float maxPressure = m_settings.safety.vacuum.value("vacuum_from").toFloat();
+
         // Check the pressure is safe to vac down
-        if(package.value("pressure") < "1.5")
+        if(pressure < maxPressure)
         {
+            // Store the stage info
+            QVariantMap data;
+            data.insert("pressure", pressure);
+
             // Emit safe to proceed
+            emit emit_validationSuccess(data);
         }
         else
         {
-            // Emit not safe to proceed
-        }
+            // Store the error
+            QVariantMap error;
+            error.insert("message", "pressure in system is too high for the vac station; Exhuast the system first.");
+            error.insert("system_pressure", pressure);
+            error.insert("system_pressure_max", maxPressure);
 
-        qDebug() << "Validating: " << package.value("pressure");
+            // Emit not safe to proceed
+            emit emit_validationFailed(error);
+        }
     }
+
 
 }}}

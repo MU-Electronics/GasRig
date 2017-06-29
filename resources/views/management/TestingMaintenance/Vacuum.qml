@@ -109,7 +109,7 @@ Item
                         enabled: (vacDown_time.text) ? 1 : 0;
                         onClicked:
                         {
-                            TestingManager.requestVacDown(vacDown_time.text, vacDown_turbo.checked);
+                            TestingManager.requestVacDown(vacDown_time.text, vacDown_turbo.checked, SystemStatusManager.vacuumState["gas_type_mode"]);
                         }
                     }
                 }

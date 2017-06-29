@@ -36,6 +36,9 @@ namespace App { namespace Experiment { namespace Machines
             // Hold the state machine
             QStateMachine machine;
 
+            // Hold params for states
+            QVariantMap params;
+
             // Hold a timer instance
             QTimer t_vacMonitor;
             QTimer t_vacTime;
@@ -43,19 +46,34 @@ namespace App { namespace Experiment { namespace Machines
             // Create the states for the machine
             QState
                 // Check pressure
-                sm_systemPressure;
+                sm_systemPressure,
+                // Close input valves
+                sm_closeHighPressureInput,
+                sm_closeHighPressureNitrogen,
+                sm_closeFlowController;
 
             CommandValidatorState
                 // Validate pressure
-                sm_validate_requestSystemPressure;
+                sm_validatePressureForVacuum,
+                // Validate input valves
+                sm_validateCloseHighPressureInput,
+                sm_validateCloseHighPressureNitrogen,
+                sm_validateCloseFlowController;
 
         signals:
             void hardwareRequest(QVariantMap command);
 
+            void emit_validationFailed(QVariantMap error);
+            void emit_validationSuccess(QVariantMap data);
+
         public slots:
-            // Functions for states
+            // Pressure related states
             void systemPressure();
-            void validateSystemPressure();
+            void validatePressureForVacuum();
+
+            // Valve related states
+            void closeHighPressureInput();
+            void validateCloseHighPressureInput();
 
         private:
             // Holds the application settings

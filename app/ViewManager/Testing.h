@@ -69,7 +69,7 @@ namespace App { namespace ViewManager
             void requestPurgeSystemMethodTwo(int minutes, QString pressure);
             void requestValveStateSafe(int port, bool state);
             void requestOutputPressure(int frequency);
-            void requestVacDown(int mintues, bool turbo);
+            void requestVacDown(int mintues, bool turbo, int gasMode);
 
 
 

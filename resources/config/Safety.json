@@ -5,11 +5,13 @@
     },
 
     "vacuum":{
-        "rise": "0.5",
-        "fall": "0.5"
+        "max_rise": "0.5",
+        "max_fall": "0.5",
+        "vacuum_from": "1.1"
     },
 
     "turbo_pump": {
+        "turbo_from": "0.005",
         "temp_bottom": "60",
         "temp_electronics": "50",
         "temp_bearing": "60",
