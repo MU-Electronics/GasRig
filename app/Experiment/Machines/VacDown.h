@@ -26,9 +26,11 @@ namespace App { namespace Experiment { namespace Machines
 
             ~VacDown();
 
-            void setParams(int mintues, bool turbo, int gasMode);
+            void setParams(int mintues, bool turbo, int gasMode, int mode);
 
             void start();
+
+            void stop();
 
             void buildMachine();
 

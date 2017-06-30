@@ -40,25 +40,80 @@ namespace App { namespace Experiment { namespace Machines
             QVariantMap params;
 
             // Hold a timer instance
-            QTimer t_vacMonitor;
+            QTimer t_vacPressureMonitor;
             QTimer t_vacTime;
 
             // Create the states for the machine
             QState
                 // Check pressure
-                sm_systemPressure,
-                // Close input valves
-                sm_closeHighPressureInput,
-                sm_closeHighPressureNitrogen,
-                sm_closeFlowController;
+                sm_systemPressure
+                // Close valves
+            ,   sm_closeHighPressureInput
+            ,   sm_closeHighPressureNitrogen
+            ,   sm_closeFlowController
+            ,   sm_closeExhuast
+            ,   sm_closeOutput
+            ,   sm_closeSlowExhuastPath
+            ,   sm_closeFastExhuastPath
+            ,   sm_closeVacuumIn
+            ,   sm_closeVacuumOut
+                // Open valve related states
+            ,   sm_openHighPressureInput
+            ,   sm_openHighPressureNitrogen
+            ,   sm_openFlowController
+            ,   sm_openExhuast
+            ,   sm_openOutput
+            ,   sm_openSlowExhuastPath
+            ,   sm_openFastExhuastPath
+            ,   sm_openVacuumIn
+            ,   sm_openVacuumOut
+                // States relating to controlling the vac station
+            ,   sm_disableTurboPump
+            ,   sm_enableTurboPump
+            ,   sm_disableBackingPump
+            ,   sm_enableBackingPump
+            ,   sm_setGasModeHeavy
+            ,   sm_setGasModeMedium
+            ,   sm_setGasModeHelium
+            ,   sm_startVacuumPressureMonitor;
 
+
+
+
+            // Create command validator states
             CommandValidatorState
                 // Validate pressure
-                sm_validatePressureForVacuum,
-                // Validate input valves
-                sm_validateCloseHighPressureInput,
-                sm_validateCloseHighPressureNitrogen,
-                sm_validateCloseFlowController;
+                sm_validatePressureForVacuum
+                // Validate close valves
+            ,   sm_validateCloseHighPressureInput
+            ,   sm_validateCloseHighPressureNitrogen
+            ,   sm_validateCloseFlowController
+            ,   sm_validateCloseExhuast
+            ,   sm_validateCloseOutput
+            ,   sm_validateCloseSlowExhuastPath
+            ,   sm_validateCloseFastExhuastPath
+            ,   sm_validateCloseVacuumIn
+            ,   sm_validateCloseVacuumOut
+                // Validate open valve
+            ,   sm_validateOpenHighPressureInput
+            ,   sm_validateOpenHighPressureNitrogen
+            ,   sm_validateOpenFlowController
+            ,   sm_validateOpenExhuast
+            ,   sm_validateOpenOutput
+            ,   sm_validateOpenSlowExhuastPath
+            ,   sm_validateOpenFastExhuastPath
+            ,   sm_validateOpenVacuumIn
+            ,   sm_validateOpenVacuumOut
+                // States relating to controlling the vac station
+            ,   sm_validateDisableTurboPump
+            ,   sm_validateEnableTurboPump
+            ,   sm_validateDisableBackingPump
+            ,   sm_validateEnableBackingPump
+            ,   sm_validateSetGasModeHeavy
+            ,   sm_validateSetGasModeMedium
+            ,   sm_validateSetGasModeHelium
+            ,   sm_validateStartVacuumPressureMonitor;
+
 
         signals:
             void hardwareRequest(QVariantMap command);
@@ -66,14 +121,82 @@ namespace App { namespace Experiment { namespace Machines
             void emit_validationFailed(QVariantMap error);
             void emit_validationSuccess(QVariantMap data);
 
+            void emit_timerStarted();
+
         public slots:
             // Pressure related states
             void systemPressure();
             void validatePressureForVacuum();
 
-            // Valve related states
+            // Close valve states
             void closeHighPressureInput();
+            void closeHighPressureNitrogen();
+            void closeFlowController();
+            void closeExhuast();
+            void closeOutput();
+            void closeSlowExhuastPath();
+            void closeFastExhuastPath();
+            void closeVacuumIn();
+            void closeVacuumOut();
+
+            // Validate close valve states
             void validateCloseHighPressureInput();
+            void validateCloseHighPressureNitrogen();
+            void validateCloseFlowController();
+            void validateCloseExhuast();
+            void validateCloseOutput();
+            void validateCloseSlowExhuastPath();
+            void validateCloseFastExhuastPath();
+            void validateCloseVacuumIn();
+            void validateCloseVacuumOut();
+
+            // Open valve states
+            void openHighPressureInput();
+            void openHighPressureNitrogen();
+            void openFlowController();
+            void openExhuast();
+            void openOutput();
+            void openSlowExhuastPath();
+            void openFastExhuastPath();
+            void openVacuumIn();
+            void openVacuumOut();
+
+            // Validate open valve states
+            void validateOpenHighPressureInput();
+            void validateOpenHighPressureNitrogen();
+            void validateOpenFlowController();
+            void validateOpenExhuast();
+            void validateOpenOutput();
+            void validateOpenSlowExhuastPath();
+            void validateOpenFastExhuastPath();
+            void validateOpenVacuumIn();
+            void validateOpenVacuumOut();
+
+            // States relating to controlling the vac station
+            void disableTurboPump();
+            void enableTurboPump();
+            void disableBackingPump();
+            void enableBackingPump();
+            void setGasModeHeavy();
+            void setGasModeMedium();
+            void setGasModeHelium();
+
+            // States relating to validating the vac station commands
+            void validateDisableTurboPump();
+            void validateEnableTurboPump();
+            void validateDisableBackingPump();
+            void validateEnableBackingPump();
+            void validateSetGasModeHeavy();
+            void validateSetGasModeMedium();
+            void validateSetGasModeHelium();
+
+
+
+
+
+            // Timer functions
+            void startVacuumPressureMonitor();
+            void stopVacuumPressureMonitor();
 
         private:
             // Holds the application settings
@@ -82,15 +205,15 @@ namespace App { namespace Experiment { namespace Machines
             // Hold instance of command constructor
             Hardware::CommandConstructor m_commandConstructor;
 
-
-
-
-
             // Setup state timers
             void setupTimers();
 
             // Connect states to their function
             void connectStatesToMethods();
+
+            // Open valve helper
+            void valveHelper(QString number, bool state);
+            void validateValveHelper(QString number, bool state);
 
     };
 }}}

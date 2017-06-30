@@ -37,10 +37,10 @@ namespace App { namespace Experiment
 
     }
 
-    void Engine::VacDown(int mintues, bool turbo, int gasMode)
+    void Engine::VacDown(int mintues, bool turbo, int gasMode, int mode)
     {
         // Set the params
-        m_vacDown.setParams(mintues, turbo, gasMode);
+        m_vacDown.setParams(mintues, turbo, gasMode, mode);
 
         // Build the machine
         m_vacDown.buildMachine();

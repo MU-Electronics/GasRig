@@ -32,7 +32,7 @@ Item
 
             width: parent.width-10
 
-            height: 200
+            height: 280
 
             padding: 5
 
@@ -94,13 +94,31 @@ Item
                         placeholderText: qsTr("Time in minutes")
                         validator: IntValidator { bottom:0; top: 10000}
                         inputMethodHints: Qt.ImhDigitsOnly
-                        width: vacuumStationSafeFunction.width - 250
+                        width: vacuumStationSafeFunction.width - 110
                     }
 
                     CheckBox {
                         id: vacDown_turbo
                         checked: false
                         text: qsTr("Turbo")
+                    }
+                }
+                Row
+                {
+                    RadioButton {
+                        checked: false
+                        text: qsTr("To Output")
+                        id: vacDown_toOuput
+                    }
+                    RadioButton {
+                        checked: false
+                        text: qsTr("To Vacuum Output")
+                        id: vacDown_toVacOutput
+                    }
+                    RadioButton {
+                        checked: true
+                        text: qsTr("Internal system")
+                        id: vacDown_toInternal
                     }
 
                     Button
@@ -109,7 +127,9 @@ Item
                         enabled: (vacDown_time.text) ? 1 : 0;
                         onClicked:
                         {
-                            TestingManager.requestVacDown(vacDown_time.text, vacDown_turbo.checked, SystemStatusManager.vacuumState["gas_type_mode"]);
+                            var mode;
+                            if(vacDown_toOuput.checked){ mode = 1; } else if(vacDown_toVacOutput.checked){ mode = 2; } else if(vacDown_toInternal.checked){ mode = 3; }
+                            TestingManager.requestVacDown(vacDown_time.text, vacDown_turbo.checked, SystemStatusManager.vacuumState["gas_type_mode"], mode);
                         }
                     }
                 }
