@@ -75,7 +75,13 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_setGasModeHeavy
             ,   sm_setGasModeMedium
             ,   sm_setGasModeHelium
-            ,   sm_startVacuumPressureMonitor;
+            ,   sm_vacPressure
+                // Timers
+            ,   sm_startVacuumPressureMonitor
+            ,   sm_startVacuumTimer
+            ,   sm_timerWait
+                // Finishing sequence
+            ,   sm_finishVacSession;
 
 
 
@@ -112,7 +118,8 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_validateSetGasModeHeavy
             ,   sm_validateSetGasModeMedium
             ,   sm_validateSetGasModeHelium
-            ,   sm_validateStartVacuumPressureMonitor;
+            ,   sm_validateStartVacuumPressureMonitor
+            ,   sm_validateVacPressureForTurbo;
 
 
         signals:
@@ -121,12 +128,16 @@ namespace App { namespace Experiment { namespace Machines
             void emit_validationFailed(QVariantMap error);
             void emit_validationSuccess(QVariantMap data);
 
-            void emit_timerStarted();
+            void emit_stateAlreadySet();
+
+            void emit_timerActive();
 
         public slots:
             // Pressure related states
             void systemPressure();
             void validatePressureForVacuum();
+            void vacPressure();
+            void validateVacPressureForTurbo();
 
             // Close valve states
             void closeHighPressureInput();
@@ -192,11 +203,17 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
+            // Finishing sequence
+            void finishVacSession();
+
 
 
             // Timer functions
+            void timerWait();
             void startVacuumPressureMonitor();
             void stopVacuumPressureMonitor();
+            void startVacuumTimer();
+            void stopVacuumTimer();
 
         private:
             // Holds the application settings
@@ -214,6 +231,15 @@ namespace App { namespace Experiment { namespace Machines
             // Open valve helper
             void valveHelper(QString number, bool state);
             void validateValveHelper(QString number, bool state);
+
+            // Turbo pump state
+            bool turboState = false;
+
+            // Vacuum pressure
+            double vacuumPressure = 0;
+
+            // Pressure
+            double pressure = 0;
 
     };
 }}}

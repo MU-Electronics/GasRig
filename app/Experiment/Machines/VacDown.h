@@ -35,6 +35,9 @@ namespace App { namespace Experiment { namespace Machines
             void buildMachine();
 
         private:
+            // Referance to QObject
+            QObject *parent;
+
             // Holds the application settings
             Settings::Container m_settings;
 

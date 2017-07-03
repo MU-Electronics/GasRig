@@ -37,6 +37,9 @@ namespace App { namespace Experiment { namespace Machines
      */
     void VacDown::setParams(int mintues, bool turbo, int gasMode, int mode)
     {
+        // Ensure we have a clean machine when chaning params
+
+
         // How long the vac should run
         params.insert("mintues", mintues);
 
@@ -48,6 +51,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Where the vacuum should go
         params.insert("mode", mode);
+
+        // Setup timers
+        t_vacTime.setInterval( (mintues * 60) * 1000 );
     }
 
 
@@ -209,24 +215,45 @@ namespace App { namespace Experiment { namespace Machines
             // Valve failed to close
 
         // Disable the vac station turbo
+        sm_disableTurboPump.addTransition(this, &MachineStates::emit_stateAlreadySet, &sm_startVacuumPressureMonitor);
         sm_disableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &sm_validateDisableTurboPump);
             // Turbo pump was disabled
             sm_validateDisableTurboPump.addTransition(this, &MachineStates::emit_validationSuccess, &sm_startVacuumPressureMonitor);
             // Turbo pump could not be disabled
 
         // Start monitoring the vacuum sensor
-        sm_startVacuumPressureMonitor.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sm_enableTurboPump);
-            // Should the turbo turn on?
-        sm_enableTurboPump.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sm_enableTurboPump);
+        sm_startVacuumPressureMonitor.addTransition(this, &MachineStates::emit_timerActive, &sm_startVacuumTimer);
 
-        // Turn the backing pump on
-            // Backing pump turned on
-            // Backing pump did not turn on
+        // Start vac time
+        sm_startVacuumTimer.addTransition(this, &MachineStates::emit_timerActive, &sm_enableBackingPump);
 
-        // Start the timer for length of vac session
-            // Timer expirered
+        // Turn on backing pump
+        sm_enableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &sm_validateEnableBackingPump);
+            // Validate backing pump on
+            sm_validateEnableBackingPump.addTransition(this, &MachineStates::emit_validationSuccess, &sm_vacPressure);
+            // Backing pump failed
 
-        // Close machine
+        // Read vac pressure
+        sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &sm_validateVacPressureForTurbo);
+            // Pressure low enough for turbo so enable it
+            sm_validateVacPressureForTurbo.addTransition(this, &MachineStates::emit_validationSuccess, &sm_enableTurboPump);
+            // Pressure too high for turbo, wait for next time out untill we check again
+            sm_validateVacPressureForTurbo.addTransition(this, &MachineStates::emit_validationFailed, &sm_timerWait);
+            // Vac session finished
+
+        // Enable turbo pump
+        sm_enableTurboPump.addTransition(this, &MachineStates::emit_stateAlreadySet, &sm_timerWait);
+        sm_enableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &sm_validateEnableTurboPump);
+            // Successfully enabled
+            sm_validateEnableTurboPump.addTransition(this, &MachineStates::emit_validationSuccess, &sm_timerWait);
+            // Could not enable
+
+        // End vac session when timer limit ends t_vacTime
+        sm_timerWait.addTransition(&t_vacTime, &QTimer::timeout, &sm_finishVacSession);
+        // Wait for timer event
+        sm_timerWait.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sm_vacPressure);
+
+        // Finish
             // Disable turbo
             // Turn off backing pump
             // Disable vacuum sensor monitor

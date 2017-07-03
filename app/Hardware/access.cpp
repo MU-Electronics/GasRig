@@ -63,13 +63,16 @@ namespace App { namespace Hardware
 
     /**
      * Class detructure performs:
-     *      - Nothing atm
+     *      - Close com ports
      *
      * @brief Monitor::~Monitor
      */
     Access::~Access()
     {
-
+        m_vacStation.close();
+        m_pressureSensor.close();
+        m_flowController.close();
+        m_labjack.close();
     }
 
 

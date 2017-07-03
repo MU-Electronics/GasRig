@@ -1,5 +1,7 @@
 #include "MachineStates.h"
 
+#include <cmath>
+
 // Include extenral deps
 #include <QObject>
 #include <QDebug>
@@ -35,6 +37,8 @@ namespace App { namespace Experiment { namespace Machines
             // Pressure sensor ralted states
         ,   sm_systemPressure(&machine)
         ,   sm_validatePressureForVacuum(&machine)
+        ,   sm_vacPressure(&machine)
+        ,   sm_validateVacPressureForTurbo(&machine)
 
             // Close valve related states
         ,   sm_closeHighPressureInput(&machine)       
@@ -89,6 +93,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sm_setGasModeMedium(&machine)
         ,   sm_setGasModeHelium(&machine)
         ,   sm_startVacuumPressureMonitor(&machine)
+        ,   sm_startVacuumTimer(&machine)
 
             // States relating to controlling the vac station
         ,   sm_validateDisableTurboPump(&machine)
@@ -101,6 +106,12 @@ namespace App { namespace Experiment { namespace Machines
         ,   sm_validateStartVacuumPressureMonitor(&machine)
 
             // Flow controller related states
+
+            // Timers
+        ,   sm_timerWait(&machine)
+
+            // Finishing sequence
+        ,   sm_finishVacSession(&machine)
 
     {
         // Connect object signals to hardware slots and visa versa
@@ -125,6 +136,9 @@ namespace App { namespace Experiment { namespace Machines
         // Pressure related states
         connect(&sm_systemPressure, &QState::entered, this, &MachineStates::systemPressure);
         connect(&sm_validatePressureForVacuum, &CommandValidatorState::entered, this, &MachineStates::validatePressureForVacuum);
+        connect(&sm_vacPressure, &QState::entered, this, &MachineStates::vacPressure);
+        connect(&sm_validateVacPressureForTurbo, &CommandValidatorState::entered, this, &MachineStates::validateVacPressureForTurbo);
+
 
         // Link close valve states
         connect(&sm_closeHighPressureInput, &QState::entered, this, &MachineStates::closeHighPressureInput);
@@ -188,8 +202,15 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sm_validateSetGasModeMedium, &CommandValidatorState::entered, this, &MachineStates::validateSetGasModeMedium);
         connect(&sm_validateSetGasModeHelium, &CommandValidatorState::entered, this, &MachineStates::validateSetGasModeHelium);
 
+        // Link
+
         // Link the timer states
         connect(&sm_startVacuumPressureMonitor, &QState::entered, this, &MachineStates::startVacuumPressureMonitor);
+        connect(&sm_startVacuumTimer, &QState::entered, this, &MachineStates::startVacuumTimer);
+        connect(&sm_timerWait, &QState::entered, this, &MachineStates::timerWait);
+
+        // Finishing sequence
+        connect(&sm_finishVacSession, &QState::entered, this, &MachineStates::finishVacSession);
     }
 
 
@@ -474,24 +495,48 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
-
+    void MachineStates::timerWait()
+    {
+    }
 
     void MachineStates::startVacuumPressureMonitor()
     {
-        qDebug() << "Setting up the timer";
-        // Setup timer
-        t_vacPressureMonitor.setSingleShot(false);
-        t_vacPressureMonitor.setInterval(500);
-        t_vacPressureMonitor.start();
+        if(!t_vacPressureMonitor.isActive())
+        {
+            // Setup timer
+            t_vacPressureMonitor.setSingleShot(false);
+            t_vacPressureMonitor.setInterval(500);
+            t_vacPressureMonitor.start();
+        }
 
         // Emit the timer started
-        emit emit_timerStarted();
+        emit emit_timerActive();
     }
 
     void MachineStates::stopVacuumPressureMonitor()
     {
-        t_vacPressureMonitor.start();
+        t_vacPressureMonitor.stop();
     }
+
+
+    void MachineStates::startVacuumTimer()
+    {
+        if(!t_vacTime.isActive())
+        {
+            // Setup timer
+            t_vacTime.setSingleShot(true);
+            //t_vacTime.setInterval(10000);
+            t_vacTime.start();
+        }
+
+        emit emit_timerActive();
+    }
+
+    void MachineStates::stopVacuumTimer()
+    {
+        t_vacTime.stop();
+    }
+
 
 
 
@@ -502,16 +547,29 @@ namespace App { namespace Experiment { namespace Machines
 
     void MachineStates::disableTurboPump()
     {
+        // Check current state
+        if(!turboState)
+        {
+            emit emit_stateAlreadySet();
+            return;
+        }
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setTurboPump(false));
     }
 
-    // THIS SHOULD BE A VALIDATOR AS WE SHOULD CHECK PRESSURE BEFORE HAND
     void MachineStates::enableTurboPump()
     {
+        // Get the param trubo over ride if exists
+        if(turboState || (!params.value("turbo").isNull() && !params.value("turbo").toBool()) )
+        {
+            emit emit_stateAlreadySet();
+            return;
+        }
+
         qDebug() << "Enabling turbo pump";
         // Emit siganl to HAL
-        //emit hardwareRequest(m_commandConstructor.setTurboPump(true));
+       emit hardwareRequest(m_commandConstructor.setTurboPump(true));
     }
 
     void MachineStates::disableBackingPump()
@@ -522,6 +580,7 @@ namespace App { namespace Experiment { namespace Machines
 
     void MachineStates::enableBackingPump()
     {
+        qDebug() <<  "enabling backing pump";
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setBackingPump(true));
     }
@@ -555,6 +614,9 @@ namespace App { namespace Experiment { namespace Machines
 
         if(package.value("state").toBool() == false)
         {
+            // Store turbo off
+            turboState = false;
+
             // Store the success
             QVariantMap success;
             success.insert("message", "the turbo pump could not be disabled");
@@ -585,7 +647,15 @@ namespace App { namespace Experiment { namespace Machines
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        qDebug() << package;
+        // Store enable turbo
+        turboState = true;
+
+        qDebug() << "Validating enabling turbo pump";
+
+        QVariantMap success;
+        success.insert("requested_state", true);
+        emit emit_validationSuccess(success);
+
     }
 
     void MachineStates::validateDisableBackingPump()
@@ -606,6 +676,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Get the package data from the instance
         QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
 
         qDebug() << package;
     }
@@ -646,6 +719,48 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
+
+
+
+
+
+
+    void MachineStates::vacPressure()
+    {
+        emit hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings.hardware.vacuum_guage.value("connection").toString(),
+                                                                     m_settings.hardware.vacuum_guage.value("slope").toDouble(),
+                                                                     m_settings.hardware.vacuum_guage.value("offset").toDouble()));
+    }
+
+
+    void MachineStates::validateVacPressureForTurbo()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // If port is the same as the vacuum guage port
+        if(package.value("port").toString() == m_settings.hardware.vacuum_guage.value("connection").toString())
+        {
+            double pressure = (std::pow(10, (1.667*package.value("calibrated").toDouble()-9.333)))/100;
+
+            if( (turboState == false && pressure < 6) || (turboState == true && pressure < 7) )
+            {
+                QVariantMap success;
+                success.insert("pressure", pressure);
+                emit emit_validationSuccess(success);
+                return;
+            }
+        }
+
+        // Store the error
+        QVariantMap error;
+        error.insert("message", "the vacuum pressure is too high for the turbo pump to be turned on");
+        emit emit_validationFailed(error);
+
+    }
 
 
     /**
@@ -701,5 +816,27 @@ namespace App { namespace Experiment { namespace Machines
         emit emit_validationFailed(error);
     }
 
+
+
+    void MachineStates::finishVacSession()
+    {
+        // Turn off vacuum
+       disableTurboPump();
+       disableBackingPump();
+
+       // Close valves
+       closeOutput();
+       closeVacuumOut();
+       closeFastExhuastPath();
+       closeSlowExhuastPath();
+       closeVacuumIn();
+
+       // Stop timers
+       stopVacuumPressureMonitor();
+       stopVacuumTimer();
+
+       // Stop the machine
+       machine.stop();
+    }
 
 }}}
