@@ -11,7 +11,7 @@
 #include "../Safety/Monitor.h"
 
 // Include state machine
-#include "Machines/VacDown.h"
+#include "Machines/Machines.h"
 
 namespace App { namespace Experiment
 {
@@ -26,8 +26,7 @@ namespace App { namespace Experiment
 
             void makeConnections();
 
-            void vacDown(int mintues, bool turbo, int gasMode, int mode);
-            void stopVacDown();
+            Machines::Machines &machines();
 
         private:
             // Holds the application settings
@@ -39,8 +38,8 @@ namespace App { namespace Experiment
             // Hold the safety monitor
             Safety::Monitor &m_safety;
 
-            // Vac down machine
-            Machines::VacDown& m_vacDown;
+            // Machines container
+            Machines::Machines& m_machines;
 
     };
 }}

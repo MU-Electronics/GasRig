@@ -10,17 +10,17 @@
 #include "../Hardware/Access.h"
 #include "../Safety/Monitor.h"
 
-// Include state machine
-#include "Machines/VacDown.h"
+// Include state machines
+#include "Machines/Machines.h"
 
 namespace App { namespace Experiment
 {
     Engine::Engine(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
-        :   QObject(parent),
-            m_settings(settings),
-            m_hardware(hardware),
-            m_safety(safety)
-        ,   m_vacDown(*new Machines::VacDown(parent, settings, hardware, safety))
+        :   QObject(parent)
+        ,   m_settings(settings)
+        ,   m_hardware(hardware)
+        ,   m_safety(safety)
+        ,   m_machines(*new Machines::Machines(parent, settings, hardware, safety))
     {
 
     }
@@ -40,34 +40,14 @@ namespace App { namespace Experiment
 
 
     /**
-     * Start a new vac down state machine running
+     * Returns the container of machines
      *
-     * @brief Engine::VacDown
-     * @param mintues
-     * @param turbo
-     * @param gasMode
-     * @param mode
+     * @brief Engine::machines
+     * @return
      */
-    void Engine::vacDown(int mintues, bool turbo, int gasMode, int mode)
+    Machines::Machines& Engine::machines()
     {
-        // Set the params
-        m_vacDown.setParams(mintues, turbo, gasMode, mode);
-
-        // Build the machine
-        m_vacDown.buildMachine();
-
-        // Start the machine
-        m_vacDown.start();
-    }
-
-    /**
-     * Stops a running instance of vac down state machine
-     *
-     * @brief Engine::StopVacDown
-     */
-    void Engine::stopVacDown()
-    {
-        m_vacDown.stop();
+        return m_machines;
     }
 
 

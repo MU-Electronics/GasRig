@@ -572,7 +572,6 @@ namespace App { namespace Experiment { namespace Machines
             return;
         }
 
-        qDebug() << "Enabling turbo pump";
         // Emit siganl to HAL
        emit hardwareRequest(m_commandConstructor.setTurboPump(true));
     }
@@ -585,7 +584,6 @@ namespace App { namespace Experiment { namespace Machines
 
     void MachineStates::enableBackingPump()
     {
-        qDebug() <<  "enabling backing pump";
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setBackingPump(true));
     }
@@ -655,7 +653,7 @@ namespace App { namespace Experiment { namespace Machines
         // Store enable turbo
         turboState = true;
 
-        qDebug() << "Validating enabling turbo pump";
+        qDebug() << "@todo Validating enabling turbo pump";
 
         QVariantMap success;
         success.insert("requested_state", true);

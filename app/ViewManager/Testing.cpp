@@ -651,7 +651,7 @@ namespace App { namespace ViewManager
 
     void Testing::requestVacDown(int mintues, bool turbo,int gasMode, int mode)
     {
-        m_experimentEngine.vacDown(mintues, turbo, gasMode, mode);
+        m_experimentEngine.machines().vacDown(mintues, turbo, gasMode, mode);
         qDebug() << "Running vac down method";
     }
 
