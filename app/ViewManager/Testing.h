@@ -112,6 +112,30 @@ namespace App { namespace ViewManager
             // Hold instance of command constructor
             Hardware::CommandConstructor m_commandConstructor;
 
+            // Requested command which is allowed to show a responce in the command terminal
+            QString requestedCommand;
+
+
+            void setRequestedCommand(QString command)
+            {
+                requestedCommand = command;
+            }
+
+            bool isRequestedCommand(QString command)
+            {
+                if(requestedCommand == command)
+                {
+                    // Remove from request
+                    requestedCommand = "";
+
+                    // Return true
+                    return true;
+                }
+
+                // Return false
+                return false;
+            }
+
     };
 }}
 

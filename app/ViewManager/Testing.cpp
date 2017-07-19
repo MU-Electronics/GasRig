@@ -78,6 +78,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveFlowControllerTemperature(QVariantMap command)
     {
+        if(!isRequestedCommand("requestFlowControllerTemperature"))
+            return;
+
         // Get the flow units
         auto flowUnits = m_settings.hardware.flow_controller_units.value("temperature").toMap();
         QString unit = " " + flowUnits.value(command.value("temperature_unit").toString()).toString();
@@ -94,6 +97,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveFlowControllerFlowRate(QVariantMap command)
     {
+        if(!isRequestedCommand("requestFlowControllerFlowRate"))
+            return;
+
         // Get the flow units
         auto flowUnits = m_settings.hardware.flow_controller_units.value("flow").toMap();
         QString unit = " " + flowUnits.value(command.value("flow_unit").toString()).toString();
@@ -110,6 +116,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveFlowControllerValveOverride(QVariantMap command)
     {
+        if(!isRequestedCommand("requestFlowControllerValveOverride"))
+            return;
+
         emit emit_testingMaintenanceReply("Valve override set to " + command.value("override_verbal").toString() + " for " + command.value("controller").toString());
     }
 
@@ -121,6 +130,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveSetFlowControllerFlowRate(QVariantMap command)
     {
+        if(!isRequestedCommand("requestActualFlowControllerFlowRate"))
+            return;
+
         emit emit_testingMaintenanceReply("Flow rate set to " + command.value("flow").toString() + " for " + command.value("controller").toString());
     }
 
@@ -132,6 +144,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveSetFlowControllerSoftStart(QVariantMap command)
     {
+        if(!isRequestedCommand("requestFlowControllerSoftStart"))
+            return;
+
         QString softstart = "disabled";
         if(command.value("state").toInt() == 4)
             softstart = "linear ramp";
@@ -147,6 +162,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveSetFlowControllerSoftStartTime(QVariantMap command)
     {
+        if(!isRequestedCommand("requestFlowControllerSoftStartTime"))
+            return;
+
         emit emit_testingMaintenanceReply("Flow controller's soft start time constant set to " + command.value("seconds").toString() + " seconds for " + command.value("controller").toString());
     }
 
@@ -158,6 +176,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveSetFlowControllerSourceControl(QVariantMap command)
     {
+        if(!isRequestedCommand("requestSetFlowControllerSourceControl"))
+            return;
+
         QString source = "digital";
         if(command.value("source").toInt() == 1)
             QString source = "analogue";
@@ -182,6 +203,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receivePressureSensorInit(QVariantMap command)
     {
+        if(!isRequestedCommand("requestPressureConfirmation"))
+            return;
+
         emit emit_testingMaintenanceReply("Pressure sensor init: " + command.value("hardware_correct").toString());
     }
 
@@ -193,6 +217,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receivePressureSensorSerialNumber(QVariantMap command)
     {
+        if(!isRequestedCommand("requestPressureSerialNumber"))
+            return;
+
         emit emit_testingMaintenanceReply("Pressure sensor serial number is: " + command.value("serial").toString());
     }
 
@@ -204,6 +231,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receivePressureSensorReading(QVariantMap command)
     {
+        if(!isRequestedCommand("requestPressureReading"))
+            return;
+
         emit emit_testingMaintenanceReply("Pressure sensor was reading was: " + command.value("pressure").toString());
     }
 
@@ -225,6 +255,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveVacTurboSpeed(QVariantMap command)
     {
+        if(!isRequestedCommand("requestTurboSpeed"))
+            return;
+
         emit emit_testingMaintenanceReply("The " + command.value("type_desc_verbal").toString() + " speed of the turbo is " + command.value("speed").toString() + " " + command.value("type_unit").toString());
     }
 
@@ -236,6 +269,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveVacTemperature(QVariantMap command)
     {
+        if(!isRequestedCommand("requestTurboBearingTemperature"))
+            return;
+
         emit emit_testingMaintenanceReply("The temperature of " + command.value("location_verbal").toString() + " is " + command.value("temperature").toString() + " Degrees Celsius");
     }
 
@@ -247,6 +283,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveVacSetGasMode(QVariantMap command)
     {
+        if(!isRequestedCommand("requestGasMode"))
+            return;
+
         emit emit_testingMaintenanceReply("The gas mode was set to: " + command.value("mode_verbal").toString());
     }
 
@@ -258,6 +297,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveVacSetPumpMode(QVariantMap command)
     {
+        if(!isRequestedCommand("requestBackingPumpMode"))
+            return;
+
         emit emit_testingMaintenanceReply("The pump mode was set to: " + command.value("mode_verbal").toString());
     }
 
@@ -269,6 +311,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveVacSetPump(QVariantMap command)
     {
+        if(!isRequestedCommand("requestBackingPump"))
+            return;
+
         emit emit_testingMaintenanceReply("The pump state is: " + command.value("state_verbal").toString());
     }
 
@@ -280,6 +325,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveVacSetTurbo(QVariantMap command)
     {
+        if(!isRequestedCommand("requestTurboPump"))
+            return;
+
         emit emit_testingMaintenanceReply("The turbo state is: " + command.value("state_verbal").toString());
     }
 
@@ -302,6 +350,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveValveStatus(QVariantMap command)
     {
+        if(!isRequestedCommand("requestValveState"))
+            return;
+
         // Get the port name
         QString portNumber  = m_settings.hardware.valve_connections.key(command.value("port").toString());
 
@@ -325,6 +376,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveLabJackConfig(QVariantMap command)
     {
+        if(!isRequestedCommand("requestLabJackConfig"))
+            return;
+
         emit emit_testingMaintenanceReply("The LabJack config is: "/* + command.value("state_verbal").toString()*/);
     }
 
@@ -336,6 +390,9 @@ namespace App { namespace ViewManager
      */
     void Testing::receiveVacuumReading(QVariantMap command)
     {
+        if(!isRequestedCommand("requestVacuumPressure"))
+            return;
+
         // If port is the same as the vacuum guage port
         if(command["port"] == m_settings.hardware.vacuum_guage.value("connection").toString())
         {
@@ -364,6 +421,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestBackingPump(bool onOff)
     {
+        // Set the requested command
+        setRequestedCommand("requestBackingPump");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setBackingPump(onOff));
     }
@@ -376,6 +436,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestTurboPump(bool onOff)
     {
+        // Set the requested command
+        setRequestedCommand("requestTurboPump");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setTurboPump(onOff));
     }
@@ -388,7 +451,10 @@ namespace App { namespace ViewManager
      */
     void Testing::requestBackingPumpMode(int mode)
     {
-       // Emit siganl to HAL
+        // Set the requested command
+        setRequestedCommand("requestBackingPumpMode");
+
+        // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setBackingPumpMode(mode));
     }
 
@@ -400,6 +466,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestGasMode(int mode)
     {
+        // Set the requested command
+        setRequestedCommand("requestGasMode");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setGasMode(mode));
     }
@@ -411,6 +480,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestTurboSpeed()
     {
+        // Set the requested command
+        setRequestedCommand("requestTurboSpeed");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.getTurboSpeed());
     }
@@ -422,6 +494,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestTurboBearingTemperature()
     {
+        // Set the requested command
+        setRequestedCommand("requestTurboBearingTemperature");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.getTurboBearingTemperature());
     }
@@ -445,6 +520,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestPressureConfirmation()
     {
+        // Set the requested command
+        setRequestedCommand("requestPressureConfirmation");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.pressureConfirmation());
     }
@@ -456,6 +534,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestPressureReading()
     {
+        // Set the requested command
+        setRequestedCommand("requestPressureReading");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.getPressureReading(1));
     }
@@ -467,6 +548,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestPressureSerialNumber()
     {
+        // Set the requested command
+        setRequestedCommand("requestPressureSerialNumber");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.getPressureSerialNumber());
     }
@@ -492,6 +576,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestLabJackConfig()
     {
+        // Set the requested command
+        setRequestedCommand("requestLabJackConfig");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setLabJackConfig(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
     }
@@ -504,6 +591,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestValveState(int port, bool state)
     {
+        // Set the requested command
+        setRequestedCommand("requestValveState");
+
         // Find the correct valve name
         QString valveName = m_settings.hardware.valve_connections.value(QString::number(port)).toString();
 
@@ -520,6 +610,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestVacuumPressure()
     {
+        // Set the requested command
+        setRequestedCommand("requestVacuumPressure");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings.hardware.vacuum_guage.value("connection").toString(),
                                                                      m_settings.hardware.vacuum_guage.value("slope").toDouble(),
@@ -546,6 +639,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestActualFlowControllerFlowRate(QString controller)
     {
+        // Set the requested command
+        setRequestedCommand("requestActualFlowControllerFlowRate");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.getFlowControllerFlowRate(controller));
     }
@@ -557,6 +653,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerTemperature(QString controller)
     {
+        // Set the requested command
+        setRequestedCommand("requestFlowControllerTemperature");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.getFlowControllerTemperature(controller));
     }
@@ -568,6 +667,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerValveOverride(QString controller, int state)
     {
+        // Set the requested command
+        setRequestedCommand("requestFlowControllerValveOverride");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setFlowControllerValveOverride(controller, state));
     }
@@ -579,6 +681,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerFlowRate(QString controller, double flowrate)
     {
+        // Set the requested command
+        setRequestedCommand("requestFlowControllerFlowRate");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setFlowControllerFlowRate(controller, flowrate));
     }
@@ -590,6 +695,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerSoftStart(QString controller, int state)
     {
+        // Set the requested command
+        setRequestedCommand("requestFlowControllerSoftStart");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setFlowControllerSoftStart(controller, state));
     }
@@ -601,6 +709,9 @@ namespace App { namespace ViewManager
      */
     void Testing::requestFlowControllerSoftStartTime(QString controller, int seconds)
     {
+        // Set the requested command
+        setRequestedCommand("requestFlowControllerSoftStartTime");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setFlowControllerSoftStartTime(controller, seconds));
     }
@@ -608,6 +719,9 @@ namespace App { namespace ViewManager
 
     void Testing::requestSetFlowControllerSourceControl(QString controller, int source)
     {
+        // Set the requested command
+        setRequestedCommand("requestSetFlowControllerSourceControl");
+
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setFlowControllerSourceControl(controller, source));
     }
