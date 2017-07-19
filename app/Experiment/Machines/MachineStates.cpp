@@ -113,6 +113,8 @@ namespace App { namespace Experiment { namespace Machines
             // Finishing sequence
         ,   sm_finishVacSession(&machine)
 
+        ,   // Re-implimention of stop for each machine
+            sm_stop(&machine)
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &MachineStates::hardwareRequest, &m_hardware, &Hardware::Access::hardwareAccess);
@@ -211,6 +213,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Finishing sequence
         connect(&sm_finishVacSession, &QState::entered, this, &MachineStates::finishVacSession);
+
+        // Re-implimention of stop for each machine
+        connect(&sm_stop, &QState::entered, this, &MachineStates::stop);
     }
 
 
@@ -833,9 +838,6 @@ namespace App { namespace Experiment { namespace Machines
        // Stop timers
        stopVacuumPressureMonitor();
        stopVacuumTimer();
-
-       // Stop the machine
-       machine.stop();
     }
 
 }}}

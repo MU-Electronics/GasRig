@@ -27,6 +27,7 @@ namespace App { namespace Experiment
 
     Engine::~Engine(){}
 
+
     /**
      * Make connections to other parts of the application
      *
@@ -37,7 +38,17 @@ namespace App { namespace Experiment
 
     }
 
-    void Engine::VacDown(int mintues, bool turbo, int gasMode, int mode)
+
+    /**
+     * Start a new vac down state machine running
+     *
+     * @brief Engine::VacDown
+     * @param mintues
+     * @param turbo
+     * @param gasMode
+     * @param mode
+     */
+    void Engine::vacDown(int mintues, bool turbo, int gasMode, int mode)
     {
         // Set the params
         m_vacDown.setParams(mintues, turbo, gasMode, mode);
@@ -48,4 +59,16 @@ namespace App { namespace Experiment
         // Start the machine
         m_vacDown.start();
     }
+
+    /**
+     * Stops a running instance of vac down state machine
+     *
+     * @brief Engine::StopVacDown
+     */
+    void Engine::stopVacDown()
+    {
+        m_vacDown.stop();
+    }
+
+
 }}

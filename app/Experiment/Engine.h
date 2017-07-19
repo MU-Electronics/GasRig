@@ -26,7 +26,8 @@ namespace App { namespace Experiment
 
             void makeConnections();
 
-            void VacDown(int mintues, bool turbo, int gasMode, int mode);
+            void vacDown(int mintues, bool turbo, int gasMode, int mode);
+            void stopVacDown();
 
         private:
             // Holds the application settings

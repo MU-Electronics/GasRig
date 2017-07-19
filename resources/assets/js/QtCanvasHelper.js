@@ -168,7 +168,8 @@ function pressureSensor(ctx, windowWidth, pressure)
     // Pressure
     ctx.font = 'bold 15pt Calibri';
     ctx.textAlign = 'center';
-    ctx.fillStyle = colorLuminance(colorText, -0.2);
+    //ctx.fillStyle = colorLuminance(colorText, -0.2);
+    ctx.fillStyle = colorText;
     ctx.fillText("Pressure Sensor", x+55, y+25);
 
     // value

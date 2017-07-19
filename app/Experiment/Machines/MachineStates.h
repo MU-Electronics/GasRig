@@ -81,7 +81,9 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_startVacuumTimer
             ,   sm_timerWait
                 // Finishing sequence
-            ,   sm_finishVacSession;
+            ,   sm_finishVacSession
+            ,   // Re-implimention of stop for each machine
+                sm_stop;
 
 
 
@@ -205,6 +207,11 @@ namespace App { namespace Experiment { namespace Machines
 
             // Finishing sequence
             void finishVacSession();
+
+
+
+            // Re-implimention of stop for each machine
+            virtual void stop() = 0;
 
 
 

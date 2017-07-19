@@ -20,7 +20,7 @@ namespace App { namespace Experiment { namespace Machines
 {
     class VacDown    :   public MachineStates
     {
-
+        Q_OBJECT
         public:
             VacDown(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
@@ -32,7 +32,12 @@ namespace App { namespace Experiment { namespace Machines
 
             void stop();
 
+            void destroyMachine();
+
             void buildMachine();
+
+        signals:
+            void emit_vacDownFinished(QVariantMap params);
 
         private:
             // Referance to QObject
