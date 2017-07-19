@@ -99,24 +99,28 @@ namespace App { namespace Experiment { namespace Machines
             // Pressure is low enough
             sm_validatePressureForVacuum.addTransition(this, &MachineStates::emit_validationSuccess, &sm_closeHighPressureInput);
             // Pressure is too high
+            sm_validatePressureForVacuum.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Close the high pressure valve
         sm_closeHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sm_validateCloseHighPressureInput);
             // Valve closed successfully
             sm_validateCloseHighPressureInput.addTransition(this, &MachineStates::emit_validationSuccess, &sm_closeHighPressureNitrogen);
             // Valve failed to close
+            sm_validateCloseHighPressureInput.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Close the nitrogen valve
         sm_closeHighPressureNitrogen.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sm_validateCloseHighPressureNitrogen);
             // Valve closed successfully
             sm_validateCloseHighPressureNitrogen.addTransition(this, &MachineStates::emit_validationSuccess, &sm_closeFlowController);
             // Valve failed to close
+            sm_validateCloseHighPressureNitrogen.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Close the flow controller valve
         sm_closeFlowController.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sm_validateCloseFlowController);
             // Valve closed successfully
             sm_validateCloseFlowController.addTransition(this, &MachineStates::emit_validationSuccess, &sm_closeExhuast);
             // Valve failed to close
+            sm_validateCloseFlowController.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Close the exhuast valve
         sm_closeExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sm_validateCloseExhuast);
@@ -132,6 +136,7 @@ namespace App { namespace Experiment { namespace Machines
                 sm_validateCloseExhuast.addTransition(this, &MachineStates::emit_validationSuccess, &sm_openOutput);
             }
             // Valve failed to close
+            sm_validateCloseExhuast.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Set the output valve
         sm_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sm_validateCloseOutput);
@@ -153,6 +158,8 @@ namespace App { namespace Experiment { namespace Machines
                 sm_validateOpenOutput.addTransition(this, &MachineStates::emit_validationSuccess, &sm_openFastExhuastPath);
             }
             // Valve failed to close
+            sm_validateCloseOutput.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
+            sm_validateOpenOutput.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Set the exhuast path valve fast
         sm_closeFastExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sm_validateCloseFastExhuastPath);
@@ -174,6 +181,8 @@ namespace App { namespace Experiment { namespace Machines
                 sm_validateOpenFastExhuastPath.addTransition(this, &MachineStates::emit_validationSuccess, &sm_openSlowExhuastPath);
             }
             // Valve failed to close
+            sm_validateCloseFastExhuastPath.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
+            sm_validateOpenFastExhuastPath.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Set the exhuast path valve slow
         sm_closeSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sm_validateCloseSlowExhuastPath);
@@ -190,6 +199,8 @@ namespace App { namespace Experiment { namespace Machines
                 sm_validateOpenSlowExhuastPath.addTransition(this, &MachineStates::emit_validationSuccess, &sm_closeVacuumOut);
             }
             // Valve failed to close
+            sm_validateCloseSlowExhuastPath.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
+            sm_validateOpenSlowExhuastPath.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Set vacuum out valve
         sm_closeVacuumOut.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sm_validateCloseVacuumOut);
@@ -206,6 +217,8 @@ namespace App { namespace Experiment { namespace Machines
                 sm_validateCloseVacuumOut.addTransition(this, &MachineStates::emit_validationSuccess, &sm_openVacuumIn);
             }
             // Valve failed to close
+            sm_validateOpenVacuumOut.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
+            sm_validateCloseVacuumOut.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
 
         // Set the vacuum in valve open
@@ -213,6 +226,7 @@ namespace App { namespace Experiment { namespace Machines
             // Valve closed successfully
             sm_validateOpenVacuumIn.addTransition(this, &MachineStates::emit_validationSuccess, &sm_disableTurboPump);
             // Valve failed to close
+            sm_validateOpenVacuumIn.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Disable the vac station turbo
         sm_disableTurboPump.addTransition(this, &MachineStates::emit_stateAlreadySet, &sm_startVacuumPressureMonitor);
@@ -220,6 +234,7 @@ namespace App { namespace Experiment { namespace Machines
             // Turbo pump was disabled
             sm_validateDisableTurboPump.addTransition(this, &MachineStates::emit_validationSuccess, &sm_startVacuumPressureMonitor);
             // Turbo pump could not be disabled
+            sm_validateDisableTurboPump.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Start monitoring the vacuum sensor
         sm_startVacuumPressureMonitor.addTransition(this, &MachineStates::emit_timerActive, &sm_startVacuumTimer);
@@ -232,6 +247,7 @@ namespace App { namespace Experiment { namespace Machines
             // Validate backing pump on
             sm_validateEnableBackingPump.addTransition(this, &MachineStates::emit_validationSuccess, &sm_vacPressure);
             // Backing pump failed
+            sm_validateEnableBackingPump.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // Read vac pressure
         sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &sm_validateVacPressureForTurbo);
@@ -239,7 +255,6 @@ namespace App { namespace Experiment { namespace Machines
             sm_validateVacPressureForTurbo.addTransition(this, &MachineStates::emit_validationSuccess, &sm_enableTurboPump);
             // Pressure too high for turbo, wait for next time out untill we check again
             sm_validateVacPressureForTurbo.addTransition(this, &MachineStates::emit_validationFailed, &sm_timerWait);
-            // Vac session finished
 
         // Enable turbo pump
         sm_enableTurboPump.addTransition(this, &MachineStates::emit_stateAlreadySet, &sm_timerWait);
@@ -247,17 +262,12 @@ namespace App { namespace Experiment { namespace Machines
             // Successfully enabled
             sm_validateEnableTurboPump.addTransition(this, &MachineStates::emit_validationSuccess, &sm_timerWait);
             // Could not enable
+            sm_validateEnableTurboPump.addTransition(this, &MachineStates::emit_validationFailed, &sm_finishVacSession);
 
         // End vac session when timer limit ends t_vacTime
         sm_timerWait.addTransition(&t_vacTime, &QTimer::timeout, &sm_finishVacSession);
         // Wait for timer event
         sm_timerWait.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sm_vacPressure);
-
-        // Finish
-            // Disable turbo
-            // Turn off backing pump
-            // Disable vacuum sensor monitor
-
     }
 }}}
 

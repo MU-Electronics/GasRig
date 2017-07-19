@@ -744,8 +744,7 @@ namespace App { namespace Experiment { namespace Machines
         // If port is the same as the vacuum guage port
         if(package.value("port").toString() == m_settings.hardware.vacuum_guage.value("connection").toString())
         {
-            double pressure = (std::pow(10, (1.667*package.value("calibrated").toDouble()-9.333)))/100;
-
+            pressure = (std::pow(10, (1.667*package.value("calibrated").toDouble()-9.333)))/100;
             if( (turboState == false && pressure < 6) || (turboState == true && pressure < 7) )
             {
                 QVariantMap success;
