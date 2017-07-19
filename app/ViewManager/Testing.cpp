@@ -622,37 +622,54 @@ namespace App { namespace ViewManager
     void Testing::requestHighPressure(QString pressure)
     {
         qDebug() << "Running high pressure";
+
+        m_experimentEngine.machines().setHighPressure(pressure.toDouble(), 1, 0.3);
     }
 
     void Testing::requestExhuast(int filterType, int frequency)
     {
         qDebug() << "Running exhuast";
+
+        m_experimentEngine.machines().exhuast(frequency, filterType);
     }
 
     void Testing::requestOutputPressure(int frequency)
     {
         qDebug() << "Running output pressure";
+
+        m_experimentEngine.machines().outputPressure(frequency);
     }
 
     void Testing::requestPurgeSystemMethodOne(bool outputValve, int cycles, QString pressure)
     {
         qDebug() << "Running purging with method one";
+
+        m_experimentEngine.machines().purgeSystemMethodOne(outputValve, cycles, pressure);
     }
 
     void Testing::requestPurgeSystemMethodTwo(int minutes, QString pressure)
     {
         qDebug() << "Running purging with method two";
+
+        m_experimentEngine.machines().purgeSystemMethodTwo(minutes, pressure);
     }
 
     void Testing::requestValveStateSafe(int port, bool state)
     {
         qDebug() << "Running valve safe method";
+        if(state)
+        {
+            m_experimentEngine.machines().valveOpen(port);
+        }
+        else
+        {
+            m_experimentEngine.machines().valveClose(port);
+        }
     }
 
     void Testing::requestVacDown(int mintues, bool turbo,int gasMode, int mode)
     {
         m_experimentEngine.machines().vacDown(mintues, turbo, gasMode, mode);
-        qDebug() << "Running vac down method";
     }
 
 }}
