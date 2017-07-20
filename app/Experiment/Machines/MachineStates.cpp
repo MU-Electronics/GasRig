@@ -683,7 +683,7 @@ namespace App { namespace Experiment { namespace Machines
         QVariantMap success;
         emit emit_validationSuccess(success);
 
-        qDebug() << package;
+        //qDebug() << package;
     }
 
     void MachineStates::validateSetGasModeHeavy()

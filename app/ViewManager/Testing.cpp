@@ -786,5 +786,10 @@ namespace App { namespace ViewManager
         m_experimentEngine.machines().vacDown(mintues, turbo, gasMode, mode);
     }
 
+    void Testing::requestVacDownStop()
+    {
+        m_experimentEngine.machines().stopVacDown();
+    }
+
 }}
 

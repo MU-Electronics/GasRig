@@ -27,14 +27,23 @@ namespace App { namespace ViewManager
     {
         Q_OBJECT
 
+        // Vac down state machine status
+        Q_PROPERTY(QVariantMap vacDownMachine READ vacDownMachine NOTIFY emit_vacDownMachineChanged)
+
         public:
             MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
 
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
+            // Return the data for the vac down state machine
+            QVariantMap vacDownMachine() const { return m_vacDownMachine; }
+
         signals:
             void emit_hardwareAccess(QVariantMap command);
+
+            // Signals for properties
+            void emit_vacDownMachineChanged(QVariantMap);
 
         public slots:
             void vacDownStarted(int mintues, bool turbo, int gasMode, int mode);
@@ -49,6 +58,9 @@ namespace App { namespace ViewManager
 
             // Hold experiment engine
             Experiment::Engine& m_experimentEngine;
+
+            // Holds the vac down machine statuses
+            QVariantMap m_vacDownMachine;
 
     };
 }}

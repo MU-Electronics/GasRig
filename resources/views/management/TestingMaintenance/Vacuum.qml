@@ -95,12 +95,14 @@ Item
                         validator: IntValidator { bottom:0; top: 10000}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: vacuumStationSafeFunction.width - 110
+                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
 
                     CheckBox {
                         id: vacDown_turbo
                         checked: false
                         text: qsTr("Turbo")
+                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
                 }
                 Row
@@ -109,27 +111,40 @@ Item
                         checked: false
                         text: qsTr("To Output")
                         id: vacDown_toOuput
+                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
                     RadioButton {
                         checked: false
                         text: qsTr("To Vacuum Output")
                         id: vacDown_toVacOutput
+                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
                     RadioButton {
                         checked: true
                         text: qsTr("Internal system")
                         id: vacDown_toInternal
+                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
 
                     Button
                     {
                         text: qsTr("Vac down")
-                        enabled: (vacDown_time.text) ? 1 : 0;
+                        enabled: (vacDown_time.text && MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
+                        visible: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                         onClicked:
                         {
                             var mode;
                             if(vacDown_toOuput.checked){ mode = 1; } else if(vacDown_toVacOutput.checked){ mode = 2; } else if(vacDown_toInternal.checked){ mode = 3; }
                             TestingManager.requestVacDown(vacDown_time.text, vacDown_turbo.checked, SystemStatusManager.vacuumState["gas_type_mode"], mode);
+                        }
+                    }
+                    Button
+                    {
+                        text: qsTr("Stop")
+                        visible: (MachineStatusManager.vacDownMachine["status"] === true) ? 1 : 0;
+                        onClicked:
+                        {
+                            TestingManager.requestVacDownStop();
                         }
                     }
                 }

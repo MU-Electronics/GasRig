@@ -24,7 +24,12 @@ namespace App { namespace ViewManager
         ,   m_settings(settings)
         ,   m_experimentEngine(experimentEngine)
     {
-
+        // Default values for vac state machine
+        m_vacDownMachine.insert("status", false);
+        m_vacDownMachine.insert("mintues", 0);
+        m_vacDownMachine.insert("turbo", false);
+        m_vacDownMachine.insert("gasMode", 0);
+        m_vacDownMachine.insert("mode", 0);
 
     }
 
@@ -60,7 +65,15 @@ namespace App { namespace ViewManager
      */
     void MachineStatus::vacDownStarted(int mintues, bool turbo, int gasMode, int mode)
     {
-        qDebug() << "Vac down machine started for: " << mintues << " mins";
+        // Update the vac machine status
+        m_vacDownMachine.insert("status", true);
+        m_vacDownMachine.insert("mintues", mintues);
+        m_vacDownMachine.insert("turbo", turbo);
+        m_vacDownMachine.insert("gasMode", gasMode);
+        m_vacDownMachine.insert("mode", mode);
+
+        // Emit that there was an update
+        emit emit_vacDownMachineChanged(m_vacDownMachine);
     }
 
 
@@ -71,7 +84,11 @@ namespace App { namespace ViewManager
      */
     void MachineStatus::vacDownStopped()
     {
-        qDebug() << "Vac down machine stopped";
+        // Update the vac machine status
+        m_vacDownMachine.insert("status", false);
+
+        // Emit that there was an update
+        emit emit_vacDownMachineChanged(m_vacDownMachine);
     }
 
 

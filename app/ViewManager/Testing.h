@@ -71,6 +71,8 @@ namespace App { namespace ViewManager
             void requestOutputPressure(int frequency);
             void requestVacDown(int mintues, bool turbo, int gasMode, int mode);
 
+            // Request experiment methods to be stopped
+            void requestVacDownStop();
 
 
 
