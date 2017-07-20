@@ -5,6 +5,7 @@
 
 // Include state machine
 #include "VacDown.h"
+#include "SafeValve.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -13,6 +14,7 @@ namespace App { namespace Experiment { namespace Machines
     Machines::Machines(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   QObject(parent)
         ,   m_vacDown(*new VacDown(parent, settings, hardware, safety))
+        ,   m_safeValve(*new SafeValve(parent, settings, hardware, safety))
     {
         // Connect the finished signals for the machines
         connect(&m_vacDown, &VacDown::emit_vacDownFinished, this, &Machines::vacDownFinished);
@@ -215,7 +217,17 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::valveOpen(int id)
     {
+        // Set the params
+        m_safeValve.setParams(id, true);
 
+        // Build the machine
+        m_safeValve.buildMachine();
+
+        // Start the machine
+        m_safeValve.start();
+
+        // Emit machine started
+        emit emit_safeValveMachineStarted(id, true);
     }
 
     /**
@@ -226,7 +238,17 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::valveClose(int id)
     {
+        // Set the params
+        m_safeValve.setParams(id, false);
 
+        // Build the machine
+        m_safeValve.buildMachine();
+
+        // Start the machine
+        m_safeValve.start();
+
+        // Emit machine started
+        emit emit_safeValveMachineStarted(id, true);
     }
 
 

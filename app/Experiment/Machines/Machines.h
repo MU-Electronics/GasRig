@@ -5,6 +5,7 @@
 
 // Include state machine
 #include "VacDown.h"
+#include "SafeValve.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -45,14 +46,18 @@ namespace App { namespace Experiment { namespace Machines
             void emit_vacDownMachineStarted(int mintues, bool turbo, int gasMode, int mode);
             void emit_vacDownMachineStopped();
 
+            void emit_safeValveMachineStarted(int id, bool state);
+
             void emit_purgeSystemMachineState(bool state);
 
         public slots:
             void vacDownFinished(QVariantMap params);
 
         private:
-            // Vac down machine
+            // Hold the machines
             VacDown& m_vacDown;
+            SafeValve& m_safeValve;
+
     };
 
 }}}

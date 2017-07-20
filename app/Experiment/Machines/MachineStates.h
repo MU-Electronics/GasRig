@@ -83,7 +83,8 @@ namespace App { namespace Experiment { namespace Machines
                 // Finishing sequence
             ,   sm_finishVacSession
             ,   // Re-implimention of stop for each machine
-                sm_stop;
+                sm_stop
+            ,   sm_stopAsFailed;
 
 
 
@@ -123,6 +124,12 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_validateStartVacuumPressureMonitor
             ,   sm_validateVacPressureForTurbo;
 
+            // Helper methods
+            void removeAllTransitions();
+
+            // Contract methods that must be implimented
+            virtual void start() = 0;
+            virtual void buildMachine() = 0;
 
         signals:
             void hardwareRequest(QVariantMap command);
@@ -212,6 +219,7 @@ namespace App { namespace Experiment { namespace Machines
 
             // Re-implimention of stop for each machine
             virtual void stop() = 0;
+            virtual void stopAsFailed() = 0;
 
 
 

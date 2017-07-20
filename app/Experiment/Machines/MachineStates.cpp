@@ -113,8 +113,9 @@ namespace App { namespace Experiment { namespace Machines
             // Finishing sequence
         ,   sm_finishVacSession(&machine)
 
-        ,   // Re-implimention of stop for each machine
-            sm_stop(&machine)
+            // Re-implimention of stop for each machine
+        ,   sm_stop(&machine)
+        ,   sm_stopAsFailed(&machine)
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &MachineStates::hardwareRequest, &m_hardware, &Hardware::Access::hardwareAccess);
@@ -216,6 +217,32 @@ namespace App { namespace Experiment { namespace Machines
 
         // Re-implimention of stop for each machine
         connect(&sm_stop, &QState::entered, this, &MachineStates::stop);
+        connect(&sm_stopAsFailed, &QState::entered, this, &MachineStates::stopAsFailed);
+    }
+
+
+
+    /**
+     * This helper method removes all transistions from all the states
+     *
+     * @brief MachineStates::removeAllTransitions
+     */
+    void MachineStates::removeAllTransitions()
+    {
+        // Get all states from machine and loop through them
+        QList<QState *> allStates = machine.findChildren<QState *>();
+        while(!allStates.isEmpty())
+        {
+            // Get the current state
+            QState *state = allStates.takeFirst();
+
+            // Get all the transistions for this state
+            QList<QAbstractTransition *> transitions = state->transitions();
+
+            // Remove all the transisition from the states
+            while (!transitions.isEmpty())
+                state->removeTransition(transitions.takeFirst());
+        }
     }
 
 

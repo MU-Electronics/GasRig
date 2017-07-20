@@ -18,16 +18,16 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    class VacDown    :   public MachineStates
+    class SafeValve    :   public MachineStates
     {
         Q_OBJECT
 
         public:
-            VacDown(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            SafeValve(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
-            ~VacDown();
+            ~SafeValve();
 
-            void setParams(int mintues, bool turbo, int gasMode, int mode);
+            void setParams(int id, bool state);
 
             void start();
 
@@ -38,8 +38,8 @@ namespace App { namespace Experiment { namespace Machines
             void buildMachine();
 
         signals:
-            void emit_vacDownFinished(QVariantMap params);
-            void emit_vacDownFailed(QVariantMap params);
+            void emit_safeValveFinished(QVariantMap params);
+            void emit_safeValveFailed(QVariantMap params);
 
         private:
             // Referance to QObject
@@ -47,6 +47,17 @@ namespace App { namespace Experiment { namespace Machines
 
             // Holds the application settings
             Settings::Container m_settings;
+
+            // Valve state machines
+            void valveOne(bool state);
+            void valveTwo(bool state);
+            void valveThree(bool state);
+            void valveFour(bool state);
+            void valveFive(bool state);
+            void valveSix(bool state);
+            void valveSeven(bool state);
+            void valveEight(bool state);
+            void valveNine(bool state);
 
     };
 }}}
