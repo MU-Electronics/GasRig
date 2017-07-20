@@ -13,6 +13,7 @@
 #include "ViewManager/Testing.h"
 #include "ViewManager/ConnectionStatus.h"
 #include "ViewManager/SystemStatus.h"
+#include "ViewManager/MachineStatus.h"
 
 // Objects to the threaded
 #include "Safety/Monitor.h"
@@ -54,6 +55,7 @@ namespace App
             ViewManager::Testing& manager_testing;
             ViewManager::ConnectionStatus& manager_connection;
             ViewManager::SystemStatus& manager_systemStatus;
+            ViewManager::MachineStatus& manager_machineStatus;
 
             void registerManagers();
             void registerAddtionalThreads();

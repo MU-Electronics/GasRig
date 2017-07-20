@@ -78,7 +78,8 @@ SOURCES += \
     app/Experiment/Machines/VacDown.cpp \
     app/Experiment/Machines/MachineStates.cpp \
     app/Experiment/Machines/CommandValidatorState.cpp \
-    app/Experiment/Machines/Machines.cpp
+    app/Experiment/Machines/Machines.cpp \
+    app/ViewManager/MachineStatus.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -148,4 +149,5 @@ HEADERS += \
     app/Experiment/Machines/VacDown.h \
     app/Experiment/Machines/MachineStates.h \
     app/Experiment/Machines/CommandValidatorState.h \
-    app/Experiment/Machines/Machines.h
+    app/Experiment/Machines/Machines.h \
+    app/ViewManager/MachineStatus.h

@@ -11,9 +11,11 @@ namespace App { namespace Experiment { namespace Machines
 
 
     Machines::Machines(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
-        :   m_vacDown(*new VacDown(parent, settings, hardware, safety))
+        :   QObject(parent)
+        ,   m_vacDown(*new VacDown(parent, settings, hardware, safety))
     {
-
+        // Connect the finished signals for the machines
+        connect(&m_vacDown, &VacDown::emit_vacDownFinished, this, &Machines::vacDownFinished);
     }
 
 
@@ -36,6 +38,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_vacDown.start();
+
+        // Emit machine started
+        emit emit_vacDownMachineStarted(mintues, turbo, gasMode, mode);
     }
 
     /**
@@ -45,7 +50,22 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::stopVacDown()
     {
+        // Stop the machine
         m_vacDown.stop();
+
+        // Emit machine stopped
+        emit emit_vacDownMachineStopped();
+    }
+
+    /**
+     * This method is trigged if the state machine finished
+     *
+     * @brief Machine::vacDownFinished
+     */
+    void Machines::vacDownFinished(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_vacDownMachineStopped();
     }
 
 

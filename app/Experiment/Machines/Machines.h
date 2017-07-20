@@ -9,8 +9,10 @@
 namespace App { namespace Experiment { namespace Machines
 {
 
-    class Machines
+    class Machines  :   public QObject
     {
+        Q_OBJECT
+
         public:
             Machines(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety);
 
@@ -38,6 +40,15 @@ namespace App { namespace Experiment { namespace Machines
 
             void setFlowRate(int flowController, double rate);
             void stopFlowRate(int flowController, double rate);
+
+        signals:
+            void emit_vacDownMachineStarted(int mintues, bool turbo, int gasMode, int mode);
+            void emit_vacDownMachineStopped();
+
+            void emit_purgeSystemMachineState(bool state);
+
+        public slots:
+            void vacDownFinished(QVariantMap params);
 
         private:
             // Vac down machine

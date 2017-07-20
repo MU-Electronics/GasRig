@@ -45,23 +45,24 @@ namespace App
      * @param engine
      */
     Application::Application(QObject* parent, QQmlApplicationEngine* engine)
-        : QObject(parent),
-          m_engine(engine),
+        :   QObject(parent)
+        ,   m_engine(engine)
 
-          // Create instance of the settings container
-          settings_container(*new Settings::Container),
+           // Create instance of the settings container
+        ,  settings_container(*new Settings::Container)
 
-          // Start objects that are to be threaded
-          monitor(*new Safety::Monitor(this, settings_container)),
-          hardware(*new Hardware::Access(this, settings_container)),
+            // Start objects that are to be threaded
+        ,   monitor(*new Safety::Monitor(this, settings_container))
+        ,   hardware(*new Hardware::Access(this, settings_container))
 
-          // Include the expeirment engine
-          experiment_engine(*new Experiment::Engine(this, settings_container, hardware, monitor)),
+            // Include the expeirment engine
+        ,    experiment_engine(*new Experiment::Engine(this, settings_container, hardware, monitor))
 
-          // Create instance for each view manager
-          manager_testing(*new ViewManager::Testing(parent, engine, settings_container, experiment_engine)),
-          manager_connection(*new ViewManager::ConnectionStatus(parent, engine, settings_container, experiment_engine)),
-          manager_systemStatus(*new ViewManager::SystemStatus(parent, engine, settings_container, experiment_engine))
+            // Create instance for each view manager
+        ,   manager_testing(*new ViewManager::Testing(parent, engine, settings_container, experiment_engine))
+        ,   manager_connection(*new ViewManager::ConnectionStatus(parent, engine, settings_container, experiment_engine))
+        ,   manager_systemStatus(*new ViewManager::SystemStatus(parent, engine, settings_container, experiment_engine))
+        ,   manager_machineStatus(*new ViewManager::MachineStatus(parent, engine, settings_container, experiment_engine))
     {
         // Load all managers
         registerManagers();
@@ -121,6 +122,9 @@ namespace App
 
         // Set system status manager
         m_engine->rootContext()->setContextProperty("SystemStatusManager", &manager_systemStatus);
+
+        // Set machine status manger
+        m_engine->rootContext()->setContextProperty("MachineStatusManager", &manager_machineStatus);
     }
 
 
@@ -176,6 +180,9 @@ namespace App
 
         // Make connections for connection status view manager
         manager_connection.makeConnections(hardware, monitor);
+
+        // Make connections for machine status view manager
+        manager_machineStatus.makeConnections(hardware, monitor);
 
     }
 
