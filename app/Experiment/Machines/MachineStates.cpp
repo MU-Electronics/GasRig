@@ -771,11 +771,17 @@ namespace App { namespace Experiment { namespace Machines
         // Get the package data from the instance
         QVariantMap package = state->package;
 
+        // Get value form settings
+        double setPressure = (m_settings.safety.turbo_pump.value("turbo_from").toDouble()) * 1000;
+
         // If port is the same as the vacuum guage port
         if(package.value("port").toString() == m_settings.hardware.vacuum_guage.value("connection").toString())
         {
+            // Calculate current vacuum
             pressure = (std::pow(10, (1.667*package.value("calibrated").toDouble()-9.333)))/100;
-            if( (turboState == false && pressure < 6) || (turboState == true && pressure < 7) )
+
+            // Apply some hysteresis
+            if( (turboState == false && pressure < setPressure) || (turboState == true && pressure < setPressure + 1) )
             {
                 QVariantMap success;
                 success.insert("pressure", pressure);

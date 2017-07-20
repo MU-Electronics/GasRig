@@ -672,7 +672,7 @@ Item {
                             {
                                 text: model.name
                                 objectName: "valveButton"
-                                Material.background: if(SystemStatusManager.valveState[model.number] === 1){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
+                                Material.background: if(SystemStatusManager.valveState[model.number] === 1){ Material.color(Material.Red, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
                                 Material.foreground: if(SystemStatusManager.valveState[model.number] === 1){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
                                 onClicked:
                                 {
