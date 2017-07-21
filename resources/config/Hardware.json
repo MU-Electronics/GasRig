@@ -91,6 +91,9 @@
     "polling_times": {
         "pressure_sensor": "1500",
         "vacuum_sensor": "1500",
-        "flowcontroller_flow": "1500"
+        "flow_controller_flow": "1500",
+        "turbo_speed": "3000",
+        "vacuum_station_temperatures": "5000",
+        "flow_controller_temperatures": "5000"
     }
 }

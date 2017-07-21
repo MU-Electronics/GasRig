@@ -9,6 +9,9 @@
 #include "ReadFlowControllerFlow.h"
 #include "ReadPressure.h"
 #include "ReadVacuum.h"
+#include "ReadFlowControllerTemperatures.h"
+#include "ReadTurboSpeed.h"
+#include "ReadVacStationTemperatures.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -20,6 +23,9 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_readFlowControllerFlow(*new ReadFlowControllerFlow(parent, settings, hardware, safety))
         ,   m_readPressure(*new ReadPressure(parent, settings, hardware, safety))
         ,   m_readVacuum(*new ReadVacuum(parent, settings, hardware, safety))
+        ,   m_readFlowControllerTemperatures(*new ReadFlowControllerTemperatures(parent, settings, hardware, safety))
+        ,   m_readTurboSpeed(*new ReadTurboSpeed(parent, settings, hardware, safety))
+        ,   m_readVacStationTemperatures(*new ReadVacStationTemperatures(parent, settings, hardware, safety))
     {
         // Connect the finished signals for the machine vac down
         connect(&m_vacDown, &VacDown::emit_vacDownFinished, this, &Machines::vacDownFinished);
@@ -36,6 +42,12 @@ namespace App { namespace Experiment { namespace Machines
         connect(&m_readPressure, &ReadPressure::emit_readPressureFailed, this, &Machines::sensorReadingsFailed);
         connect(&m_readVacuum, &ReadVacuum::emit_readVacuumStopped, this, &Machines::sensorReadingsFinished);
         connect(&m_readVacuum, &ReadVacuum::emit_readVacuumStopped, this, &Machines::sensorReadingsFailed);
+        connect(&m_readFlowControllerTemperatures, &ReadFlowControllerTemperatures::emit_readFlowControllerTemperaturesStopped, this, &Machines::sensorReadingsFinished);
+        connect(&m_readFlowControllerTemperatures, &ReadFlowControllerTemperatures::emit_readFlowControllerTemperaturesFailed, this, &Machines::sensorReadingsFailed);
+        connect(&m_readTurboSpeed, &ReadTurboSpeed::emit_readTurboSpeedStopped, this, &Machines::sensorReadingsFinished);
+        connect(&m_readTurboSpeed, &ReadTurboSpeed::emit_readTurboSpeedFailed, this, &Machines::sensorReadingsFailed);
+        connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_readVacStationTemperaturesStopped, this, &Machines::sensorReadingsFinished);
+        connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_readVacStationTemperaturesFailed, this, &Machines::sensorReadingsFailed);
 
         // Connect the finished signals for the machine purge system
 
@@ -76,7 +88,6 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
-
     /**
      * Start a new sensor readings state machine running
      *
@@ -85,28 +96,37 @@ namespace App { namespace Experiment { namespace Machines
      * @param pressureSensorTimeInter
      * @param flowControllerTimeInter
      */
-    int Machines::sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter)
+    int Machines::sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter, int turboSpeedTimeInter, int vacStationTemperTimeInter, int flowControlTempTimeInter)
     {
         // Set the params for the three sensor machines
         m_readFlowControllerFlow.setParams(flowControllerTimeInter);
         m_readPressure.setParams(pressureSensorTimeInter);
         m_readVacuum.setParams(vacSensorTimeInter);
+        m_readFlowControllerTemperatures.setParams(flowControlTempTimeInter);
+        m_readTurboSpeed.setParams(turboSpeedTimeInter);
+        m_readVacStationTemperatures.setParams(vacStationTemperTimeInter);
 
         // Build the machines for the three sensors
         m_readFlowControllerFlow.buildMachine();
         m_readPressure.buildMachine();
         m_readVacuum.buildMachine();
+        m_readFlowControllerTemperatures.buildMachine();
+        m_readTurboSpeed.buildMachine();
+        m_readVacStationTemperatures.buildMachine();
 
         // Start the machines for the three sensors
         m_readFlowControllerFlow.start();
         m_readPressure.start();
         m_readVacuum.start();
+        m_readFlowControllerTemperatures.start();
+        m_readTurboSpeed.start();
+        m_readVacStationTemperatures.start();
 
         // Set the sensors to being monitored
         sensorMonitors = true;
 
         // Emit machines started
-        emit emit_sensorReadingsMachineStarted(vacSensorTimeInter, pressureSensorTimeInter, flowControllerTimeInter);
+        emit emit_sensorReadingsMachineStarted(vacSensorTimeInter, pressureSensorTimeInter, flowControllerTimeInter, turboSpeedTimeInter, vacStationTemperTimeInter, flowControlTempTimeInter);
 
         // Return success
         return 1;
@@ -124,6 +144,9 @@ namespace App { namespace Experiment { namespace Machines
         m_readFlowControllerFlow.stop();
         m_readPressure.stop();
         m_readVacuum.stop();
+        m_readFlowControllerTemperatures.stop();
+        m_readTurboSpeed.stop();
+        m_readVacStationTemperatures.stop();
 
         // Set the sensors to being monitored
         sensorMonitors = false;

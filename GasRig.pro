@@ -83,7 +83,10 @@ SOURCES += \
     app/Experiment/Machines/SafeValve.cpp \
     app/Experiment/Machines/ReadFlowControllerFlow.cpp \
     app/Experiment/Machines/ReadPressure.cpp \
-    app/Experiment/Machines/ReadVacuum.cpp
+    app/Experiment/Machines/ReadVacuum.cpp \
+    app/Experiment/Machines/ReadFlowControllerTemperatures.cpp \
+    app/Experiment/Machines/ReadVacStationTemperatures.cpp \
+    app/Experiment/Machines/ReadTurboSpeed.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -158,4 +161,7 @@ HEADERS += \
     app/Experiment/Machines/SafeValve.h \
     app/Experiment/Machines/ReadFlowControllerFlow.h \
     app/Experiment/Machines/ReadPressure.h \
-    app/Experiment/Machines/ReadVacuum.h
+    app/Experiment/Machines/ReadVacuum.h \
+    app/Experiment/Machines/ReadFlowControllerTemperatures.h \
+    app/Experiment/Machines/ReadVacStationTemperatures.h \
+    app/Experiment/Machines/ReadTurboSpeed.h

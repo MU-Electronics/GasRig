@@ -181,7 +181,10 @@ namespace App { namespace ViewManager
         // Start monitoring the sensors
         m_experimentEngine.machines().sensorReadings(m_settings.hardware.polling_times.value("vacuum_sensor").toInt(),
                                                      m_settings.hardware.polling_times.value("pressure_sensor").toInt(),
-                                                     m_settings.hardware.polling_times.value("flowcontroller_flow").toInt());
+                                                     m_settings.hardware.polling_times.value("flow_controller_flow").toInt(),
+                                                     m_settings.hardware.polling_times.value("turbo_speed").toInt(),
+                                                     m_settings.hardware.polling_times.value("vacuum_station_temperatures").toInt(),
+                                                     m_settings.hardware.polling_times.value("flow_controller_temperatures").toInt());
     }
 
 

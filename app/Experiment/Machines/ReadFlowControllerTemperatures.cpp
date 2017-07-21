@@ -1,4 +1,4 @@
-#include "ReadVacuum.h"
+#include "ReadFlowControllerTemperatures.h"
 
 // Include extenral deps
 #include <QObject>
@@ -15,13 +15,13 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    ReadVacuum::ReadVacuum(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    ReadFlowControllerTemperatures::ReadFlowControllerTemperatures(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
     {
 
     }
 
-    ReadVacuum::~ReadVacuum()
+    ReadFlowControllerTemperatures::~ReadFlowControllerTemperatures()
     {
 
     }
@@ -35,7 +35,7 @@ namespace App { namespace Experiment { namespace Machines
      * @param turbo
      * @param gasMode
      */
-    void ReadVacuum::setParams(int vacSensorTimeInter)
+    void ReadFlowControllerTemperatures::setParams(int vacSensorTimeInter)
     {
         // Timer invertval for vac sensor
         params.insert("vacSensorTimeInter", vacSensorTimeInter);
@@ -48,9 +48,9 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief ReadVacuum::start
+     * @brief ReadFlowControllerTemperatures::start
      */
-    void ReadVacuum::start()
+    void ReadFlowControllerTemperatures::start()
     {
         machine.start();
     }
@@ -59,12 +59,11 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief ReadVacuum::start
+     * @brief ReadFlowControllerTemperatures::start
      */
-    void ReadVacuum::stop()
+    void ReadFlowControllerTemperatures::stop()
     {
-        // Stop all the timers
-        stopVacuumPressureMonitor();
+        // @todo
 
         // Stop the machine
         machine.stop();
@@ -73,19 +72,18 @@ namespace App { namespace Experiment { namespace Machines
         removeAllTransitions();
 
         // Emit the machine is finished
-        emit emit_readVacuumStopped(params);
+        emit emit_readFlowControllerTemperaturesStopped(params);
     }
 
 
     /**
      * Stop the state machine as it failed somewhere
      *
-     * @brief ReadVacuum::stopAsFailed
+     * @brief ReadFlowControllerTemperatures::stopAsFailed
      */
-    void ReadVacuum::stopAsFailed()
+    void ReadFlowControllerTemperatures::stopAsFailed()
     {
-        // Stop all the timers
-        stopVacuumPressureMonitor();
+        // @todo
 
         // Stop the machine
         machine.stop();
@@ -94,33 +92,22 @@ namespace App { namespace Experiment { namespace Machines
         removeAllTransitions();
 
         // Emit the machine is finished
-        emit emit_readVacuumFailed(params);
+        emit emit_readFlowControllerTemperaturesFailed(params);
     }
 
 
     /**
      * Builds the machine connections
      *
-     * @brief ReadVacuum::buildMachine
+     * @brief ReadFlowControllerTemperatures::buildMachine
      */
-    void ReadVacuum::buildMachine()
+    void ReadFlowControllerTemperatures::buildMachine()
     {
         // Where to start the machine
         machine.setInitialState(&sm_startVacuumPressureMonitor);
-
-        // Start the vacuum monitor
-        sm_startVacuumPressureMonitor.addTransition(this, &MachineStates::emit_timerActive, &sm_timerWait);
-
-        // Wait for a timer event
-        sm_timerWait.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sm_vacPressure);
-
-        // Read the vacuum sensor
-        sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &sm_timerWait);
-
-        // Account for com issues
-        sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sm_timerWait);
     }
 }}}
+
 
 
 

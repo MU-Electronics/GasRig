@@ -9,6 +9,9 @@
 #include "ReadFlowControllerFlow.h"
 #include "ReadPressure.h"
 #include "ReadVacuum.h"
+#include "ReadFlowControllerTemperatures.h"
+#include "ReadTurboSpeed.h"
+#include "ReadVacStationTemperatures.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -23,7 +26,7 @@ namespace App { namespace Experiment { namespace Machines
             int vacDown(int mintues, bool turbo, int gasMode, int mode);
             void stopVacDown();
 
-            int sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter);
+            int sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter, int turboSpeedTimeInter, int vacStationTemperTimeInter, int flowControlTempTimeInter);
             void stopSensorReadings();
 
             int purgeSystemMethodOne(bool outputValve, int cycles, QString pressure);
@@ -51,7 +54,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void emit_safeValveMachineStarted(int id, bool state);
 
-            void emit_sensorReadingsMachineStarted(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter);
+            void emit_sensorReadingsMachineStarted(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter, int turboSpeedTimeInter, int vacStationTemperTimeInter, int flowControlTempTimeInter);
             void emit_sensorReadingsMachineStopped();
             void emit_sensorsNotBeingMonitored();
 
@@ -77,6 +80,9 @@ namespace App { namespace Experiment { namespace Machines
             ReadFlowControllerFlow& m_readFlowControllerFlow;
             ReadPressure& m_readPressure;
             ReadVacuum& m_readVacuum;
+            ReadFlowControllerTemperatures& m_readFlowControllerTemperatures;
+            ReadTurboSpeed& m_readTurboSpeed;
+            ReadVacStationTemperatures& m_readVacStationTemperatures;
 
             // Error
             int machineFailedToStart(int errorCode);
