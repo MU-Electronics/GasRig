@@ -87,6 +87,7 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_startFlowControllerFlowMonitor
             ,   sm_startVacuumTimer
             ,   sm_timerWait
+            ,   sm_initalWait
                 // Finishing sequence
             ,   sm_finishVacSession
             ,   // Re-implimention of stop for each machine
@@ -148,6 +149,9 @@ namespace App { namespace Experiment { namespace Machines
             void emit_validationSuccess(QVariantMap data);
 
             void emit_stateAlreadySet();
+
+            void emit_turboPumpAlreadyEnabled();
+            void emit_turboPumpAlreadyDisabled();
 
             void emit_timerActive();
 

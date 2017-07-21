@@ -49,6 +49,33 @@ namespace App { namespace Experiment { namespace Machines
     }
 
 
+    /**
+     * Helper method to produce error responces
+     *
+     * @brief Machines::machineFailedToStart
+     * @param errorCode
+     */
+    int Machines::machineFailedToStart(int errorCode)
+    {
+        // Sensors need to be monitored for this state machine
+        if(errorCode == -1)
+        {
+            emit emit_sensorsNotBeingMonitored();
+
+            return -1;
+        }
+
+        return 0;
+    }
+
+
+
+
+
+
+
+
+
 
     /**
      * Start a new sensor readings state machine running
@@ -58,7 +85,7 @@ namespace App { namespace Experiment { namespace Machines
      * @param pressureSensorTimeInter
      * @param flowControllerTimeInter
      */
-    void Machines::sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter)
+    int Machines::sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter)
     {
         // Set the params for the three sensor machines
         m_readFlowControllerFlow.setParams(flowControllerTimeInter);
@@ -75,8 +102,14 @@ namespace App { namespace Experiment { namespace Machines
         m_readPressure.start();
         m_readVacuum.start();
 
+        // Set the sensors to being monitored
+        sensorMonitors = true;
+
         // Emit machines started
         emit emit_sensorReadingsMachineStarted(vacSensorTimeInter, pressureSensorTimeInter, flowControllerTimeInter);
+
+        // Return success
+        return 1;
     }
 
 
@@ -91,6 +124,9 @@ namespace App { namespace Experiment { namespace Machines
         m_readFlowControllerFlow.stop();
         m_readPressure.stop();
         m_readVacuum.stop();
+
+        // Set the sensors to being monitored
+        sensorMonitors = false;
 
         // Tell everyone we've stopped
         emit emit_sensorReadingsMachineStopped();
@@ -124,8 +160,6 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
-
-
     /**
      * Start a new vac down state machine running
      *
@@ -135,8 +169,12 @@ namespace App { namespace Experiment { namespace Machines
      * @param gasMode
      * @param mode
      */
-    void Machines::vacDown(int mintues, bool turbo, int gasMode, int mode)
+    int Machines::vacDown(int mintues, bool turbo, int gasMode, int mode)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
+
         // Set the params
         m_vacDown.setParams(mintues, turbo, gasMode, mode);
 
@@ -148,6 +186,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Emit machine started
         emit emit_vacDownMachineStarted(mintues, turbo, gasMode, mode);
+
+        // Return success
+        return 1;
     }
 
     /**
@@ -200,9 +241,16 @@ namespace App { namespace Experiment { namespace Machines
      * @param method
      * @param outputValve
      */
-    void Machines::purgeSystemMethodOne(bool outputValve, int cycles, QString pressure)
+    int Machines::purgeSystemMethodOne(bool outputValve, int cycles, QString pressure)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
 
+        // @todo Load machine here
+
+        // Return success
+        return 1;
     }
 
 
@@ -213,9 +261,16 @@ namespace App { namespace Experiment { namespace Machines
      * @param method
      * @param outputValve
      */
-    void Machines::purgeSystemMethodTwo(int minutes, QString pressure)
+    int Machines::purgeSystemMethodTwo(int minutes, QString pressure)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
 
+        // @todo Load machine here
+
+        // Return success
+        return 1;
     }
 
 
@@ -243,9 +298,16 @@ namespace App { namespace Experiment { namespace Machines
      * @param frequency
      * @param speed
      */
-    void Machines::exhuast(double pressure, int frequency, int speed)
+    int Machines::exhuast(double pressure, int frequency, int speed)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
 
+        // @todo Load machine here
+
+        // Return success
+        return 1;
     }
 
     /**
@@ -273,9 +335,16 @@ namespace App { namespace Experiment { namespace Machines
      * @param input
      * @param frequency
      */
-    void Machines::setHighPressure(double pressure, int input, int frequency)
+    int Machines::setHighPressure(double pressure, int input, int frequency)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
 
+        // @todo Load machine here
+
+        // Return success
+        return 1;
     }
 
 
@@ -298,9 +367,16 @@ namespace App { namespace Experiment { namespace Machines
      * @brief Machines::outputPressure
      * @param frequency
      */
-    void Machines::outputPressure(int frequency)
+    int Machines::outputPressure(int frequency)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
 
+        // @todo Load machine here
+
+        // Return success
+        return 1;
     }
 
     /**
@@ -322,8 +398,12 @@ namespace App { namespace Experiment { namespace Machines
      * @brief Machines::valveOpen
      * @param id
      */
-    void Machines::valveOpen(int id)
+    int Machines::valveOpen(int id)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
+
         // Set the params
         m_safeValve.setParams(id, true);
 
@@ -335,6 +415,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Emit machine started
         emit emit_safeValveMachineStarted(id, true);
+
+        // Return success
+        return 1;
     }
 
     /**
@@ -343,8 +426,12 @@ namespace App { namespace Experiment { namespace Machines
      * @brief Machines::valveClose
      * @param id
      */
-    void Machines::valveClose(int id)
+    int Machines::valveClose(int id)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
+
         // Set the params
         m_safeValve.setParams(id, false);
 
@@ -356,6 +443,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Emit machine started
         emit emit_safeValveMachineStarted(id, true);
+
+        // Return success
+        return 1;
     }
 
 
@@ -390,9 +480,16 @@ namespace App { namespace Experiment { namespace Machines
      * @param flowController
      * @param rate
      */
-    void Machines::setFlowRate(int flowController, double rate)
+    int Machines::setFlowRate(int flowController, double rate)
     {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
 
+        // @todo Load machine here
+
+        // Return success
+        return 1;
     }
 
 
@@ -403,7 +500,7 @@ namespace App { namespace Experiment { namespace Machines
      * @param flowController
      * @param rate
      */
-    void Machines::stopFlowRate(int flowController, double rate)
+    void Machines::stopFlowRate()
     {
 
     }

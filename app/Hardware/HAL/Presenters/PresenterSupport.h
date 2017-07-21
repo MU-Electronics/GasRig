@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include <QStringList>
 
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
@@ -9,6 +9,8 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
     {
         public:
             PresenterSupport();
+
+            bool validatePackageSize(QStringList package, int size);
 
             // Convert 4 btyes to float
             union FourByteFloatConvertion

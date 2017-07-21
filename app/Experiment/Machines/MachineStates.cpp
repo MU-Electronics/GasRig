@@ -115,6 +115,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sm_validateFlowControllerTwoFlow(&machine)
 
             // Timers
+        ,   sm_initalWait(&machine)
         ,   sm_timerWait(&machine)
         ,   sm_startVacuumPressureMonitor(&machine)
         ,   sm_startPressureMonitor(&machine)
@@ -222,6 +223,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sm_validateFlowControllerTwoFlow, &CommandValidatorState::entered, this, &MachineStates::validateFlowControllerTwoFlow);
 
         // Link the timer states
+        connect(&sm_initalWait, &QState::entered, this, &MachineStates::timerWait);
         connect(&sm_timerWait, &QState::entered, this, &MachineStates::timerWait);
         connect(&sm_startVacuumPressureMonitor, &QState::entered, this, &MachineStates::startVacuumPressureMonitor);
         connect(&sm_startPressureMonitor, &QState::entered, this, &MachineStates::startPressureMonitor);
@@ -681,7 +683,7 @@ namespace App { namespace Experiment { namespace Machines
         // Check current state
         if(!turboState)
         {
-            emit emit_stateAlreadySet();
+            emit emit_turboPumpAlreadyDisabled();
             return;
         }
 
@@ -692,9 +694,9 @@ namespace App { namespace Experiment { namespace Machines
     void MachineStates::enableTurboPump()
     {
         // Get the param trubo over ride if exists
-        if(turboState || (!params.value("turbo").isNull() && !params.value("turbo").toBool()) )
+        if(turboState || params.value("turbo").isNull() || !params.value("turbo").toBool() )
         {
-            emit emit_stateAlreadySet();
+            emit emit_turboPumpAlreadyEnabled();
             return;
         }
 

@@ -20,30 +20,30 @@ namespace App { namespace Experiment { namespace Machines
         public:
             Machines(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety);
 
-            void vacDown(int mintues, bool turbo, int gasMode, int mode);
+            int vacDown(int mintues, bool turbo, int gasMode, int mode);
             void stopVacDown();
 
-            void sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter);
+            int sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter);
             void stopSensorReadings();
 
-            void purgeSystemMethodOne(bool outputValve, int cycles, QString pressure);
-            void purgeSystemMethodTwo(int minutes, QString pressure);
+            int purgeSystemMethodOne(bool outputValve, int cycles, QString pressure);
+            int purgeSystemMethodTwo(int minutes, QString pressure);
             void stopPurgeSystem();
 
-            void exhuast(double pressure, int frequency, int speed);
+            int exhuast(double pressure, int frequency, int speed);
             void stopExhuast();
 
-            void setHighPressure(double pressure, int input, int frequency);
+            int setHighPressure(double pressure, int input, int frequency);
             void stopSetHighPressure();
 
-            void outputPressure(int frequency);
+            int outputPressure(int frequency);
             void stopOutputPressure();
 
-            void valveOpen(int id);
-            void valveClose(int id);
+            int valveOpen(int id);
+            int valveClose(int id);
 
-            void setFlowRate(int flowController, double rate);
-            void stopFlowRate(int flowController, double rate);
+            int setFlowRate(int flowController, double rate);
+            void stopFlowRate();
 
         signals:
             void emit_vacDownMachineStarted(int mintues, bool turbo, int gasMode, int mode);
@@ -53,6 +53,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void emit_sensorReadingsMachineStarted(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter);
             void emit_sensorReadingsMachineStopped();
+            void emit_sensorsNotBeingMonitored();
 
             void emit_purgeSystemMachineState(bool state);
 
@@ -67,12 +68,18 @@ namespace App { namespace Experiment { namespace Machines
             void sensorReadingsFailed(QVariantMap params);
 
         private:
+            // Are the sensors being monitored?
+            bool sensorMonitors = false;
+
             // Hold the machines
             VacDown& m_vacDown;
             SafeValve& m_safeValve;
             ReadFlowControllerFlow& m_readFlowControllerFlow;
             ReadPressure& m_readPressure;
             ReadVacuum& m_readVacuum;
+
+            // Error
+            int machineFailedToStart(int errorCode);
 
     };
 
