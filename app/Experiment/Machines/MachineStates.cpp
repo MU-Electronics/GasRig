@@ -35,8 +35,11 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_pressureMonitor(parent)
         ,   t_flowControllerFlowMonitor(parent)
         ,   t_vacTime(parent)
+        ,   t_flowControllerTemperatureMonitor(parent)
+        ,   t_vacStationTemperatureMonitor(parent)
+        ,   t_turboSpeedMonitor(parent)
 
-            // Pressure sensor ralted states
+            // Pressure sensor related states
         ,   sm_systemPressure(&machine)
         ,   sm_validatePressureForVacuum(&machine)
         ,   sm_vacPressure(&machine)
@@ -127,6 +130,9 @@ namespace App { namespace Experiment { namespace Machines
         ,   sm_startVacuumPressureMonitor(&machine)
         ,   sm_startPressureMonitor(&machine)
         ,   sm_startFlowControllerFlowMonitor(&machine)
+        ,   sm_startFlowControllerTemperatureMonitor(&machine)
+        ,   sm_startVacStationTemperatureMonitor(&machine)
+        ,   sm_startTurboSpeedMonitor(&machine)
         ,   sm_startVacuumTimer(&machine)
 
             // Finishing sequence
@@ -246,6 +252,9 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sm_startFlowControllerFlowMonitor, &QState::entered, this, &MachineStates::startFlowControllerFlowMonitor);
         connect(&sm_startVacuumTimer, &QState::entered, this, &MachineStates::startVacuumTimer);
 
+        connect(&sm_startFlowControllerTemperatureMonitor, &QState::entered, this, &MachineStates::startFlowControllerTemperatureMonitor);
+        connect(&sm_startVacStationTemperatureMonitor, &QState::entered, this, &MachineStates::startVacStationTemperatureMonitor);
+        connect(&sm_startTurboSpeedMonitor, &QState::entered, this, &MachineStates::startTurboSpeedMonitor);
 
         // Finishing sequence
         connect(&sm_finishVacSession, &QState::entered, this, &MachineStates::finishVacSession);
@@ -412,6 +421,98 @@ namespace App { namespace Experiment { namespace Machines
     {
         t_flowControllerFlowMonitor.stop();
     }
+
+
+    /**
+     * Timer to use to trigger reading the vac station turbo speed sensor
+     *
+     * @brief MachineStates::startTurboSpeedMonitor
+     */
+    void MachineStates::startTurboSpeedMonitor()
+    {
+        if(!t_turboSpeedMonitor.isActive())
+        {
+            // Setup timer
+            t_turboSpeedMonitor.setSingleShot(false);
+            t_turboSpeedMonitor.start();
+        }
+
+        // Emit the timer started
+        emit emit_timerActive();
+    }
+
+
+    /**
+     * Stop the timer triggering reading of the vac station turbo speed sensor
+     *
+     * @brief MachineStates::stopTurboSpeedMonitor
+     */
+    void MachineStates::stopTurboSpeedMonitor()
+    {
+        t_turboSpeedMonitor.stop();
+    }
+
+
+    /**
+     * Timer to use to trigger reading the vac station temperature sensor
+     *
+     * @brief MachineStates::startVacStationTemperatureMonitor
+     */
+    void MachineStates::startVacStationTemperatureMonitor()
+    {
+        if(!t_vacStationTemperatureMonitor.isActive())
+        {
+            // Setup timer
+            t_vacStationTemperatureMonitor.setSingleShot(false);
+            t_vacStationTemperatureMonitor.start();
+        }
+
+        // Emit the timer started
+        emit emit_timerActive();
+    }
+
+
+    /**
+     * Stop the timer triggering reading of the vac station temperature sensor
+     *
+     * @brief MachineStates::stopVacStationTemperatureMonitor
+     */
+    void MachineStates::stopVacStationTemperatureMonitor()
+    {
+        t_vacStationTemperatureMonitor.stop();
+    }
+
+
+    /**
+     * Timer to use to trigger reading the flow controller temperature sensor
+     *
+     * @brief MachineStates::startFlowControllerTemperatureMonitor
+     */
+    void MachineStates::startFlowControllerTemperatureMonitor()
+    {
+        if(!t_flowControllerTemperatureMonitor.isActive())
+        {
+            // Setup timer
+            t_flowControllerTemperatureMonitor.setSingleShot(false);
+            t_flowControllerTemperatureMonitor.start();
+        }
+
+        // Emit the timer started
+        emit emit_timerActive();
+    }
+
+
+    /**
+     * Stop the timer triggering reading of the flow controller temperature sensor
+     *
+     * @brief MachineStates::stopFlowControllerTemperatureMonitor
+     */
+    void MachineStates::stopFlowControllerTemperatureMonitor()
+    {
+        t_flowControllerTemperatureMonitor.stop();
+    }
+
+
 
 
 

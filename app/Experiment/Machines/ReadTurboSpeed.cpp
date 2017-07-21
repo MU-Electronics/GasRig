@@ -35,13 +35,13 @@ namespace App { namespace Experiment { namespace Machines
      * @param turbo
      * @param gasMode
      */
-    void ReadTurboSpeed::setParams(int vacSensorTimeInter)
+    void ReadTurboSpeed::setParams(int interval)
     {       
         // Timer invertval for vac sensor
-        params.insert("vacSensorTimeInter", vacSensorTimeInter);
+        params.insert("interval", interval);
 
         // Setup timers
-        t_vacPressureMonitor.setInterval(vacSensorTimeInter);
+        t_turboSpeedMonitor.setInterval(interval);
     }
 
 

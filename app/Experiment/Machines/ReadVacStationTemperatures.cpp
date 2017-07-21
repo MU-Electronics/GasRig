@@ -35,13 +35,13 @@ namespace App { namespace Experiment { namespace Machines
      * @param turbo
      * @param gasMode
      */
-    void ReadVacStationTemperatures::setParams(int vacSensorTimeInter)
+    void ReadVacStationTemperatures::setParams(int interval)
     {       
         // Timer invertval for vac sensor
-        params.insert("vacSensorTimeInter", vacSensorTimeInter);
+        params.insert("interval", interval);
 
         // Setup timers
-        t_vacPressureMonitor.setInterval(vacSensorTimeInter);
+        t_vacStationTemperatureMonitor.setInterval(interval);
     }
 
 
@@ -104,9 +104,45 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacStationTemperatures::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sm_startVacuumPressureMonitor);
+        machine.setInitialState(&sm_getBearingTemperature);
+
+        // Get the bearing temperture
+        sm_getBearingTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetBearingTemperature);
+            // Success
+            sm_validateGetBearingTemperature.addTransition(this, &MachineStates::emit_validationSuccess, &sm_getTC110ElectronicsTemperature);
+            // Failed
+            // Com issue
+
+        // Get the electronics temperature
+        sm_getTC110ElectronicsTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetTC110ElectronicsTemperature);
+            // Success
+            sm_validateGetTC110ElectronicsTemperature.addTransition(this, &MachineStates::emit_validationSuccess, &sm_getMotorTemperature);
+            // Failed
+            // Com issue
+
+        // Get the motor temperature
+        sm_getMotorTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetMotorTemperature);
+            // Success
+            sm_validateGetMotorTemperature.addTransition(this, &MachineStates::emit_validationSuccess, &sm_getPumpBottomTemperature);
+            // Failed
+            // Com issue
+
+        // Get the pump bottom temperature
+        sm_getPumpBottomTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetPumpBottomTemperature);
+            // Success
+            sm_validateGetPumpBottomTemperature.addTransition(this, &MachineStates::emit_validationSuccess, &sm_stop);
+            // Failed
+            // Com issue
+
+        // Timer  @TODO IMPLIMENT THE TIMER TO TRIGGER CYCLING
+
     }
 }}}
+
+
+
+
+
 
 
 

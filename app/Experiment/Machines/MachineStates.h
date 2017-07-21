@@ -39,11 +39,16 @@ namespace App { namespace Experiment { namespace Machines
             // Hold params for states
             QVariantMap params;
 
-            // Hold a timer instance
-            QTimer t_vacPressureMonitor;        // Sensor
-            QTimer t_pressureMonitor;           // Sensor
-            QTimer t_flowControllerFlowMonitor; // Sensor
-            QTimer t_vacTime;                   // Vac down timer
+            // Hold a timer instance for sensors
+            QTimer t_vacPressureMonitor;
+            QTimer t_pressureMonitor;
+            QTimer t_flowControllerFlowMonitor;
+            QTimer t_flowControllerTemperatureMonitor;
+            QTimer t_vacStationTemperatureMonitor;
+            QTimer t_turboSpeedMonitor;
+
+            // Hold a timer instance for events
+            QTimer t_vacTime;   // Vac down timer
 
             // Create the states for the machine
             QState
@@ -92,6 +97,9 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_startVacuumTimer
             ,   sm_timerWait
             ,   sm_initalWait
+            ,   sm_startFlowControllerTemperatureMonitor
+            ,   sm_startVacStationTemperatureMonitor
+            ,   sm_startTurboSpeedMonitor
                 // Finishing sequence
             ,   sm_finishVacSession
             ,   // Re-implimention of stop for each machine
@@ -275,6 +283,15 @@ namespace App { namespace Experiment { namespace Machines
 
             void startFlowControllerFlowMonitor();
             void stopFlowControllerFlowMonitor();
+
+            void startFlowControllerTemperatureMonitor();
+            void stopFlowControllerTemperatureMonitor();
+
+            void startVacStationTemperatureMonitor();
+            void stopVacStationTemperatureMonitor();
+
+            void startTurboSpeedMonitor();
+            void stopTurboSpeedMonitor();
 
             void startVacuumTimer();
             void stopVacuumTimer();

@@ -27,7 +27,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ~ReadTurboSpeed();
 
-            void setParams(int vacSensorTimeInter);
+            void setParams(int interval);
 
             void start();
 
