@@ -94,7 +94,10 @@ namespace App { namespace Experiment { namespace Machines
         ,   sm_setGasModeHeavy(&machine)
         ,   sm_setGasModeMedium(&machine)
         ,   sm_setGasModeHelium(&machine)
-
+        ,   sm_getBearingTemperature(&machine)
+        ,   sm_getTC110ElectronicsTemperature(&machine)
+        ,   sm_getPumpBottomTemperature(&machine)
+        ,   sm_getMotorTemperature(&machine)
 
             // States relating to validating the vac station
         ,   sm_validateDisableTurboPump(&machine)
@@ -105,6 +108,10 @@ namespace App { namespace Experiment { namespace Machines
         ,   sm_validateSetGasModeMedium(&machine)
         ,   sm_validateSetGasModeHelium(&machine)
         ,   sm_validateStartVacuumPressureMonitor(&machine)
+        ,   sm_validateGetBearingTemperature(&machine)
+        ,   sm_validateGetTC110ElectronicsTemperature(&machine)
+        ,   sm_validateGetPumpBottomTemperature(&machine)
+        ,   sm_validateGetMotorTemperature(&machine)
 
             // States relating to controlling the flow controller
         ,   sm_flowControllerOneFlow(&machine)
@@ -734,6 +741,36 @@ namespace App { namespace Experiment { namespace Machines
         emit hardwareRequest(m_commandConstructor.setGasMode(2));
     }
 
+    void MachineStates::getTurboSpeed()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getTurboSpeed());
+    }
+
+    void MachineStates::getBearingTemperature()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getTurboBearingTemperature());
+    }
+
+    void MachineStates::getTC110ElectronicsTemperature()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getTC110ElectronicsTemperature());
+    }
+
+    void MachineStates::getPumpBottomTemperature()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getPumpBottomTemperature());
+    }
+
+    void MachineStates::getMotorTemperature()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getMotorTemperature());
+    }
+
 
     void MachineStates::validateDisableTurboPump()
     {
@@ -822,6 +859,9 @@ namespace App { namespace Experiment { namespace Machines
         // Get the package data from the instance
         QVariantMap package = state->package;
 
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
         qDebug() << package;
     }
 
@@ -832,6 +872,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Get the package data from the instance
         QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
 
         qDebug() << package;
     }
@@ -844,10 +887,67 @@ namespace App { namespace Experiment { namespace Machines
         // Get the package data from the instance
         QVariantMap package = state->package;
 
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
         qDebug() << package;
     }
 
+    void MachineStates::validateGetBearingTemperature()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
 
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
+        qDebug() << package;
+    }
+
+    void MachineStates::validateGetTC110ElectronicsTemperature()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
+        qDebug() << package;
+    }
+
+    void MachineStates::validateGetPumpBottomTemperature()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
+        qDebug() << package;
+    }
+
+    void MachineStates::validateGetMotorTemperature()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
+        qDebug() << package;
+    }
 
 
 

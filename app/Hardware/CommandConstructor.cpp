@@ -375,6 +375,42 @@ namespace App { namespace Hardware
         return command;
     }
 
+    QVariantMap CommandConstructor::getPumpBottomTemperature()
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "VacStation");
+        command.insert("method", "getTemperature");
+        command.insert("location", "1");
+
+        // Return the package
+        return command;
+    }
+
+    QVariantMap CommandConstructor::getTC110ElectronicsTemperature()
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "VacStation");
+        command.insert("method", "getTemperature");
+        command.insert("location", "2");
+
+        // Return the package
+        return command;
+    }
+
+    QVariantMap CommandConstructor::getMotorTemperature()
+    {
+        // Create command for HAL
+        QVariantMap command;
+        command.insert("hardware", "VacStation");
+        command.insert("method", "getTemperature");
+        command.insert("location", "4");
+
+        // Return the package
+        return command;
+    }
+
 
 
 

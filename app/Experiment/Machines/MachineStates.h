@@ -78,6 +78,10 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_setGasModeMedium
             ,   sm_setGasModeHelium
             ,   sm_vacPressure
+            ,   sm_getBearingTemperature
+            ,   sm_getTC110ElectronicsTemperature
+            ,   sm_getPumpBottomTemperature
+            ,   sm_getMotorTemperature
                 // States relating to controlling the flow controller
             ,   sm_flowControllerOneFlow
             ,   sm_flowControllerTwoFlow
@@ -93,7 +97,6 @@ namespace App { namespace Experiment { namespace Machines
             ,   // Re-implimention of stop for each machine
                 sm_stop
             ,   sm_stopAsFailed;
-
 
 
 
@@ -131,9 +134,15 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_validateSetGasModeHelium
             ,   sm_validateStartVacuumPressureMonitor
             ,   sm_validateVacPressureForTurbo
+            ,   sm_validateGetBearingTemperature
+            ,   sm_validateGetTC110ElectronicsTemperature
+            ,   sm_validateGetPumpBottomTemperature
+            ,   sm_validateGetMotorTemperature
                 // States relating to validating the flow controller
             ,   sm_validateFlowControllerOneFlow
             ,   sm_validateFlowControllerTwoFlow;
+
+
 
             // Helper methods
             void removeAllTransitions();
@@ -214,6 +223,17 @@ namespace App { namespace Experiment { namespace Machines
             void setGasModeHeavy();
             void setGasModeMedium();
             void setGasModeHelium();
+
+            // States relating to reading the vac station params
+            void getTurboSpeed();
+            void getBearingTemperature();
+            void getTC110ElectronicsTemperature();
+            void getPumpBottomTemperature();
+            void getMotorTemperature();
+            void validateGetBearingTemperature();
+            void validateGetTC110ElectronicsTemperature();
+            void validateGetPumpBottomTemperature();
+            void validateGetMotorTemperature();
 
             // States relating to validating the vac station commands
             void validateDisableTurboPump();

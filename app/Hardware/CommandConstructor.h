@@ -36,6 +36,9 @@ namespace App { namespace Hardware
             QVariantMap getBackingPump();
             QVariantMap getTurboSpeed();
             QVariantMap getTurboBearingTemperature();
+            QVariantMap getPumpBottomTemperature();
+            QVariantMap getTC110ElectronicsTemperature();
+            QVariantMap getMotorTemperature();
 
             QVariantMap setGasMode(int mode);
             QVariantMap setBackingPumpMode(int mode);
