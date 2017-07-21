@@ -212,6 +212,11 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sm_setGasModeMedium, &QState::entered, this, &MachineStates::setGasModeMedium);
         connect(&sm_setGasModeHelium, &QState::entered, this, &MachineStates::setGasModeHelium);
 
+        connect(&sm_getBearingTemperature, &QState::entered, this, &MachineStates::getBearingTemperature);
+        connect(&sm_getTC110ElectronicsTemperature, &QState::entered, this, &MachineStates::getTC110ElectronicsTemperature);
+        connect(&sm_getPumpBottomTemperature, &QState::entered, this, &MachineStates::getPumpBottomTemperature);
+        connect(&sm_getMotorTemperature, &QState::entered, this, &MachineStates::getMotorTemperature);
+
         // Link vac station validation states
         connect(&sm_validateDisableTurboPump, &CommandValidatorState::entered, this, &MachineStates::validateDisableTurboPump);
         connect(&sm_validateEnableTurboPump, &CommandValidatorState::entered, this, &MachineStates::validateEnableTurboPump);
@@ -220,6 +225,10 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sm_validateSetGasModeHeavy, &CommandValidatorState::entered, this, &MachineStates::validateSetGasModeHeavy);
         connect(&sm_validateSetGasModeMedium, &CommandValidatorState::entered, this, &MachineStates::validateSetGasModeMedium);
         connect(&sm_validateSetGasModeHelium, &CommandValidatorState::entered, this, &MachineStates::validateSetGasModeHelium);
+        connect(&sm_validateGetBearingTemperature, &CommandValidatorState::entered, this, &MachineStates::validateGetBearingTemperature);
+        connect(&sm_validateGetTC110ElectronicsTemperature, &CommandValidatorState::entered, this, &MachineStates::validateGetTC110ElectronicsTemperature);
+        connect(&sm_validateGetPumpBottomTemperature, &CommandValidatorState::entered, this, &MachineStates::validateGetPumpBottomTemperature);
+        connect(&sm_validateGetMotorTemperature, &CommandValidatorState::entered, this, &MachineStates::validateGetMotorTemperature);
 
         // Link flow controller states
         connect(&sm_flowControllerOneFlow, &QState::entered, this, &MachineStates::flowControllerOneFlow);
