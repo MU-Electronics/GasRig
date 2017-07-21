@@ -80,7 +80,8 @@ SOURCES += \
     app/Experiment/Machines/CommandValidatorState.cpp \
     app/Experiment/Machines/Machines.cpp \
     app/ViewManager/MachineStatus.cpp \
-    app/Experiment/Machines/SafeValve.cpp
+    app/Experiment/Machines/SafeValve.cpp \
+    app/Experiment/Machines/SensorReadings.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -152,4 +153,5 @@ HEADERS += \
     app/Experiment/Machines/CommandValidatorState.h \
     app/Experiment/Machines/Machines.h \
     app/ViewManager/MachineStatus.h \
-    app/Experiment/Machines/SafeValve.h
+    app/Experiment/Machines/SafeValve.h \
+    app/Experiment/Machines/SensorReadings.h

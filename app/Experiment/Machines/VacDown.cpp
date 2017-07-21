@@ -86,7 +86,7 @@ namespace App { namespace Experiment { namespace Machines
     }
 
     /**
-     * Start the state machine
+     * Stop the state machine as it failed somewhere
      *
      * @brief VacDown::stopAsFailed
      */

@@ -102,6 +102,9 @@ namespace App { namespace ViewManager
             // Holds the application settings
             Settings::Container m_settings;
 
+            // Hold experiment engine
+            Experiment::Engine& m_experimentEngine;
+
             // Hold instance of command constructor
             Hardware::CommandConstructor m_commandConstructor;
 

@@ -89,7 +89,8 @@
         "vacuum_max": "0.0000007"
     },
     "polling_times": {
-        "pressure_sensor": "0.5",
-        "vacuum_sensor": "1"
+        "pressure_sensor": "500",
+        "vacuum_sensor": "1000",
+        "flowcontroller_flow": "1000"
     }
 }

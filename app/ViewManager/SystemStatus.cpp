@@ -26,6 +26,7 @@ namespace App { namespace ViewManager
         : QObject(parent),
           m_root(root),
           m_settings(settings),
+          m_experimentEngine(experimentEngine),
           m_commandConstructor(*new Hardware::CommandConstructor)
     {
         // Default valves values
@@ -176,6 +177,11 @@ namespace App { namespace ViewManager
             // Get current values for pressure
             emit emit_hardwareRequest(m_commandConstructor.getPressureReading(1));
         });
+
+        // Start monitoring the sensors
+        m_experimentEngine.machines().sensorReadings(m_settings.hardware.polling_times.value("vacuum_sensor").toInt(),
+                                                     m_settings.hardware.polling_times.value("pressure_sensor").toInt(),
+                                                     m_settings.hardware.polling_times.value("flowcontroller_flow").toInt());
     }
 
 

@@ -6,6 +6,7 @@
 // Include state machine
 #include "VacDown.h"
 #include "SafeValve.h"
+#include "SensorReadings.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -15,10 +16,99 @@ namespace App { namespace Experiment { namespace Machines
         :   QObject(parent)
         ,   m_vacDown(*new VacDown(parent, settings, hardware, safety))
         ,   m_safeValve(*new SafeValve(parent, settings, hardware, safety))
+        ,   m_sensorReadings(*new SensorReadings(parent, settings, hardware, safety))
     {
-        // Connect the finished signals for the machines
+        // Connect the finished signals for the machine vac down
         connect(&m_vacDown, &VacDown::emit_vacDownFinished, this, &Machines::vacDownFinished);
+        connect(&m_vacDown, &VacDown::emit_vacDownFailed, this, &Machines::vacDownFailed);
+
+        // Connect the finished signals for the machine safe valve
+        connect(&m_safeValve, &SafeValve::emit_safeValveFinished, this, &Machines::sensorReadingsFinished);
+        connect(&m_safeValve, &SafeValve::emit_safeValveFailed, this, &Machines::sensorReadingsFailed);
+
+        // Connect the finished signals for the machine sensor readings
+        connect(&m_sensorReadings, &SensorReadings::emit_sensorReadingsStopped, this, &Machines::valveStateFinished);
+        connect(&m_sensorReadings, &SensorReadings::emit_sensorReadingsFailed, this, &Machines::valveStateFailed);
+
+        // Connect the finished signals for the machine purge system
+
+        // Connect the finished signals for the machine exhuast system
+
+        // Connect the finished signals for the machine set flow rate
+
+        // Connect the finished signals for the machine output pressure
+
+        // Connect the finished signals for the machine set high pressure
     }
+
+
+
+    /**
+     * Start a new sensor readings state machine running
+     *
+     * @brief Machines::sensorReadings
+     * @param vacSensorTimeInter
+     * @param pressureSensorTimeInter
+     * @param flowControllerTimeInter
+     */
+    void Machines::sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter)
+    {
+        // Set the params
+        m_sensorReadings.setParams(vacSensorTimeInter, pressureSensorTimeInter, flowControllerTimeInter);
+
+        // Build the machine
+        m_sensorReadings.buildMachine();
+
+        // Start the machine
+        m_sensorReadings.start();
+
+        // Emit machine started
+        emit emit_sensorReadingsMachineStarted(vacSensorTimeInter, pressureSensorTimeInter, flowControllerTimeInter);
+    }
+
+
+    /**
+     * Stops a running instance of sensor readings state machine
+     *
+     * @brief Machines::stopSensorReadings
+     */
+    void Machines::stopSensorReadings()
+    {
+        // Stop the machine
+        m_sensorReadings.stop();
+
+        // Tell everyone we've stopped
+        emit emit_sensorReadingsMachineStopped();
+    }
+
+
+    /**
+     * This method is trigged if the state machine finished
+     *
+     * @brief Machines::sensorReadingsFinished
+     * @param params
+     */
+    void Machines::sensorReadingsFinished(QVariantMap params)
+    {
+
+    }
+
+
+    /**
+     * This method is trigged if the state machine failed
+     *
+     * @brief Machines::sensorReadingsFailed
+     * @param params
+     */
+    void Machines::sensorReadingsFailed(QVariantMap params)
+    {
+
+    }
+
+
+
+
+
 
 
     /**
@@ -70,6 +160,21 @@ namespace App { namespace Experiment { namespace Machines
         emit emit_vacDownMachineStopped();
     }
 
+    /**
+     * This method is trigged if the state machine failed
+     *
+     * @brief Machine::vacDownFailed
+     */
+    void Machines::vacDownFailed(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_vacDownMachineStopped();
+    }
+
+
+
+
+
 
 
 
@@ -111,6 +216,11 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
+
+
+
+
+
     /**
      * Start a new exhuast state machine running
      *
@@ -118,7 +228,7 @@ namespace App { namespace Experiment { namespace Machines
      * @param frequency
      * @param speed
      */
-    void Machines::exhuast(int frequency, int speed)
+    void Machines::exhuast(double pressure, int frequency, int speed)
     {
 
     }
@@ -135,26 +245,8 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
-    /**
-     * Start a new negative tune state machine running
-     *
-     * @brief Machines::negativeTune
-     * @param pressure
-     */
-    void Machines::negativeTune(double pressure)
-    {
 
-    }
 
-    /**
-     * Stops a running instance of negative tune state machine
-     *
-     * @brief Machines::stopNegativeTune
-     */
-    void Machines::stopNegativeTune()
-    {
-
-    }
 
 
 
@@ -249,6 +341,27 @@ namespace App { namespace Experiment { namespace Machines
 
         // Emit machine started
         emit emit_safeValveMachineStarted(id, true);
+    }
+
+
+    /**
+     * This method is trigged if the state machine finished
+     *
+     * @brief Machine::valveStateFinished
+     */
+    void Machines::valveStateFinished(QVariantMap params)
+    {
+
+    }
+
+    /**
+     * This method is trigged if the state machine failed
+     *
+     * @brief Machine::valveStateFailed
+     */
+    void Machines::valveStateFailed(QVariantMap params)
+    {
+
     }
 
 

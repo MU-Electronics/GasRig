@@ -744,7 +744,7 @@ namespace App { namespace ViewManager
     {
         qDebug() << "Running exhuast";
 
-        m_experimentEngine.machines().exhuast(frequency, filterType);
+        m_experimentEngine.machines().exhuast(1, frequency, filterType);
     }
 
     void Testing::requestOutputPressure(int frequency)
