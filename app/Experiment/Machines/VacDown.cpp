@@ -51,6 +51,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Setup timers
         t_vacTime.setInterval( (mintues * 60) * 1000 );
+
+        // To delete soon
+        t_vacPressureMonitor.setInterval(500);
     }
 
 

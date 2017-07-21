@@ -18,25 +18,28 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    class SafeValve    :   public MachineStates
+    class ReadPressure    :   public MachineStates
     {
         Q_OBJECT
 
         public:
-            SafeValve(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            ReadPressure(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
-            ~SafeValve();
+            ~ReadPressure();
 
-            void setParams(int id, bool state);
+            void setParams(int pressureSensorTimeInter);
 
             void start();
 
             void stop();
 
+            void stopAsFailed();
+
             void buildMachine();
 
         signals:
-            void emit_safeValveFinished(QVariantMap params);
+            void emit_readPressureStopped(QVariantMap params);
+            void emit_readPressureFailed(QVariantMap params);
 
         private:
             // Referance to QObject

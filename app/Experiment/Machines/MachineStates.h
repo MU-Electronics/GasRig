@@ -40,8 +40,10 @@ namespace App { namespace Experiment { namespace Machines
             QVariantMap params;
 
             // Hold a timer instance
-            QTimer t_vacPressureMonitor;
-            QTimer t_vacTime;
+            QTimer t_vacPressureMonitor;        // Sensor
+            QTimer t_pressureMonitor;           // Sensor
+            QTimer t_flowControllerFlowMonitor; // Sensor
+            QTimer t_vacTime;                   // Vac down timer
 
             // Create the states for the machine
             QState
@@ -76,8 +78,13 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_setGasModeMedium
             ,   sm_setGasModeHelium
             ,   sm_vacPressure
+                // States relating to controlling the flow controller
+            ,   sm_flowControllerOneFlow
+            ,   sm_flowControllerTwoFlow
                 // Timers
             ,   sm_startVacuumPressureMonitor
+            ,   sm_startPressureMonitor
+            ,   sm_startFlowControllerFlowMonitor
             ,   sm_startVacuumTimer
             ,   sm_timerWait
                 // Finishing sequence
@@ -122,7 +129,10 @@ namespace App { namespace Experiment { namespace Machines
             ,   sm_validateSetGasModeMedium
             ,   sm_validateSetGasModeHelium
             ,   sm_validateStartVacuumPressureMonitor
-            ,   sm_validateVacPressureForTurbo;
+            ,   sm_validateVacPressureForTurbo
+                // States relating to validating the flow controller
+            ,   sm_validateFlowControllerOneFlow
+            ,   sm_validateFlowControllerTwoFlow;
 
             // Helper methods
             void removeAllTransitions();
@@ -210,6 +220,13 @@ namespace App { namespace Experiment { namespace Machines
             void validateSetGasModeMedium();
             void validateSetGasModeHelium();
 
+            // States relating to controlling the flow controller
+            void flowControllerOneFlow();
+            void flowControllerTwoFlow();
+
+            // States relating to validating the flow controller
+            void validateFlowControllerOneFlow();
+            void validateFlowControllerTwoFlow();
 
 
             // Finishing sequence
@@ -225,8 +242,16 @@ namespace App { namespace Experiment { namespace Machines
 
             // Timer functions
             void timerWait();
+
             void startVacuumPressureMonitor();
             void stopVacuumPressureMonitor();
+
+            void startPressureMonitor();
+            void stopPressureMonitor();
+
+            void startFlowControllerFlowMonitor();
+            void stopFlowControllerFlowMonitor();
+
             void startVacuumTimer();
             void stopVacuumTimer();
 
@@ -236,9 +261,6 @@ namespace App { namespace Experiment { namespace Machines
 
             // Hold instance of command constructor
             Hardware::CommandConstructor m_commandConstructor;
-
-            // Setup state timers
-            void setupTimers();
 
             // Connect states to their function
             void connectStatesToMethods();

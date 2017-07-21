@@ -32,6 +32,8 @@ namespace App { namespace Experiment { namespace Machines
 
             // Timers for states
         ,   t_vacPressureMonitor(parent)
+        ,   t_pressureMonitor(parent)
+        ,   t_flowControllerFlowMonitor(parent)
         ,   t_vacTime(parent)
 
             // Pressure sensor ralted states
@@ -92,10 +94,9 @@ namespace App { namespace Experiment { namespace Machines
         ,   sm_setGasModeHeavy(&machine)
         ,   sm_setGasModeMedium(&machine)
         ,   sm_setGasModeHelium(&machine)
-        ,   sm_startVacuumPressureMonitor(&machine)
-        ,   sm_startVacuumTimer(&machine)
 
-            // States relating to controlling the vac station
+
+            // States relating to validating the vac station
         ,   sm_validateDisableTurboPump(&machine)
         ,   sm_validateEnableTurboPump(&machine)
         ,   sm_validateDisableBackingPump(&machine)
@@ -105,10 +106,20 @@ namespace App { namespace Experiment { namespace Machines
         ,   sm_validateSetGasModeHelium(&machine)
         ,   sm_validateStartVacuumPressureMonitor(&machine)
 
-            // Flow controller related states
+            // States relating to controlling the flow controller
+        ,   sm_flowControllerOneFlow(&machine)
+        ,   sm_flowControllerTwoFlow(&machine)
+
+            // States relating to validating the vac station
+        ,   sm_validateFlowControllerOneFlow(&machine)
+        ,   sm_validateFlowControllerTwoFlow(&machine)
 
             // Timers
         ,   sm_timerWait(&machine)
+        ,   sm_startVacuumPressureMonitor(&machine)
+        ,   sm_startPressureMonitor(&machine)
+        ,   sm_startFlowControllerFlowMonitor(&machine)
+        ,   sm_startVacuumTimer(&machine)
 
             // Finishing sequence
         ,   sm_finishVacSession(&machine)
@@ -122,9 +133,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Connect the states to functions
         connectStatesToMethods();
-
-        // Confiugre the timers of the states
-        setupTimers();
     }
 
 
@@ -205,12 +213,21 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sm_validateSetGasModeMedium, &CommandValidatorState::entered, this, &MachineStates::validateSetGasModeMedium);
         connect(&sm_validateSetGasModeHelium, &CommandValidatorState::entered, this, &MachineStates::validateSetGasModeHelium);
 
-        // Link
+        // Link flow controller states
+        connect(&sm_flowControllerOneFlow, &QState::entered, this, &MachineStates::flowControllerOneFlow);
+        connect(&sm_flowControllerTwoFlow, &QState::entered, this, &MachineStates::flowControllerTwoFlow);
+
+        // Link flow controller validation states
+        connect(&sm_validateFlowControllerOneFlow, &CommandValidatorState::entered, this, &MachineStates::validateFlowControllerOneFlow);
+        connect(&sm_validateFlowControllerTwoFlow, &CommandValidatorState::entered, this, &MachineStates::validateFlowControllerTwoFlow);
 
         // Link the timer states
-        connect(&sm_startVacuumPressureMonitor, &QState::entered, this, &MachineStates::startVacuumPressureMonitor);
-        connect(&sm_startVacuumTimer, &QState::entered, this, &MachineStates::startVacuumTimer);
         connect(&sm_timerWait, &QState::entered, this, &MachineStates::timerWait);
+        connect(&sm_startVacuumPressureMonitor, &QState::entered, this, &MachineStates::startVacuumPressureMonitor);
+        connect(&sm_startPressureMonitor, &QState::entered, this, &MachineStates::startPressureMonitor);
+        connect(&sm_startFlowControllerFlowMonitor, &QState::entered, this, &MachineStates::startFlowControllerFlowMonitor);
+        connect(&sm_startVacuumTimer, &QState::entered, this, &MachineStates::startVacuumTimer);
+
 
         // Finishing sequence
         connect(&sm_finishVacSession, &QState::entered, this, &MachineStates::finishVacSession);
@@ -246,16 +263,142 @@ namespace App { namespace Experiment { namespace Machines
     }
 
 
+
     /**
-     * Setup timers to the correct configuration for the states that use them
+     * Empty state to wait for timer events
      *
-     * @brief MachineStates::setupTimers
+     * @brief MachineStates::timerWait
      */
-    void MachineStates::setupTimers()
+    void MachineStates::timerWait()
     {
-        // The time the vacumm should vac down to
-        t_vacTime.setSingleShot(true);
     }
+
+
+
+    /**
+     * The timer for how long to vac down for
+     *
+     * @brief MachineStates::startVacuumTimer
+     */
+    void MachineStates::startVacuumTimer()
+    {
+        if(!t_vacTime.isActive())
+        {
+            // Setup timer
+            t_vacTime.setSingleShot(true);
+            t_vacTime.start();
+        }
+
+        emit emit_timerActive();
+    }
+
+    /**
+     * Stop the vac down timer
+     *
+     * @brief MachineStates::stopVacuumTimer
+     */
+    void MachineStates::stopVacuumTimer()
+    {
+        t_vacTime.stop();
+    }
+
+
+
+
+    /**
+     * Timer to use to trigger reading the vacuum sensor
+     *
+     * @brief MachineStates::startVacuumPressureMonitor
+     */
+    void MachineStates::startVacuumPressureMonitor()
+    {
+        if(!t_vacPressureMonitor.isActive())
+        {
+            // Setup timer
+            t_vacPressureMonitor.setSingleShot(false);
+            t_vacPressureMonitor.start();
+        }
+
+        // Emit the timer started
+        emit emit_timerActive();
+    }
+
+
+    /**
+     * Stop the timer triggering reading of the vacuum sensor
+     *
+     * @brief MachineStates::stopVacuumPressureMonitor
+     */
+    void MachineStates::stopVacuumPressureMonitor()
+    {
+        t_vacPressureMonitor.stop();
+    }
+
+
+    /**
+     * Timer to use to trigger reading the pressure sensor
+     *
+     * @brief MachineStates::startPressureMonitor
+     */
+    void MachineStates::startPressureMonitor()
+    {
+        if(!t_pressureMonitor.isActive())
+        {
+            // Setup timer
+            t_pressureMonitor.setSingleShot(false);
+            t_pressureMonitor.start();
+        }
+
+        // Emit the timer started
+        emit emit_timerActive();
+    }
+
+
+    /**
+     * Stop the timer triggering reading of the pressure sensor
+     *
+     * @brief MachineStates::stopPressureMonitor
+     */
+    void MachineStates::stopPressureMonitor()
+    {
+        t_pressureMonitor.stop();
+    }
+
+
+
+    /**
+     * Timer to use to trigger reading the flow controller flow sensor
+     *
+     * @brief MachineStates::startPressureMonitor
+     */
+    void MachineStates::startFlowControllerFlowMonitor()
+    {
+        if(!t_flowControllerFlowMonitor.isActive())
+        {
+            // Setup timer
+            t_flowControllerFlowMonitor.setSingleShot(false);
+            t_flowControllerFlowMonitor.start();
+        }
+
+        // Emit the timer started
+        emit emit_timerActive();
+    }
+
+
+    /**
+     * Stop the timer triggering reading of the flow controller flow sensor
+     *
+     * @brief MachineStates::stopPressureMonitor
+     */
+    void MachineStates::stopFlowControllerFlowMonitor()
+    {
+        t_flowControllerFlowMonitor.stop();
+    }
+
+
+
+
+
 
 
     /**
@@ -527,50 +670,6 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
-    void MachineStates::timerWait()
-    {
-    }
-
-    void MachineStates::startVacuumPressureMonitor()
-    {
-        if(!t_vacPressureMonitor.isActive())
-        {
-            // Setup timer
-            t_vacPressureMonitor.setSingleShot(false);
-            t_vacPressureMonitor.setInterval(500);
-            t_vacPressureMonitor.start();
-        }
-
-        // Emit the timer started
-        emit emit_timerActive();
-    }
-
-    void MachineStates::stopVacuumPressureMonitor()
-    {
-        t_vacPressureMonitor.stop();
-    }
-
-
-    void MachineStates::startVacuumTimer()
-    {
-        if(!t_vacTime.isActive())
-        {
-            // Setup timer
-            t_vacTime.setSingleShot(true);
-            //t_vacTime.setInterval(10000);
-            t_vacTime.start();
-        }
-
-        emit emit_timerActive();
-    }
-
-    void MachineStates::stopVacuumTimer()
-    {
-        t_vacTime.stop();
-    }
-
-
-
 
 
 
@@ -742,6 +841,55 @@ namespace App { namespace Experiment { namespace Machines
 
         // Get the package data from the instance
         QVariantMap package = state->package;
+
+        qDebug() << package;
+    }
+
+
+
+
+
+
+
+
+    void MachineStates::flowControllerOneFlow()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getFlowControllerFlowRate("FlowControllerOne"));
+    }
+
+
+    void MachineStates::validateFlowControllerOneFlow()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
+        qDebug() << package;
+    }
+
+    void MachineStates::flowControllerTwoFlow()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getFlowControllerFlowRate("FlowControllerTwo"));
+    }
+
+
+    void MachineStates::validateFlowControllerTwoFlow()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
 
         qDebug() << package;
     }

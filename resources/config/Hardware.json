@@ -5,7 +5,7 @@
             "productId": "1288",
             "com": "tty.usbserial-FTZ6KPLP",
             "braud": "9600",
-            "timeout": "2000",
+            "timeout": "800",
             "id": "1"
         },
         "vacuum_station":{
@@ -89,8 +89,8 @@
         "vacuum_max": "0.0000007"
     },
     "polling_times": {
-        "pressure_sensor": "500",
-        "vacuum_sensor": "1000",
-        "flowcontroller_flow": "1000"
+        "pressure_sensor": "1500",
+        "vacuum_sensor": "1500",
+        "flowcontroller_flow": "1500"
     }
 }

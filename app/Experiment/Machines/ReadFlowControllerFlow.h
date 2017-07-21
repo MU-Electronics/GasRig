@@ -18,16 +18,16 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    class SensorReadings    :   public MachineStates
+    class ReadFlowControllerFlow    :   public MachineStates
     {
         Q_OBJECT
 
         public:
-            SensorReadings(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            ReadFlowControllerFlow(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
-            ~SensorReadings();
+            ~ReadFlowControllerFlow();
 
-            void setParams(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter);
+            void setParams(int flowControllerTimeInter);
 
             void start();
 
@@ -38,8 +38,8 @@ namespace App { namespace Experiment { namespace Machines
             void buildMachine();
 
         signals:
-            void emit_sensorReadingsStopped(QVariantMap params);
-            void emit_sensorReadingsFailed(QVariantMap params);
+            void emit_readFlowControllerFlowStopped(QVariantMap params);
+            void emit_readFlowControllerFlowFailed(QVariantMap params);
 
         private:
             // Referance to QObject

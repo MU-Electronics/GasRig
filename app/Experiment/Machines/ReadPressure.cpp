@@ -1,4 +1,4 @@
-#include "SensorReadings.h"
+#include "ReadPressure.h"
 
 // Include extenral deps
 #include <QObject>
@@ -15,13 +15,13 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    SensorReadings::SensorReadings(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    ReadPressure::ReadPressure(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
     {
 
     }
 
-    SensorReadings::~SensorReadings()
+    ReadPressure::~ReadPressure()
     {
 
     }
@@ -35,25 +35,22 @@ namespace App { namespace Experiment { namespace Machines
      * @param turbo
      * @param gasMode
      */
-    void SensorReadings::setParams(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter)
-    {
-        // Timer invertval for vac sensor
-        params.insert("vacSensorTimeInter", vacSensorTimeInter);
-
+    void ReadPressure::setParams(int pressureSensorTimeInter)
+    {       
         // Time interval for pressure sensor
         params.insert("pressureSensorTimeInter", pressureSensorTimeInter);
 
-        // Time interval for flow sensor
-        params.insert("flowControllerTimeInter", flowControllerTimeInter);
+        // Setup timers
+        t_pressureMonitor.setInterval(pressureSensorTimeInter);
     }
 
 
     /**
      * Start the state machine
      *
-     * @brief SensorReadings::start
+     * @brief ReadPressure::start
      */
-    void SensorReadings::start()
+    void ReadPressure::start()
     {
         machine.start();
     }
@@ -62,12 +59,12 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief SensorReadings::start
+     * @brief ReadPressure::start
      */
-    void SensorReadings::stop()
+    void ReadPressure::stop()
     {
         // Stop all the timers
-
+        stopPressureMonitor();
 
         // Stop the machine
         machine.stop();
@@ -76,18 +73,19 @@ namespace App { namespace Experiment { namespace Machines
         removeAllTransitions();
 
         // Emit the machine is finished
-        emit emit_sensorReadingsStopped(params);
+        emit emit_readPressureStopped(params);
     }
 
 
     /**
      * Stop the state machine as it failed somewhere
      *
-     * @brief SensorReadings::stopAsFailed
+     * @brief ReadPressure::stopAsFailed
      */
-    void SensorReadings::stopAsFailed()
+    void ReadPressure::stopAsFailed()
     {
         // Stop all the timers
+        stopPressureMonitor();
 
         // Stop the machine
         machine.stop();
@@ -96,22 +94,31 @@ namespace App { namespace Experiment { namespace Machines
         removeAllTransitions();
 
         // Emit the machine is finished
-        emit emit_sensorReadingsFailed(params);
+        emit emit_readPressureFailed(params);
     }
 
 
     /**
      * Builds the machine connections
      *
-     * @brief SensorReadings::buildMachine
+     * @brief ReadPressure::buildMachine
      */
-    void SensorReadings::buildMachine()
+    void ReadPressure::buildMachine()
     {
         // Where to start the machine
-        //machine.setInitialState(&sm_systemPressure);
+        machine.setInitialState(&sm_startPressureMonitor);
 
-        // Check the system pressure
-        //sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sm_validatePressureForVacuum);
+        // Start the pressure monitor
+        sm_startPressureMonitor.addTransition(this, &MachineStates::emit_timerActive, &sm_timerWait);
+
+        // Wait for a timer event
+        sm_timerWait.addTransition(&t_pressureMonitor, &QTimer::timeout, &sm_systemPressure);
+
+        // Read the pressure sensor
+        sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sm_timerWait);
+
+        // Account for com issues
+        sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sm_timerWait);
 
     }
 }}}

@@ -6,7 +6,9 @@
 // Include state machine
 #include "VacDown.h"
 #include "SafeValve.h"
-#include "SensorReadings.h"
+#include "ReadFlowControllerFlow.h"
+#include "ReadPressure.h"
+#include "ReadVacuum.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -68,7 +70,9 @@ namespace App { namespace Experiment { namespace Machines
             // Hold the machines
             VacDown& m_vacDown;
             SafeValve& m_safeValve;
-            SensorReadings& m_sensorReadings;
+            ReadFlowControllerFlow& m_readFlowControllerFlow;
+            ReadPressure& m_readPressure;
+            ReadVacuum& m_readVacuum;
 
     };
 
