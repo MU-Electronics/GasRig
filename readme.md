@@ -37,7 +37,7 @@ When a commit is made to the repo Jenkins would run the following script to
   * Copy the required dll files to the directory from qt
   * Run the new version of the software
 
-```
+```BASH
 REM "Update the source code"
 cd c:\Users\xray\Desktop\GasRig\GasRig
 git pull
@@ -50,19 +50,19 @@ cd C:\Users\xray\Desktop\GasRig
 mkdir build
 cd build
 REM "Qt generate the make files"
-"c:\Qt\5.8\mingw53_32\bin\qmake.exe" "c:\Users\xray\Desktop\GasRig\GasRig\GasRig.pro" -r -spec win32-g++ CONFIG+=production
+"c:\Qt\5.9.1\mingw53_32\bin\qmake.exe" "c:\development\qt\GasRig\GasRig.pro" -r -spec win32-g++ CONFIG+=production
 REM "Compile the release"
 mingw32-make -f Makefile.Release
 REM "Ensure all the required DLLs are avaiable to the program"
-windeployqt --qmldir "C:\Users\xray\Desktop\GasRig\GasRig" "C:\Users\xray\Desktop\GasRig\build\release"
+"c:\Qt\5.9.1\mingw53_32\bin\windeployqt" --qmldir "C:\development\qt\GasRig" "C:\development\qt\build-gasRig\release"
 REM "Copy missing dlls that windeployqt seems to miss"
-copy C:\Qt\5.8\mingw53_32\bin\libwinpthread-1.dll C:\Users\xray\Desktop\GasRig\build\release\libwinpthread-1.dll
-copy C:\Qt\5.8\mingw53_32\bin\Qt5OpenGL.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5OpenGL.dll
-copy C:\Qt\5.8\mingw53_32\bin\Qt5MultimediaQuick_p.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5MultimediaQuick_p.dll
-copy C:\Qt\5.8\mingw53_32\bin\Qt5Multimedia.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5Multimedia.dll
-copy C:\Qt\5.8\mingw53_32\bin\Qt5Concurrent.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5Concurrent.dll
-copy C:\Qt\5.8\mingw53_32\bin\Qt5DesignerComponents.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5DesignerComponents.dll
-copy C:\Qt\5.8\mingw53_32\bin\Qt5Designer.dll C:\Users\xray\Desktop\GasRig\build\release\Qt5Designer.dll
+copy c:\Qt\5.9.1\mingw53_32\bin\libwinpthread-1.dll C:\development\qt\build-gasRig\release\libwinpthread-1.dll
+copy c:\Qt\5.9.1\mingw53_32\bin\Qt5OpenGL.dll C:\development\qt\build-gasRig\release\Qt5OpenGL.dll
+copy c:\Qt\5.9.1\mingw53_32\bin\Qt5MultimediaQuick_p.dll C:\development\qt\build-gasRig\release\Qt5MultimediaQuick_p.dll
+copy c:\Qt\5.9.1\mingw53_32\bin\Qt5Multimedia.dll C:\development\qt\build-gasRig\release\Qt5Multimedia.dll
+copy c:\Qt\5.9.1\mingw53_32\bin\Qt5Concurrent.dll C:\development\qt\build-gasRig\release\Qt5Concurrent.dll
+copy c:\Qt\5.9.1\mingw53_32\bin\Qt5DesignerComponents.dll C:\development\qt\build-gasRig\release\Qt5DesignerComponents.dll
+copy c:\Qt\5.9.1\mingw53_32\bin\Qt5Designer.dll C:\development\qt\build-gasRig\release\Qt5Designer.dll
 REM "Run the new app"
 "C:\PSTools\PsExec.exe" -u xray -p "PASSWORD" -accepteula "C:\Users\xray\Desktop\GasRig\build\release\GasRig.exe"
 ```
