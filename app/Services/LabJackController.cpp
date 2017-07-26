@@ -102,8 +102,8 @@ namespace App { namespace Services
     QStringList LabJackController::read(int length)
     {
         // Hold the reads data
-        //unsigned char data[length]; << Not standard c++, GCC allows but MSVS does not
-        char* data = new char[length];
+        //unsigned char data[length]; << Not standard c++, GCC allows but MSVC does not
+        unsigned char* data = new unsigned char[length];
 
         // Run the correct method using the correct library
         #ifdef _WIN32
@@ -163,8 +163,8 @@ namespace App { namespace Services
     bool LabJackController::write(QByteArray package)
     {
         // Convert QBtyeArray to char
-        // unsigned char data[package.size()];  << Not standard c++, GCC allows but MSVS does not
-        char* data = new char[package.size()];
+        // unsigned char data[package.size()];  << Not standard c++, GCC allows but MSVC does not
+        unsigned char* data = new unsigned char[package.size()];
         for (int i = 0; i < package.size(); i++) {
             data[i] = package.at(i);
         }
