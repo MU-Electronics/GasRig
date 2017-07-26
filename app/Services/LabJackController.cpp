@@ -102,7 +102,8 @@ namespace App { namespace Services
     QStringList LabJackController::read(int length)
     {
         // Hold the reads data
-        unsigned char data[length];
+        //unsigned char data[length]; << Not standard c++, GCC allows but MSVS does not
+        char* data = new char[length];
 
         // Run the correct method using the correct library
         #ifdef _WIN32
@@ -144,6 +145,9 @@ namespace App { namespace Services
         // Temp debug message
         //qDebug() << "The data received was: " << QByteArray::fromRawData((char*) data, byteLength) << " Length of: " << byteLength;
 
+        // Delete dynamic memory allocation
+        delete [] data;
+
         // Format char into QByteArray
         return asciiContainer;
     }
@@ -159,7 +163,8 @@ namespace App { namespace Services
     bool LabJackController::write(QByteArray package)
     {
         // Convert QBtyeArray to char
-        unsigned char data[package.size()];
+        // unsigned char data[package.size()];  << Not standard c++, GCC allows but MSVS does not
+        char* data = new char[package.size()];
         for (int i = 0; i < package.size(); i++) {
             data[i] = package.at(i);
         }
@@ -194,6 +199,9 @@ namespace App { namespace Services
 
         // Temp debug message
         //qDebug() << "The data send was: " << QByteArray::fromRawData((char*) data, byteLength) << " Length of: " << byteLength;
+
+        // Delete dynamic memory allocation
+        delete [] data;
 
         // Success
         return true;
@@ -322,11 +330,11 @@ namespace App { namespace Services
 
         // Calculate checksum16 MSB
         QString highCheckSum = QString("%1").arg(checkSumSixteenHex.mid(0,2), 0, 16);
-        int highCheckSumDecimal = highCheckSum.toInt(__null, 16);
+        int highCheckSumDecimal = highCheckSum.toInt(Q_NULLPTR, 16);
 
         // Calculate checksum16 LSB
         QString lowCheckSum = QString("%1").arg(checkSumSixteenHex.mid(2,2), 0, 16);
-        int lowCheckSumDecimal = lowCheckSum.toInt(__null, 16);
+        int lowCheckSumDecimal = lowCheckSum.toInt(Q_NULLPTR, 16);
 
         // Set MSB and LSB values into the package at the correct position
         stringPackage.replace(5, QString::number(highCheckSumDecimal));
@@ -384,10 +392,10 @@ namespace App { namespace Services
             QString checksum16 = QString("%1").arg(checkSumSixteen(package).toInt(), 0, 10);  // QString checksum16 = QString("%1").arg(checkSumSixteen(package).toInt(), 4, 10, QChar('0'));        checkSumSixteen(package);
 
             // Find the checksum16 MSB
-            highCheckSumDecimal = (int)((checksum16.toInt(__null, 10) / 256 ) & 0xff);
+            highCheckSumDecimal = (int)((checksum16.toInt(Q_NULLPTR, 10) / 256 ) & 0xff);
 
             // Find the checksum16 LSB
-            lowCheckSumDecimal = (int)(checksum16.toInt(__null, 10) & 0xff);
+            lowCheckSumDecimal = (int)(checksum16.toInt(Q_NULLPTR, 10) & 0xff);
 
             // Calculate the check sum 8
             checksum8 = checkSumEight(package);

@@ -16,8 +16,9 @@ win32 {
 
     configfiles.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\debug\\config)
 
-    LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LJUDDotNet.dll"
+    #LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LJUDDotNet.dll"
     LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LabJackUD.lib"
+
 }
 
 macx {
@@ -38,7 +39,7 @@ POST_TARGETDEPS += configfiles
 
 # Application is very dynamic in nature to allow for easy expantion and since there is no worry of resource
 # As such paramaters are passed to methods that they may not use but are required to keep a tidy format or for reflection
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
+#QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
 
 
 SOURCES += \

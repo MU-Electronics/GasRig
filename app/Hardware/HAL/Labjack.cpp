@@ -80,7 +80,7 @@ namespace App { namespace Hardware { namespace HAL
         // Enable DAC 1?
         QString binaryDacConfig = "001";
         // Convert and append
-        int DACConfigValue = binaryDacConfig.toInt(__null, 2);
+        int DACConfigValue = binaryDacConfig.toInt(Q_NULLPTR, 2);
         stringPackage.append(QString::number(DACConfigValue));
 
         // FIO Analogue
@@ -91,7 +91,7 @@ namespace App { namespace Hardware { namespace HAL
         binaryFIOConfig.append(m_command.value("FIO4").toString());
         binaryFIOConfig.append("1111"); // FIO0, FIO1, FIO2, FIO3 can only be analogue inputs
         // Convert and append
-        int FIOConfigValue = binaryFIOConfig.toInt(__null, 2);
+        int FIOConfigValue = binaryFIOConfig.toInt(Q_NULLPTR, 2);
         stringPackage.append(QString::number(FIOConfigValue));
 
 
@@ -106,7 +106,7 @@ namespace App { namespace Hardware { namespace HAL
         binaryEIOConfig.append(m_command.value("EIO1").toString());
         binaryEIOConfig.append(m_command.value("EIO0").toString());
         // Convert and append
-        int EIOConfigValue = binaryEIOConfig.toInt(__null, 2);
+        int EIOConfigValue = binaryEIOConfig.toInt(Q_NULLPTR, 2);
         stringPackage.append(QString::number(EIOConfigValue));
 
         // Send the data and get the reply
