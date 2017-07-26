@@ -2,7 +2,7 @@
 
 // Include external deps
 #include <QByteArray>
-#include <qDebug>
+#include <QDebug>
 
 // Import correct labjack driver
 #ifdef _WIN32
