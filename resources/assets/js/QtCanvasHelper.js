@@ -1,10 +1,38 @@
 
+/**
+ * Sets a font scale of the monitors pixel density ratio
+ */
 var fontScale = 1;
-
 function setFontScale(scale)
 {
     fontScale = scale;
-    console.log(scale);
+}
+
+
+/**
+ * Determins a font size depening on the monitor font density
+ */
+function calcFontSize(ptFont)
+{
+    // Take a referance of
+    var ref = 4.29;
+
+    // Place holder for our new font size
+    var scaledPtFont = ptFont;
+
+    // Take the different of our font scale
+    if(fontScale >= 4.29)
+    { // Larger monitor resolution
+        var scaleHigh = fontScale - ref;
+        scaledPtFont = ptFont + (( ptFont * scaleHigh )*0.42);
+    }
+    else
+    { // Smaller monitor resolution
+        var scaleLow = ref - fontScale;
+        scaledPtFont = ptFont - (( ptFont * scaleLow )*0.42);
+    }
+
+    return scaledPtFont;
 }
 
 /**
@@ -103,14 +131,18 @@ function valve(ctx, x, y, state, number)
     ctx.strokeStyle = (state ? '#D32F2F' : '#388E3C');
     ctx.stroke();
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(14);
+    var fontSize2 = calcFontSize(12);
+
     //Valve number
-    ctx.font = 'bold 14px Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'white';
     ctx.fillText(number, x, y-2);
 
     //open close
-    ctx.font = 'bold 12pt Calibri';
+    ctx.font = 'bold '+fontSize2+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'white';
     ctx.fillText((state ? 'open' : 'closed'), x, y+8);
@@ -172,15 +204,18 @@ function pressureSensor(ctx, windowWidth, pressure)
     ctx.lineWidth = 4;
     ctx.stroke();
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(14);
+
     // Pressure
-    ctx.font = 'bold 15pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     //ctx.fillStyle = colorLuminance(colorText, -0.2);
     ctx.fillStyle = colorText;
-    ctx.fillText("Pressure Sensor", x+55, y+25);
+    ctx.fillText("Pressure Sensor", x+57, y+25);
 
     // value
-    ctx.font = 'bold 15pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = colorText;
     ctx.fillText(parseFloat(pressure).toFixed(4)+" Bar", x+55, y+45);
@@ -216,8 +251,11 @@ function exhaustPort(ctx, windowWidth)
     ctx.strokeStyle = '#c8cace';
     ctx.stroke();
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(14);
+
     // Output
-    ctx.font = 'bold 15pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Exhuast", x+29, y+20);
@@ -253,8 +291,11 @@ function outputPort(ctx, windowWidth)
     ctx.strokeStyle = '#c8cace';
     ctx.stroke();
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(14);
+
     // Output
-    ctx.font = 'bold 15pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Output", x+28.5, y+20);
@@ -291,8 +332,11 @@ function vacuumOutPort(ctx, windowWidth)
     ctx.strokeStyle = '#c8cace';
     ctx.stroke();
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(14);
+
     // Output
-    ctx.font = 'bold 15pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Vacuum Out", x+45, y+20);
@@ -327,23 +371,26 @@ function highPressureInput(ctx, windowWidth)
     ctx.strokeRect(rectX+(cornerRadius/2), rectY+(cornerRadius/2), rectWidth-cornerRadius, rectHeight-cornerRadius);
     ctx.fillRect(rectX+(cornerRadius/2), rectY+(cornerRadius/2), rectWidth-cornerRadius, rectHeight-cornerRadius);
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(19);
+
     // High
-    ctx.font = 'bold 20pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
-    ctx.fillText("High", rectX+38, rectY+40);
+    ctx.fillText("High", rectX+40, rectY+40);
 
     // Pressure
-    ctx.font = 'bold 20pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
-    ctx.fillText("Pressure", rectX+38, rectY+60);
+    ctx.fillText("Pressure", rectX+40, rectY+60);
 
     // Pressure
-    ctx.font = 'bold 20pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
-    ctx.fillText("Input", rectX+38, rectY+80);
+    ctx.fillText("Input", rectX+40, rectY+80);
 
     ctx.closePath();
 }
@@ -375,23 +422,26 @@ function nitrogenPressureInput(ctx, windowWidth)
     ctx.strokeRect(rectX+(cornerRadius/2), rectY+(cornerRadius/2), rectWidth-cornerRadius, rectHeight-cornerRadius);
     ctx.fillRect(rectX+(cornerRadius/2), rectY+(cornerRadius/2), rectWidth-cornerRadius, rectHeight-cornerRadius);
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(19);
+
     // High
-    ctx.font = 'bold 20pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
-    ctx.fillText("High", rectX+38, rectY+40);
+    ctx.fillText("High", rectX+40, rectY+40);
 
     // Pressure
-    ctx.font = 'bold 20pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
-    ctx.fillText("Pressure", rectX+38, rectY+60);
+    ctx.fillText("Pressure", rectX+40, rectY+60);
 
     // Pressure
-    ctx.font = 'bold 20pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
-    ctx.fillText("Nitrogen", rectX+38, rectY+80);
+    ctx.fillText("Nitrogen", rectX+40, rectY+80);
 
     ctx.closePath();
 }
@@ -435,14 +485,18 @@ function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gas
     ctx.strokeStyle = strokeVac;
     ctx.stroke();
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(14);
+    var fontSize2 = calcFontSize(12);
+
     // Output
-    ctx.font = 'bold 15pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Vacuum Station", x+70, y+20);
 
     // Turbo
-    ctx.font = 'bold 13pt Calibri';
+    ctx.font = 'bold '+fontSize2+'pt Calibri';
     ctx.fillText("Turbo: "+(turbo ? 'enabled' : 'disabled'), x+70, y+45);
 
     // Vacuum pressure
@@ -502,14 +556,18 @@ function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverri
     ctx.strokeStyle = stroke;
     ctx.stroke();
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(14);
+    var fontSize2 = calcFontSize(12);
+
     // Flow Controller ID
-    ctx.font = 'bold 15pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Flow Controller "+id, x+70, y+20);
 
     // Flow
-    ctx.font = 'bold 13pt Calibri';
+    ctx.font = 'bold '+fontSize2+'pt Calibri';
     ctx.fillText("Flow: " + flowRate.toExponential(3) + "ml/min", x+70, y+45);
 
     // Set flow
@@ -538,16 +596,20 @@ function filters(ctx, windowWidth)
 {
     var widthScaling = (windowWidth-514);
 
+    // Scale the font sizes
+    var fontSize1 = calcFontSize(14);
+    var fontSize2 = calcFontSize(9);
+
     // Set style
-    ctx.font = 'bold 15pt Calibri';
+    ctx.font = 'bold '+fontSize1+'pt Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#ffffff';
 
     // Draw filter
-    ctx.fillText("F", 250+widthScaling/1.8, 55);
+    ctx.fillText("F", 240+widthScaling/1.8, 55);
 
     // Draw filter
-    ctx.fillText("F", 250+widthScaling/1.8, 155);
+    ctx.fillText("F", 240+widthScaling/1.8, 155);
 
     // Draw filter
     ctx.fillText("F", 144, 355);
@@ -556,9 +618,9 @@ function filters(ctx, windowWidth)
     ctx.fillText("F", 164+widthScaling/3.8, 373);
 
     // Description
-    ctx.font = 'bold 10pt Calibri';
-    ctx.fillText("(fast)", 265+widthScaling/1.8, 55);
-    ctx.fillText("(slow)", 265+widthScaling/1.8, 155);
+    ctx.font = 'bold '+fontSize2+'pt Calibri';
+    ctx.fillText("(fast)", 255+widthScaling/1.8, 55);
+    ctx.fillText("(slow)", 255+widthScaling/1.8, 155);
 
 }
 
