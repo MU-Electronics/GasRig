@@ -4,7 +4,7 @@
 #include <QThread>
 #include <QDebug>
 
-#include "../Settings/container.h"
+#include "../Settings/Container.h"
 
 namespace App { namespace Safety
 {    

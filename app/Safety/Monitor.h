@@ -9,7 +9,7 @@
 #include "../Services/Thread.h"
 
 // Include settings container
-#include "../Settings/container.h"
+#include "../Settings/Container.h"
 
 namespace App { namespace Safety
 {

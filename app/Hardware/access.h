@@ -8,7 +8,7 @@
 #include <QQueue>
 
 // Include settings container
-#include "../Settings/container.h"
+#include "../Settings/Container.h"
 
 // Include thread
 #include "../Services/Thread.h"

@@ -10,7 +10,7 @@
 #include <QMapIterator>
 
 // Include settings container
-#include "../Settings/container.h"
+#include "../Settings/Container.h"
 
 // Include Hals
 #include "HAL/VacStation.h"

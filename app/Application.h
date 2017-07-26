@@ -7,7 +7,7 @@
 #include <QMap>
 
 // Settings container
-#include "Settings/container.h"
+#include "Settings/Container.h"
 
 // View managers
 #include "ViewManager/Testing.h"

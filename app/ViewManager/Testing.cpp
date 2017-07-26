@@ -8,7 +8,7 @@
 #include <QString>
 
 // Include settings container
-#include "../Settings/container.h"
+#include "../Settings/Container.h"
 
 // Include threads
 #include "../Hardware/Access.h"
