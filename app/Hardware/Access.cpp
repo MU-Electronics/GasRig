@@ -213,10 +213,13 @@ namespace App { namespace Hardware
 
             // Remove item from queue
             m_queue.dequeue();
+
+            // Cycle immediate
+            return;
         }
 
         // Sleep the thread for a while; this reduces cpu usage massivly 15-20%!
-        thread()->usleep(50);
+        thread()->usleep(500);
     }
 
 
