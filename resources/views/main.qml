@@ -19,7 +19,7 @@ ApplicationWindow {
     // End app will be full screen
     //visibility: "FullScreen"
     //Easy of debugging use maximized
-    minimumWidth: 1280
+    minimumWidth: 1250
     //minimumHeight: 1024
     minimumHeight: 725 // my laptops a bit smaller :S
     //visibility: "Maximized"

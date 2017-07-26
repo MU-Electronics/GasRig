@@ -43,6 +43,9 @@ Item
         function paint_canvas(width, height){
             var ctx = systemDrawing.getContext('2d');
 
+            // Set font scale
+            CanvasHelper.setFontScale(Screen.pixelDensity.toFixed(2));
+
             // Draw pipes
             CanvasHelper.drawPipes(ctx, systemDrawing.width);
 

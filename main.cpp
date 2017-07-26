@@ -53,6 +53,9 @@ void fileMessageHandler(QtMsgType type, const QMessageLogContext &, const QStrin
  */
 int main(int argc, char *argv[])
 {
+    // Set
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     // Start app
     QApplication app(argc, argv);
     //QApplication   QGuiApplication

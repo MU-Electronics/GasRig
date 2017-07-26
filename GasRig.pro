@@ -15,6 +15,8 @@ win32 {
     DESTDIR_WIN ~= s,/,\\,g
 
     configfiles.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\debug\\config)
+    configfiles_release.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\release\\config)
+
 
     #LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LJUDDotNet.dll"
     LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LabJackUD.lib"

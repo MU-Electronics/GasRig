@@ -1,4 +1,11 @@
 
+var fontScale = 1;
+
+function setFontScale(scale)
+{
+    fontScale = scale;
+    console.log(scale);
+}
 
 /**
  * Draws all the pipes for the system
@@ -97,7 +104,7 @@ function valve(ctx, x, y, state, number)
     ctx.stroke();
 
     //Valve number
-    ctx.font = 'bold 14pt Calibri';
+    ctx.font = 'bold 14px Calibri';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'white';
     ctx.fillText(number, x, y-2);
