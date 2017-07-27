@@ -111,7 +111,7 @@ namespace App { namespace Services
             double byteLength = (double) length;
 
             // Using labjackUD library
-            eGetPtr(device, LJ_ioRAW_IN, 0, &byteLength, &data);
+            eGetPtr(device, LJ_ioRAW_IN, 0, &byteLength, data);
         #else
             // Number of bytes to be read
             unsigned long byteLength = (unsigned int) length;
@@ -178,7 +178,7 @@ namespace App { namespace Services
             double byteLength = (double) length;
 
             // Using labjackUD library
-            eGetPtr(device, LJ_ioRAW_OUT, 0, &byteLength, &data);
+            eGetPtr(device, LJ_ioRAW_OUT, 0, &byteLength, data);
         #else
             // Number of bytes to be read
             unsigned long byteLength = (unsigned int) length;

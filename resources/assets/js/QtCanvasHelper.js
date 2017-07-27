@@ -26,13 +26,18 @@ function calcFontSize(ptFont)
         var scaleHigh = fontScale - ref;
         scaledPtFont = ptFont + (( ptFont * scaleHigh )*0.42);
     }
-    else
+    else if(fontScale >= 3)
+    { // medium monitor resolution
+        var scaleMedium = ref - fontScale;
+        scaledPtFont = ptFont - (( ptFont * scaleMedium )*0.42);
+    }
+    else if(fontScale >= 2)
     { // Smaller monitor resolution
         var scaleLow = ref - fontScale;
-        scaledPtFont = ptFont - (( ptFont * scaleLow )*0.42);
+        scaledPtFont = (( ptFont * scaleLow ) - ptFont) * 1.8;
     }
 
-    return scaledPtFont;
+    return Math.abs(scaledPtFont);
 }
 
 /**
