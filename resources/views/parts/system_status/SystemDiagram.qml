@@ -77,6 +77,7 @@ Item
         function paint_canvas(width, height, valves, vacuum, flow, pressure){
             var ctx = systemDrawing.getContext('2d');
 
+            // Should we draw the none dynamic parts
             if(!drawInit)
             {
                systemDrawing.paint_init(ctx)
