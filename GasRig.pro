@@ -19,6 +19,8 @@ win32 {
 
 
     #LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LJUDDotNet.dll"
+
+    # Supplier labjack driver is for windows 7
     LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LabJackUD.lib"
 
 }
@@ -26,14 +28,20 @@ win32 {
 macx {
     configfiles.commands = rsync -av $$PWD/resources/config/* $$OUT_PWD/config
 
+    # Supplier labjack driver is for macOS Sierra (10.12.6)
     #LIBS += "$$PWD/vendor/labjack/exodriver/liblabjackusb-2.5.2.dylib"
+
+    # Assume the user has labjack driver installed
     LIBS += "/usr/local/lib/liblabjackusb.dylib"
 }
 
 linux {
     configfiles.commands = cp -r $$PWD/resources/config/* $$OUT_PWD/config
 
+    # Supplied labjack driver is for Ubuntu 32 bit
     #LIBS += "$$PWD/vendor/labjack/exodriver/liblabjackusb-2.5.2.so"
+
+    # Assume the user has labjack driver installed
     LIBS += "/usr/local/lib/liblabjackusb.so"
 }
 
