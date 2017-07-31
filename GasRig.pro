@@ -26,13 +26,15 @@ win32 {
 macx {
     configfiles.commands = rsync -av $$PWD/resources/config/* $$OUT_PWD/config
 
-    LIBS += "$$PWD/vendor/labjack/exodriver/liblabjackusb-2.5.2.dylib"
+    #LIBS += "$$PWD/vendor/labjack/exodriver/liblabjackusb-2.5.2.dylib"
+    LIBS += "/usr/local/lib/liblabjackusb.dylib"
 }
 
 linux {
     configfiles.commands = cp -r $$PWD/resources/config/* $$OUT_PWD/config
 
-    LIBS += "$$PWD/vendor/labjack/exodriver/liblabjackusb-2.5.2.dylib"
+    #LIBS += "$$PWD/vendor/labjack/exodriver/liblabjackusb-2.5.2.so"
+    LIBS += "/usr/local/lib/liblabjackusb.so"
 }
 
 QMAKE_EXTRA_TARGETS += configfiles
