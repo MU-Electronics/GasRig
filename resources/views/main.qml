@@ -39,7 +39,7 @@ ApplicationWindow {
     // Set the default colours
     Material.primary: Material.LightBlue
     Material.accent: Material.Blue
-
+xorg
     Universal.accent: Universal.Cobalt
 
     initialPage: TitleBar{}
