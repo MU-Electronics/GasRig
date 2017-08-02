@@ -20,8 +20,8 @@ ApplicationWindow {
     visible: true
 
     // We want a minmum width and height set
-    minimumWidth: 1280
-    minimumHeight: 1024
+    minimumWidth: 1250
+    minimumHeight: 725
 
     // Set the size to the screen size
     width: Screen.width
