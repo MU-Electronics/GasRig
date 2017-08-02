@@ -4,6 +4,7 @@ import QtQuick.Controls.Material 2.0
 import QtQuick.Controls.Universal 2.0
 import QtQuick.Layouts 1.3
 import Fluid.Controls 1.0
+import QtQuick.Window 2.2
 import "template"
 import "modes"
 import "management"
@@ -12,22 +13,26 @@ import "management/TestingMaintenance"
 ApplicationWindow {
     id: window
 
-    //flags: Qt.FramelessWindowHint | Qt.Window
+    // Ensure there is no frame around the program
+    flags: Qt.FramelessWindowHint | Qt.Window
 
+    // Ensure the window is visable
     visible: true
 
-    // End app will be full screen
-    //visibility: "FullScreen"
-    //Easy of debugging use maximized
-    minimumWidth: 1250
-    //minimumHeight: 1024
-    minimumHeight: 725 // my laptops a bit smaller :S
-    //visibility: "Maximized"
+    // We want a minmum width and height set
+    minimumWidth: 1280
+    minimumHeight: 1024
 
+    // Ensure we are in full screen mode
+    visibility: Window.FullScreen
+    //visibility: "FullScreen"
+
+    // Title for the program
     title: qsTr("Electronic Services: Gas Rig Controller")
 
     appBar.maxActionCount: 1
 
+    // Set the default colours
     Material.primary: Material.LightBlue
     Material.accent: Material.Blue
 
