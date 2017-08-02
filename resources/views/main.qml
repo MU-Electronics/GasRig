@@ -23,6 +23,10 @@ ApplicationWindow {
     minimumWidth: 1280
     minimumHeight: 1024
 
+    // Set the size to the screen size
+    width: Screen.width
+    height: Screen.height
+
     // Ensure we are in full screen mode
     visibility: Window.FullScreen
     //visibility: "FullScreen"
