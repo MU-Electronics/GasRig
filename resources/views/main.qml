@@ -20,16 +20,16 @@ ApplicationWindow {
     visible: true
 
     // We want a minmum width and height set
-    minimumWidth: 1250
+    minimumWidth: 1280
     minimumHeight: 725
 
     // Set the size to the screen size
-    width: Screen.width
-    height: Screen.height
+    //width: Screen.width
+    //height: Screen.height
 
     // Ensure we are in full screen mode
-    visibility: Window.FullScreen
-    //visibility: "FullScreen"
+    //visibility: Window.FullScreen
+    visibility: "FullScreen"
 
     // Title for the program
     title: qsTr("Electronic Services: Gas Rig Controller")
@@ -39,15 +39,15 @@ ApplicationWindow {
     // Set the default colours
     Material.primary: Material.LightBlue
     Material.accent: Material.Blue
-xorg
     Universal.accent: Universal.Cobalt
 
+    // Draw the title bar
     initialPage: TitleBar{}
 
-
+    // Draw the side bar
     SideBar{ id: listPane }
 
-
+    // Draw the stack / main view
     StackView {
         id: stackView
         anchors {
