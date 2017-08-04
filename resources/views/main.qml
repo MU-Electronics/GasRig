@@ -11,25 +11,21 @@ import "management"
 import "management/TestingMaintenance"
 
 ApplicationWindow {
+    // Id for application window
     id: window
 
     // Ensure there is no frame around the program
-    flags: Qt.FramelessWindowHint | Qt.Window
+    flags: Qt.FramelessWindowHint
 
     // Ensure the window is visable
     visible: true
 
-    // We want a minmum width and height set
+    // Ensure a minimum width and height
     minimumWidth: 1280
     minimumHeight: 725
 
-    // Set the size to the screen size
-    //width: Screen.width
-    //height: Screen.height
-
     // Ensure we are in full screen mode
-    //visibility: Window.FullScreen
-    visibility: "FullScreen"
+    visibility: "Maximized"
 
     // Title for the program
     title: qsTr("Electronic Services: Gas Rig Controller")
