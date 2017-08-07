@@ -4,17 +4,17 @@
 #include <QMap>
 
 // Include settings container
-#include "../Settings/Container.h"
+#include "../../Settings/Container.h"
 
 // Include threads
-#include "../Hardware/Access.h"
-#include "../Safety/Monitor.h"
+#include "../../Hardware/Access.h"
+#include "../../Safety/Monitor.h"
 
 // Experiment Engine with state machine methods
-#include "../Experiment/Engine.h"
+#include "../../Experiment/Engine.h"
 
 
-namespace App { namespace ViewManager
+namespace App { namespace View { namespace Managers
 {
     ConnectionStatus::ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
@@ -159,5 +159,5 @@ namespace App { namespace ViewManager
 
 
 
-}}
+}}}
 

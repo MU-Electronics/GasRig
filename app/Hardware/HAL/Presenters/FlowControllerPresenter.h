@@ -18,6 +18,10 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             // Select the correct presenter
             QVariantMap proccess(QString method, QVariantMap commands, QStringList package);
 
+            // Validate package info
+            bool expectedPackage(QVariantMap commands, QStringList package, int commandId, int expectedLength);
+            QVariantMap generateError(QString method, QVariantMap commands, QStringList package);
+
             // Presenters
             QVariantMap getSoftStart(QVariantMap commands, QStringList package);
             QVariantMap getSoftStartTime(QVariantMap commands, QStringList package);
@@ -37,7 +41,12 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             QVariantMap setTemperatureUnit(QVariantMap commands, QStringList package);
 
         private:
+            // Preps the package for use
             QStringList parse(QStringList &package);
+
+            // Hold validation failed information
+            int error_returnedPackageSize = -1;
+            int error_returnedCommandId = -1;
     };
 
 }}}}

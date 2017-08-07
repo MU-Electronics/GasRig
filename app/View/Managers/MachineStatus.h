@@ -8,22 +8,22 @@
 #include "Manager.h"
 
 // Include macros
-#include "../Utilities/Properties.h"
+#include "../../Utilities/Properties.h"
 
 // Include settings container
-#include "../Settings/Container.h"
+#include "../../Settings/Container.h"
 
 // Include threads
-#include "../Hardware/Access.h"
-#include "../Safety/Monitor.h"
+#include "../../Hardware/Access.h"
+#include "../../Safety/Monitor.h"
 
 // Experiment Engine with state machine methods
-#include "../Experiment/Engine.h"
+#include "../../Experiment/Engine.h"
 
-namespace App { namespace ViewManager
+namespace App { namespace View { namespace Managers
 {
 
-    class MachineStatus : public QObject, public App::ViewManager::Manager
+    class MachineStatus : public QObject, public App::View::Managers::Manager
     {
         Q_OBJECT
 
@@ -63,6 +63,6 @@ namespace App { namespace ViewManager
             QVariantMap m_vacDownMachine;
 
     };
-}}
+}}}
 
 

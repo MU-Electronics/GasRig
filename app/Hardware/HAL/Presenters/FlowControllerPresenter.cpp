@@ -5,6 +5,9 @@
 #include <QStringList>
 #include <QVariantMap>
 #include <QDebug>
+#include <QMapIterator>
+#include <QString>
+#include <QVariant>
 
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
@@ -27,73 +30,193 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap FlowControllerPresenter::proccess(QString method, QVariantMap commands, QStringList package)
     {
+        // Addtion bytes other than the data section of the package (common to all package)
+        int addtionPackageBytes = 2;
 
         // Select the correct presenter
-        if(method == "getIdentifier")
+        if(method == "getIdentifier" && expectedPackage(commands, package, 11, 11 + addtionPackageBytes))
         {
             return getIdentifier(commands, package);
         }
-        else if (method == "getSourceControl")
+        else if (method == "getSourceControl" && expectedPackage(commands, package, 215, 13 + addtionPackageBytes))
         {
             return getSourceControl(commands, package);
         }
-        else if (method == "getSoftStart")
+        else if (method == "getSoftStart" && expectedPackage(commands, package, 215, 13 + addtionPackageBytes))
         {
             return getSoftStart(commands, package);
         }
-        else if (method == "getSoftStartTime")
+        else if (method == "getSoftStartTime" && expectedPackage(commands, package, 215, 13 + addtionPackageBytes))
         {
             return getSoftStartTime(commands, package);
-        }else if (method == "getFlowRate")
+        }
+        else if (method == "getFlowRate" && expectedPackage(commands, package, 1, 4 + addtionPackageBytes))
         {
             return getFlowRate(commands, package);
         }
-        else if (method == "getSetFlowRate")
+        else if (method == "getSetFlowRate" && expectedPackage(commands, package, 235, 9 + addtionPackageBytes))
         {
             return getSetFlowRate(commands, package);
         }
-        else if (method == "getValveOverride")
+        else if (method == "getValveOverride" && expectedPackage(commands, package, 230, 1 + addtionPackageBytes))
         {
             return getValveOverride(commands, package);
         }
-        else if (method == "getControllerTemperature")
+        else if (method == "getControllerTemperature" && expectedPackage(commands, package, 13, 1 + addtionPackageBytes))
         {
             return getControllerTemperature(commands, package);
         }
-        else if(method == "setSourceControll")
+        else if(method == "setSourceControll" && expectedPackage(commands, package, 216, 1 + addtionPackageBytes))
         {
             return setSourceControll(commands, package);
         }
-        else if (method == "setFlowRate")
+        else if (method == "setFlowRate" && expectedPackage(commands, package, 236, 9 + addtionPackageBytes))
         {
             return setFlowRate(commands, package);
         }
-        else if (method == "setValveOverride")
+        else if (method == "setValveOverride" && expectedPackage(commands, package, 231, 1 + addtionPackageBytes))
         {
             return setValveOverride(commands, package);
         }
-        else if (method == "setSoftStart")
+        else if (method == "setSoftStart" && expectedPackage(commands, package, 218, 1 + addtionPackageBytes))
         {
             return setSoftStart(commands, package);
         }
-        else if (method == "setSoftStartTime")
+        else if (method == "setSoftStartTime" && expectedPackage(commands, package, 219, 3 + addtionPackageBytes))
         {
             return setSoftStartTime(commands, package);
         }
-        else if (method == "setFlowUnit")
+        else if (method == "setFlowUnit" && expectedPackage(commands, package, 196, 2 + addtionPackageBytes))
         {
             return setFlowUnit(commands, package);
         }
-        else if (method == "setTemperatureUnit")
+        else if (method == "setTemperatureUnit" && expectedPackage(commands, package, 197, 1 + addtionPackageBytes))
         {
             return setTemperatureUnit(commands, package);
         }
 
-        // No method could be found
-        QVariantMap error;
-        error["error"] = "NoMethod";
-        return error;
+        // There was an error
+        if(error_returnedPackageSize == -1 && error_returnedCommandId == -1)
+        {
+            // Generate the error package and sent it back
+            return generateError(method, commands, package);
+        }
+        else
+        {
+            // No method could be found generate error package
+            QVariantMap error;
+            error["error_id"] = "FlowControllerPresenter_NoMethodFound";
+            error["level"] = "critical";
+            error["message"] = "The method " + method + " does not exist in the flow controller presenter class.";
+
+            // Return the package
+            return error;
+        }
     }
+
+
+
+    /**
+     * Check whether the package returned is the expected package
+     *
+     * @brief FlowControllerPresenter::expectedPackage
+     * @param commands
+     * @param package
+     * @return
+     */
+    bool FlowControllerPresenter::expectedPackage(QVariantMap commands, QStringList package, int commandId, int expectedLength)
+    {
+        // Prep package for validating
+        parse(package);
+
+        // Check the length of the package
+        if(package.length() != expectedLength)
+        {
+            // Save the returned package size
+            error_returnedPackageSize = package.length();
+
+            // Invalid package
+            return false;
+        }
+
+        // Get the command ID
+        if(commandId != package.at(8).toInt())
+        {
+            // Save the returned id
+            error_returnedCommandId = package.at(8).toInt();
+
+            // Invalid package
+            return false;
+        }
+
+        // Passed all tests
+        return true;
+    }
+
+
+    /**
+     * Creates an error package
+     *
+     * @brief FlowControllerPresenter::generateError
+     * @param commands
+     * @param package
+     * @return
+     */
+    QVariantMap FlowControllerPresenter::generateError(QString method, QVariantMap commands, QStringList package)
+    {
+        // Container for error
+        QVariantMap error;
+
+        // Strings to hold the compiled data
+        QString compiledCommands = "";
+        QString compiledPackages = "";
+
+        // Compile commands package
+        if(commands.size() > 0)
+        {
+            QMapIterator<QString, QVariant> i(commands);
+            while (i.hasNext())
+            {
+                // Move to next record
+                i.next();
+
+                // Compile the data
+                compiledCommands += i.key() + " : " + i.value().toString() + ";    ";
+            }
+        }
+
+        // Compile returned package
+        if(package.size() > 0)
+        {
+            for (int i = 0; i < package.size(); ++i)
+                compiledPackages += package.at(i);
+        }
+
+        // If package size was too small
+        if(error_returnedPackageSize == -1)
+        {
+            // Create an error id
+            error["error_id"] = "FlowControllerPresenter_InvalidPackageLength";
+            error["level"] = "warning";
+            error["message"] = "Method:" + method + " was called but the responce length was not as expected.";
+            error["send_command"] = compiledCommands;
+            error["returned_package"] = compiledPackages;
+        }
+        else // If command id is not what was expected
+        {
+            // Create an error id
+            error["error_id"] = "FlowControllerPresenter_InvalidCommandId";
+            error["level"] = "warning";
+            error["message"] = "Method:" + method + " was called but the responce contained a command id which differs form the requested command.";
+            error["send_command"] = compiledCommands;
+            error["returned_package"] = compiledPackages;
+        }
+
+        // Return the error package
+        return error;
+
+    }
+
 
 
 

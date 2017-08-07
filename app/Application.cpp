@@ -9,10 +9,14 @@
 #include <QString>
 #include <QDebug>
 
+// Include qml types
+#include "View/QmlTypes/RigDiagram.h"
+
 // Include view manangers
-#include "ViewManager/Testing.h"
-#include "ViewManager/ConnectionStatus.h"
-#include "ViewManager/SystemStatus.h"
+#include "View/Managers/Testing.h"
+#include "View/Managers/ConnectionStatus.h"
+#include "View/Managers/SystemStatus.h"
+#include "View/Managers/MachineStatus.h"
 
 // Include objects for threading
 #include "Safety/Monitor.h"
@@ -59,11 +63,14 @@ namespace App
         ,    experiment_engine(*new Experiment::Engine(this, settings_container, hardware, monitor))
 
             // Create instance for each view manager
-        ,   manager_testing(*new ViewManager::Testing(parent, engine, settings_container, experiment_engine))
-        ,   manager_connection(*new ViewManager::ConnectionStatus(parent, engine, settings_container, experiment_engine))
-        ,   manager_systemStatus(*new ViewManager::SystemStatus(parent, engine, settings_container, experiment_engine))
-        ,   manager_machineStatus(*new ViewManager::MachineStatus(parent, engine, settings_container, experiment_engine))
+        ,   manager_testing(*new View::Managers::Testing(parent, engine, settings_container, experiment_engine))
+        ,   manager_connection(*new View::Managers::ConnectionStatus(parent, engine, settings_container, experiment_engine))
+        ,   manager_systemStatus(*new View::Managers::SystemStatus(parent, engine, settings_container, experiment_engine))
+        ,   manager_machineStatus(*new View::Managers::MachineStatus(parent, engine, settings_container, experiment_engine))
     {
+        // Register qml types with qml
+        registerQmlTypes();
+
         // Load all managers
         registerManagers();
 
@@ -110,7 +117,7 @@ namespace App
     /**
      * Register all the view manager instances
      *
-     * @brief View::loadManagers
+     * @brief Application::registerManagers
      */
     void Application::registerManagers()
     {
@@ -125,6 +132,19 @@ namespace App
 
         // Set machine status manger
         m_engine->rootContext()->setContextProperty("MachineStatusManager", &manager_machineStatus);
+    }
+
+
+
+    /**
+     * Register qml types
+     *
+     * @brief Application::registerQmlTypes
+     */
+    void Application::registerQmlTypes()
+    {
+        // Rig diagram qml type
+        qmlRegisterType<App::View::QmlTypes::RigDiagram>("RigDiagram", 1, 0, "RigDiagramViewer");
     }
 
 

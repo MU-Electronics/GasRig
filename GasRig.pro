@@ -68,10 +68,10 @@ SOURCES += \
     app/Services/FormBuilder.cpp \
     app/Safety/Monitor.cpp \
     app/Services/Logger.cpp \
-    app/ViewManager/ConnectionStatus.cpp \
-    app/ViewManager/Testing.cpp \
+    app/View/Managers/ConnectionStatus.cpp \
+    app/View/Managers/Testing.cpp \
     app/Application.cpp \
-    app/ViewManager/SystemStatus.cpp \
+    app/View/Managers/SystemStatus.cpp \
     app/Services/Thread.cpp \
     app/Settings/Safety.cpp \
     app/Settings/General.cpp \
@@ -92,14 +92,15 @@ SOURCES += \
     app/Experiment/Machines/MachineStates.cpp \
     app/Experiment/Machines/CommandValidatorState.cpp \
     app/Experiment/Machines/Machines.cpp \
-    app/ViewManager/MachineStatus.cpp \
+    app/View/Managers/MachineStatus.cpp \
     app/Experiment/Machines/SafeValve.cpp \
     app/Experiment/Machines/ReadFlowControllerFlow.cpp \
     app/Experiment/Machines/ReadPressure.cpp \
     app/Experiment/Machines/ReadVacuum.cpp \
     app/Experiment/Machines/ReadFlowControllerTemperatures.cpp \
     app/Experiment/Machines/ReadVacStationTemperatures.cpp \
-    app/Experiment/Machines/ReadTurboSpeed.cpp
+    app/Experiment/Machines/ReadTurboSpeed.cpp \
+    app/View/QmlTypes/RigDiagram.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -142,12 +143,12 @@ HEADERS += \
     app/Services/FormBuilder.h \
     app/Safety/Monitor.h \
     app/Services/Logger.h \
-    app/ViewManager/ConnectionStatus.h \
-    app/ViewManager/Testing.h \
-    app/ViewManager/Manager.h \
+    app/View/Managers/ConnectionStatus.h \
+    app/View/Managers/Testing.h \
+    app/View/Managers/Manager.h \
     app/Utilities/Properties.h \
     app/Application.h \
-    app/ViewManager/SystemStatus.h \
+    app/View/Managers/SystemStatus.h \
     app/Services/Thread.h \
     app/Settings/Safety.h \
     app/Settings/General.h \
@@ -170,11 +171,12 @@ HEADERS += \
     app/Experiment/Machines/MachineStates.h \
     app/Experiment/Machines/CommandValidatorState.h \
     app/Experiment/Machines/Machines.h \
-    app/ViewManager/MachineStatus.h \
+    app/View/Managers/MachineStatus.h \
     app/Experiment/Machines/SafeValve.h \
     app/Experiment/Machines/ReadFlowControllerFlow.h \
     app/Experiment/Machines/ReadPressure.h \
     app/Experiment/Machines/ReadVacuum.h \
     app/Experiment/Machines/ReadFlowControllerTemperatures.h \
     app/Experiment/Machines/ReadVacStationTemperatures.h \
-    app/Experiment/Machines/ReadTurboSpeed.h
+    app/Experiment/Machines/ReadTurboSpeed.h \
+    app/View/QmlTypes/RigDiagram.h

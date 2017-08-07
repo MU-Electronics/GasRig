@@ -10,10 +10,10 @@
 #include "Settings/Container.h"
 
 // View managers
-#include "ViewManager/Testing.h"
-#include "ViewManager/ConnectionStatus.h"
-#include "ViewManager/SystemStatus.h"
-#include "ViewManager/MachineStatus.h"
+#include "View/Managers/Testing.h"
+#include "View/Managers/ConnectionStatus.h"
+#include "View/Managers/SystemStatus.h"
+#include "View/Managers/MachineStatus.h"
 
 // Objects to the threaded
 #include "Safety/Monitor.h"
@@ -52,12 +52,13 @@ namespace App
             Experiment::Engine& experiment_engine;
 
             // View managers
-            ViewManager::Testing& manager_testing;
-            ViewManager::ConnectionStatus& manager_connection;
-            ViewManager::SystemStatus& manager_systemStatus;
-            ViewManager::MachineStatus& manager_machineStatus;
+            View::Managers::Testing& manager_testing;
+            View::Managers::ConnectionStatus& manager_connection;
+            View::Managers::SystemStatus& manager_systemStatus;
+            View::Managers::MachineStatus& manager_machineStatus;
 
             void registerManagers();
+            void registerQmlTypes();
             void registerAddtionalThreads();
             void startAddtionalThread();
             void connectThreads();

@@ -1,10 +1,10 @@
 #pragma once
 
 // Include threads
-#include "../Hardware/Access.h"
-#include "../Safety/Monitor.h"
+#include "../../Hardware/Access.h"
+#include "../../Safety/Monitor.h"
 
-namespace App { namespace ViewManager
+namespace App { namespace View { namespace Managers
 {
     class Manager
     {
@@ -12,6 +12,6 @@ namespace App { namespace ViewManager
         virtual void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety) = 0;
 
     };
-}}
+}}}
 
 
