@@ -31,30 +31,30 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
     QVariantMap FlowControllerPresenter::proccess(QString method, QVariantMap commands, QStringList package)
     {
         // Addtion bytes other than the data section of the package (common to all package)
-        int addtionPackageBytes = 2;
+        int addtionPackageBytes = 13;
 
         // Select the correct presenter
-        if(method == "getIdentifier" && expectedPackage(commands, package, 11, 11 + addtionPackageBytes))
+        if(method == "getIdentifier" && expectedPackage(commands, package, 11, 12 + addtionPackageBytes))
         {
             return getIdentifier(commands, package);
         }
-        else if (method == "getSourceControl" && expectedPackage(commands, package, 215, 13 + addtionPackageBytes))
+        else if (method == "getSourceControl" && expectedPackage(commands, package, 215, 14 + addtionPackageBytes))
         {
             return getSourceControl(commands, package);
         }
-        else if (method == "getSoftStart" && expectedPackage(commands, package, 215, 13 + addtionPackageBytes))
+        else if (method == "getSoftStart" && expectedPackage(commands, package, 215, 14 + addtionPackageBytes))
         {
             return getSoftStart(commands, package);
         }
-        else if (method == "getSoftStartTime" && expectedPackage(commands, package, 215, 13 + addtionPackageBytes))
+        else if (method == "getSoftStartTime" && expectedPackage(commands, package, 215, 14 + addtionPackageBytes))
         {
             return getSoftStartTime(commands, package);
         }
-        else if (method == "getFlowRate" && expectedPackage(commands, package, 1, 4 + addtionPackageBytes))
+        else if (method == "getFlowRate" && expectedPackage(commands, package, 1, 5 + addtionPackageBytes))
         {
             return getFlowRate(commands, package);
         }
-        else if (method == "getSetFlowRate" && expectedPackage(commands, package, 235, 9 + addtionPackageBytes))
+        else if (method == "getSetFlowRate" && expectedPackage(commands, package, 235, 10 + addtionPackageBytes))
         {
             return getSetFlowRate(commands, package);
         }
@@ -62,7 +62,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         {
             return getValveOverride(commands, package);
         }
-        else if (method == "getControllerTemperature" && expectedPackage(commands, package, 13, 1 + addtionPackageBytes))
+        else if (method == "getControllerTemperature" && expectedPackage(commands, package, 3, 14 + addtionPackageBytes))
         {
             return getControllerTemperature(commands, package);
         }
@@ -70,7 +70,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         {
             return setSourceControll(commands, package);
         }
-        else if (method == "setFlowRate" && expectedPackage(commands, package, 236, 9 + addtionPackageBytes))
+        else if (method == "setFlowRate" && expectedPackage(commands, package, 236, 10 + addtionPackageBytes))
         {
             return setFlowRate(commands, package);
         }
@@ -82,7 +82,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         {
             return setSoftStart(commands, package);
         }
-        else if (method == "setSoftStartTime" && expectedPackage(commands, package, 219, 3 + addtionPackageBytes))
+        else if (method == "setSoftStartTime" && expectedPackage(commands, package, 219, 4 + addtionPackageBytes))
         {
             return setSoftStartTime(commands, package);
         }
