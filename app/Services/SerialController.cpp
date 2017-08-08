@@ -486,6 +486,7 @@ namespace App { namespace Services
     {
         // Create package to be emitted
         QVariantMap errorPackage;
+        errorPackage["error_id"] = m_responsability+"Hal_ComError";
         errorPackage["responsability"] = m_responsability;
         errorPackage["method"] = m_method;
         errorPackage["status"] = false;

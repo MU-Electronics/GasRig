@@ -6,13 +6,10 @@ import "../../../assets/js/QtCanvasHelper.js" as CanvasHelper
 
 Item
 {
-
     id: systemDrawing
 
     width: parent.width
     height: parent.height
-
-
 
     /**
      * Draw the system pipes
