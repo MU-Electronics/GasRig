@@ -11,8 +11,8 @@ Rectangle
 
     width: 50
     height: 50
-    color: (state ? '#F44336' : '#4CAF50')
-    border.color: (state? '#D32F2F' : '#388E3C')
+    color: (valve.state ? '#F44336' : '#4CAF50')
+    border.color: (valve.state? '#D32F2F' : '#388E3C')
     border.width: 5
     radius: 25
 
@@ -27,7 +27,7 @@ Rectangle
     }
 
     Text{
-        text: (state ? 'open' : 'closed')
+        text: (valve.state ? 'open' : 'closed')
         color: "white"
         font.bold: true
         font.pixelSize: 11
@@ -35,6 +35,6 @@ Rectangle
         anchors.top: parent.top
         anchors.topMargin: 22
         anchors.left: parent.left
-        anchors.leftMargin: (state ? '11' : '6')
+        anchors.leftMargin: (valve.state ? '11' : '6')
     }
 }
