@@ -3,7 +3,7 @@
         "pressure_sensor": {
             "vendorId": "24577",
             "productId": "1288",
-            "com": "tty.usbserial-FTZ6KPLP",
+            "com": "ttyS1",
             "braud": "9600",
             "timeout": "800",
             "id": "1"
@@ -11,13 +11,13 @@
         "vacuum_station":{
             "vendorId": "1027",
             "productId": "24577",
-            "com": "tty.usbserial-AH02FNCX",
+            "com": "ttyUSB1",
             "braud": "9600",
             "timeout": "500",
             "id": "123"
         },
         "flow_controller":{
-            "com": "tty.usbserial-FTWVILT1",
+            "com": "ttyUSB0",
             "braud": "19200",
             "timeout": "1000",
 

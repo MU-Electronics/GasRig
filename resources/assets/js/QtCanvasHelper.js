@@ -435,7 +435,7 @@ function nitrogenPressureInput(ctx, windowWidth)
 /**
  * Draws the vac station
  */
-function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gasMode, backingPumpMode)
+function vaccumStation(ctx, windowWidth)
 {
     var widthScaling = (windowWidth-514);
 
@@ -451,16 +451,6 @@ function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gas
     // Calculate the background colour
     var backgroundVac = '#d4d5d8';
     var strokeVac = '#c8cace';
-    if(backingPump && !turbo)
-    {
-        backgroundVac = '#FF9800';
-        strokeVac = '#FB8C00';
-    }
-    else if(backingPump && turbo)
-    {
-        backgroundVac = '#EF5350';
-        strokeVac = '#E53935';
-    }
 
     ctx.fillStyle = backgroundVac;
     ctx.fill();
@@ -479,18 +469,6 @@ function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gas
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Vacuum Station", x+70, y+20);
 
-//    // Turbo
-//    ctx.font = 'bold '+fontSize2+'pt '+font;
-//    ctx.fillText("Turbo: "+(turbo ? 'enabled' : 'disabled'), x+70, y+45);
-
-//    // Vacuum pressure
-//    ctx.fillText("Vacuum: "+vacuumPressure.toExponential(3)+" mBar", x+70, y+65);
-
-//    // Gas mode
-//    var mode;
-//    if(gasMode === 0) { mode = '>= 39'; }else if(gasMode === 1) { mode = '< 39'; }else if(gasMode === 2) { mode = 'helium'; }
-//    ctx.fillText("Gas Mode: "+mode, x+70, y+85);
-
     ctx.closePath();
 
 }
@@ -499,7 +477,7 @@ function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gas
 /**
  * Draws the flow controller
  */
-function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverride, softStart, softStartTime)
+function flowController(ctx, windowWidth, id)
 {
     var widthScaling = (windowWidth-514);
 
@@ -522,16 +500,16 @@ function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverri
 
     var background = '#d4d5d8';
     var stroke = '#c8cace';
-    if(valveOverride === 1)
-    {
-        background = '#EF5350';
-        stroke = '#E53935';
-    }
-    else if(setFlowRate > 0)
-    {
-        background = '#FF9800';
-        stroke = '#FB8C00';
-    }
+//    if(valveOverride === 1)
+//    {
+//        background = '#EF5350';
+//        stroke = '#E53935';
+//    }
+//    else if(setFlowRate > 0)
+//    {
+//        background = '#FF9800';
+//        stroke = '#FB8C00';
+//    }
 
     ctx.fillStyle = background;
     ctx.fill();
@@ -549,24 +527,6 @@ function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverri
     ctx.textAlign = 'center';
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Flow Controller "+id, x+70, y+20);
-
-//    // Flow
-//    ctx.font = 'bold '+fontSize2+'pt '+font;
-//    ctx.fillText("Flow: " + flowRate.toExponential(3) + "ml/min", x+70, y+45);
-
-//    // Set flow
-//    ctx.fillText("Set: " + setFlowRate.toExponential(3) + "ml/min", x+70, y+65);
-
-//    // Soft start state
-//    ctx.fillText("Soft Start: " + (softStart === 4 ? 'enabled' : 'disabled'), x+70, y+95);
-
-//    // Soft start time
-//    ctx.fillText("Soft Start time: " + softStartTime + "s", x+70, y+115);
-
-//    // Valve override
-//    var overrideVerbal;
-//    if(valveOverride === 0){ overrideVerbal = "off"; } else if(valveOverride === 1){ overrideVerbal = "open"; } else if(valveOverride === 2){ overrideVerbal = "closed"; }
-//    ctx.fillText("Override: " + overrideVerbal, x+70, y+145);
 
     ctx.closePath();
 }
@@ -608,80 +568,3 @@ function filters(ctx, windowWidth)
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * Convets number to hex
- */
-function componentToHex(c) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-}
-
-/**
- * Convets percentage to colour
- */
-function getColorForPercentage(pct)
-{
-    var percentColors = [
-        { pct: 0.0, color: { r: 0x00, g: 0xff, b: 0 } },
-        { pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
-        { pct: 1.0, color: { r: 0xff, g: 0x00, b: 0 } } ];
-
-    for (var i = 1; i < percentColors.length - 1; i++) {
-        if (pct < percentColors[i].pct) {
-            break;
-        }
-    }
-    var lower = percentColors[i - 1];
-    var upper = percentColors[i];
-    var range = upper.pct - lower.pct;
-    var rangePct = (pct - lower.pct) / range;
-    var pctLower = 1 - rangePct;
-    var pctUpper = rangePct;
-    var color = {
-        r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
-        g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-        b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
-    };
-    //return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
-    return componentToHex(color.r)+componentToHex(color.g)+componentToHex(color.b);
-}
-
-
-/**
- * Lightens or darkens a colour
- */
-function colorLuminance(color, percent) {
-
-    var num = parseInt(color,16),
-        amt = Math.round(2.55 * percent),
-        R = (num >> 16) + amt,
-        B = (num >> 8 & 0x00FF) + amt,
-        G = (num & 0x0000FF) + amt;
-
-    return "#"+(0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
-
-}
-
-/**
- * Get correct text color for background
- */
-function getColorByBgColor(bgColor) {
-    if (!bgColor) { return ''; }
-    return (parseInt(bgColor.replace('#', ''), 16) > 0xffffff / 2) ? '#000' : '#fff';
-}

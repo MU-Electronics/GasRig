@@ -13,22 +13,6 @@ Item
     width: parent.width
     height: parent.height
 
-    // Redraw diagram on valve update
-    Connections {
-        target: SystemStatusManager
-        onEmit_valveStateChanged: {
-            //systemDrawing.paint_canvas(parent.width, parent.height, true, false, false, false);
-        }
-        onEmit_pressureSensorChanged: {
-            //systemDrawing.paint_canvas(parent.width, parent.height, false, false, false, true);
-        }
-        onEmit_vacuumStateChanged: {
-            //systemDrawing.paint_canvas(parent.width, parent.height, false, true, false, false);
-        }
-        onEmit_flowControllerStateChanged: {
-            //systemDrawing.paint_canvas(parent.width, parent.height, false, false, true, false);
-        }
-    }
 
     Canvas
     {
@@ -40,7 +24,7 @@ Item
         antialiasing: true
         transformOrigin: Item.TopLeft
         renderStrategy: Canvas.Threaded
-        //renderTarget: Canvas.FramebufferObject
+        renderTarget: Canvas.FramebufferObject
 
 
         /**
@@ -94,8 +78,8 @@ Item
                 }
             }
 
-            color: whichColorBackground(SystemStatusManager.vacuumState["backing_pump"], SystemStatusManager.pressureSensor["turbo_pump"])
-            border.color: whichColorBorder(SystemStatusManager.vacuumState["backing_pump"], SystemStatusManager.pressureSensor["turbo_pump"])
+            color: whichColorBackground(SystemStatusManager.vacuumState["backing_pump"], SystemStatusManager.vacuumState["turbo_pump"])
+            border.color: whichColorBorder(SystemStatusManager.vacuumState["backing_pump"], SystemStatusManager.vacuumState["turbo_pump"])
             border.width: 5
             width: 145
             height: 105
@@ -103,7 +87,7 @@ Item
             y: 97
 
             Text{
-                text:   "Turbo: " + SystemStatusManager.pressureSensor["turbo_pump"] + "\n" +
+                text:   "Turbo: " + SystemStatusManager.vacuumState["turbo_pump"] + "\n" +
                         "Gas Mode: " + SystemStatusManager.vacuumState["gas_type_mode_verbal"] + "\n" +
                         "Vacuum: " + SystemStatusManager.vacuumState["vacuum_round_3"];
 
@@ -118,11 +102,11 @@ Item
          * NOTE: Far more efficent than redrawing using Canvas!!!
          */
         Text{
-            text:   "Flow: " + SystemStatusManager.pressureSensor["controller_1_flow"] + "\n" +
-                    "Set: " + SystemStatusManager.vacuumState["controller_1_set_flowrate"] + "\n" +
-                    "Soft Start: " + SystemStatusManager.vacuumState["controller_1_softstart"] + "\n" +
-                    "Soft Start time: " + SystemStatusManager.vacuumState["controller_1_softstart_time"] + "\n" +
-                    "Override: " + SystemStatusManager.vacuumState["controller_1_override"];
+            text:   "Flow: " + SystemStatusManager.flowControllerState["controller_1_flow"] + "\n" +
+                    "Set: " + SystemStatusManager.flowControllerState["controller_1_set_flowrate"] + "\n" +
+                    "Soft Start: " + SystemStatusManager.flowControllerState["controller_1_softstart"] + "\n" +
+                    "Soft Start time: " + SystemStatusManager.flowControllerState["controller_1_softstart_time"] + "\n" +
+                    "Override: " + SystemStatusManager.flowControllerState["controller_1_override"];
 
             horizontalAlignment: Text.AlignHCenter
             color: "#5e5f63"
@@ -131,11 +115,11 @@ Item
         }
 
         Text{
-            text:   "Flow: " + SystemStatusManager.pressureSensor["controller_2_flow"] + "\n" +
-                    "Set: " + SystemStatusManager.vacuumState["controller_2_set_flowrate"] + "\n" +
-                    "Soft Start: " + SystemStatusManager.vacuumState["controller_2_softstart"] + "\n" +
-                    "Soft Start time: " + SystemStatusManager.vacuumState["controller_2_softstart_time"] + "\n" +
-                    "Override: " + SystemStatusManager.vacuumState["controller_2_override"];
+            text:   "Flow: " + SystemStatusManager.flowControllerState["controller_2_flow"] + "\n" +
+                    "Set: " + SystemStatusManager.flowControllerState["controller_2_set_flowrate"] + "\n" +
+                    "Soft Start: " + SystemStatusManager.flowControllerState["controller_2_softstart"] + "\n" +
+                    "Soft Start time: " + SystemStatusManager.flowControllerState["controller_2_softstart_time"] + "\n" +
+                    "Override: " + SystemStatusManager.flowControllerState["controller_2_override"];
 
             horizontalAlignment: Text.AlignHCenter
             color: "#5e5f63"
@@ -228,24 +212,12 @@ Item
             CanvasHelper.pressureSensor(ctx, systemDrawing.width);
 
             // Draw vac pump
-            CanvasHelper.vaccumStation(ctx, systemDrawing.width, SystemStatusManager.vacuumState["backing_pump"],
-                                                                 SystemStatusManager.vacuumState["turbo_pump"],
-                                                                 SystemStatusManager.vacuumState["vacuum"],
-                                                                 SystemStatusManager.vacuumState["gas_type_mode"] ,
-                                                                 SystemStatusManager.vacuumState["backing_pump_mode"]);
+            CanvasHelper.vaccumStation(ctx, systemDrawing.width);
 
             // Draw flow controller one and two
-            CanvasHelper.flowController(ctx, systemDrawing.width, 1, SystemStatusManager.flowControllerState["controller_1_set_flowrate"],
-                                                                     SystemStatusManager.flowControllerState["controller_1_flow"],
-                                                                     SystemStatusManager.flowControllerState["controller_1_override"],
-                                                                     SystemStatusManager.flowControllerState["controller_1_softstart"],
-                                                                     SystemStatusManager.flowControllerState["controller_1_softstart_time"]);
+            CanvasHelper.flowController(ctx, systemDrawing.width, 1);
 
-            CanvasHelper.flowController(ctx, systemDrawing.width, 2, SystemStatusManager.flowControllerState["controller_2_set_flowrate"],
-                                                                     SystemStatusManager.flowControllerState["controller_2_flow"],
-                                                                     SystemStatusManager.flowControllerState["controller_2_override"],
-                                                                     SystemStatusManager.flowControllerState["controller_2_softstart"],
-                                                                     SystemStatusManager.flowControllerState["controller_2_softstart_time"]);
+            CanvasHelper.flowController(ctx, systemDrawing.width, 2);
 
             // Draw valves
             CanvasHelper.drawValves(ctx, systemDrawing.width);
