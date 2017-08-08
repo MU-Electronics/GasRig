@@ -369,11 +369,13 @@ namespace App { namespace View { namespace Managers
         {
             // Update the flowrate
             m_flowController["controller_1_flow"] = command.value("flow").toDouble();
+            m_vacuumState["controller_1_flow_round_3"] = QString::number(command.value("flow").toDouble(), 'e', 3);
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the flowrate
             m_flowController["controller_2_flow"] = command.value("flow").toDouble();
+            m_vacuumState["controller_2_flow_round_3"] = QString::number(command.value("flow").toDouble(), 'e', 3);
         }
 
         // Update the display
@@ -381,16 +383,33 @@ namespace App { namespace View { namespace Managers
     }
     void SystemStatus::receiveSetFlowControllerValveOverride(QVariantMap command)
     {
+        int override = command.value("override").toInt();
+        QString controller = "1";
         // Select controller
         if(command["controller"] == "FlowControllerOne")
         {
             // Update the mode
-            m_flowController["controller_1_override"] = command.value("override").toInt();
+            m_flowController["controller_1_override"] = override;
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the mode
-            m_flowController["controller_2_override"] = command.value("override").toInt();
+            m_flowController["controller_2_override"] = override;
+            controller = "2";
+        }
+
+        // Add the vebal meaning / result
+        if(override == 0)
+        {
+            m_flowController["controller_"+controller+"_override_verbal"] = "off";
+        }
+        else if(override == 1)
+        {
+            m_flowController["controller_"+controller+"_override_verbal"] = "open";
+        }
+        else if(override == 2)
+        {
+            m_flowController["controller_"+controller+"_override_verbal"] = "closed";
         }
 
         // Update the display
@@ -423,11 +442,14 @@ namespace App { namespace View { namespace Managers
         {
             // Update the mode
             m_flowController["controller_1_softstart"] = command.value("state").toInt();
+            if(command.value("state").toInt() == 4){ m_flowController["controller_1_softstart_verbal"] = "enabled"; }else{ m_flowController["controller_1_softstart_verbal"] = "disabled"; }
         }
         else if(command["controller"] == "FlowControllerTwo")
         {
             // Update the mode
             m_flowController["controller_2_softstart"] = command.value("state").toInt();
+            if(command.value("state").toInt() == 4){ m_flowController["controller_2_softstart_verbal"] = "enabled"; }else{ m_flowController["controller_2_softstart_verbal"] = "disabled"; }
+
         }
 
         // Update the display

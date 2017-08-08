@@ -23,7 +23,7 @@ Rectangle
         anchors.top: parent.top
         anchors.topMargin: 8
         anchors.left: parent.left
-        anchors.leftMargin: 17
+        anchors.leftMargin: 16
     }
 
     Text{

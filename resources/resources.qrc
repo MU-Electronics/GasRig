@@ -35,5 +35,8 @@
         <file>views/parts/system_status/SystemDiagram.qml</file>
         <file>views/parts/system_status/VacuumDiagram.qml</file>
         <file>views/parts/system_status/SystemDiagramValve.qml</file>
+        <file>views/parts/system_status/SystemDiagramFlowController.qml</file>
+        <file>views/parts/system_status/SystemDiagramVacStation.qml</file>
+        <file>views/parts/system_status/SystemDiagramPressureSensor.qml</file>
     </qresource>
 </RCC>

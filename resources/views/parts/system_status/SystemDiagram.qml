@@ -24,111 +24,45 @@ Item
         antialiasing: true
         transformOrigin: Item.TopLeft
         renderStrategy: Canvas.Threaded
-        renderTarget: Canvas.FramebufferObject
+        //renderTarget: Canvas.FramebufferObject
 
 
         /**
          * Draw the pressure value on the diagram
          * NOTE: Far more efficent than redrawing using Canvas!!!
          */
-        Text{
-            text:SystemStatusManager.pressureSensor["pressure"]+ " Bar"
-            horizontalAlignment: Text.AlignHCenter
-            color: "#5e5f63"
-            //x: systemDrawing.width - 514 + 200
-            x: 40
-            y: 155
+        SystemDiagramPressureSensor{
+            x: 0
+            y: 120
         }
 
         /**
          * Draw text for vacuum station
-         * NOTE: Far more efficent than redrawing using Canvas!!!
          */
-        Rectangle
-        {
-            function whichColorBackground(backingPump, turbo)
-            {
-                if(backingPump && !turbo)
-                {
-                    return '#FF9800';
-                }
-                else if(backingPump && turbo)
-                {
-                    return '#EF5350';
-                }
-                else
-                {
-                    return '#d4d5d8';
-                }
-            }
-
-            function whichColorBorder(backingPump, turbo)
-            {
-                if(backingPump && !turbo)
-                {
-                    return '#FB8C00';
-                }
-                else if(backingPump && turbo)
-                {
-                    return '#E53935';
-                }
-                else
-                {
-                    return '#c8cace';
-                }
-            }
-
-            color: whichColorBackground(SystemStatusManager.vacuumState["backing_pump"], SystemStatusManager.vacuumState["turbo_pump"])
-            border.color: whichColorBorder(SystemStatusManager.vacuumState["backing_pump"], SystemStatusManager.vacuumState["turbo_pump"])
-            border.width: 5
-            width: 145
-            height: 105
+        SystemDiagramVacStation{
             x: systemDrawing.width - 514 + 360
             y: 97
-
-            Text{
-                text:   "Turbo: " + SystemStatusManager.vacuumState["turbo_pump"] + "\n" +
-                        "Gas Mode: " + SystemStatusManager.vacuumState["gas_type_mode_verbal"] + "\n" +
-                        "Vacuum: " + SystemStatusManager.vacuumState["vacuum_round_3"];
-
-                horizontalAlignment: Text.AlignHCenter
-                color: "#5e5f63"
-
-            }
         }
 
+
         /**
-         * Fraw values for slow controller
-         * NOTE: Far more efficent than redrawing using Canvas!!!
+         * Draw flow controllers
          */
-        Text{
-            text:   "Flow: " + SystemStatusManager.flowControllerState["controller_1_flow"] + "\n" +
-                    "Set: " + SystemStatusManager.flowControllerState["controller_1_set_flowrate"] + "\n" +
-                    "Soft Start: " + SystemStatusManager.flowControllerState["controller_1_softstart"] + "\n" +
-                    "Soft Start time: " + SystemStatusManager.flowControllerState["controller_1_softstart_time"] + "\n" +
-                    "Override: " + SystemStatusManager.flowControllerState["controller_1_override"];
-
-            horizontalAlignment: Text.AlignHCenter
-            color: "#5e5f63"
-            x: ((systemDrawing.width - 514) + 270) / 1.3
-            y: 430
+        SystemDiagramFlowController{
+            controller: 1
+            x: ((systemDrawing.width - 514) + 273) / 1.3
+            y: 395
         }
 
-        Text{
-            text:   "Flow: " + SystemStatusManager.flowControllerState["controller_2_flow"] + "\n" +
-                    "Set: " + SystemStatusManager.flowControllerState["controller_2_set_flowrate"] + "\n" +
-                    "Soft Start: " + SystemStatusManager.flowControllerState["controller_2_softstart"] + "\n" +
-                    "Soft Start time: " + SystemStatusManager.flowControllerState["controller_2_softstart_time"] + "\n" +
-                    "Override: " + SystemStatusManager.flowControllerState["controller_2_override"];
-
-            horizontalAlignment: Text.AlignHCenter
-            color: "#5e5f63"
+        SystemDiagramFlowController{
+            controller: 2
             x: ((systemDrawing.width - 514) + 360)
-            y: 430
+            y: 395
         }
+
 
         /**
-         * Draw valve one
+         * Draw all the valves
          */
         SystemDiagramValve{
             number: 1
@@ -172,11 +106,9 @@ Item
         }
         SystemDiagramValve{
             number: 9
-            x: ((systemDrawing.width - 514 + 12) + 485) / 3.7
+            x: ((systemDrawing.width - 514 + 12) + 490) / 3.7
             y: 375
         }
-
-
 
 
         /**
@@ -207,20 +139,6 @@ Item
 
             // Draw filters
             CanvasHelper.filters(ctx, systemDrawing.width);
-
-            // Draw pressure sensor
-            CanvasHelper.pressureSensor(ctx, systemDrawing.width);
-
-            // Draw vac pump
-            CanvasHelper.vaccumStation(ctx, systemDrawing.width);
-
-            // Draw flow controller one and two
-            CanvasHelper.flowController(ctx, systemDrawing.width, 1);
-
-            CanvasHelper.flowController(ctx, systemDrawing.width, 2);
-
-            // Draw valves
-            CanvasHelper.drawValves(ctx, systemDrawing.width);
         }
 
         /**
