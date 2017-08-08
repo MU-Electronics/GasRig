@@ -6,7 +6,7 @@ Rectangle
     border.color: "#c8cace"
     border.width: 5
     width: 145
-    height: 60
+    height: 50
 
     Text{
         text: "Pressure Sensor"

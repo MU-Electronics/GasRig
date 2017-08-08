@@ -39,5 +39,7 @@
         <file>views/parts/system_status/SystemDiagramVacStation.qml</file>
         <file>views/parts/system_status/SystemDiagramPressureSensor.qml</file>
         <file>views/parts/system_status/SystemDiagramBoxedText.qml</file>
+        <file>views/parts/system_status/SystemDiagramPipes.qml</file>
+        <file>views/parts/system_status/SystemDiagramPipe.qml</file>
     </qresource>
 </RCC>
