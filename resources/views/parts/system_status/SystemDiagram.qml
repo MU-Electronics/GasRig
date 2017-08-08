@@ -17,7 +17,7 @@ Item
     Connections {
         target: SystemStatusManager
         onEmit_valveStateChanged: {
-            systemDrawing.paint_canvas(parent.width, parent.height, true, false, false, false);
+            //systemDrawing.paint_canvas(parent.width, parent.height, true, false, false, false);
         }
         onEmit_pressureSensorChanged: {
             //systemDrawing.paint_canvas(parent.width, parent.height, false, false, false, true);
