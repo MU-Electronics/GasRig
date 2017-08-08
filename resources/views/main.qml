@@ -15,7 +15,7 @@ ApplicationWindow {
     id: window
 
     // Ensure there is no frame around the program
-    flags: Qt.FramelessWindowHint
+    //flags: Qt.FramelessWindowHint
 
     // Ensure the window is visable
     visible: true

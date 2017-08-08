@@ -34,5 +34,6 @@
         <file>views/parts/AlertBox.qml</file>
         <file>views/parts/system_status/SystemDiagram.qml</file>
         <file>views/parts/system_status/VacuumDiagram.qml</file>
+        <file>views/parts/system_status/SystemDiagramValve.qml</file>
     </qresource>
 </RCC>

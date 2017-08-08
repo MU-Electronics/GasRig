@@ -97,37 +97,37 @@ function drawPipes(ctx, windowWidth)
 /**
  * Draws all the valves for the system
  */
-function drawValves(ctx, windowWidth, valve1, valve2, valve3, valve4, valve5, valve6, valve7, valve8, valve9)
+function drawValves(ctx, windowWidth)
 {
     // Padding
     var widthScaling = (windowWidth-514);
     var leftPadding = 12;
 
     // First row of valves
-    valve(ctx, 100+leftPadding, 50, valve1, "V1");
-    valve(ctx, 200+leftPadding+widthScaling / 2, 50, valve2, "V2");
-    valve(ctx, 300+leftPadding+widthScaling, 50, valve3, "V3");
+    valve(ctx, 100+leftPadding, 50, "V1");
+    valve(ctx, 200+leftPadding+widthScaling / 2, 50, "V2");
+    valve(ctx, 300+leftPadding+widthScaling, 50, "V3");
 
     // 2nd row of valves
-    valve(ctx, 200+leftPadding+widthScaling / 2, 150, valve4, "V4");
-    valve(ctx, 300+leftPadding+widthScaling, 150, valve5, "V5");
+    valve(ctx, 200+leftPadding+widthScaling / 2, 150, "V4");
+    valve(ctx, 300+leftPadding+widthScaling, 150, "V5");
 
     // 3rd row of valves
-    valve(ctx, 250+leftPadding+widthScaling/1.3, 250, valve6, "V6");
+    valve(ctx, 250+leftPadding+widthScaling/1.3, 250, "V6");
 
     // 4th row of valves
-    valve(ctx, 100+leftPadding, 350, valve7, "V7");
-    valve(ctx, 200+leftPadding+widthScaling / 2, 350, valve8, "V8");
+    valve(ctx, 100+leftPadding, 350, "V7");
+    valve(ctx, 200+leftPadding+widthScaling / 2, 350, "V8");
 
     // 5th row of valves
-    valve(ctx, 150+leftPadding+widthScaling/3.7, 400, valve9, "V9");
+    valve(ctx, 150+leftPadding+widthScaling/3.7, 400,  "V9");
 }
 
 
 /**
  * Draws a valve symbol in the correct postion and state
  */
-function valve(ctx, x, y, state, number)
+function valve(ctx, x, y, number)
 {
     var radius = 20;
 
@@ -135,10 +135,10 @@ function valve(ctx, x, y, state, number)
 
     // Cirlce
     ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = (state ? '#F44336' : '#4CAF50');
+    ctx.fillStyle = '#d4d5d8';
+    ctx.strokeStyle = '#c8cace';
     ctx.fill();
     ctx.lineWidth = 5;
-    ctx.strokeStyle = (state ? '#D32F2F' : '#388E3C');
     ctx.stroke();
 
     // Scale the font sizes
@@ -149,13 +149,7 @@ function valve(ctx, x, y, state, number)
     ctx.font = 'bold '+fontSize1+'pt '+font;
     ctx.textAlign = 'center';
     ctx.fillStyle = 'white';
-    ctx.fillText(number, x, y-2);
-
-    //open close
-    ctx.font = 'bold '+fontSize2+'pt '+font;
-    ctx.textAlign = 'center';
-    ctx.fillStyle = 'white';
-    ctx.fillText((state ? 'open' : 'closed'), x, y+8);
+    ctx.fillText(number, x, y+5);
 
     ctx.closePath();
 }
@@ -185,7 +179,7 @@ function pipe(ctx, x, y, tox, toy)
 /**
  * Draws the pressure sensor
  */
-function pressureSensor(ctx, windowWidth, pressure)
+function pressureSensor(ctx, windowWidth)
 {
     var x = 20;
     var y = 120;
@@ -195,18 +189,10 @@ function pressureSensor(ctx, windowWidth, pressure)
 
     ctx.beginPath();
 
-    // Fix colour
-    var colorBackground = "#"+getColorForPercentage(pressure/100);
-    var colorStoke = colorLuminance("#"+colorBackground, -0.005);
-    var colorText = getColorByBgColor(colorBackground);
-
-    ctx.fillStyle = colorBackground;
-    ctx.strokeStyle = colorText;
-
+    ctx.fillStyle = '#d4d5d8';
+    ctx.strokeStyle = '#c8cace';
     ctx.rect(x, y, width, height);
-
     ctx.fill();
-
     ctx.lineWidth = 4;
     ctx.stroke();
 
@@ -216,16 +202,8 @@ function pressureSensor(ctx, windowWidth, pressure)
     // Pressure
     ctx.font = 'bold '+fontSize1+'pt '+font;
     ctx.textAlign = 'center';
-    //ctx.fillStyle = colorLuminance(colorText, -0.2);
-    ctx.fillStyle = colorText;
+    ctx.fillStyle = "#5e5f63";
     ctx.fillText("Pressure Sensor", x+57, y+25);
-
-    // value
-    ctx.font = 'bold '+fontSize1+'pt '+font;
-    ctx.textAlign = 'center';
-    ctx.fillStyle = colorText;
-    ctx.fillText(parseFloat(pressure).toFixed(4)+" Bar", x+55, y+45);
-
 
     ctx.closePath();
 }
@@ -501,17 +479,17 @@ function vaccumStation(ctx, windowWidth, backingPump, turbo, vacuumPressure, gas
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Vacuum Station", x+70, y+20);
 
-    // Turbo
-    ctx.font = 'bold '+fontSize2+'pt '+font;
-    ctx.fillText("Turbo: "+(turbo ? 'enabled' : 'disabled'), x+70, y+45);
+//    // Turbo
+//    ctx.font = 'bold '+fontSize2+'pt '+font;
+//    ctx.fillText("Turbo: "+(turbo ? 'enabled' : 'disabled'), x+70, y+45);
 
-    // Vacuum pressure
-    ctx.fillText("Vacuum: "+vacuumPressure.toExponential(3)+" mBar", x+70, y+65);
+//    // Vacuum pressure
+//    ctx.fillText("Vacuum: "+vacuumPressure.toExponential(3)+" mBar", x+70, y+65);
 
-    // Gas mode
-    var mode;
-    if(gasMode === 0) { mode = '>= 39'; }else if(gasMode === 1) { mode = '< 39'; }else if(gasMode === 2) { mode = 'helium'; }
-    ctx.fillText("Gas Mode: "+mode, x+70, y+85);
+//    // Gas mode
+//    var mode;
+//    if(gasMode === 0) { mode = '>= 39'; }else if(gasMode === 1) { mode = '< 39'; }else if(gasMode === 2) { mode = 'helium'; }
+//    ctx.fillText("Gas Mode: "+mode, x+70, y+85);
 
     ctx.closePath();
 
@@ -572,23 +550,23 @@ function flowController(ctx, windowWidth, id, setFlowRate, flowRate, valveOverri
     ctx.fillStyle = '#5e5f63';
     ctx.fillText("Flow Controller "+id, x+70, y+20);
 
-    // Flow
-    ctx.font = 'bold '+fontSize2+'pt '+font;
-    ctx.fillText("Flow: " + flowRate.toExponential(3) + "ml/min", x+70, y+45);
+//    // Flow
+//    ctx.font = 'bold '+fontSize2+'pt '+font;
+//    ctx.fillText("Flow: " + flowRate.toExponential(3) + "ml/min", x+70, y+45);
 
-    // Set flow
-    ctx.fillText("Set: " + setFlowRate.toExponential(3) + "ml/min", x+70, y+65);
+//    // Set flow
+//    ctx.fillText("Set: " + setFlowRate.toExponential(3) + "ml/min", x+70, y+65);
 
-    // Soft start state
-    ctx.fillText("Soft Start: " + (softStart === 4 ? 'enabled' : 'disabled'), x+70, y+95);
+//    // Soft start state
+//    ctx.fillText("Soft Start: " + (softStart === 4 ? 'enabled' : 'disabled'), x+70, y+95);
 
-    // Soft start time
-    ctx.fillText("Soft Start time: " + softStartTime + "s", x+70, y+115);
+//    // Soft start time
+//    ctx.fillText("Soft Start time: " + softStartTime + "s", x+70, y+115);
 
-    // Valve override
-    var overrideVerbal;
-    if(valveOverride === 0){ overrideVerbal = "off"; } else if(valveOverride === 1){ overrideVerbal = "open"; } else if(valveOverride === 2){ overrideVerbal = "closed"; }
-    ctx.fillText("Override: " + overrideVerbal, x+70, y+145);
+//    // Valve override
+//    var overrideVerbal;
+//    if(valveOverride === 0){ overrideVerbal = "off"; } else if(valveOverride === 1){ overrideVerbal = "open"; } else if(valveOverride === 2){ overrideVerbal = "closed"; }
+//    ctx.fillText("Override: " + overrideVerbal, x+70, y+145);
 
     ctx.closePath();
 }

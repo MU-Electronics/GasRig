@@ -144,7 +144,7 @@ namespace App
     void Application::registerQmlTypes()
     {
         // Rig diagram qml type
-        qmlRegisterType<App::View::QmlTypes::RigDiagram>("RigDiagram", 1, 0, "RigDiagramViewer");
+        qmlRegisterType<App::View::QmlTypes::RigDiagram>("App", 1, 0, "RigDiagram");
     }
 
 

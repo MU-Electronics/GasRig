@@ -250,8 +250,23 @@ namespace App { namespace View { namespace Managers
      */
     void SystemStatus::receiveVacSetGasMode(QVariantMap command)
     {
+        // Get gas mode
+        int gasMode = command.value("mode").toInt();
+
         // Update the mode
-        m_vacuumState["gas_type_mode"] = command.value("mode").toInt();
+        m_vacuumState["gas_type_mode"] = gasMode;
+
+        if(gasMode == 0) {
+            m_vacuumState["gas_type_mode_verbal"] = ">= 39";
+        }
+        else if(gasMode == 1)
+        {
+            m_vacuumState["gas_type_mode_verbal"] = "< 39";
+        }
+        else if(gasMode == 2)
+        {
+            m_vacuumState["gas_type_mode_verbal"] = "helium";
+        }
 
         // Update the display
         emit_vacuumStateChanged(m_vacuumState);
@@ -316,6 +331,7 @@ namespace App { namespace View { namespace Managers
             // Update vacuum reading
             double pressure = (std::pow(10, (1.667*command.value("calibrated").toDouble()-9.333)))/100;
             m_vacuumState["vacuum"] = pressure;
+            m_vacuumState["vacuum_round_3"] = QString::number(pressure, 'e', 3);
 
             // Update the display
             emit_vacuumStateChanged(m_vacuumState);
