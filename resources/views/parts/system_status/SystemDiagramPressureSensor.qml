@@ -21,13 +21,12 @@ Rectangle
     }
 
     Text{
-        text: SystemStatusManager.pressureSensor["pressure"]+ " Bar"
+        text: SystemStatusManager.pressureSensor["pressure_round_3"]+ " Bar"
+        width: 145
         horizontalAlignment: Text.AlignHCenter
         color: "#5e5f63"
         anchors.top: parent.top
         anchors.topMargin: 25
-        anchors.left: parent.left
-        anchors.leftMargin: 7
     }
 
 }

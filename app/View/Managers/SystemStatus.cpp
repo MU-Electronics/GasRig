@@ -42,6 +42,7 @@ namespace App { namespace View { namespace Managers
 
         // Pressure reading
         m_pressureSensor.insert("pressure", 50);
+        m_pressureSensor.insert("pressure_round_3", 50.000);
 
         // Default vacuum states
         m_vacuumState.insert("backing_pump", 0);
@@ -203,6 +204,7 @@ namespace App { namespace View { namespace Managers
     {
         // Update the pressure @todo moving average
         m_pressureSensor["pressure"] = package["pressure"];
+        m_pressureSensor["pressure_round_3"] = QString::number(package["pressure"].toFloat(), 'e', 3);
 
         // Tell the views we've updated
         emit_pressureSensorChanged(m_pressureSensor);
@@ -312,6 +314,15 @@ namespace App { namespace View { namespace Managers
     {
         // Update the mode
         m_vacuumState["turbo_pump"] = command.value("state").toInt();
+
+        if(command.value("state").toInt() == 1)
+        {
+            m_vacuumState["turbo_pump_verbal"] = "enabled";
+        }
+        else
+        {
+            m_vacuumState["turbo_pump_verbal"] = "disabled";
+        }
 
         // Update the display
         emit_vacuumStateChanged(m_vacuumState);

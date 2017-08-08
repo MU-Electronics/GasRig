@@ -28,8 +28,77 @@ Item
 
 
         /**
+         * Draw the output port
+         */
+        SystemDiagramBoxedText{
+            x: 2
+            y: 35
+            width: 65
+            height: 30
+            message: "Output"
+            texttop: 5
+            textleft:5
+        }
+
+        /**
+         * Draw the exhuast port
+         */
+        SystemDiagramBoxedText{
+            x: (systemDrawing.width - 514) + 360
+            y: 35
+            width: 70
+            height: 30
+            message: "Exhuast"
+            texttop: 5
+            textleft:5
+        }
+
+
+        /**
+         * Draw the vacuum port
+         */
+        SystemDiagramBoxedText{
+            x: (systemDrawing.width - 514) + 360
+            y: 235
+            width: 128
+            height: 30
+            message: "Vacuum Output"
+            texttop: 5
+            textleft:5
+        }
+
+        /**
+         * Draw the high pressure input
+         */
+        SystemDiagramBoxedText{
+            x: 5
+            y: 390
+            width: 90
+            height: 130
+            message: "High\nPressure\nInput"
+            texttop: 35
+            textleft:10
+            radius: 45;
+        }
+
+
+        /**
+         * Draw the high pressure nitrogen input
+         */
+        SystemDiagramBoxedText{
+            x: (systemDrawing.width - 514 + 435) / 3.75;
+            y: 440
+            width: 90
+            height: 130
+            message: "High\nPressure\nNitrogen"
+            texttop: 35
+            textleft:10
+            radius: 45;
+        }
+
+
+        /**
          * Draw the pressure value on the diagram
-         * NOTE: Far more efficent than redrawing using Canvas!!!
          */
         SystemDiagramPressureSensor{
             x: 0
@@ -121,21 +190,6 @@ Item
 
             // Draw pipes
             CanvasHelper.drawPipes(ctx, systemDrawing.width);
-
-            // Draw output
-            CanvasHelper.outputPort(ctx, systemDrawing.width);
-
-            // Draw exhuast
-            CanvasHelper.exhaustPort(ctx, systemDrawing.width);
-
-            // Draw vac out
-            CanvasHelper.vacuumOutPort(ctx, systemDrawing.width);
-
-            // Draw high pressure
-            CanvasHelper.highPressureInput(ctx, systemDrawing.width);
-
-            // Draw nitrogen pressure
-            CanvasHelper.nitrogenPressureInput(ctx, systemDrawing.width);
 
             // Draw filters
             CanvasHelper.filters(ctx, systemDrawing.width);

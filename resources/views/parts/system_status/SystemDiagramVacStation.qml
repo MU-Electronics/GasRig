@@ -49,11 +49,11 @@ Rectangle
         anchors.top: parent.top
         anchors.topMargin: 5
         anchors.left: parent.left
-        anchors.leftMargin: 40
+        anchors.leftMargin: 35
     }
 
     Text{
-        text:   "Turbo: " + SystemStatusManager.vacuumState["turbo_pump"] + "\n" +
+        text:   "Turbo: " + SystemStatusManager.vacuumState["turbo_pump_verbal"] + "\n" +
                 "Gas Mode: " + SystemStatusManager.vacuumState["gas_type_mode_verbal"] + "\n" +
                 "Vacuum: " + SystemStatusManager.vacuumState["vacuum_round_3"];
         horizontalAlignment: Text.AlignHCenter
