@@ -25,56 +25,182 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap VacStationPresenter::proccess(QString method, QVariantMap commands, QStringList package)
     {
+
         // Select the correct presenter
-        if(method == "getTemperature")
+        if(method == "getTemperature" && expectedPackage(commands, package, "342,330,326,346", 19))
         {
             return getTemperature(commands, package);
         }
-        else if (method == "getTurboSpeed")
+        else if (method == "getTurboSpeed" && expectedPackage(commands, package, "398,336,399,397", 19))
         {
             return getTurboSpeed(commands, package);
         }
-        else if (method == "getError")
+        else if (method == "getError" && expectedPackage(commands, package, "360,361,362,363,364,365,366,367,368,369", 19))
         {
             return getError(commands, package);
         }
-        else if (method == "getGasMode")
+        else if (method == "getGasMode" && expectedPackage(commands, package, "027", 16))
         {
             return getGasMode(commands, package);
         }
-        else if (method == "getBackingPumpMode")
+        else if (method == "getBackingPumpMode" && expectedPackage(commands, package, "025", 16))
         {
             return getBackingPumpMode(commands, package);
         }
-        else if (method == "getTurboPumpState")
+        else if (method == "getTurboPumpState" && expectedPackage(commands, package, "023", 19))
         {
             return getTurboPumpState(commands, package);
         }
-        else if (method == "getPumpingState")
+        else if (method == "getPumpingState" && expectedPackage(commands, package, "010", 19))
         {
             return getPumpingState(commands, package);
         }
-        else if (method == "setGasMode")
+        else if (method == "setGasMode" && expectedPackage(commands, package, "027", 16))
         {
             return setGasMode(commands, package);
         }
-        else if (method == "setBackingPumpMode")
+        else if (method == "setBackingPumpMode" && expectedPackage(commands, package, "025", 16))
         {
             return setBackingPumpMode(commands, package);
         }
-        else if (method == "setTurboPumpState")
+        else if (method == "setTurboPumpState" && expectedPackage(commands, package, "023", 19))
         {
             return setTurboPumpState(commands, package);
         }
-        else if (method == "setPumpingState")
+        else if (method == "setPumpingState" && expectedPackage(commands, package, "010", 19))
         {
             return setPumpingState(commands, package);
         }
 
-        QVariantMap error;
-        error["error"] = "NoMethod";
-        return error;
+        // There was an error
+        if(error_returnedPackageSize != -1 || error_returnedCommandId != -1)
+        {
+            // Generate the error package and sent it back
+            return generateError(method, commands, package);
+        }
+        else
+        {
+            // No method could be found generate error package
+            QVariantMap error;
+            error["error_id"] = "FlowControllerPresenter_NoMethodFound";
+            error["level"] = "critical";
+            error["message"] = "The method " + method + " does not exist in the flow controller presenter class.";
+
+            // Return the package
+            return error;
+        }
     }
+
+
+
+
+    /**
+     * Check whether the package returned is the expected package
+     *
+     * @brief VacStationPresenter::expectedPackage
+     * @param commands
+     * @param package
+     * @return
+     */
+    bool VacStationPresenter::expectedPackage(QVariantMap commands, QStringList package, QString commandId, int expectedLength)
+    {
+        // Check the length of the package
+        if(package.length() != expectedLength)
+        {
+            // Save the returned package size
+            error_returnedPackageSize = package.length();
+
+            // Invalid package
+            return false;
+        }
+
+        // Combind the data
+        QString readData = package.join("");
+
+        // Get the parameter number
+        QString commandIdReturned = readData.mid(5, 3);
+
+        // Check command ID
+        if(!commandId.contains(commandIdReturned))
+        {
+            // Save the returned id
+            error_returnedCommandId = commandIdReturned.toInt();
+
+            // Invalid package
+            return false;
+        }
+
+        // Passed all tests
+        return true;
+    }
+
+    /**
+     * Creates an error package
+     *
+     * @brief FlowControllerPresenter::generateError
+     * @param commands
+     * @param package
+     * @return
+     */
+    QVariantMap VacStationPresenter::generateError(QString method, QVariantMap commands, QStringList package)
+    {
+        // Container for error
+        QVariantMap error;
+
+        // Strings to hold the compiled data
+        QString compiledCommands = "";
+        QString compiledPackages = "";
+
+        // Compile commands package
+        if(commands.size() > 0)
+        {
+            QMapIterator<QString, QVariant> i(commands);
+            while (i.hasNext())
+            {
+                // Move to next record
+                i.next();
+
+                // Compile the data
+                compiledCommands += i.key() + " : " + i.value().toString() + ";    ";
+            }
+        }
+
+        // Compile returned package
+        if(package.size() > 0)
+        {
+            for (int i = 0; i < package.size(); ++i)
+                compiledPackages += package.at(i);
+        }
+
+        // If package size was too small
+        if(error_returnedPackageSize == -1)
+        {
+            // Create an error id
+            error["error_id"] = "VacStationPresenter_InvalidPackageLength";
+            error["level"] = "warning";
+            error["message"] = "Method:" + method + " was called but the responce length was not as expected.";
+            error["send_command"] = compiledCommands;
+            error["returned_package"] = compiledPackages;
+        }
+        else // If command id is not what was expected
+        {
+            // Create an error id
+            error["error_id"] = "VacStationPresenter_InvalidCommandId";
+            error["level"] = "warning";
+            error["message"] = "Method:" + method + " was called but the responce contained a command id which differs from the requested command.";
+            error["send_command"] = compiledCommands;
+            error["returned_package"] = compiledPackages;
+        }
+
+        // Return the error package
+        return error;
+
+    }
+
+
+
+
+
 
 
     /**

@@ -96,7 +96,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         }
 
         // There was an error
-        if(error_returnedPackageSize == -1 && error_returnedCommandId == -1)
+        if(error_returnedPackageSize != -1 || error_returnedCommandId != -1)
         {
             // Generate the error package and sent it back
             return generateError(method, commands, package);
