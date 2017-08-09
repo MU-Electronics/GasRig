@@ -31,7 +31,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   m_commandConstructor(*new Hardware::CommandConstructor)
 
             // Valve states
-        ,   m_valves(new Valves(parent, settings, hardware, safety, machine, params, m_commandConstructor))
+        ,   m_valves(*new Valves(parent, settings, hardware, safety, machine, params, m_commandConstructor))
 
             // Timers for states
         ,   t_vacPressureMonitor(parent)
@@ -47,50 +47,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   sm_validatePressureForVacuum(&machine)
         ,   sm_vacPressure(&machine)
         ,   sm_validateVacPressureForTurbo(&machine)
-
-            // Close valve related states
-        ,   sm_closeHighPressureInput(&machine)       
-        ,   sm_closeHighPressureNitrogen(&machine)      
-        ,   sm_closeFlowController(&machine)        
-        ,   sm_closeExhuast(&machine)
-        ,   sm_closeOutput(&machine)
-        ,   sm_closeSlowExhuastPath(&machine)
-        ,   sm_closeFastExhuastPath(&machine)
-        ,   sm_closeVacuumIn(&machine)
-        ,   sm_closeVacuumOut(&machine)
-
-            // Validate closed valve
-        ,   sm_validateCloseHighPressureInput(&machine)
-        ,   sm_validateCloseHighPressureNitrogen(&machine)
-        ,   sm_validateCloseFlowController(&machine)
-        ,   sm_validateCloseExhuast(&machine)
-        ,   sm_validateCloseOutput(&machine)
-        ,   sm_validateCloseSlowExhuastPath(&machine)
-        ,   sm_validateCloseFastExhuastPath(&machine)
-        ,   sm_validateCloseVacuumIn(&machine)
-        ,   sm_validateCloseVacuumOut(&machine)
-
-            // Open valve related states
-        ,   sm_openHighPressureInput(&machine)
-        ,   sm_openHighPressureNitrogen(&machine)
-        ,   sm_openFlowController(&machine)
-        ,   sm_openExhuast(&machine)
-        ,   sm_openOutput(&machine)
-        ,   sm_openSlowExhuastPath(&machine)
-        ,   sm_openFastExhuastPath(&machine)
-        ,   sm_openVacuumIn(&machine)
-        ,   sm_openVacuumOut(&machine)
-
-            // Validate open valve
-        ,   sm_validateOpenHighPressureInput(&machine)
-        ,   sm_validateOpenHighPressureNitrogen(&machine)
-        ,   sm_validateOpenFlowController(&machine)
-        ,   sm_validateOpenExhuast(&machine)
-        ,   sm_validateOpenOutput(&machine)
-        ,   sm_validateOpenSlowExhuastPath(&machine)
-        ,   sm_validateOpenFastExhuastPath(&machine)
-        ,   sm_validateOpenVacuumIn(&machine)
-        ,   sm_validateOpenVacuumOut(&machine)
 
             // States relating to controlling the vac station
         ,   sm_disableTurboPump(&machine)
@@ -167,51 +123,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         connect(&sm_vacPressure, &QState::entered, this, &MachineStates::vacPressure);
         connect(&sm_validateVacPressureForTurbo, &CommandValidatorState::entered, this, &MachineStates::validateVacPressureForTurbo);
 
-
-        // Link close valve states
-        connect(&sm_closeHighPressureInput, &QState::entered, this, &MachineStates::closeHighPressureInput);
-        connect(&sm_closeHighPressureNitrogen, &QState::entered, this, &MachineStates::closeHighPressureNitrogen);
-        connect(&sm_closeFlowController, &QState::entered, this, &MachineStates::closeFlowController);
-        connect(&sm_closeExhuast, &QState::entered, this, &MachineStates::closeExhuast);
-        connect(&sm_closeOutput, &QState::entered, this, &MachineStates::closeOutput);
-        connect(&sm_closeSlowExhuastPath, &QState::entered, this, &MachineStates::closeSlowExhuastPath);
-        connect(&sm_closeFastExhuastPath, &QState::entered, this, &MachineStates::closeFastExhuastPath);
-        connect(&sm_closeVacuumIn, &QState::entered, this, &MachineStates::closeVacuumIn);
-        connect(&sm_closeVacuumOut, &QState::entered, this, &MachineStates::closeVacuumOut);
-
-        // Link close valve validator states
-        connect(&sm_validateCloseHighPressureInput, &CommandValidatorState::entered, this, &MachineStates::validateCloseHighPressureInput);
-        connect(&sm_validateCloseHighPressureNitrogen, &CommandValidatorState::entered, this, &MachineStates::validateCloseHighPressureNitrogen);
-        connect(&sm_validateCloseFlowController, &CommandValidatorState::entered, this, &MachineStates::validateCloseFlowController);
-        connect(&sm_validateCloseExhuast, &CommandValidatorState::entered, this, &MachineStates::validateCloseExhuast);
-        connect(&sm_validateCloseOutput, &CommandValidatorState::entered, this, &MachineStates::validateCloseOutput);
-        connect(&sm_validateCloseSlowExhuastPath, &CommandValidatorState::entered, this, &MachineStates::validateCloseSlowExhuastPath);
-        connect(&sm_validateCloseFastExhuastPath, &CommandValidatorState::entered, this, &MachineStates::validateCloseFastExhuastPath);
-        connect(&sm_validateCloseVacuumIn, &CommandValidatorState::entered, this, &MachineStates::validateCloseVacuumIn);
-        connect(&sm_validateCloseVacuumOut, &CommandValidatorState::entered, this, &MachineStates::validateCloseVacuumOut);
-
-        // Link open valve states
-        connect(&sm_openHighPressureInput, &QState::entered, this, &MachineStates::openHighPressureInput);
-        connect(&sm_openHighPressureNitrogen, &QState::entered, this, &MachineStates::openHighPressureNitrogen);
-        connect(&sm_openFlowController, &QState::entered, this, &MachineStates::openFlowController);
-        connect(&sm_openExhuast, &QState::entered, this, &MachineStates::openExhuast);
-        connect(&sm_openOutput, &QState::entered, this, &MachineStates::openOutput);
-        connect(&sm_openSlowExhuastPath, &QState::entered, this, &MachineStates::openSlowExhuastPath);
-        connect(&sm_openFastExhuastPath, &QState::entered, this, &MachineStates::openFastExhuastPath);
-        connect(&sm_openVacuumIn, &QState::entered, this, &MachineStates::openVacuumIn);
-        connect(&sm_openVacuumOut, &QState::entered, this, &MachineStates::openVacuumOut);
-
-        // Link open valve validator states
-        connect(&sm_validateOpenHighPressureInput, &CommandValidatorState::entered, this, &MachineStates::validateOpenHighPressureInput);
-        connect(&sm_validateOpenHighPressureNitrogen, &CommandValidatorState::entered, this, &MachineStates::validateOpenHighPressureNitrogen);
-        connect(&sm_validateOpenFlowController, &CommandValidatorState::entered, this, &MachineStates::validateOpenFlowController);
-        connect(&sm_validateOpenExhuast, &CommandValidatorState::entered, this, &MachineStates::validateOpenExhuast);
-        connect(&sm_validateOpenOutput, &CommandValidatorState::entered, this, &MachineStates::validateOpenOutput);
-        connect(&sm_validateOpenSlowExhuastPath, &CommandValidatorState::entered, this, &MachineStates::validateOpenSlowExhuastPath);
-        connect(&sm_validateOpenFastExhuastPath, &CommandValidatorState::entered, this, &MachineStates::validateOpenFastExhuastPath);
-        connect(&sm_validateOpenVacuumIn, &CommandValidatorState::entered, this, &MachineStates::validateOpenVacuumIn);
-        connect(&sm_validateOpenVacuumOut, &CommandValidatorState::entered, this, &MachineStates::validateOpenVacuumOut);
-
         // Link vac station states
         connect(&sm_disableTurboPump, &QState::entered, this, &MachineStates::disableTurboPump);
         connect(&sm_enableTurboPump, &QState::entered, this, &MachineStates::enableTurboPump);
@@ -265,6 +176,19 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         // Re-implimention of stop for each machine
         connect(&sm_stop, &QState::entered, this, &MachineStates::stop);
         connect(&sm_stopAsFailed, &QState::entered, this, &MachineStates::stopAsFailed);
+    }
+
+
+
+    /**
+     * Returns the valve states container
+     *
+     * @brief MachineStates::valves
+     * @return
+     */
+    Valves& MachineStates::valves()
+    {
+        return m_valves;
     }
 
 
@@ -523,268 +447,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
 
 
-    /**
-     * Open valve helper
-     *
-     * @brief MachineStates::openValveHelper
-     * @param number
-     */
-    void MachineStates::valveHelper(QString number, bool state)
-    {
-        // Find the correct valve name
-        QString valveName = m_settings.hardware.valve_connections.value(number).toString();
 
-        // Emit siganl to HAL
-        emit hardwareRequest(m_commandConstructor.setValveState(valveName, state));
-    }
-
-    /**
-     * Vavlidate valve helper
-     *
-     * @brief MachineStates::openValveHelper
-     * @param number
-     */
-    void MachineStates::validateValveHelper(QString number, bool state)
-    {
-        // Get the validator state instance
-        CommandValidatorState* command = (CommandValidatorState*)sender();
-
-        // Get the package data from the instance
-        QVariantMap package = command->package;
-
-        // Find the correct valve name
-        QString valveName = m_settings.hardware.valve_connections.value(number).toString();
-
-        // Check valve is the same
-        if(package.value("port").toString() == valveName && state == package.value("value").toBool())
-        {
-            // Data to pass on
-            QVariantMap success;
-            success.insert("requested_valve", valveName);
-            success.insert("requested_valve_id", number);
-            success.insert("valve_changed", package.value("port").toString());
-            success.insert("requested_state", state);
-            success.insert("state", package.value("value").toBool());
-
-            // Emit safe to proceed
-            emit emit_validationSuccess(success);
-
-            return;
-        }
-
-        // Failed data to passon
-        QVariantMap error;
-        error.insert("message", "The valve failed to update correctly");
-        error.insert("requested_valve", valveName);
-        error.insert("requested_valve_id", number);
-        error.insert("valve_changed", package.value("port").toString());
-        error.insert("requested_state", state);
-        error.insert("state", package.value("value").toBool());
-
-        // Emit not safe to proceed
-        emit emit_validationFailed(error);
-    }
-
-
-    /**
-     * Request closing of the high pressure input valve
-     *
-     * @brief MachineStates::systemPressure
-     */
-    void MachineStates::closeHighPressureInput()
-    {
-        valveHelper("7", false);
-    }
-
-    void MachineStates::closeHighPressureNitrogen()
-    {
-        valveHelper("9", false);
-    }
-
-    void MachineStates::closeFlowController()
-    {
-        valveHelper("8", false);
-    }
-
-    void MachineStates::closeExhuast()
-    {
-        valveHelper("3", false);
-    }
-
-    void MachineStates::closeOutput()
-    {
-        valveHelper("1", false);
-    }
-
-    void MachineStates::closeSlowExhuastPath()
-    {
-        valveHelper("4", false);
-    }
-
-    void MachineStates::closeFastExhuastPath()
-    {
-        valveHelper("2", false);
-    }
-
-    void MachineStates::closeVacuumIn()
-    {
-        valveHelper("5", false);
-    }
-
-    void MachineStates::closeVacuumOut()
-    {
-        valveHelper("6", false);
-    }
-
-
-    /**
-     * Request closing of the high pressure input valve
-     *
-     * @brief MachineStates::systemPressure
-     */
-    void MachineStates::validateCloseHighPressureInput()
-    {
-        validateValveHelper("7", false);
-    }
-
-    void MachineStates::validateCloseHighPressureNitrogen()
-    {
-        validateValveHelper("9", false);
-    }
-
-    void MachineStates::validateCloseFlowController()
-    {
-        validateValveHelper("8", false);
-    }
-
-    void MachineStates::validateCloseExhuast()
-    {
-        validateValveHelper("3", false);
-    }
-
-    void MachineStates::validateCloseOutput()
-    {
-        validateValveHelper("1", false);
-    }
-
-    void MachineStates::validateCloseSlowExhuastPath()
-    {
-        validateValveHelper("4", false);
-    }
-
-    void MachineStates::validateCloseFastExhuastPath()
-    {
-        validateValveHelper("2", false);
-    }
-
-    void MachineStates::validateCloseVacuumIn()
-    {
-        validateValveHelper("5", false);
-    }
-
-    void MachineStates::validateCloseVacuumOut()
-    {
-        validateValveHelper("6", false);
-    }
-
-
-
-
-
-
-    void MachineStates::openHighPressureInput()
-    {
-        valveHelper("7", true);
-    }
-
-    void MachineStates::openHighPressureNitrogen()
-    {
-        valveHelper("9", true);
-    }
-
-    void MachineStates::openFlowController()
-    {
-        valveHelper("8", true);
-    }
-
-    void MachineStates::openExhuast()
-    {
-        valveHelper("3", true);
-    }
-
-    void MachineStates::openOutput()
-    {
-        valveHelper("1", true);
-    }
-
-    void MachineStates::openSlowExhuastPath()
-    {
-        valveHelper("4", true);
-    }
-
-    void MachineStates::openFastExhuastPath()
-    {
-        valveHelper("2", true);
-    }
-
-    void MachineStates::openVacuumIn()
-    {
-        valveHelper("5", true);
-    }
-
-    void MachineStates::openVacuumOut()
-    {
-        valveHelper("6", true);
-    }
-
-
-
-
-
-    void MachineStates::validateOpenHighPressureInput()
-    {
-        validateValveHelper("7", true);
-    }
-
-    void MachineStates::validateOpenHighPressureNitrogen()
-    {
-        validateValveHelper("9", true);
-    }
-
-    void MachineStates::validateOpenFlowController()
-    {
-        validateValveHelper("8", true);
-    }
-
-    void MachineStates::validateOpenExhuast()
-    {
-        validateValveHelper("3", true);
-    }
-
-    void MachineStates::validateOpenOutput()
-    {
-        validateValveHelper("1", true);
-    }
-
-    void MachineStates::validateOpenSlowExhuastPath()
-    {
-        validateValveHelper("4", true);
-    }
-
-    void MachineStates::validateOpenFastExhuastPath()
-    {
-        validateValveHelper("2", true);
-    }
-
-    void MachineStates::validateOpenVacuumIn()
-    {
-        validateValveHelper("5", true);
-    }
-
-    void MachineStates::validateOpenVacuumOut()
-    {
-        validateValveHelper("6", true);
-    }
 
 
 
@@ -1067,6 +730,11 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
 
 
+
+
+
+
+
     void MachineStates::flowControllerOneFlow()
     {
         // Emit siganl to HAL
@@ -1223,11 +891,11 @@ namespace App { namespace Experiment { namespace Machines { namespace States
        disableBackingPump();
 
        // Close valves
-       closeOutput();
-       closeVacuumOut();
-       closeFastExhuastPath();
-       closeSlowExhuastPath();
-       closeVacuumIn();
+       m_valves.closeOutput();
+       m_valves.closeVacuumOut();
+       m_valves.closeFastExhuastPath();
+       m_valves.closeSlowExhuastPath();
+       m_valves.closeVacuumIn();
 
        // Stop timers
        stopVacuumPressureMonitor();
