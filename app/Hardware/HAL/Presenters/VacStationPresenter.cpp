@@ -141,7 +141,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
     /**
      * Creates an error package
      *
-     * @brief FlowControllerPresenter::generateError
+     * @brief VacStationPresenter::generateError
      * @param commands
      * @param package
      * @return

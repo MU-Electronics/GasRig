@@ -18,10 +18,19 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             // Select the correct presenter
             QVariantMap proccess(QString method, QVariantMap commands, QStringList package);
 
+            // Validate package info
+            bool expectedPackage(QVariantMap commands, QStringList package, QString commandId, int expectedLength);
+            QVariantMap generateError(QString method, QVariantMap commands, QStringList package);
+
             // Presenters
             QVariantMap confirmInit(QVariantMap commands, QStringList package);
             QVariantMap readSerialNumber(QVariantMap commands, QStringList package);
             QVariantMap readPressure(QVariantMap commands, QStringList package);
+
+        private:
+            // Hold validation failed information
+            int error_returnedPackageSize = -1;
+            int error_returnedCommandId = -1;
 
     };
 
