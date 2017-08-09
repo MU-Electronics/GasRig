@@ -34,7 +34,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         {
             return readSerialNumber(commands, package);
         }
-        else if (method == "readPressure" && expectedPackage(commands, package, "73", 8))
+        else if (method == "readPressure" && expectedPackage(commands, package, "73", 9))
         {
             return readPressure(commands, package);
         }
@@ -72,6 +72,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Check the length of the package
         if(package.length() != expectedLength)
         {
+            qDebug() << "package count is incorrect, expected: " << expectedLength << " got:" << package.count();
             // Save the returned package size
             error_returnedPackageSize = package.length();
 
@@ -82,6 +83,8 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Get the command ID
         if(commandId != package.at(1))
         {
+            qDebug() << "The command is not correct, expected one of: " << commandId << " got:" << package.at(1);
+
             // Save the returned id
             error_returnedCommandId = package.at(8).toInt();
 
