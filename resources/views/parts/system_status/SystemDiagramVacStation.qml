@@ -58,10 +58,12 @@ Rectangle
                 "Vacuum: " + SystemStatusManager.vacuumState["vacuum_round_3"];
         horizontalAlignment: Text.AlignHCenter
         color: "#5e5f63"
+        lineHeight: 1.5
+        width: 145
+        font.pixelSize: 10
         anchors.top: parent.top
         anchors.topMargin: 25
         anchors.left: parent.left
-        anchors.leftMargin: 7
 
     }
 }
