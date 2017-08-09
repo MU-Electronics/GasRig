@@ -7,19 +7,19 @@
 #include <QDebug>
 
 // Include settings container
-#include "../../Settings/Container.h"
+#include "../../../Settings/Container.h"
 
 // Include threads
-#include "../../Hardware/Access.h"
-#include "../../Safety/Monitor.h"
+#include "../../../Hardware/Access.h"
+#include "../../../Safety/Monitor.h"
 
 // Include the command constructor for hardware gateway
-#include "../../Hardware/CommandConstructor.h"
+#include "../../../Hardware/CommandConstructor.h"
 
 // Include valaitor state
 #include "CommandValidatorState.h"
 
-namespace App { namespace Experiment { namespace Machines
+namespace App { namespace Experiment { namespace Machines { namespace States
 {
 
     MachineStates::MachineStates(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety)
@@ -1231,4 +1231,4 @@ namespace App { namespace Experiment { namespace Machines
        stopVacuumTimer();
     }
 
-}}}
+}}}}

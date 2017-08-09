@@ -89,8 +89,8 @@ SOURCES += \
     app/Hardware/HAL/Presenters/PresenterSupport.cpp \
     app/Hardware/CommandConstructor.cpp \
     app/Experiment/Machines/VacDown.cpp \
-    app/Experiment/Machines/MachineStates.cpp \
-    app/Experiment/Machines/CommandValidatorState.cpp \
+    app/Experiment/Machines/States/MachineStates.cpp \
+    app/Experiment/Machines/States/CommandValidatorState.cpp \
     app/Experiment/Machines/Machines.cpp \
     app/View/Managers/MachineStatus.cpp \
     app/Experiment/Machines/SafeValve.cpp \
@@ -168,8 +168,8 @@ HEADERS += \
     app/Hardware/HAL/Presenters/PresenterSupport.h \
     app/Hardware/CommandConstructor.h \
     app/Experiment/Machines/VacDown.h \
-    app/Experiment/Machines/MachineStates.h \
-    app/Experiment/Machines/CommandValidatorState.h \
+    app/Experiment/Machines/States/MachineStates.h \
+    app/Experiment/Machines/States/CommandValidatorState.h \
     app/Experiment/Machines/Machines.h \
     app/View/Managers/MachineStatus.h \
     app/Experiment/Machines/SafeValve.h \

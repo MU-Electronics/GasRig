@@ -5,7 +5,7 @@
 #include <QStateMachine>
 #include <QVariantMap>
 
-namespace App { namespace Experiment { namespace Machines
+namespace App { namespace Experiment { namespace Machines { namespace States
 {
 
     class CommandValidatorState: public QState
@@ -19,5 +19,5 @@ namespace App { namespace Experiment { namespace Machines
             void onEntry(QEvent* e);
     };
 
-}}}
+}}}}
 

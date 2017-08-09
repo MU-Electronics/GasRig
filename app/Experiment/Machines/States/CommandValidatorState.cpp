@@ -6,7 +6,7 @@
 #include <QVariant>
 #include <QEvent>
 
-namespace App { namespace Experiment { namespace Machines
+namespace App { namespace Experiment { namespace Machines { namespace States
 {
 
     /**
@@ -52,4 +52,4 @@ namespace App { namespace Experiment { namespace Machines
         }
     }
 
-}}}
+}}}}

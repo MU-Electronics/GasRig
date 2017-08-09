@@ -11,7 +11,7 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "MachineStates.h"
+#include "States/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {

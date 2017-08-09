@@ -14,11 +14,11 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "MachineStates.h"
+#include "States/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
-    class ReadFlowControllerFlow    :   public MachineStates
+    class ReadFlowControllerFlow    :   public States::MachineStates
     {
         Q_OBJECT
 

@@ -7,19 +7,19 @@
 #include <QTimer>
 
 // Include settings container
-#include "../../Settings/Container.h"
+#include "../../../Settings/Container.h"
 
 // Include threads
-#include "../../Hardware/Access.h"
-#include "../../Safety/Monitor.h"
+#include "../../../Hardware/Access.h"
+#include "../../../Safety/Monitor.h"
 
 // Include the command constructor for hardware gateway
-#include "../../Hardware/CommandConstructor.h"
+#include "../../../Hardware/CommandConstructor.h"
 
 // Include command validator states
 #include "CommandValidatorState.h"
 
-namespace App { namespace Experiment { namespace Machines
+namespace App { namespace Experiment { namespace Machines { namespace States
 {
     class MachineStates : public QObject
     {
@@ -320,6 +320,6 @@ namespace App { namespace Experiment { namespace Machines
             double pressure = 0;
 
     };
-}}}
+}}}}
 
 
