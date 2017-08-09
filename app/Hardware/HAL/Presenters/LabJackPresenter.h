@@ -18,6 +18,10 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             // Select the correct presenter
             QVariantMap proccess(QString method, QVariantMap commands, QStringList package);
 
+            // Validate package
+            bool expectedPackage(QVariantMap commands, QStringList package, int expectedLength);
+            QVariantMap generateError(QString method, QVariantMap commands, QStringList package);
+
             // Presenters
             QVariantMap configureIO(QVariantMap commands, QStringList package);
 
@@ -27,6 +31,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             QVariantMap readPortDirection(QVariantMap commands, QStringList package);
             QVariantMap readDigitalPort(QVariantMap commands, QStringList package);
             QVariantMap readAnaloguePort(QVariantMap commands, QStringList package);
+
+        private:
+            int error_returnedPackageSize = -1;
 
     };
 

@@ -26,35 +26,134 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
     QVariantMap LabJackPresenter::proccess(QString method, QVariantMap commands, QStringList package)
     {
         // Select the correct presenter
-        if(method == "configureIO")
+        if(method == "configureIO" && expectedPackage(commands, package, 12))
         {
             return configureIO(commands, package);
         }
-        else if (method == "setDigitalPort")
+        else if (method == "setDigitalPort" && expectedPackage(commands, package, 10))
         {
             return setDigitalPort(commands, package);
         }
-        else if (method == "setAnaloguePort")
+        else if (method == "setAnaloguePort" && expectedPackage(commands, package, 10))
         {
             return setAnaloguePort(commands, package);
         }
-        else if (method == "readPortDirection")
+        else if (method == "readPortDirection" && expectedPackage(commands, package, 10))
         {
             return readPortDirection(commands, package);
         }
-        else if (method == "readDigitalPort")
+        else if (method == "readDigitalPort" && expectedPackage(commands, package, 10))
         {
             return readDigitalPort(commands, package);
         }
-        else if (method == "readAnaloguePort")
+        else if (method == "readAnaloguePort"  && expectedPackage(commands, package, 12))
         {
             return readAnaloguePort(commands, package);
         }
 
-        QVariantMap error;
-        error["error"] = "NoMethod";
-        return error;
+        // There was an error
+        if(error_returnedPackageSize != -1)
+        {
+            // Generate the error package and sent it back
+            return generateError(method, commands, package);
+        }
+        else
+        {
+            // No method could be found generate error package
+            QVariantMap error;
+            error["error_id"] = "LabJackPresenter_NoMethodFound";
+            error["level"] = "critical";
+            error["message"] = "The method " + method + " does not exist in the flow controller presenter class.";
+
+            // Return the package
+            return error;
+        }
     }
+
+
+    /**
+     * Check whether the package returned is the expected package
+     *
+     * @brief LabJackPresenter::expectedPackage
+     * @param commands
+     * @param package
+     * @return
+     */
+    bool LabJackPresenter::expectedPackage(QVariantMap commands, QStringList package, int expectedLength)
+    {
+        // Check the length of the package
+        if(package.length() != expectedLength)
+        {
+            // Save the returned package size
+            error_returnedPackageSize = package.length();
+
+            // Invalid package
+            return false;
+        }
+
+        // Passed all tests
+        return true;
+    }
+
+
+
+    /**
+     * Creates an error package
+     *
+     * @brief LabJackPresenter::generateError
+     * @param commands
+     * @param package
+     * @return
+     */
+    QVariantMap LabJackPresenter::generateError(QString method, QVariantMap commands, QStringList package)
+    {
+        // Container for error
+        QVariantMap error;
+
+        // Strings to hold the compiled data
+        QString compiledCommands = "";
+        QString compiledPackages = "";
+
+        // Compile commands package
+        if(commands.size() > 0)
+        {
+            QMapIterator<QString, QVariant> i(commands);
+            while (i.hasNext())
+            {
+                // Move to next record
+                i.next();
+
+                // Compile the data
+                compiledCommands += i.key() + " : " + i.value().toString() + ";    ";
+            }
+        }
+
+        // Compile returned package
+        if(package.size() > 0)
+        {
+            for (int i = 0; i < package.size(); ++i)
+                compiledPackages += package.at(i);
+        }
+
+        // If package size was too small
+        if(error_returnedPackageSize == -1)
+        {
+            // Create an error id
+            error["error_id"] = "LabJackPresenter_InvalidPackageLength";
+            error["level"] = "warning";
+            error["message"] = "Method:" + method + " was called but the responce length was not as expected.";
+            error["send_command"] = compiledCommands;
+            error["returned_package"] = compiledPackages;
+        }
+
+        // Return the error package
+        return error;
+
+    }
+
+
+
+
 
 
     /**
