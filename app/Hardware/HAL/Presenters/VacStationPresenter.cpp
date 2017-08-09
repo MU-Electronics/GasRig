@@ -27,47 +27,47 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
     {
 
         // Select the correct presenter
-        if(method == "getTemperature" && expectedPackage(commands, package, "342,330,326,346", 19))
+        if(method == "getTemperature" && expectedPackage(commands, package, "342,330,326,346", 20))
         {
             return getTemperature(commands, package);
         }
-        else if (method == "getTurboSpeed" && expectedPackage(commands, package, "398,336,399,397", 19))
+        else if (method == "getTurboSpeed" && expectedPackage(commands, package, "398,336,399,397", 20))
         {
             return getTurboSpeed(commands, package);
         }
-        else if (method == "getError" && expectedPackage(commands, package, "360,361,362,363,364,365,366,367,368,369", 19))
+        else if (method == "getError" && expectedPackage(commands, package, "360,361,362,363,364,365,366,367,368,369", 20))
         {
             return getError(commands, package);
         }
-        else if (method == "getGasMode" && expectedPackage(commands, package, "027", 16))
+        else if (method == "getGasMode" && expectedPackage(commands, package, "027", 17))
         {
             return getGasMode(commands, package);
         }
-        else if (method == "getBackingPumpMode" && expectedPackage(commands, package, "025", 16))
+        else if (method == "getBackingPumpMode" && expectedPackage(commands, package, "025", 17))
         {
             return getBackingPumpMode(commands, package);
         }
-        else if (method == "getTurboPumpState" && expectedPackage(commands, package, "023", 19))
+        else if (method == "getTurboPumpState" && expectedPackage(commands, package, "023", 20))
         {
             return getTurboPumpState(commands, package);
         }
-        else if (method == "getPumpingState" && expectedPackage(commands, package, "010", 19))
+        else if (method == "getPumpingState" && expectedPackage(commands, package, "010", 20))
         {
             return getPumpingState(commands, package);
         }
-        else if (method == "setGasMode" && expectedPackage(commands, package, "027", 16))
+        else if (method == "setGasMode" && expectedPackage(commands, package, "027", 17))
         {
             return setGasMode(commands, package);
         }
-        else if (method == "setBackingPumpMode" && expectedPackage(commands, package, "025", 16))
+        else if (method == "setBackingPumpMode" && expectedPackage(commands, package, "025", 17))
         {
             return setBackingPumpMode(commands, package);
         }
-        else if (method == "setTurboPumpState" && expectedPackage(commands, package, "023", 19))
+        else if (method == "setTurboPumpState" && expectedPackage(commands, package, "023", 20))
         {
             return setTurboPumpState(commands, package);
         }
-        else if (method == "setPumpingState" && expectedPackage(commands, package, "010", 19))
+        else if (method == "setPumpingState" && expectedPackage(commands, package, "010", 20))
         {
             return setPumpingState(commands, package);
         }
@@ -103,19 +103,22 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      * @return
      */
     bool VacStationPresenter::expectedPackage(QVariantMap commands, QStringList package, QString commandId, int expectedLength)
-    {
+    {       
+        // Combind the data
+        QString readData;
+        if(package.length() > 0)
+            readData = package.join("");
+
         // Check the length of the package
-        if(package.length() != expectedLength)
+        if(readData.count() != expectedLength)
         {
+            qDebug() << "package count is incorrect, expected: " << expectedLength << " got:" << readData.count();
             // Save the returned package size
-            error_returnedPackageSize = package.length();
+            error_returnedPackageSize = readData.length();
 
             // Invalid package
             return false;
         }
-
-        // Combind the data
-        QString readData = package.join("");
 
         // Get the parameter number
         QString commandIdReturned = readData.mid(5, 3);
@@ -123,6 +126,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Check command ID
         if(!commandId.contains(commandIdReturned))
         {
+            qDebug() << "The command is not correct, expected one of: " << commandId << " got:" << commandIdReturned;
             // Save the returned id
             error_returnedCommandId = commandIdReturned.toInt();
 
