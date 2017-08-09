@@ -60,9 +60,9 @@ Rectangle
         color: "#5e5f63"
         lineHeight: 1.5
         width: 145
-        font.pixelSize: 10
+        font.pixelSize: 11
         anchors.top: parent.top
-        anchors.topMargin: 25
+        anchors.topMargin: 30
         anchors.left: parent.left
 
     }

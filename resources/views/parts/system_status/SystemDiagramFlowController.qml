@@ -64,7 +64,7 @@ Rectangle
                 "Override: " + SystemStatusManager.flowControllerState["controller_"+flowController.controller+"_override_verbal"];
         horizontalAlignment: Text.AlignHCenter
         color: "#5e5f63"
-        font.pixelSize: 10
+        font.pixelSize: 11
         lineHeight: 1.5
         width: 140
         anchors.top: parent.top
