@@ -19,6 +19,9 @@
 // Include command validator states
 #include "CommandValidatorState.h"
 
+// Include states
+#include "Valves.h"
+
 namespace App { namespace Experiment { namespace Machines { namespace States
 {
     class MachineStates : public QObject
@@ -26,6 +29,9 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         Q_OBJECT
         public:
             MachineStates(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+
+            // Holds the application settings
+            Settings::Container m_settings;
 
             // Hold the hardware gateway
             Hardware::Access &m_hardware;
@@ -38,6 +44,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             // Hold params for states
             QVariantMap params;
+
+            // Hold instance of command constructor
+            Hardware::CommandConstructor m_commandConstructor;
+
+            // Valves
+            Valves* m_valves;
 
             // Hold a timer instance for sensors
             QTimer t_vacPressureMonitor;
@@ -297,12 +309,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             void stopVacuumTimer();
 
         private:
-            // Holds the application settings
-            Settings::Container m_settings;
-
-            // Hold instance of command constructor
-            Hardware::CommandConstructor m_commandConstructor;
-
             // Connect states to their function
             void connectStatesToMethods();
 

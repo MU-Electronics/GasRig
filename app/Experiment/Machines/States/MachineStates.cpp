@@ -30,6 +30,9 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   machine(parent)
         ,   m_commandConstructor(*new Hardware::CommandConstructor)
 
+            // Valve states
+        ,   m_valves(new Valves(parent, settings, hardware, safety, machine, params, m_commandConstructor))
+
             // Timers for states
         ,   t_vacPressureMonitor(parent)
         ,   t_pressureMonitor(parent)
