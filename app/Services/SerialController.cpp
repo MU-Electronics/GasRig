@@ -325,7 +325,7 @@ namespace App { namespace Services
     void SerialController::handleTimeout()
     {
         // General error message for any timeout event
-        qDebug() << "Operation timed out for port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+        qDebug() << "Operation timed out for port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString() << "; Data collected: " << m_readData;
 
         // Clear the output and input buffer
         m_serialPort.flush();
