@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory.h>
+
 // Include extenral deps
 #include <QObject>
 #include <QStateMachine>
@@ -29,6 +31,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         Q_OBJECT
         public:
             MachineStates(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            ~MachineStates();
 
             // Holds the application settings
             Settings::Container m_settings;
@@ -46,10 +49,13 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             QVariantMap params;
 
             // Hold instance of command constructor
-            Hardware::CommandConstructor m_commandConstructor;
+            Hardware::CommandConstructor& m_commandConstructor;
 
             // Valves
-            Valves& m_valves;
+            Valves* m_valves;
+
+            // State getters
+            Valves* valves();
 
             // Hold a timer instance for sensors
             QTimer t_vacPressureMonitor;
@@ -121,9 +127,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
                 // States relating to validating the flow controller
             ,   sm_validateFlowControllerOneFlow
             ,   sm_validateFlowControllerTwoFlow;
-
-
-            Valves& valves();
 
             // Helper methods
             void removeAllTransitions();

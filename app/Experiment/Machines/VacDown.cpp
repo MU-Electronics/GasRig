@@ -123,136 +123,136 @@ namespace App { namespace Experiment { namespace Machines
         // Check the system pressure
         sm_initalWait.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sm_validatePressureForVacuum);
             // Pressure is low enough
-            sm_validatePressureForVacuum.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_closeHighPressureInput);
+            sm_validatePressureForVacuum.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves->sm_closeHighPressureInput);
             // Pressure is too high
             sm_validatePressureForVacuum.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the high pressure valve
-        m_valves.sm_closeHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateCloseHighPressureInput);
+        m_valves->sm_closeHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseHighPressureInput);
             // Valve closed successfully
-            m_valves.sm_validateCloseHighPressureInput.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_closeHighPressureNitrogen);
+            m_valves->sm_validateCloseHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_closeHighPressureNitrogen);
             // Valve failed to close
-            m_valves.sm_validateCloseHighPressureInput.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateCloseHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the nitrogen valve
-        m_valves.sm_closeHighPressureNitrogen.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateCloseHighPressureNitrogen);
+        m_valves->sm_closeHighPressureNitrogen.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseHighPressureNitrogen);
             // Valve closed successfully
-            m_valves.sm_validateCloseHighPressureNitrogen.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_closeFlowController);
+            m_valves->sm_validateCloseHighPressureNitrogen.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_closeFlowController);
             // Valve failed to close
-            m_valves.sm_validateCloseHighPressureNitrogen.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateCloseHighPressureNitrogen.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the flow controller valve
-        m_valves.sm_closeFlowController.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateCloseFlowController);
+        m_valves->sm_closeFlowController.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseFlowController);
             // Valve closed successfully
-            m_valves.sm_validateCloseFlowController.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_closeExhuast);
+            m_valves->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_closeExhuast);
             // Valve failed to close
-            m_valves.sm_validateCloseFlowController.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the exhuast valve
-        m_valves.sm_closeExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateCloseExhuast);
+        m_valves->sm_closeExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseExhuast);
             // Valve closed successfully check to see what state the output valve should be in
             if(params.value("mode").toInt() == 2 || params.value("mode").toInt() == 3)
             {
                 // Close the output
-                m_valves.sm_validateCloseExhuast.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_closeOutput);
+                m_valves->sm_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_closeOutput);
             }
             else if(params.value("mode").toInt() == 1)
             {
                 // Open the output
-                m_valves.sm_validateCloseExhuast.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_openOutput);
+                m_valves->sm_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_openOutput);
             }
             // Valve failed to close
-            m_valves.sm_validateCloseExhuast.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the output valve
-        m_valves.sm_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateCloseOutput);
-        m_valves.sm_openOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateOpenOutput);
+        m_valves->sm_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseOutput);
+        m_valves->sm_openOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateOpenOutput);
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
                 // Close the fast exhuast valve
-                m_valves.sm_validateCloseOutput.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_closeFastExhuastPath);
+                m_valves->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_closeFastExhuastPath);
             }
             if(params.value("mode").toInt() == 3)
             {
                 // Open the fast exhuast path valve
-                m_valves.sm_validateCloseOutput.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_openFastExhuastPath);
+                m_valves->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_openFastExhuastPath);
             }
             else if(params.value("mode").toInt() == 1)
             {
                 // Open the fast exhaust path valve
-                m_valves.sm_validateOpenOutput.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_openFastExhuastPath);
+                m_valves->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_openFastExhuastPath);
             }
             // Valve failed to close
-            m_valves.sm_validateCloseOutput.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
-            m_valves.sm_validateOpenOutput.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the exhuast path valve fast
-        m_valves.sm_closeFastExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateCloseFastExhuastPath);
-        m_valves.sm_openFastExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateOpenFastExhuastPath);
+        m_valves->sm_closeFastExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseFastExhuastPath);
+        m_valves->sm_openFastExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateOpenFastExhuastPath);
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
                 // Close the slow exhuast valve
-                m_valves.sm_validateCloseFastExhuastPath.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_closeSlowExhuastPath);
+                m_valves->sm_validateCloseFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_closeSlowExhuastPath);
             }
             else if(params.value("mode").toInt() == 3)
             {
                 // Open the slow exhuast path valve
-                m_valves.sm_validateOpenFastExhuastPath.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_openSlowExhuastPath);
+                m_valves->sm_validateOpenFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_openSlowExhuastPath);
             }
             else if(params.value("mode").toInt() == 1)
             {
                 // Open the slow exhaust path valve
-                m_valves.sm_validateOpenFastExhuastPath.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_openSlowExhuastPath);
+                m_valves->sm_validateOpenFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_openSlowExhuastPath);
             }
             // Valve failed to close
-            m_valves.sm_validateCloseFastExhuastPath.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
-            m_valves.sm_validateOpenFastExhuastPath.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateCloseFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateOpenFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the exhuast path valve slow
-        m_valves.sm_closeSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateCloseSlowExhuastPath);
-        m_valves.sm_openSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateOpenSlowExhuastPath);
+        m_valves->sm_closeSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseSlowExhuastPath);
+        m_valves->sm_openSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateOpenSlowExhuastPath);
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
                 // Open the vacuum out valve
-                m_valves.sm_validateCloseSlowExhuastPath.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_openVacuumOut);
+                m_valves->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_openVacuumOut);
             }
             else if(params.value("mode").toInt() == 3 || params.value("mode").toInt() == 1)
             {
                 // Close the vacuum out valve
-                m_valves.sm_validateOpenSlowExhuastPath.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_closeVacuumOut);
+                m_valves->sm_validateOpenSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_closeVacuumOut);
             }
             // Valve failed to close
-            m_valves.sm_validateCloseSlowExhuastPath.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
-            m_valves.sm_validateOpenSlowExhuastPath.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateOpenSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set vacuum out valve
-        m_valves.sm_closeVacuumOut.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateCloseVacuumOut);
-        m_valves.sm_openVacuumOut.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateOpenVacuumOut);
+        m_valves->sm_closeVacuumOut.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseVacuumOut);
+        m_valves->sm_openVacuumOut.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateOpenVacuumOut);
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
                 // Open the vacuum in valve
-                m_valves.sm_validateOpenVacuumOut.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_openVacuumIn);
+                m_valves->sm_validateOpenVacuumOut.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_openVacuumIn);
             }
             else if(params.value("mode").toInt() == 3 || params.value("mode").toInt() == 1)
             {
                 // Close the vacuum out valve
-                m_valves.sm_validateCloseVacuumOut.addTransition(this, &MachineStates::emit_validationSuccess, &m_valves.sm_openVacuumIn);
+                m_valves->sm_validateCloseVacuumOut.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_valves->sm_openVacuumIn);
             }
             // Valve failed to close
-            m_valves.sm_validateOpenVacuumOut.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
-            m_valves.sm_validateCloseVacuumOut.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateOpenVacuumOut.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateCloseVacuumOut.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
 
         // Set the vacuum in valve open
-        m_valves.sm_openVacuumIn.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves.sm_validateOpenVacuumIn);
+        m_valves->sm_openVacuumIn.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateOpenVacuumIn);
             // Valve closed successfully
-            m_valves.sm_validateOpenVacuumIn.addTransition(this, &MachineStates::emit_validationSuccess, &sm_disableTurboPump);
+            m_valves->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sm_disableTurboPump);
             // Valve failed to close
-            m_valves.sm_validateOpenVacuumIn.addTransition(this, &MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_valves->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Disable the vac station turbo
         sm_disableTurboPump.addTransition(this, &MachineStates::emit_turboPumpAlreadyDisabled, &sm_startVacuumTimer);

@@ -24,6 +24,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     MachineStates::MachineStates(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety)
         :   QObject(parent)
+
         ,   m_settings(settings)
         ,   m_hardware(hardware)
         ,   m_safety(safety)
@@ -31,21 +32,22 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   m_commandConstructor(*new Hardware::CommandConstructor)
 
             // Valve states
-        ,   m_valves(*new Valves(parent, settings, hardware, safety, machine, params, m_commandConstructor))
+        ,   m_valves(new Valves(parent, settings, hardware, safety, machine, params, m_commandConstructor))
 
             // Timers for states
         ,   t_vacPressureMonitor(parent)
         ,   t_pressureMonitor(parent)
         ,   t_flowControllerFlowMonitor(parent)
-        ,   t_vacTime(parent)
         ,   t_flowControllerTemperatureMonitor(parent)
         ,   t_vacStationTemperatureMonitor(parent)
         ,   t_turboSpeedMonitor(parent)
+        ,   t_vacTime(parent)
 
             // Pressure sensor related states
         ,   sm_systemPressure(&machine)
-        ,   sm_validatePressureForVacuum(&machine)
+
         ,   sm_vacPressure(&machine)
+        ,   sm_validatePressureForVacuum(&machine)
         ,   sm_validateVacPressureForTurbo(&machine)
 
             // States relating to controlling the vac station
@@ -107,6 +109,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         // Connect the states to functions
         connectStatesToMethods();
     }
+
+    MachineStates::~MachineStates()
+    {
+        delete m_valves;
+    }
+
 
 
     /**
@@ -186,7 +194,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
      * @brief MachineStates::valves
      * @return
      */
-    Valves& MachineStates::valves()
+    Valves *MachineStates::valves()
     {
         return m_valves;
     }
@@ -891,11 +899,11 @@ namespace App { namespace Experiment { namespace Machines { namespace States
        disableBackingPump();
 
        // Close valves
-       m_valves.closeOutput();
-       m_valves.closeVacuumOut();
-       m_valves.closeFastExhuastPath();
-       m_valves.closeSlowExhuastPath();
-       m_valves.closeVacuumIn();
+       m_valves->closeOutput();
+       m_valves->closeVacuumOut();
+       m_valves->closeFastExhuastPath();
+       m_valves->closeSlowExhuastPath();
+       m_valves->closeVacuumIn();
 
        // Stop timers
        stopVacuumPressureMonitor();

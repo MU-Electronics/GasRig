@@ -27,6 +27,11 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
         public:
             Valves(QObject* parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap& params, Hardware::CommandConstructor& commandConstructor);
+            ~Valves();
+
+
+            // Holds the application settings
+            Settings::Container m_settings;
 
             // Hold the hardware gateway
             Hardware::Access &m_hardware;
@@ -39,9 +44,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             // Hold params for states
             QVariantMap &m_params;
-
-            // Holds the application settings
-            Settings::Container m_settings;
 
             // Hold instance of command constructor
             Hardware::CommandConstructor& m_commandConstructor;

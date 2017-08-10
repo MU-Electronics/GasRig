@@ -20,6 +20,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     Valves::Valves(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap &params, Hardware::CommandConstructor &commandConstructor)
         :   QObject(parent)
+
         ,   m_settings(settings)
         ,   m_hardware(hardware)
         ,   m_safety(safety)
@@ -38,17 +39,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   sm_closeVacuumIn(&machine)
         ,   sm_closeVacuumOut(&machine)
 
-            // Validate closed valve
-        ,   sm_validateCloseHighPressureInput(&machine)
-        ,   sm_validateCloseHighPressureNitrogen(&machine)
-        ,   sm_validateCloseFlowController(&machine)
-        ,   sm_validateCloseExhuast(&machine)
-        ,   sm_validateCloseOutput(&machine)
-        ,   sm_validateCloseSlowExhuastPath(&machine)
-        ,   sm_validateCloseFastExhuastPath(&machine)
-        ,   sm_validateCloseVacuumIn(&machine)
-        ,   sm_validateCloseVacuumOut(&machine)
-
             // Open valve related states
         ,   sm_openHighPressureInput(&machine)
         ,   sm_openHighPressureNitrogen(&machine)
@@ -59,6 +49,17 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   sm_openFastExhuastPath(&machine)
         ,   sm_openVacuumIn(&machine)
         ,   sm_openVacuumOut(&machine)
+
+            // Validate closed valve
+        ,   sm_validateCloseHighPressureInput(&machine)
+        ,   sm_validateCloseHighPressureNitrogen(&machine)
+        ,   sm_validateCloseFlowController(&machine)
+        ,   sm_validateCloseExhuast(&machine)
+        ,   sm_validateCloseOutput(&machine)
+        ,   sm_validateCloseSlowExhuastPath(&machine)
+        ,   sm_validateCloseFastExhuastPath(&machine)
+        ,   sm_validateCloseVacuumIn(&machine)
+        ,   sm_validateCloseVacuumOut(&machine)
 
             // Validate open valve
         ,   sm_validateOpenHighPressureInput(&machine)
@@ -77,6 +78,11 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
         // Connect the states to functions
         connectStatesToMethods();
+    }
+
+    Valves::~Valves()
+    {
+
     }
 
     void Valves::connectStatesToMethods()
@@ -135,13 +141,10 @@ namespace App { namespace Experiment { namespace Machines { namespace States
     void Valves::valveHelper(QString number, bool state)
     {
         // Find the correct valve name
-        qDebug() << "Valve helper" << number;
         QString valveName = m_settings.hardware.valve_connections.value(number).toString();
-        qDebug() << valveName;
 
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setValveState(valveName, state));
-        qDebug() << "emitted";
     }
 
     /**
