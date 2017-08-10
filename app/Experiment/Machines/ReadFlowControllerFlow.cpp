@@ -109,7 +109,7 @@ namespace App { namespace Experiment { namespace Machines
         machine.setInitialState(&sm_startFlowControllerFlowMonitor);
 
         // Start the flow controller flow monitor
-        sm_startFlowControllerFlowMonitor.addTransition(this, &MachineStates::emit_timerActive, &sm_timerWait);
+        sm_startFlowControllerFlowMonitor.addTransition(this, &States::MachineStates::emit_timerActive, &sm_timerWait);
 
         // Wait for a timer event
         sm_timerWait.addTransition(&t_flowControllerFlowMonitor, &QTimer::timeout, &sm_flowControllerOneFlow);

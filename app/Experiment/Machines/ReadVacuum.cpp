@@ -109,7 +109,7 @@ namespace App { namespace Experiment { namespace Machines
         machine.setInitialState(&sm_startVacuumPressureMonitor);
 
         // Start the vacuum monitor
-        sm_startVacuumPressureMonitor.addTransition(this, &MachineStates::emit_timerActive, &sm_timerWait);
+        sm_startVacuumPressureMonitor.addTransition(this, &States::MachineStates::emit_timerActive, &sm_timerWait);
 
         // Wait for a timer event
         sm_timerWait.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sm_vacPressure);

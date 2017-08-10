@@ -116,21 +116,21 @@ namespace App { namespace Experiment { namespace Machines
         // Get the electronics temperature
         sm_getTC110ElectronicsTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetTC110ElectronicsTemperature);
             // Success
-            sm_validateGetTC110ElectronicsTemperature.addTransition(this, &MachineStates::emit_validationSuccess, &sm_getMotorTemperature);
+            sm_validateGetTC110ElectronicsTemperature.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_getMotorTemperature);
             // Failed
             // Com issue
 
         // Get the motor temperature
         sm_getMotorTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetMotorTemperature);
             // Success
-            sm_validateGetMotorTemperature.addTransition(this, &MachineStates::emit_validationSuccess, &sm_getPumpBottomTemperature);
+            sm_validateGetMotorTemperature.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_getPumpBottomTemperature);
             // Failed
             // Com issue
 
         // Get the pump bottom temperature
         sm_getPumpBottomTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetPumpBottomTemperature);
             // Success
-            sm_validateGetPumpBottomTemperature.addTransition(this, &MachineStates::emit_validationSuccess, &sm_stop);
+            sm_validateGetPumpBottomTemperature.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_stop);
             // Failed
             // Com issue
 
