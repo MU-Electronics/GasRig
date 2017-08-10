@@ -104,33 +104,33 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacStationTemperatures::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sm_getBearingTemperature);
+        machine.setInitialState(&m_vacuum->sm_getBearingTemperature);
 
         // Get the bearing temperture
-        sm_getBearingTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetBearingTemperature);
+        m_vacuum->sm_getBearingTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &m_vacuum->sm_validateGetBearingTemperature);
             // Success
-            sm_validateGetBearingTemperature.addTransition(this, &MachineStates::emit_validationSuccess, &sm_getTC110ElectronicsTemperature);
+            m_vacuum->sm_validateGetBearingTemperature.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &m_vacuum->sm_getTC110ElectronicsTemperature);
             // Failed
             // Com issue
 
         // Get the electronics temperature
-        sm_getTC110ElectronicsTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetTC110ElectronicsTemperature);
+        m_vacuum->sm_getTC110ElectronicsTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &m_vacuum->sm_validateGetTC110ElectronicsTemperature);
             // Success
-            sm_validateGetTC110ElectronicsTemperature.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_getMotorTemperature);
+            m_vacuum->sm_validateGetTC110ElectronicsTemperature.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &m_vacuum->sm_getMotorTemperature);
             // Failed
             // Com issue
 
         // Get the motor temperature
-        sm_getMotorTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetMotorTemperature);
+        m_vacuum->sm_getMotorTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &m_vacuum->sm_validateGetMotorTemperature);
             // Success
-            sm_validateGetMotorTemperature.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_getPumpBottomTemperature);
+            m_vacuum->sm_validateGetMotorTemperature.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &m_vacuum->sm_getPumpBottomTemperature);
             // Failed
             // Com issue
 
         // Get the pump bottom temperature
-        sm_getPumpBottomTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sm_validateGetPumpBottomTemperature);
+        m_vacuum->sm_getPumpBottomTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &m_vacuum->sm_validateGetPumpBottomTemperature);
             // Success
-            sm_validateGetPumpBottomTemperature.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_stop);
+            m_vacuum->sm_validateGetPumpBottomTemperature.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sm_stop);
             // Failed
             // Com issue
 

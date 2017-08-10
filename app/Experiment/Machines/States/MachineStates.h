@@ -23,6 +23,9 @@
 
 // Include states
 #include "Valves.h"
+#include "Vacuum.h"
+#include "Pressure.h"
+#include "Flow.h"
 
 namespace App { namespace Experiment { namespace Machines { namespace States
 {
@@ -51,11 +54,18 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             // Hold instance of command constructor
             Hardware::CommandConstructor& m_commandConstructor;
 
-            // Valves
+            // External states
             Valves* m_valves;
+            Vacuum* m_vacuum;
+            Pressure* m_pressure;
+            Flow* m_flow;
+
 
             // State getters
             Valves* valves();
+            Vacuum* vacuum();
+            Pressure* pressure();
+            Flow* flow();
 
             // Hold a timer instance for sensors
             QTimer t_vacPressureMonitor;
@@ -72,19 +82,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             QState
                 // Check pressure
                 sm_systemPressure
-                // States relating to controlling the vac station
-            ,   sm_disableTurboPump
-            ,   sm_enableTurboPump
-            ,   sm_disableBackingPump
-            ,   sm_enableBackingPump
-            ,   sm_setGasModeHeavy
-            ,   sm_setGasModeMedium
-            ,   sm_setGasModeHelium
-            ,   sm_vacPressure
-            ,   sm_getBearingTemperature
-            ,   sm_getTC110ElectronicsTemperature
-            ,   sm_getPumpBottomTemperature
-            ,   sm_getMotorTemperature
                 // States relating to controlling the flow controller
             ,   sm_flowControllerOneFlow
             ,   sm_flowControllerTwoFlow
@@ -108,24 +105,8 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             // Create command validator states
             CommandValidatorState
-                // Validate pressure
-                sm_validatePressureForVacuum
-                // States relating to controlling the vac station
-            ,   sm_validateDisableTurboPump
-            ,   sm_validateEnableTurboPump
-            ,   sm_validateDisableBackingPump
-            ,   sm_validateEnableBackingPump
-            ,   sm_validateSetGasModeHeavy
-            ,   sm_validateSetGasModeMedium
-            ,   sm_validateSetGasModeHelium
-            ,   sm_validateStartVacuumPressureMonitor
-            ,   sm_validateVacPressureForTurbo
-            ,   sm_validateGetBearingTemperature
-            ,   sm_validateGetTC110ElectronicsTemperature
-            ,   sm_validateGetPumpBottomTemperature
-            ,   sm_validateGetMotorTemperature
                 // States relating to validating the flow controller
-            ,   sm_validateFlowControllerOneFlow
+                sm_validateFlowControllerOneFlow
             ,   sm_validateFlowControllerTwoFlow;
 
             // Helper methods
@@ -143,46 +124,11 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             void emit_stateAlreadySet();
 
-            void emit_turboPumpAlreadyEnabled();
-            void emit_turboPumpAlreadyDisabled();
-
             void emit_timerActive();
 
         public slots:
             // Pressure related states
             void systemPressure();
-            void validatePressureForVacuum();
-            void vacPressure();
-            void validateVacPressureForTurbo();
-
-            // States relating to controlling the vac station
-            void disableTurboPump();
-            void enableTurboPump();
-            void disableBackingPump();
-            void enableBackingPump();
-            void setGasModeHeavy();
-            void setGasModeMedium();
-            void setGasModeHelium();
-
-            // States relating to reading the vac station params
-            void getTurboSpeed();
-            void getBearingTemperature();
-            void getTC110ElectronicsTemperature();
-            void getPumpBottomTemperature();
-            void getMotorTemperature();
-            void validateGetBearingTemperature();
-            void validateGetTC110ElectronicsTemperature();
-            void validateGetPumpBottomTemperature();
-            void validateGetMotorTemperature();
-
-            // States relating to validating the vac station commands
-            void validateDisableTurboPump();
-            void validateEnableTurboPump();
-            void validateDisableBackingPump();
-            void validateEnableBackingPump();
-            void validateSetGasModeHeavy();
-            void validateSetGasModeMedium();
-            void validateSetGasModeHelium();
 
             // States relating to controlling the flow controller
             void flowControllerOneFlow();
@@ -239,7 +185,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             double vacuumPressure = 0;
 
             // Pressure
-            double pressure = 0;
+            double pressureSensor = 0;
 
     };
 }}}}

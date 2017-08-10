@@ -121,11 +121,11 @@ namespace App { namespace Experiment { namespace Machines
         machine.setInitialState(&sm_initalWait);
 
         // Check the system pressure
-        sm_initalWait.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sm_validatePressureForVacuum);
+        sm_initalWait.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &m_pressure->sm_validatePressureForVacuum);
             // Pressure is low enough
-            sm_validatePressureForVacuum.addTransition(this, &States::MachineStates::emit_validationSuccess, &m_valves->sm_closeHighPressureInput);
+            m_pressure->sm_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationSuccess, &m_valves->sm_closeHighPressureInput);
             // Pressure is too high
-            sm_validatePressureForVacuum.addTransition(this, &States::MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_pressure->sm_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the high pressure valve
         m_valves->sm_closeHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateCloseHighPressureInput);
@@ -250,42 +250,42 @@ namespace App { namespace Experiment { namespace Machines
         // Set the vacuum in valve open
         m_valves->sm_openVacuumIn.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &m_valves->sm_validateOpenVacuumIn);
             // Valve closed successfully
-            m_valves->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sm_disableTurboPump);
+            m_valves->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &m_vacuum->sm_disableTurboPump);
             // Valve failed to close
             m_valves->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Disable the vac station turbo
-        sm_disableTurboPump.addTransition(this, &States::MachineStates::emit_turboPumpAlreadyDisabled, &sm_startVacuumTimer);
-        sm_disableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &sm_validateDisableTurboPump);
+        m_vacuum->sm_disableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_turboPumpAlreadyDisabled, &sm_startVacuumTimer);
+        m_vacuum->sm_disableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &m_vacuum->sm_validateDisableTurboPump);
             // Turbo pump was disabled
-            sm_validateDisableTurboPump.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_startVacuumTimer);
+            m_vacuum->sm_validateDisableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sm_startVacuumTimer);
             // Turbo pump could not be disabled
-            sm_validateDisableTurboPump.addTransition(this, &States::MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_vacuum->sm_validateDisableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
 
         // Start vac time
-        sm_startVacuumTimer.addTransition(this, &States::MachineStates::emit_timerActive, &sm_enableBackingPump);
+        sm_startVacuumTimer.addTransition(this, &States::MachineStates::emit_timerActive, &m_vacuum->sm_enableBackingPump);
 
         // Turn on backing pump
-        sm_enableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &sm_validateEnableBackingPump);
+        m_vacuum->sm_enableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &m_vacuum->sm_validateEnableBackingPump);
             // Validate backing pump on
-            sm_validateEnableBackingPump.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_timerWait);
+            m_vacuum->sm_validateEnableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sm_timerWait);
             // Backing pump failed
-            sm_validateEnableBackingPump.addTransition(this, &States::MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_vacuum->sm_validateEnableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
 
         // Read vac pressure
-        sm_timerWait.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &sm_validateVacPressureForTurbo);
+        sm_timerWait.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &m_pressure->sm_validateVacPressureForTurbo);
             // Pressure low enough for turbo so enable it
-            sm_validateVacPressureForTurbo.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_enableTurboPump);
+            m_pressure->sm_validateVacPressureForTurbo.addTransition(this->pressure(), &States::Pressure::emit_validationSuccess, &m_vacuum->sm_enableTurboPump);
             // Pressure too high for turbo, wait for next time out untill we check again
-            sm_validateVacPressureForTurbo.addTransition(this, &States::MachineStates::emit_validationFailed, &sm_timerWait);
+            m_pressure->sm_validateVacPressureForTurbo.addTransition(this->pressure(), &States::Pressure::emit_validationFailed, &sm_timerWait);
 
         // Enable turbo pump
-        sm_enableTurboPump.addTransition(this, &States::MachineStates::emit_turboPumpAlreadyEnabled, &sm_timerWait);
-        sm_enableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &sm_validateEnableTurboPump);
+        m_vacuum->sm_enableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_turboPumpAlreadyEnabled, &sm_timerWait);
+        m_vacuum->sm_enableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &m_vacuum->sm_validateEnableTurboPump);
             // Successfully enabled
-            sm_validateEnableTurboPump.addTransition(this, &States::MachineStates::emit_validationSuccess, &sm_timerWait);
+            m_vacuum->sm_validateEnableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sm_timerWait);
             // Could not enable
-            sm_validateEnableTurboPump.addTransition(this, &States::MachineStates::emit_validationFailed, &sm_stopAsFailed);
+            m_vacuum->sm_validateEnableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
 
         // End vac session when timer limit ends t_vacTime
         sm_timerWait.addTransition(&t_vacTime, &QTimer::timeout, &sm_stop);
