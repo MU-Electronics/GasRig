@@ -49,17 +49,11 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             Hardware::CommandConstructor& m_commandConstructor;
 
             // Create the states for the machine
-            QState
-                // States relating to controlling the flow controller
-                sm_flowControllerOneFlow
-            ,   sm_flowControllerTwoFlow;
+            // QState
 
 
             // Create command validator states
-             CommandValidatorState
-                // States relating to validating the flow controller
-                sm_validateFlowControllerOneFlow
-            ,   sm_validateFlowControllerTwoFlow;
+            // CommandValidatorState
 
 
             void connectStatesToMethods();
@@ -71,13 +65,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             void emit_validationSuccess(QVariantMap data);
 
         public slots:
-            // States relating to controlling the flow controller
-            void flowControllerOneFlow();
-            void flowControllerTwoFlow();
 
-            // States relating to validating the flow controller
-            void validateFlowControllerOneFlow();
-            void validateFlowControllerTwoFlow();
 
         private:
 

@@ -49,14 +49,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             // Pressure sensor related states
         ,   sm_systemPressure(&machine)
 
-            // States relating to controlling the flow controller
-        ,   sm_flowControllerOneFlow(&machine)
-        ,   sm_flowControllerTwoFlow(&machine)
-
-            // States relating to validating the vac station
-        ,   sm_validateFlowControllerOneFlow(&machine)
-        ,   sm_validateFlowControllerTwoFlow(&machine)
-
             // Timers
         ,   sm_initalWait(&machine)
         ,   sm_timerWait(&machine)
@@ -103,14 +95,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
     {
         // Pressure related states
         connect(&sm_systemPressure, &QState::entered, this, &MachineStates::systemPressure);
-
-        // Link flow controller states
-        connect(&sm_flowControllerOneFlow, &QState::entered, this, &MachineStates::flowControllerOneFlow);
-        connect(&sm_flowControllerTwoFlow, &QState::entered, this, &MachineStates::flowControllerTwoFlow);
-
-        // Link flow controller validation states
-        connect(&sm_validateFlowControllerOneFlow, &CommandValidatorState::entered, this, &MachineStates::validateFlowControllerOneFlow);
-        connect(&sm_validateFlowControllerTwoFlow, &CommandValidatorState::entered, this, &MachineStates::validateFlowControllerTwoFlow);
 
         // Link the timer states
         connect(&sm_initalWait, &QState::entered, this, &MachineStates::timerWait);
@@ -426,66 +410,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
     {
         t_flowControllerTemperatureMonitor.stop();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    void MachineStates::flowControllerOneFlow()
-    {
-        // Emit siganl to HAL
-        emit hardwareRequest(m_commandConstructor.getFlowControllerFlowRate("FlowControllerOne"));
-    }
-
-
-    void MachineStates::validateFlowControllerOneFlow()
-    {
-        // Get the validator state instance
-        CommandValidatorState* state = (CommandValidatorState*)sender();
-
-        // Get the package data from the instance
-        QVariantMap package = state->package;
-
-        QVariantMap success;
-        emit emit_validationSuccess(success);
-
-        qDebug() << package;
-    }
-
-    void MachineStates::flowControllerTwoFlow()
-    {
-        // Emit siganl to HAL
-        emit hardwareRequest(m_commandConstructor.getFlowControllerFlowRate("FlowControllerTwo"));
-    }
-
-
-    void MachineStates::validateFlowControllerTwoFlow()
-    {
-        // Get the validator state instance
-        CommandValidatorState* state = (CommandValidatorState*)sender();
-
-        // Get the package data from the instance
-        QVariantMap package = state->package;
-
-        QVariantMap success;
-        emit emit_validationSuccess(success);
-
-        qDebug() << package;
-    }
-
-
-
-
 
 
 

@@ -28,7 +28,13 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   m_params(params)
         ,   m_commandConstructor(commandConstructor)
 
+            // States relating to controlling the flow controller
+        ,   sm_flowControllerOneFlow(&machine)
+        ,   sm_flowControllerTwoFlow(&machine)
 
+            // States relating to validating the vac station
+        ,   sm_validateFlowControllerOneFlow(&machine)
+        ,   sm_validateFlowControllerTwoFlow(&machine)
 
     {
         // Connect object signals to hardware slots and visa versa
@@ -46,7 +52,59 @@ namespace App { namespace Experiment { namespace Machines { namespace States
     void Flow::connectStatesToMethods()
     {
 
+        // Link flow controller states
+        connect(&sm_flowControllerOneFlow, &QState::entered, this, &Flow::flowControllerOneFlow);
+        connect(&sm_flowControllerTwoFlow, &QState::entered, this, &Flow::flowControllerTwoFlow);
+
+        // Link flow controller validation states
+        connect(&sm_validateFlowControllerOneFlow, &CommandValidatorState::entered, this, &Flow::validateFlowControllerOneFlow);
+        connect(&sm_validateFlowControllerTwoFlow, &CommandValidatorState::entered, this, &Flow::validateFlowControllerTwoFlow);
     }
+
+
+    void Flow::flowControllerOneFlow()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getFlowControllerFlowRate("FlowControllerOne"));
+    }
+
+
+    void Flow::validateFlowControllerOneFlow()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
+        qDebug() << package;
+    }
+
+    void Flow::flowControllerTwoFlow()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getFlowControllerFlowRate("FlowControllerTwo"));
+    }
+
+
+    void Flow::validateFlowControllerTwoFlow()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
+        qDebug() << package;
+    }
+
+
 
 
 }}}}

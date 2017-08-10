@@ -81,10 +81,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             // Create the states for the machine
             QState
                 // Check pressure
-                sm_systemPressure
-                // States relating to controlling the flow controller
-            ,   sm_flowControllerOneFlow
-            ,   sm_flowControllerTwoFlow
+                sm_systemPressure 
                 // Timers
             ,   sm_startVacuumPressureMonitor
             ,   sm_startPressureMonitor
@@ -104,10 +101,8 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
 
             // Create command validator states
-            CommandValidatorState
-                // States relating to validating the flow controller
-                sm_validateFlowControllerOneFlow
-            ,   sm_validateFlowControllerTwoFlow;
+            //CommandValidatorState
+
 
             // Helper methods
             void removeAllTransitions();
@@ -129,15 +124,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         public slots:
             // Pressure related states
             void systemPressure();
-
-            // States relating to controlling the flow controller
-            void flowControllerOneFlow();
-            void flowControllerTwoFlow();
-
-            // States relating to validating the flow controller
-            void validateFlowControllerOneFlow();
-            void validateFlowControllerTwoFlow();
-
 
             // Finishing sequence
             void finishVacSession();
