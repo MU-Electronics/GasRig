@@ -46,9 +46,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   t_turboSpeedMonitor(parent)
         ,   t_vacTime(parent)
 
-            // Pressure sensor related states
-        ,   sm_systemPressure(&machine)
-
             // Timers
         ,   sm_initalWait(&machine)
         ,   sm_timerWait(&machine)
@@ -93,9 +90,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
      */
     void MachineStates::connectStatesToMethods()
     {
-        // Pressure related states
-        connect(&sm_systemPressure, &QState::entered, this, &MachineStates::systemPressure);
-
         // Link the timer states
         connect(&sm_initalWait, &QState::entered, this, &MachineStates::timerWait);
         connect(&sm_timerWait, &QState::entered, this, &MachineStates::timerWait);
@@ -422,15 +416,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
 
 
-    /**
-     * Request a reading of the system pressure
-     *
-     * @brief MachineStates::systemPressure
-     */
-    void MachineStates::systemPressure()
-    {
-        emit hardwareRequest(m_commandConstructor.getPressureReading(1));
-    }
 
 
 

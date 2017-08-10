@@ -50,7 +50,8 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             // Create the states for the machine
             QState
-                sm_vacPressure;
+                sm_vacPressure
+            ,   sm_systemPressure;
 
 
             // Create command validator states
@@ -73,6 +74,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             void monitorTurboState(QVariantMap package);
 
             // Pressure
+            void systemPressure();
             void vacPressure();
 
             // Conditiona validation

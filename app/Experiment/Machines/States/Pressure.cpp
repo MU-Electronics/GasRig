@@ -30,6 +30,10 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   m_params(params)
         ,   m_commandConstructor(commandConstructor)
 
+
+            // Pressure sensor
+        ,   sm_systemPressure(&machine)
+
             // Get vacuum pressure
         ,   sm_vacPressure(&machine)
 
@@ -56,11 +60,24 @@ namespace App { namespace Experiment { namespace Machines { namespace States
     void Pressure::connectStatesToMethods()
     {
         // Pressure
+        connect(&sm_systemPressure, &QState::entered, this, &Pressure::systemPressure);
         connect(&sm_vacPressure, &QState::entered, this, &Pressure::vacPressure);
 
         // Contional validation
         connect(&sm_validateVacPressureForTurbo, &CommandValidatorState::entered, this, &Pressure::validateVacPressureForTurbo);
         connect(&sm_validatePressureForVacuum, &CommandValidatorState::entered, this, &Pressure::validatePressureForVacuum);
+    }
+
+
+
+    /**
+     * Request a reading of the system pressure
+     *
+     * @brief MachineStates::systemPressure
+     */
+    void Pressure::systemPressure()
+    {
+        emit hardwareRequest(m_commandConstructor.getPressureReading(1));
     }
 
 

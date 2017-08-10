@@ -80,10 +80,8 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             // Create the states for the machine
             QState
-                // Check pressure
-                sm_systemPressure 
                 // Timers
-            ,   sm_startVacuumPressureMonitor
+                sm_startVacuumPressureMonitor
             ,   sm_startPressureMonitor
             ,   sm_startFlowControllerFlowMonitor
             ,   sm_startVacuumTimer
@@ -122,9 +120,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             void emit_timerActive();
 
         public slots:
-            // Pressure related states
-            void systemPressure();
-
             // Finishing sequence
             void finishVacSession();
 
