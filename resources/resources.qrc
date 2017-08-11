@@ -41,5 +41,11 @@
         <file>views/parts/system_status/SystemDiagramBoxedText.qml</file>
         <file>views/parts/system_status/SystemDiagramPipes.qml</file>
         <file>views/parts/system_status/SystemDiagramPipe.qml</file>
+        <file>views/management/TestingMaintenance/ValveComponents/PulseValveContainer.qml</file>
+        <file>views/management/TestingMaintenance/ValveComponents/SafeValveContainer.qml</file>
+        <file>views/management/TestingMaintenance/ValveComponents/PurgeSystemContainer.qml</file>
+        <file>views/management/TestingMaintenance/ValveComponents/OutputHighPressureContainer.qml</file>
+        <file>views/management/TestingMaintenance/ValveComponents/ExhaustSystemContainer.qml</file>
+        <file>views/management/TestingMaintenance/ValveComponents/SetHighPressureContainer.qml</file>
     </qresource>
 </RCC>
