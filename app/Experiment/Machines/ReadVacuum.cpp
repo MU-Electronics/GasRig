@@ -41,7 +41,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("vacSensorTimeInter", vacSensorTimeInter);
 
         // Setup timers
-        t_vacPressureMonitor.setInterval(vacSensorTimeInter);
+        timers()->t_vacPressureMonitor.setInterval(vacSensorTimeInter);
     }
 
 
@@ -64,7 +64,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacuum::stop()
     {
         // Stop all the timers
-        stopVacuumPressureMonitor();
+        timers()->stopVacuumPressureMonitor();
 
         // Stop the machine
         machine.stop();
@@ -85,7 +85,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacuum::stopAsFailed()
     {
         // Stop all the timers
-        stopVacuumPressureMonitor();
+        timers()->stopVacuumPressureMonitor();
 
         // Stop the machine
         machine.stop();
@@ -106,19 +106,19 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacuum::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sm_startVacuumPressureMonitor);
+        machine.setInitialState(&timers()->sm_startVacuumPressureMonitor);
 
         // Start the vacuum monitor
-        sm_startVacuumPressureMonitor.addTransition(this, &States::MachineStates::emit_timerActive, &sm_timerWait);
+        timers()->sm_startVacuumPressureMonitor.addTransition(this->timers(), &States::Timers::emit_timerActive, &timers()->sm_timerWait);
 
         // Wait for a timer event
-        sm_timerWait.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &m_pressure->sm_vacPressure);
+        timers()->sm_timerWait.addTransition(&timers()->t_vacPressureMonitor, &QTimer::timeout, &m_pressure->sm_vacPressure);
 
         // Read the vacuum sensor
-        m_pressure->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &sm_timerWait);
+        m_pressure->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &timers()->sm_timerWait);
 
         // Account for com issues
-        m_pressure->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sm_timerWait);
+        m_pressure->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
     }
 }}}
 

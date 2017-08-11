@@ -41,7 +41,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("interval", interval);
 
         // Setup timers
-        t_flowControllerTemperatureMonitor.setInterval(interval);
+        timers()->t_flowControllerTemperatureMonitor.setInterval(interval);
     }
 
 
@@ -104,7 +104,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerTemperatures::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sm_startVacuumPressureMonitor);
+        machine.setInitialState(&timers()->sm_startVacuumPressureMonitor);
     }
 }}}
 

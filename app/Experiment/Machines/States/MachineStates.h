@@ -26,6 +26,7 @@
 #include "Vacuum.h"
 #include "Pressure.h"
 #include "Flow.h"
+#include "Timers.h"
 
 namespace App { namespace Experiment { namespace Machines { namespace States
 {
@@ -59,6 +60,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             Vacuum* m_vacuum;
             Pressure* m_pressure;
             Flow* m_flow;
+            Timers* m_timers;
 
 
             // State getters
@@ -66,32 +68,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             Vacuum* vacuum();
             Pressure* pressure();
             Flow* flow();
-
-            // Hold a timer instance for sensors
-            QTimer t_vacPressureMonitor;
-            QTimer t_pressureMonitor;
-            QTimer t_flowControllerFlowMonitor;
-            QTimer t_flowControllerTemperatureMonitor;
-            QTimer t_vacStationTemperatureMonitor;
-            QTimer t_turboSpeedMonitor;
-
-            // Hold a timer instance for events
-            QTimer t_vacTime;   // Vac down timer
+            Timers* timers();
 
             // Create the states for the machine
             QState
-                // Timers
-                sm_startVacuumPressureMonitor
-            ,   sm_startPressureMonitor
-            ,   sm_startFlowControllerFlowMonitor
-            ,   sm_startVacuumTimer
-            ,   sm_timerWait
-            ,   sm_initalWait
-            ,   sm_startFlowControllerTemperatureMonitor
-            ,   sm_startVacStationTemperatureMonitor
-            ,   sm_startTurboSpeedMonitor
                 // Finishing sequence
-            ,   sm_finishVacSession
+                sm_finishVacSession
             ,   // Re-implimention of stop for each machine
                 sm_stop
             ,   sm_stopAsFailed;
@@ -115,45 +97,10 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             void emit_validationFailed(QVariantMap error);
             void emit_validationSuccess(QVariantMap data);
 
-            void emit_stateAlreadySet();
-
-            void emit_timerActive();
-
         public slots:
-            // Finishing sequence
-            void finishVacSession();
-
-
-
             // Re-implimention of stop for each machine
             virtual void stop() = 0;
             virtual void stopAsFailed() = 0;
-
-
-
-            // Timer functions
-            void timerWait();
-
-            void startVacuumPressureMonitor();
-            void stopVacuumPressureMonitor();
-
-            void startPressureMonitor();
-            void stopPressureMonitor();
-
-            void startFlowControllerFlowMonitor();
-            void stopFlowControllerFlowMonitor();
-
-            void startFlowControllerTemperatureMonitor();
-            void stopFlowControllerTemperatureMonitor();
-
-            void startVacStationTemperatureMonitor();
-            void stopVacStationTemperatureMonitor();
-
-            void startTurboSpeedMonitor();
-            void stopTurboSpeedMonitor();
-
-            void startVacuumTimer();
-            void stopVacuumTimer();
 
         private:
             // Connect states to their function

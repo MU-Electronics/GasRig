@@ -41,7 +41,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("flowControllerTimeInter", flowControllerTimeInter);
 
         // Setup timer
-        t_flowControllerFlowMonitor.setInterval(flowControllerTimeInter);
+        timers()->t_flowControllerFlowMonitor.setInterval(flowControllerTimeInter);
     }
 
 
@@ -64,7 +64,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::stop()
     {
         // Stop all the timers
-        stopFlowControllerFlowMonitor();
+        timers()->stopFlowControllerFlowMonitor();
 
         // Stop the machine
         machine.stop();
@@ -85,7 +85,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::stopAsFailed()
     {
         // Stop all the timers
-        stopFlowControllerFlowMonitor();
+        timers()->stopFlowControllerFlowMonitor();
 
         // Stop the machine
         machine.stop();
@@ -106,21 +106,21 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sm_startFlowControllerFlowMonitor);
+        machine.setInitialState(&timers()->sm_startFlowControllerFlowMonitor);
 
         // Start the flow controller flow monitor
-        sm_startFlowControllerFlowMonitor.addTransition(this, &States::MachineStates::emit_timerActive, &sm_timerWait);
+        timers()->sm_startFlowControllerFlowMonitor.addTransition(this->timers(), &States::Timers::emit_timerActive, &timers()->sm_timerWait);
 
         // Wait for a timer event
-        sm_timerWait.addTransition(&t_flowControllerFlowMonitor, &QTimer::timeout, &m_flow->sm_flowControllerOneFlow);
+        timers()->sm_timerWait.addTransition(&timers()->t_flowControllerFlowMonitor, &QTimer::timeout, &m_flow->sm_flowControllerOneFlow);
 
         // Read the flow controller flow sensor
         m_flow->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &m_flow->sm_flowControllerTwoFlow);
-        m_flow->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &sm_timerWait);
+        m_flow->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &timers()->sm_timerWait);
 
         // Account for com issues
-        m_flow->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sm_timerWait);
-        m_flow->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sm_timerWait);
+        m_flow->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
+        m_flow->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
     }
 }}}
 

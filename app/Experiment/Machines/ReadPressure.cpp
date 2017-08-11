@@ -41,7 +41,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("pressureSensorTimeInter", pressureSensorTimeInter);
 
         // Setup timers
-        t_pressureMonitor.setInterval(pressureSensorTimeInter);
+        timers()->t_pressureMonitor.setInterval(pressureSensorTimeInter);
     }
 
 
@@ -64,7 +64,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadPressure::stop()
     {
         // Stop all the timers
-        stopPressureMonitor();
+        timers()->stopPressureMonitor();
 
         // Stop the machine
         machine.stop();
@@ -85,7 +85,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadPressure::stopAsFailed()
     {
         // Stop all the timers
-        stopPressureMonitor();
+        timers()->stopPressureMonitor();
 
         // Stop the machine
         machine.stop();
@@ -106,19 +106,19 @@ namespace App { namespace Experiment { namespace Machines
     void ReadPressure::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sm_startPressureMonitor);
+        machine.setInitialState(&timers()->sm_startPressureMonitor);
 
         // Start the pressure monitor
-        sm_startPressureMonitor.addTransition(this, &States::MachineStates::emit_timerActive, &sm_timerWait);
+        timers()->sm_startPressureMonitor.addTransition(this->timers(), &States::Timers::emit_timerActive, &timers()->sm_timerWait);
 
         // Wait for a timer event
-        sm_timerWait.addTransition(&t_pressureMonitor, &QTimer::timeout, &m_pressure->sm_systemPressure);
+        timers()->sm_timerWait.addTransition(&timers()->t_pressureMonitor, &QTimer::timeout, &m_pressure->sm_systemPressure);
 
         // Read the pressure sensor
-        m_pressure->sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sm_timerWait);
+        m_pressure->sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &timers()->sm_timerWait);
 
         // Account for com issues
-        m_pressure->sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sm_timerWait);
+        m_pressure->sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
 
     }
 }}}

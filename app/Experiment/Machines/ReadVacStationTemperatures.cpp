@@ -41,7 +41,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("interval", interval);
 
         // Setup timers
-        t_vacStationTemperatureMonitor.setInterval(interval);
+        timers()->t_vacStationTemperatureMonitor.setInterval(interval);
     }
 
 

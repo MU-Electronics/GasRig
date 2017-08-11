@@ -41,6 +41,10 @@ namespace App { namespace Experiment { namespace Machines
             void emit_vacDownFinished(QVariantMap params);
             void emit_vacDownFailed(QVariantMap params);
 
+        public slots:
+            // Finishing sequence
+            void finish();
+
         private:
             // Referance to QObject
             QObject *parent;
