@@ -112,13 +112,13 @@ namespace App { namespace Experiment { namespace Machines
         timers()->sm_startVacuumPressureMonitor.addTransition(this->timers(), &States::Timers::emit_timerActive, &timers()->sm_timerWait);
 
         // Wait for a timer event
-        timers()->sm_timerWait.addTransition(&timers()->t_vacPressureMonitor, &QTimer::timeout, &m_pressure->sm_vacPressure);
+        timers()->sm_timerWait.addTransition(&timers()->t_vacPressureMonitor, &QTimer::timeout, &pressure()->sm_vacPressure);
 
         // Read the vacuum sensor
-        m_pressure->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &timers()->sm_timerWait);
+        pressure()->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &timers()->sm_timerWait);
 
         // Account for com issues
-        m_pressure->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
+        pressure()->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
     }
 }}}
 

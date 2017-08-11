@@ -112,15 +112,15 @@ namespace App { namespace Experiment { namespace Machines
         timers()->sm_startFlowControllerFlowMonitor.addTransition(this->timers(), &States::Timers::emit_timerActive, &timers()->sm_timerWait);
 
         // Wait for a timer event
-        timers()->sm_timerWait.addTransition(&timers()->t_flowControllerFlowMonitor, &QTimer::timeout, &m_flow->sm_flowControllerOneFlow);
+        timers()->sm_timerWait.addTransition(&timers()->t_flowControllerFlowMonitor, &QTimer::timeout, &flow()->sm_flowControllerOneFlow);
 
         // Read the flow controller flow sensor
-        m_flow->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &m_flow->sm_flowControllerTwoFlow);
-        m_flow->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &timers()->sm_timerWait);
+        flow()->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &flow()->sm_flowControllerTwoFlow);
+        flow()->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &timers()->sm_timerWait);
 
         // Account for com issues
-        m_flow->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
-        m_flow->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
+        flow()->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
+        flow()->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
     }
 }}}
 
