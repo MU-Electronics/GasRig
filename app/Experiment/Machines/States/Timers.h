@@ -58,6 +58,9 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             // Hold a timer instance for events
             QTimer t_vacTime;   // Vac down timer
+            QTimer t_pulseValveOpen; // How long to open pulse valve
+            QTimer t_pulseValveClose; // How long to close pulse valve
+
 
             // Create the states for the machine
             QState
@@ -68,9 +71,14 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             ,   sm_startVacuumTimer
             ,   sm_timerWait
             ,   sm_initalWait
+            ,   sm_timerWaitTwo
+            ,   sm_timerWaitThree
+            ,   sm_timerWaitFour
             ,   sm_startFlowControllerTemperatureMonitor
             ,   sm_startVacStationTemperatureMonitor
-            ,   sm_startTurboSpeedMonitor;
+            ,   sm_startTurboSpeedMonitor
+            ,   sm_startPulseValveOpenTimer
+            ,   sm_startPulseValveCloseTimer;
 
 
             // Create command validator states
@@ -92,6 +100,9 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         public slots:
             // Timer functions
             void timerWait();
+            void timerWaitTwo();
+            void timerWaitThree();
+            void timerWaitFour();
 
             void startVacuumPressureMonitor();
             void stopVacuumPressureMonitor();
@@ -113,6 +124,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             void startVacuumTimer();
             void stopVacuumTimer();
+
+            void startPulseValveOpenTimer();
+            void stopPulseValveOpenTimer();
+
+            void startPulseValveCloseTimer();
+            void stopPulseValveCloseTimer();
 
         private:
 

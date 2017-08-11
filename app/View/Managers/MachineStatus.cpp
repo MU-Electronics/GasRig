@@ -31,6 +31,13 @@ namespace App { namespace View { namespace Managers
         m_vacDownMachine.insert("gasMode", 0);
         m_vacDownMachine.insert("mode", 0);
 
+        // Default values for vac state machine
+        m_pulseValveMachine.insert("status", false);
+        m_pulseValveMachine.insert("valve", -1);
+        m_pulseValveMachine.insert("cycles", -1);
+        m_pulseValveMachine.insert("timeOpen", -1);
+        m_pulseValveMachine.insert("timeClosed", -1);
+
     }
 
 
@@ -50,8 +57,34 @@ namespace App { namespace View { namespace Managers
         // Connect signals to and from experiment engine
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_vacDownMachineStarted, this, &MachineStatus::vacDownStarted);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_vacDownMachineStopped, this, &MachineStatus::vacDownStopped);
+
+        // Connect signals to and from experiment engine
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStarted, this, &MachineStatus::pulseValveStarted);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStopped, this, &MachineStatus::pulseValveStopped);
     }
 
+
+
+    void MachineStatus::pulseValveStarted(int valve, int cycles, int timeOpen, int timeClosed)
+    {
+        m_pulseValveMachine.insert("status", true);
+        m_pulseValveMachine.insert("valve", valve);
+        m_pulseValveMachine.insert("cycles", cycles);
+        m_pulseValveMachine.insert("timeOpen", timeOpen);
+        m_pulseValveMachine.insert("timeClosed", timeClosed);
+
+        // Emit that there was an update
+        emit emit_pulseValveMachineChanged(m_pulseValveMachine);
+    }
+
+    void MachineStatus::pulseValveStopped()
+    {
+        // Update the vac machine status
+        m_pulseValveMachine.insert("status", false);
+
+        // Emit that there was an update
+        emit emit_pulseValveMachineChanged(m_pulseValveMachine);
+    }
 
 
     /**

@@ -70,9 +70,11 @@ namespace App { namespace View { namespace Managers
             void requestValveStateSafe(int port, bool state);
             void requestOutputPressure(int frequency);
             void requestVacDown(int mintues, bool turbo, int gasMode, int mode);
+            void requestPulseValve(int valve, int cycles, int timeOpen, int timeClosed);
 
             // Request experiment methods to be stopped
             void requestVacDownStop();
+            void requestPulseValveStop();
 
 
 

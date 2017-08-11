@@ -40,6 +40,40 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
+            enabled: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
+            Text {
+                text: qsTr("Select valve:          ")
+                color: "#777777"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+            }
+            ComboBox {
+                id: setPulseValve_valveId
+                height: parent.height
+                width: parent.width - 170
+                textRole: "key"
+                model: ListModel {
+                    ListElement { key: "Valve 1 (Output port)"; value: 1 }
+                    ListElement { key: "Valve 2 (Slow exhuast path)"; value: 2 }
+                    ListElement { key: "Valve 3 (Exhaust port)"; value: 3 }
+                    ListElement { key: "Valve 4 (Fast exhaust path)"; value: 4 }
+                    ListElement { key: "Valve 5 (Vacuum In)"; value: 5 }
+                    ListElement { key: "Valve 6 (Vacuum Out)"; value: 6 }
+                    ListElement { key: "Valve 7 (High Pressure In)"; value: 7 }
+                    ListElement { key: "Valve 8 (High Pressure Nitrogen In)"; value: 8 }
+                    ListElement { key: "Valve 9 (Flow Controllers)"; value: 9 }
+                }
+            }
+        }
+
+        Row
+        {
+            spacing: 10
+            width: parent.width
+            height: 50
+            enabled: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
             Text {
                 text: qsTr("Number of cycles: ")
                 color: "#777777"
@@ -51,11 +85,11 @@ FluidControls.Card
             TextField
             {
                 id: setPulseValve_numberCycles
-                validator: IntValidator { bottom:1; top: 1000 }
+                validator: IntValidator { bottom:1; top: 10000 }
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: parent.width - 170
-                placeholderText: "1 minimum, 1000 maximum"
+                placeholderText: "1 minimum, 10000 maximum"
             }
         }
 
@@ -64,6 +98,7 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
+            enabled: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
             Text {
                 text: qsTr("Time open (ms):    ")
                 color: "#777777"
@@ -79,7 +114,7 @@ FluidControls.Card
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: parent.width - 170
-                placeholderText: "100 minimum, 1000 maximum"
+                placeholderText: "100 minimum, 10000 maximum"
             }
         }
 
@@ -88,6 +123,7 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
+            enabled: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
             Text {
                 text: qsTr("Time closed (ms):  ")
                 color: "#777777"
@@ -103,7 +139,7 @@ FluidControls.Card
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: parent.width - 170
-                placeholderText: "100 minimum, 1000 maximum"
+                placeholderText: "100 minimum, 10000 maximum"
             }
         }
 
@@ -121,15 +157,28 @@ FluidControls.Card
             CheckBox {
                 id:setPulseValve_confirm
                 checked: false
+                enabled: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
                 text: qsTr("Comfirm rig setup")
             }
             Button
             {
                 text: qsTr("Pulse Valve")
                 enabled: (setPulseValve_confirm.checked) ? true : false;
+                visible: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
                 onClicked:
                 {
-                    TestingManager.requestHighPressure(setHighPressure_pressure.text);
+                    TestingManager.requestPulseValve(setPulseValve_valveId.model.get(setPulseValve_valveId.currentIndex).value, setPulseValve_numberCycles.text, setPulseValve_timeOpen.text, setPulseValve_timeClosed.text);
+                }
+            }
+
+            Button
+            {
+                text: qsTr("Stop Pulse Valve")
+                enabled: (setPulseValve_confirm.checked) ? true : false;
+                visible: (MachineStatusManager.pulseValveMachine["status"] === true) ? 1 : 0;
+                onClicked:
+                {
+                    TestingManager.requestPulseValveStop();
                 }
             }
         }

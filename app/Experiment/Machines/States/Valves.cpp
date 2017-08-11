@@ -227,12 +227,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Valves::closeSlowExhuastPath()
     {
-        valveHelper("4", false);
+        valveHelper("2", false);
     }
 
     void Valves::closeFastExhuastPath()
     {
-        valveHelper("2", false);
+        valveHelper("4", false);
     }
 
     void Valves::closeVacuumIn()
@@ -278,12 +278,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Valves::validateCloseSlowExhuastPath()
     {
-        validateValveHelper("4", false);
+        validateValveHelper("2", false);
     }
 
     void Valves::validateCloseFastExhuastPath()
     {
-        validateValveHelper("2", false);
+        validateValveHelper("4", false);
     }
 
     void Valves::validateCloseVacuumIn()
@@ -328,12 +328,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Valves::openSlowExhuastPath()
     {
-        valveHelper("4", true);
+        valveHelper("2", true);
     }
 
     void Valves::openFastExhuastPath()
     {
-        valveHelper("2", true);
+        valveHelper("4", true);
     }
 
     void Valves::openVacuumIn()
@@ -377,12 +377,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Valves::validateOpenSlowExhuastPath()
     {
-        validateValveHelper("4", true);
+        validateValveHelper("2", true);
     }
 
     void Valves::validateOpenFastExhuastPath()
     {
-        validateValveHelper("2", true);
+        validateValveHelper("4", true);
     }
 
     void Valves::validateOpenVacuumIn()

@@ -12,6 +12,7 @@
 #include "ReadFlowControllerTemperatures.h"
 #include "ReadTurboSpeed.h"
 #include "ReadVacStationTemperatures.h"
+#include "PulseValve.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -36,6 +37,9 @@ namespace App { namespace Experiment { namespace Machines
             int exhuast(double pressure, int frequency, int speed);
             void stopExhuast();
 
+            int pulseValve(int valve, int cycles, int timeOpen, int timeClosed);
+            void stopPulseValve();
+
             int setHighPressure(double pressure, int input, int frequency);
             void stopSetHighPressure();
 
@@ -54,6 +58,9 @@ namespace App { namespace Experiment { namespace Machines
 
             void emit_safeValveMachineStarted(int id, bool state);
 
+            void emit_pulseValveStarted(int valve, int cycles, int timeOpen, int timeClosed);
+            void emit_pulseValveStopped();
+
             void emit_sensorReadingsMachineStarted(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter, int turboSpeedTimeInter, int vacStationTemperTimeInter, int flowControlTempTimeInter);
             void emit_sensorReadingsMachineStopped();
             void emit_sensorsNotBeingMonitored();
@@ -66,6 +73,9 @@ namespace App { namespace Experiment { namespace Machines
 
             void valveStateFinished(QVariantMap params);
             void valveStateFailed(QVariantMap params);
+
+            void pulseValveFinished(QVariantMap params);
+            void pulseValveFailed(QVariantMap params);
 
             void sensorReadingsFinished(QVariantMap params);
             void sensorReadingsFailed(QVariantMap params);
@@ -83,6 +93,7 @@ namespace App { namespace Experiment { namespace Machines
             ReadFlowControllerTemperatures& m_readFlowControllerTemperatures;
             ReadTurboSpeed& m_readTurboSpeed;
             ReadVacStationTemperatures& m_readVacStationTemperatures;
+            PulseValve& m_pulseValve;
 
             // Error
             int machineFailedToStart(int errorCode);

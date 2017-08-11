@@ -36,10 +36,15 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   t_vacStationTemperatureMonitor(parent)
         ,   t_turboSpeedMonitor(parent)
         ,   t_vacTime(parent)
+        ,   t_pulseValveOpen(parent)
+        ,   t_pulseValveClose(parent)
 
             // Timers
         ,   sm_initalWait(&machine)
         ,   sm_timerWait(&machine)
+        ,   sm_timerWaitTwo(&machine)
+        ,   sm_timerWaitThree(&machine)
+        ,   sm_timerWaitFour(&machine)
         ,   sm_startVacuumPressureMonitor(&machine)
         ,   sm_startPressureMonitor(&machine)
         ,   sm_startFlowControllerFlowMonitor(&machine)
@@ -47,6 +52,8 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   sm_startVacStationTemperatureMonitor(&machine)
         ,   sm_startTurboSpeedMonitor(&machine)
         ,   sm_startVacuumTimer(&machine)
+        ,   sm_startPulseValveOpenTimer(&machine)
+        ,   sm_startPulseValveCloseTimer(&machine)
 
     {
         // Connect object signals to hardware slots and visa versa
@@ -63,17 +70,26 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Timers::connectStatesToMethods()
     {
-        // Link the timer states
+        // Timer waiting states
         connect(&sm_initalWait, &QState::entered, this, &Timers::timerWait);
         connect(&sm_timerWait, &QState::entered, this, &Timers::timerWait);
-        connect(&sm_startVacuumPressureMonitor, &QState::entered, this, &Timers::startVacuumPressureMonitor);
-        connect(&sm_startPressureMonitor, &QState::entered, this, &Timers::startPressureMonitor);
-        connect(&sm_startFlowControllerFlowMonitor, &QState::entered, this, &Timers::startFlowControllerFlowMonitor);
-        connect(&sm_startVacuumTimer, &QState::entered, this, &Timers::startVacuumTimer);
 
+        // Pressure related timers
+        connect(&sm_startPressureMonitor, &QState::entered, this, &Timers::startPressureMonitor);
+        connect(&sm_startVacuumPressureMonitor, &QState::entered, this, &Timers::startVacuumPressureMonitor);
+
+        // Flow controller timers
+        connect(&sm_startFlowControllerFlowMonitor, &QState::entered, this, &Timers::startFlowControllerFlowMonitor);
         connect(&sm_startFlowControllerTemperatureMonitor, &QState::entered, this, &Timers::startFlowControllerTemperatureMonitor);
+
+        // Vacuum timers
+        connect(&sm_startVacuumTimer, &QState::entered, this, &Timers::startVacuumTimer);
         connect(&sm_startVacStationTemperatureMonitor, &QState::entered, this, &Timers::startVacStationTemperatureMonitor);
         connect(&sm_startTurboSpeedMonitor, &QState::entered, this, &Timers::startTurboSpeedMonitor);
+
+        // Valve timers
+        connect(&sm_startPulseValveOpenTimer, &QState::entered, this, &Timers::startPulseValveOpenTimer);
+        connect(&sm_startPulseValveCloseTimer, &QState::entered, this, &Timers::startPulseValveCloseTimer);
     }
 
 
@@ -84,6 +100,90 @@ namespace App { namespace Experiment { namespace Machines { namespace States
      */
     void Timers::timerWait()
     {
+    }
+
+    /**
+     * Empty state to wait for timer events
+     *
+     * @brief MachineStates::timerWait
+     */
+    void Timers::timerWaitTwo()
+    {
+    }
+
+    /**
+     * Empty state to wait for timer events
+     *
+     * @brief MachineStates::timerWait
+     */
+    void Timers::timerWaitThree()
+    {
+    }
+
+    /**
+     * Empty state to wait for timer events
+     *
+     * @brief MachineStates::timerWait
+     */
+    void Timers::timerWaitFour()
+    {
+    }
+
+
+
+
+    /**
+     * The timer for how long to vac down for
+     *
+     * @brief Timers::startPulseValveOpenTimer
+     */
+    void Timers::startPulseValveOpenTimer()
+    {
+        if(!t_pulseValveOpen.isActive())
+        {
+            // Setup timer
+            t_pulseValveOpen.setSingleShot(true);
+            t_pulseValveOpen.start();
+        }
+
+        emit emit_timerActive();
+    }
+
+    /**
+     * Stop the vac down timer
+     *
+     * @brief Timers::stopPulseValveOpenTimer
+     */
+    void Timers::stopPulseValveOpenTimer()
+    {
+        t_pulseValveOpen.stop();
+    }
+
+    /**
+     * The timer for how long to vac down for
+     *
+     * @brief Timers::startPulseValveOpenTimer
+     */
+    void Timers::startPulseValveCloseTimer()
+    {
+        if(!t_pulseValveClose.isActive())
+        {
+            // Setup timer
+            t_pulseValveClose.setSingleShot(true);
+            t_pulseValveClose.start();
+        }
+
+        emit emit_timerActive();
+    }
+
+    /**
+     * Stop the vac down timer
+     *
+     * @brief Timers::stopPulseValveOpenTimer
+     */
+    void Timers::stopPulseValveCloseTimer()
+    {
+        t_pulseValveClose.stop();
     }
 
 

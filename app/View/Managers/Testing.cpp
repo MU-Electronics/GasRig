@@ -770,7 +770,6 @@ namespace App { namespace View { namespace Managers
 
     void Testing::requestValveStateSafe(int port, bool state)
     {
-        qDebug() << "Running valve safe method";
         if(state)
         {
             m_experimentEngine.machines().valveOpen(port);
@@ -789,6 +788,16 @@ namespace App { namespace View { namespace Managers
     void Testing::requestVacDownStop()
     {
         m_experimentEngine.machines().stopVacDown();
+    }
+
+    void Testing::requestPulseValve(int valve, int cycles, int timeOpen, int timeClosed)
+    {
+        m_experimentEngine.machines().pulseValve(valve, cycles, timeOpen, timeClosed);
+    }
+
+    void Testing::requestPulseValveStop()
+    {
+        m_experimentEngine.machines().stopPulseValve();
     }
 
 }}}

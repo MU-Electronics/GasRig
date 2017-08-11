@@ -3,16 +3,6 @@
 // Include external libs
 #include <QDebug>
 
-// Include state machine
-#include "VacDown.h"
-#include "SafeValve.h"
-#include "ReadFlowControllerFlow.h"
-#include "ReadPressure.h"
-#include "ReadVacuum.h"
-#include "ReadFlowControllerTemperatures.h"
-#include "ReadTurboSpeed.h"
-#include "ReadVacStationTemperatures.h"
-
 namespace App { namespace Experiment { namespace Machines
 {
 
@@ -26,6 +16,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_readFlowControllerTemperatures(*new ReadFlowControllerTemperatures(parent, settings, hardware, safety))
         ,   m_readTurboSpeed(*new ReadTurboSpeed(parent, settings, hardware, safety))
         ,   m_readVacStationTemperatures(*new ReadVacStationTemperatures(parent, settings, hardware, safety))
+        ,   m_pulseValve(*new PulseValve(parent, settings, hardware, safety))
     {
         // Connect the finished signals for the machine vac down
         connect(&m_vacDown, &VacDown::emit_vacDownFinished, this, &Machines::vacDownFinished);
@@ -34,6 +25,10 @@ namespace App { namespace Experiment { namespace Machines
         // Connect the finished signals for the machine safe valve
         connect(&m_safeValve, &SafeValve::emit_safeValveFinished, this, &Machines::valveStateFinished);
         connect(&m_safeValve, &SafeValve::emit_safeValveFailed, this, &Machines::valveStateFailed);
+
+        // Connect the finished signals for the pulse valve
+        connect(&m_pulseValve, &PulseValve::emit_pulseValveFinished, this, &Machines::pulseValveFinished);
+        connect(&m_pulseValve, &PulseValve::emit_pulseValveFinished, this, &Machines::pulseValveFailed);
 
         // Connect the finished signals for the machine sensor readings
         connect(&m_readFlowControllerFlow, &ReadFlowControllerFlow::emit_readFlowControllerFlowStopped, this, &Machines::sensorReadingsFinished);
@@ -341,6 +336,73 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopExhuast()
     {
 
+    }
+
+
+
+
+
+
+
+    /**
+     * Start a new exhuast state machine running
+     *
+     * @brief Machines::exhuast
+     * @param frequency
+     * @param speed
+     */
+    int Machines::pulseValve(int valve, int cycles, int timeOpen, int timeClosed)
+    {
+        // Set the params
+        m_pulseValve.setParams(valve, cycles, timeOpen, timeClosed);
+
+        // Build the machine
+        m_pulseValve.buildMachine();
+
+        // Start the machine
+        m_pulseValve.start();
+
+        // Emit machine started
+        emit emit_pulseValveStarted(valve, cycles, timeOpen, timeClosed);
+
+        // Return success
+        return 1;
+    }
+
+    /**
+     * Stops a running instance of pulse valve state machine
+     *
+     * @brief Machines::stopExhuast
+     */
+    void Machines::stopPulseValve()
+    {
+        // Stop the pulse valve machine
+        m_pulseValve.stop();
+
+        // Tell everyone we've stopped the machine
+        emit emit_pulseValveStopped();
+    }
+
+    /**
+     * This method is trigged if the state machine finished
+     *
+     * @brief Machine::vacDownFinished
+     */
+    void Machines::pulseValveFinished(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_pulseValveStopped();
+    }
+
+    /**
+     * This method is trigged if the state machine failed
+     *
+     * @brief Machine::vacDownFailed
+     */
+    void Machines::pulseValveFailed(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_pulseValveStopped();
     }
 
 

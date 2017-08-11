@@ -16,13 +16,14 @@ import "../../../parts"
 FluidControls.Card
 {
     width: parent.width-10
-    height: 190
+    height: valveStatusContainer.height + 30
 
     padding: 5
 
 
     Column
     {
+        id: valveStatusContainer
         spacing: 0
         width: parent.width
         AlertBox
