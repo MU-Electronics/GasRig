@@ -110,7 +110,7 @@ FluidControls.Card
             TextField
             {
                 id: setPulseValve_timeOpen
-                validator: IntValidator { bottom:100; top: 1000 }
+                validator: IntValidator { bottom:1; top: 10000 }
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: parent.width - 170
@@ -135,7 +135,7 @@ FluidControls.Card
             TextField
             {
                 id: setPulseValve_timeClosed
-                validator: IntValidator { bottom:100; top: 1000 }
+                validator: IntValidator { bottom:1; top: 10000 }
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: parent.width - 170
@@ -145,8 +145,8 @@ FluidControls.Card
 
         Row{
             spacing: 20
-            opacity: ((!setPulseValve_numberCycles.text) || (setPulseValve_timeOpen.text < 100) || (setPulseValve_timeClosed.text < 100)) ? 0 : 1;
-            height: ((!setPulseValve_numberCycles.text) || (setPulseValve_timeOpen.text < 100) || (setPulseValve_timeClosed.text < 100)) ? 0 : 50;
+            opacity: ((!setPulseValve_numberCycles.text) || (setPulseValve_timeOpen.text < 1) || (setPulseValve_timeClosed.text < 1)) ? 0 : 1;
+            height: ((!setPulseValve_numberCycles.text) || (setPulseValve_timeOpen.text < 1) || (setPulseValve_timeClosed.text < 1)) ? 0 : 50;
             width: parent.width
             Behavior on opacity {
                 NumberAnimation {
