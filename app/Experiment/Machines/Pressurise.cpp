@@ -52,6 +52,8 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_pulseValveTwo(this)
         ,   t_pulseValveSeven(this)
     {
+        // Connect signals and slots
+        connectStatesToMethods();
     }
 
     Pressurise::~Pressurise()
@@ -270,7 +272,7 @@ namespace App { namespace Experiment { namespace Machines
         sml_startValveOneTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_startValveSevenTimer);
 
         // Set timer for valve 7
-        sml_startValveSevenTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_startValveTwoTimer);
+        sml_startValveSevenTimer.addTransition(this, &Pressurise::emit_timerActive, &valves()->sm_openHighPressureInput);
 
 
 
@@ -374,8 +376,8 @@ namespace App { namespace Experiment { namespace Machines
         double currentPressure = package.value("pressure").toDouble();
 
         // Calculate the boundary desired pressure
-        int max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_one").toDouble();
-        int min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_one").toDouble();
+        double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_one").toDouble();
+        double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_one").toDouble();
 
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
@@ -419,9 +421,9 @@ namespace App { namespace Experiment { namespace Machines
         double currentPressure = package.value("pressure").toDouble();
 
         // Calculate the boundary desired pressure
-        int max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
-        int min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
-
+        double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
+        double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
+qDebug() << "validating valie 2";
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
         {
@@ -464,9 +466,9 @@ namespace App { namespace Experiment { namespace Machines
         double currentPressure = package.value("pressure").toDouble();
 
         // Calculate the boundary desired pressure
-        int max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
-        int min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
-
+        double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
+        double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
+        qDebug() << "validating valie 7";
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
         {
@@ -513,6 +515,8 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         emit emit_timerActive();
+
+        qDebug() << "timer 1";
     }
 
     /**
@@ -541,6 +545,8 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         emit emit_timerActive();
+
+        qDebug() << "timer 2";
     }
 
     /**
@@ -570,6 +576,8 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         emit emit_timerActive();
+
+        qDebug() << "timer 7";
     }
 
     /**
