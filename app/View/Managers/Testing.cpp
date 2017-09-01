@@ -737,7 +737,7 @@ namespace App { namespace View { namespace Managers
     {
         qDebug() << "Running high pressure";
 
-        m_experimentEngine.machines().setHighPressure(pressure.toDouble(), 1, 0.3);
+        m_experimentEngine.machines().setPressure(pressure.toInt(), 1, 0.3);
     }
 
     void Testing::requestExhuast(int filterType, int frequency)

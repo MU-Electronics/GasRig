@@ -2,6 +2,7 @@
 
 // Include external libs
 #include <QDebug>
+#include <QThread>
 
 // Include state machine
 #include "VacDown.h"
@@ -13,6 +14,7 @@
 #include "ReadTurboSpeed.h"
 #include "ReadVacStationTemperatures.h"
 #include "PulseValve.h"
+#include "Pressurise.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -23,6 +25,8 @@ namespace App { namespace Experiment { namespace Machines
 
         public:
             Machines(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety);
+
+            void stateMachinesToThread();
 
             int vacDown(int mintues, bool turbo, int gasMode, int mode);
             void stopVacDown();
@@ -40,8 +44,8 @@ namespace App { namespace Experiment { namespace Machines
             int pulseValve(int valve, int cycles, int timeOpen, int timeClosed);
             void stopPulseValve();
 
-            int setHighPressure(double pressure, int input, int frequency);
-            void stopSetHighPressure();
+            int setPressure(double pressure, int input, int frequency);
+            void stopSetPressure();
 
             int outputPressure(int frequency);
             void stopOutputPressure();
@@ -66,6 +70,8 @@ namespace App { namespace Experiment { namespace Machines
             void emit_sensorsNotBeingMonitored();
 
             void emit_purgeSystemMachineState(bool state);
+
+            void emit_pressuriseStarted(double pressure, int input, int frequency);
 
         public slots:
             void vacDownFinished(QVariantMap params);
@@ -94,6 +100,10 @@ namespace App { namespace Experiment { namespace Machines
             ReadTurboSpeed& m_readTurboSpeed;
             ReadVacStationTemperatures& m_readVacStationTemperatures;
             PulseValve& m_pulseValve;
+            Pressurise& m_pressurise;
+
+            // Sensor reading thread
+            QThread thread_sensorReadings;
 
             // Error
             int machineFailedToStart(int errorCode);

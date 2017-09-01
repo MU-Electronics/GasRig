@@ -17,6 +17,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_readTurboSpeed(*new ReadTurboSpeed(parent, settings, hardware, safety))
         ,   m_readVacStationTemperatures(*new ReadVacStationTemperatures(parent, settings, hardware, safety))
         ,   m_pulseValve(*new PulseValve(parent, settings, hardware, safety))
+        ,   m_pressurise(*new Pressurise(parent, settings, hardware, safety))
     {
         // Connect the finished signals for the machine vac down
         connect(&m_vacDown, &VacDown::emit_vacDownFinished, this, &Machines::vacDownFinished);
@@ -56,6 +57,18 @@ namespace App { namespace Experiment { namespace Machines
     }
 
 
+
+    /**
+     * Move state machines to there own thread
+     *
+     * @brief Machines::stateMachinesToThread
+     */
+    void Machines::stateMachinesToThread()
+    {
+
+    }
+
+
     /**
      * Helper method to produce error responces
      *
@@ -92,7 +105,7 @@ namespace App { namespace Experiment { namespace Machines
      * @param flowControllerTimeInter
      */
     int Machines::sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter, int turboSpeedTimeInter, int vacStationTemperTimeInter, int flowControlTempTimeInter)
-    {
+    {        
         // Set the params for the three sensor machines
         m_readFlowControllerFlow.setParams(flowControllerTimeInter);
         m_readPressure.setParams(pressureSensorTimeInter);
@@ -415,18 +428,25 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start a new set high pressure state machine running
      *
-     * @brief Machines::setHighPressure
+     * @brief Machines::setPressure
      * @param pressure
      * @param input
      * @param frequency
      */
-    int Machines::setHighPressure(double pressure, int input, int frequency)
+    int Machines::setPressure(double pressure, int input, int frequency)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
-        // @todo Load machine here
+        // Build the machine
+        m_pressurise.buildMachine();
+
+        // Start the machine
+        m_pressurise.start();
+
+        // Emit machine started
+        emit emit_pressuriseStarted(pressure, input, frequency);
 
         // Return success
         return 1;
@@ -436,9 +456,9 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Stops a running instance of  state machine
      *
-     * @brief Machines::stopSetHighPressure
+     * @brief Machines::stopSetPressure
      */
-    void Machines::stopSetHighPressure()
+    void Machines::stopSetPressure()
     {
 
     }
