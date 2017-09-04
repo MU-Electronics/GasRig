@@ -78,7 +78,7 @@ namespace App { namespace Experiment { namespace Machines
         // Addtional states
 
         // Copy states that are used more than once to make then unique
-        connect(&sml_closeHighPressureInput_2, &QState::entered, this, &Pressurise::testMethod);
+        connect(&sml_closeHighPressureInput_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
         connect(&sml_closeOutput_2, &QState::entered, this->valves(), &States::Valves::closeOutput);
         connect(&sml_closeSlowExhuastPath_2, &QState::entered, this->valves(), &States::Valves::closeSlowExhuastPath);
 
