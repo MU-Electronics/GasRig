@@ -100,7 +100,6 @@ SOURCES += \
     app/Experiment/Machines/ReadFlowControllerTemperatures.cpp \
     app/Experiment/Machines/ReadVacStationTemperatures.cpp \
     app/Experiment/Machines/ReadTurboSpeed.cpp \
-    app/View/QmlTypes/RigDiagram.cpp \
     app/Experiment/Machines/States/Valves.cpp \
     app/Experiment/Machines/States/Vacuum.cpp \
     app/Experiment/Machines/States/Flow.cpp \
@@ -186,7 +185,6 @@ HEADERS += \
     app/Experiment/Machines/ReadFlowControllerTemperatures.h \
     app/Experiment/Machines/ReadVacStationTemperatures.h \
     app/Experiment/Machines/ReadTurboSpeed.h \
-    app/View/QmlTypes/RigDiagram.h \
     app/Experiment/Machines/States/Valves.h \
     app/Experiment/Machines/States/Vacuum.h \
     app/Experiment/Machines/States/Flow.h \

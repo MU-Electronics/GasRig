@@ -56,7 +56,7 @@ namespace App { namespace Experiment { namespace Machines
 
         public slots:
             // States
-
+            void testMethod();
 
             // Validator states
             void validatePressureAfterValveOne();
@@ -72,7 +72,7 @@ namespace App { namespace Experiment { namespace Machines
             void stopValveTwoPulseTimer();
             void stopValveSevenPulseTimer();
 
-        private:
+        public:
             // Referance to QObject
             QObject *parent;
 

@@ -61,7 +61,7 @@ namespace App { namespace Experiment { namespace Machines
 
     }
 
-
+    void Pressurise::testMethod() { qDebug() << "in method"; }
     /**
      * Connect local states to methods
      *
@@ -74,16 +74,17 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_startValveTwoTimer, &QState::entered, this, &Pressurise::startValveTwoPulseTimer);
         connect(&sml_startValveSevenTimer, &QState::entered, this, &Pressurise::startValveSevenPulseTimer);
 
+        connect(&sml_waitForValveOneTimer, &QState::entered, this, &Pressurise::testMethod);
         // Addtional states
 
         // Copy states that are used more than once to make then unique
-        connect(&sml_closeHighPressureInput_2, &QState::entered, MachineStates::valves(), &States::Valves::closeHighPressureInput);
-        connect(&sml_closeSlowExhuastPath_2, &QState::entered, MachineStates::valves(), &States::Valves::closeOutput);
-        connect(&sml_validateCloseSlowExhuastPath_2, &QState::entered, MachineStates::valves(), &States::Valves::closeSlowExhuastPath);
+        connect(&sml_closeHighPressureInput_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
+        connect(&sml_closeOutput_2, &QState::entered, this->valves(), &States::Valves::closeOutput);
+        connect(&sml_closeSlowExhuastPath_2, &QState::entered, this->valves(), &States::Valves::closeSlowExhuastPath);
 
-        connect(&sml_validateCloseHighPressureInput_2, &States::CommandValidatorState::entered, MachineStates::valves(), &States::Valves::validateCloseHighPressureInput);
-        connect(&sml_closeSlowExhuastPath_2, &States::CommandValidatorState::entered, MachineStates::valves(), &States::Valves::validateCloseOutput);
-        connect(&sml_validateCloseSlowExhuastPath_2, &States::CommandValidatorState::entered, MachineStates::valves(), &States::Valves::validateCloseSlowExhuastPath);
+        connect(&sml_validateCloseHighPressureInput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureInput);
+        connect(&sml_validateCloseOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseOutput);
+        connect(&sml_validateCloseSlowExhuastPath_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseSlowExhuastPath);
 
         // Addtional validator states
         connect(&sml_validatePressureAfterValveOne, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveOne);
@@ -104,7 +105,7 @@ namespace App { namespace Experiment { namespace Machines
     void Pressurise::setParams(double pressure, int input, int frequency)
     {
         // What is the target pressure
-        params.insert("pressure", pressure);
+        params.insert("pressure", 5000);
 
         // What is the step size in pressure
         params.insert("step_size", 2000);
@@ -115,10 +116,10 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("tolerance_valve_one", 300);
 
         // How fast to pulse valve 7
-        params.insert("valve_7_pulse", 50);
+        params.insert("valve_7_pulse", 1000);
 
         // How fast to pulse valve 2
-        params.insert("valve_2_pulse", 15);
+        params.insert("valve_2_pulse", 1000);
 
         // How fast to pulse valve 1
         params.insert("valve_1_pulse", 5000);
@@ -366,6 +367,8 @@ namespace App { namespace Experiment { namespace Machines
 
     void Pressurise::validatePressureAfterValveOne()
     {
+        qDebug() << "validate valve 1";
+
         // Get the validator state instance
         States::CommandValidatorState* state = (States::CommandValidatorState*)sender();
 
@@ -411,6 +414,8 @@ namespace App { namespace Experiment { namespace Machines
 
     void Pressurise::validatePressureAfterValveTwo()
     {
+        qDebug() << "validate valve 2";
+
         // Get the validator state instance
         States::CommandValidatorState* state = (States::CommandValidatorState*)sender();
 
@@ -423,7 +428,7 @@ namespace App { namespace Experiment { namespace Machines
         // Calculate the boundary desired pressure
         double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
         double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
-qDebug() << "validating valie 2";
+
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
         {
@@ -456,6 +461,7 @@ qDebug() << "validating valie 2";
 
     void Pressurise::validatePressureAfterValveSeven()
     {
+       qDebug() << "validate valve 7";
         // Get the validator state instance
         States::CommandValidatorState* state = (States::CommandValidatorState*)sender();
 
@@ -468,7 +474,7 @@ qDebug() << "validating valie 2";
         // Calculate the boundary desired pressure
         double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
         double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
-        qDebug() << "validating valie 7";
+
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
         {
@@ -573,11 +579,12 @@ qDebug() << "validating valie 2";
             // Setup timer
             t_pulseValveSeven.setSingleShot(false);
             t_pulseValveSeven.start();
+            qDebug() << "timer 7 enavled";
         }
 
         emit emit_timerActive();
 
-        qDebug() << "timer 7";
+        qDebug() << "timer 7 retunred";
     }
 
     /**

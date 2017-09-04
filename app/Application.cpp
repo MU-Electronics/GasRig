@@ -9,9 +9,6 @@
 #include <QString>
 #include <QDebug>
 
-// Include qml types
-#include "View/QmlTypes/RigDiagram.h"
-
 // Include view manangers
 #include "View/Managers/Testing.h"
 #include "View/Managers/ConnectionStatus.h"
@@ -144,7 +141,7 @@ namespace App
     void Application::registerQmlTypes()
     {
         // Rig diagram qml type
-        qmlRegisterType<App::View::QmlTypes::RigDiagram>("App", 1, 0, "RigDiagram");
+        //qmlRegisterType<App::View::QmlTypes::RigDiagram>("App", 1, 0, "RigDiagram");
     }
 
 
