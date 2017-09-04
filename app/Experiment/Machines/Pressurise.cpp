@@ -48,9 +48,9 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_startValveSevenTimer(&machine)
 
             // Timers for state machine
-        ,   t_pulseValveOne(this)
-        ,   t_pulseValveTwo(this)
-        ,   t_pulseValveSeven(this)
+        ,   t_pulseValveOne(parent)
+        ,   t_pulseValveTwo(parent)
+        ,   t_pulseValveSeven(parent)
     {
         // Connect signals and slots
         connectStatesToMethods();
@@ -61,7 +61,7 @@ namespace App { namespace Experiment { namespace Machines
 
     }
 
-    void Pressurise::testMethod() { qDebug() << "in method"; }
+    void Pressurise::testMethod() { qDebug() << "would be close"; }
     /**
      * Connect local states to methods
      *
@@ -74,11 +74,11 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_startValveTwoTimer, &QState::entered, this, &Pressurise::startValveTwoPulseTimer);
         connect(&sml_startValveSevenTimer, &QState::entered, this, &Pressurise::startValveSevenPulseTimer);
 
-        connect(&sml_waitForValveOneTimer, &QState::entered, this, &Pressurise::testMethod);
+        //connect(&sml_waitForValveOneTimer, &QState::entered, this, &Pressurise::testMethod);
         // Addtional states
 
         // Copy states that are used more than once to make then unique
-        connect(&sml_closeHighPressureInput_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
+        connect(&sml_closeHighPressureInput_2, &QState::entered, this, &Pressurise::testMethod);
         connect(&sml_closeOutput_2, &QState::entered, this->valves(), &States::Valves::closeOutput);
         connect(&sml_closeSlowExhuastPath_2, &QState::entered, this->valves(), &States::Valves::closeSlowExhuastPath);
 
@@ -105,7 +105,7 @@ namespace App { namespace Experiment { namespace Machines
     void Pressurise::setParams(double pressure, int input, int frequency)
     {
         // What is the target pressure
-        params.insert("pressure", 5000);
+        params.insert("pressure", 7000);
 
         // What is the step size in pressure
         params.insert("step_size", 2000);
@@ -116,10 +116,10 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("tolerance_valve_one", 300);
 
         // How fast to pulse valve 7
-        params.insert("valve_7_pulse", 1000);
+        params.insert("valve_7_pulse", 100);
 
         // How fast to pulse valve 2
-        params.insert("valve_2_pulse", 1000);
+        params.insert("valve_2_pulse", 50);
 
         // How fast to pulse valve 1
         params.insert("valve_1_pulse", 5000);
@@ -160,6 +160,8 @@ namespace App { namespace Experiment { namespace Machines
         stopValveTwoPulseTimer();
         stopValveSevenPulseTimer();
 
+        qDebug() << "Stopped";
+
         // Emit the machine is finished
         emit emit_pressuriseFinished(params);
     }
@@ -182,6 +184,8 @@ namespace App { namespace Experiment { namespace Machines
         stopValveOnePulseTimer();
         stopValveTwoPulseTimer();
         stopValveSevenPulseTimer();
+
+        qDebug() << "Stopped as failed";
 
         // Emit the machine is finished
         emit emit_pressuriseFailed(params);
@@ -281,15 +285,15 @@ namespace App { namespace Experiment { namespace Machines
         // Open valve 7
         valves()->sm_openHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenHighPressureInput);
             // Valve closed successfully
-            valves()->sm_validateOpenHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForValveOneTimer);
+            valves()->sm_validateOpenHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForValveSevenTimer);
             // Valve failed to close
             valves()->sm_validateOpenHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Wait for timer valve 7
-        sml_waitForValveOneTimer.addTransition(&t_pulseValveSeven, &QTimer::timeout, &sml_closeHighPressureInput_2);
+        sml_waitForValveSevenTimer.addTransition(&t_pulseValveSeven, &QTimer::timeout, &sml_closeHighPressureInput_2);
 
         // Close valve 7
-        sml_closeHighPressureInput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseHighPressureInput);
+        sml_closeHighPressureInput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseHighPressureInput_2);
             // Valve closed successfully
             sml_validateCloseHighPressureInput_2.addTransition(this, &Pressurise::emit_validationSuccess, &sml_waitForPressureAfterValveSeven);
             // Valve failed to close
@@ -318,11 +322,11 @@ namespace App { namespace Experiment { namespace Machines
         sml_waitForValveTwoTimer.addTransition(&t_pulseValveTwo, &QTimer::timeout, &sml_closeSlowExhuastPath_2);
 
         // Close valve 2
-        sml_closeSlowExhuastPath_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseHighPressureInput_2);
+        sml_closeSlowExhuastPath_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseSlowExhuastPath_2);
             // Valve closed successfully
-            sml_validateCloseHighPressureInput_2.addTransition(this, &Pressurise::emit_validationSuccess, &sml_waitForPressureAfterValveTwo);
+            sml_validateCloseSlowExhuastPath_2.addTransition(this, &Pressurise::emit_validationSuccess, &sml_waitForPressureAfterValveTwo);
             // Valve failed to close
-            sml_validateCloseHighPressureInput_2.addTransition(this, &Pressurise::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseSlowExhuastPath_2.addTransition(this, &Pressurise::emit_validationFailed, &sm_stopAsFailed);
 
         // Compare pressure to step size
         sml_waitForPressureAfterValveTwo.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterValveTwo);

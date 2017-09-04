@@ -204,7 +204,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
     {
         qDebug() << "Closing valve 7";
         valveHelper("7", false);
-        qDebug() << "Closing valve 7 end";
+        qDebug() << "Closed valve 7";
     }
 
     void Valves::closeHighPressureNitrogen()

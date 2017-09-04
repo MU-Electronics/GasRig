@@ -42,39 +42,9 @@ namespace App { namespace Experiment { namespace Machines
 
             void connectStatesToMethods();
 
-        signals:
-            void emit_pressuriseFinished(QVariantMap params);
-            void emit_pressuriseFailed(QVariantMap params);
 
-            // State signals
-            void emit_pressureToLow();
-            void emit_pressureToHigh();
-            void emit_pressureWithinTolerance();
-
-            // Timer signals
-            void emit_timerActive();
-
-        public slots:
-            // States
-            void testMethod();
-
-            // Validator states
-            void validatePressureAfterValveOne();
-            void validatePressureAfterValveTwo();
-            void validatePressureAfterValveSeven();
-
-            // Timers
-            void startValveOnePulseTimer();
-            void startValveTwoPulseTimer();
-            void startValveSevenPulseTimer();
-
-            void stopValveOnePulseTimer();
-            void stopValveTwoPulseTimer();
-            void stopValveSevenPulseTimer();
-
-        public:
             // Referance to QObject
-            QObject *parent;
+            //QObject *parent;
 
             // Holds the application settings
             Settings::Container m_settings;
@@ -113,6 +83,35 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_validateCloseSlowExhuastPath_2
             ,       sml_validateCloseOutput_2;
 
+        signals:
+            void emit_pressuriseFinished(QVariantMap params);
+            void emit_pressuriseFailed(QVariantMap params);
+
+            // State signals
+            void emit_pressureToLow();
+            void emit_pressureToHigh();
+            void emit_pressureWithinTolerance();
+
+            // Timer signals
+            void emit_timerActive();
+
+        public slots:
+            // States
+            void testMethod();
+
+            // Validator states
+            void validatePressureAfterValveOne();
+            void validatePressureAfterValveTwo();
+            void validatePressureAfterValveSeven();
+
+            // Timers
+            void startValveOnePulseTimer();
+            void startValveTwoPulseTimer();
+            void startValveSevenPulseTimer();
+
+            void stopValveOnePulseTimer();
+            void stopValveTwoPulseTimer();
+            void stopValveSevenPulseTimer();
 
     };
 }}}
