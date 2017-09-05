@@ -72,8 +72,8 @@ FluidControls.Card
         }
         Row{
             spacing: 20
-            opacity: (!setHighPressure_pressure.text < 1100) ? 0 : 1;
-            height: (!setHighPressure_pressure.text < 1100) ? 0 : 50;
+            opacity: (setHighPressure_pressure.text < 1100) ? 0 : 1;
+            height: (setHighPressure_pressure.text < 1100) ? 0 : 50;
             width: parent.width
             Behavior on opacity {
                 NumberAnimation {

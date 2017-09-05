@@ -114,7 +114,7 @@ FluidControls.Card
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: parent.width - 170
-                placeholderText: "100 minimum, 10000 maximum"
+                placeholderText: "1 minimum, 10000 maximum"
             }
         }
 
@@ -139,7 +139,7 @@ FluidControls.Card
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: parent.width - 170
-                placeholderText: "100 minimum, 10000 maximum"
+                placeholderText: "1 minimum, 10000 maximum"
             }
         }
 
