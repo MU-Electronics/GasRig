@@ -113,13 +113,13 @@ namespace App { namespace Experiment { namespace Machines
         // What is the accurcy
         params.insert("tolerance_valve_seven", 500);
         params.insert("tolerance_valve_two", 100);
-        params.insert("tolerance_valve_one", 100);
+        params.insert("tolerance_valve_one", 30);
 
         // How fast to pulse valve 7
-        params.insert("valve_7_pulse", 50);
+        params.insert("valve_7_pulse", 100);
 
         // How fast to pulse valve 2
-        params.insert("valve_2_pulse", 40);
+        params.insert("valve_2_pulse", 50);
 
         // How fast to pulse valve 1
         params.insert("valve_1_pulse", 5000);
@@ -427,7 +427,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Calculate the boundary desired pressure
         double max, min;
-        if(params.value("pressure").toDouble() < (pressure + params.value("step_size").toDouble()))
+        if(params.value("pressure").toDouble() > (pressure + params.value("step_size").toDouble()))
         {
             // Calculate the boundary desired pressure
             max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
@@ -486,7 +486,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Calculate increase
         double max, min;
-        if(params.value("pressure").toDouble() < (pressure + params.value("step_size").toDouble()))
+        if(params.value("pressure").toDouble() > (pressure + params.value("step_size").toDouble()))
         {
             // Calculate the boundary desired pressure
             max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
