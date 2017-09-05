@@ -426,18 +426,18 @@ namespace App { namespace Experiment { namespace Machines
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
         // Calculate the boundary desired pressure
-        // Calculate increase
+        double max, min;
         if(params.value("pressure").toDouble() < (pressure + params.value("step_size").toDouble()))
         {
             // Calculate the boundary desired pressure
-            double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
-            double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
+            max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
+            min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
         }
         else
         {
             // Calculate the boundary desired pressure
-            double max = params.value("pressure").toDouble() + params.value("tolerance_valve_two").toDouble();
-            double min = params.value("pressure").toDouble() - params.value("tolerance_valve_two").toDouble();
+            max = params.value("pressure").toDouble() + params.value("tolerance_valve_two").toDouble();
+            min = params.value("pressure").toDouble() - params.value("tolerance_valve_two").toDouble();
         }
 
         qDebug() << "VALVE TWO - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
@@ -485,17 +485,18 @@ namespace App { namespace Experiment { namespace Machines
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
         // Calculate increase
+        double max, min;
         if(params.value("pressure").toDouble() < (pressure + params.value("step_size").toDouble()))
         {
             // Calculate the boundary desired pressure
-            double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
-            double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
+            max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
+            min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
         }
         else
         {
             // Calculate the boundary desired pressure
-            double max = params.value("pressure").toDouble() + params.value("tolerance_valve_seven").toDouble();
-            double min = params.value("pressure").toDouble();
+            max = params.value("pressure").toDouble() + params.value("tolerance_valve_seven").toDouble();
+            min = params.value("pressure").toDouble();
         }
 
         qDebug() << "VALVE SEVEN - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
