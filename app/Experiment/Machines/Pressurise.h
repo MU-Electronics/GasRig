@@ -50,7 +50,7 @@ namespace App { namespace Experiment { namespace Machines
             Settings::Container m_settings;
 
             // Hold the pressure for the previous stage
-            double pressure;
+            double pressure = 1;
 
             // Timers for state machine
             QTimer t_pulseValveOne;

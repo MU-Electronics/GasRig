@@ -439,6 +439,9 @@ namespace App { namespace Experiment { namespace Machines
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
+        // Set params
+        m_pressurise.setParams(pressure, input, frequency);
+
         // Build the machine
         m_pressurise.buildMachine();
 

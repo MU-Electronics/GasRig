@@ -61,7 +61,7 @@ namespace App { namespace Experiment { namespace Machines
 
     }
 
-    void Pressurise::testMethod() { qDebug() << "would be close"; }
+    void Pressurise::testMethod() { qDebug() << "Waiting for pressure valve 2"; }
     /**
      * Connect local states to methods
      *
@@ -74,7 +74,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_startValveTwoTimer, &QState::entered, this, &Pressurise::startValveTwoPulseTimer);
         connect(&sml_startValveSevenTimer, &QState::entered, this, &Pressurise::startValveSevenPulseTimer);
 
-        //connect(&sml_waitForValveOneTimer, &QState::entered, this, &Pressurise::testMethod);
+        connect(&sml_waitForPressureAfterValveTwo, &QState::entered, this, &Pressurise::testMethod);
         // Addtional states
 
         // Copy states that are used more than once to make then unique
@@ -105,7 +105,7 @@ namespace App { namespace Experiment { namespace Machines
     void Pressurise::setParams(double pressure, int input, int frequency)
     {
         // What is the target pressure
-        params.insert("pressure", 7000);
+        params.insert("pressure", 5000);
 
         // What is the step size in pressure
         params.insert("step_size", 2000);
@@ -295,9 +295,9 @@ namespace App { namespace Experiment { namespace Machines
         // Close valve 7
         sml_closeHighPressureInput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseHighPressureInput_2);
             // Valve closed successfully
-            sml_validateCloseHighPressureInput_2.addTransition(this, &Pressurise::emit_validationSuccess, &sml_waitForPressureAfterValveSeven);
+            sml_validateCloseHighPressureInput_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForPressureAfterValveSeven);
             // Valve failed to close
-            sml_validateCloseHighPressureInput_2.addTransition(this, &Pressurise::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseHighPressureInput_2.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Compare pressure to step size
         sml_waitForPressureAfterValveSeven.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterValveSeven);
@@ -324,9 +324,9 @@ namespace App { namespace Experiment { namespace Machines
         // Close valve 2
         sml_closeSlowExhuastPath_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseSlowExhuastPath_2);
             // Valve closed successfully
-            sml_validateCloseSlowExhuastPath_2.addTransition(this, &Pressurise::emit_validationSuccess, &sml_waitForPressureAfterValveTwo);
+            sml_validateCloseSlowExhuastPath_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForPressureAfterValveTwo);
             // Valve failed to close
-            sml_validateCloseSlowExhuastPath_2.addTransition(this, &Pressurise::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseSlowExhuastPath_2.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Compare pressure to step size
         sml_waitForPressureAfterValveTwo.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterValveTwo);
@@ -348,14 +348,14 @@ namespace App { namespace Experiment { namespace Machines
             valves()->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Wait for timer valve 1
-        sml_waitForValveOneTimer.addTransition(&t_pulseValveTwo, &QTimer::timeout, &sml_closeSlowExhuastPath_2);
+        sml_waitForValveOneTimer.addTransition(&t_pulseValveOne, &QTimer::timeout, &sml_closeOutput_2);
 
         // Close valve 1
-        sml_closeSlowExhuastPath_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseOutput_2);
+        sml_closeOutput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseOutput_2);
             // Valve closed successfully
-            sml_validateCloseOutput_2.addTransition(this, &Pressurise::emit_validationSuccess, &sml_waitForPressureAfterValveOne);
+            sml_validateCloseOutput_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForPressureAfterValveOne);
             // Valve failed to close
-            sml_validateCloseOutput_2.addTransition(this, &Pressurise::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseOutput_2.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Compare pressure to step size
         sml_waitForPressureAfterValveOne.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterValveOne);
@@ -380,11 +380,14 @@ namespace App { namespace Experiment { namespace Machines
         QVariantMap package = state->package;
 
         // Current pressure value
-        double currentPressure = package.value("pressure").toDouble();
+        double currentPressure = package.value("pressure").toDouble() * 1000;
 
         // Calculate the boundary desired pressure
         double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_one").toDouble();
         double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_one").toDouble();
+
+        qDebug() << "VALVE ONE" << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
+                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble();
 
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
@@ -427,11 +430,14 @@ namespace App { namespace Experiment { namespace Machines
         QVariantMap package = state->package;
 
         // Current pressure value
-        double currentPressure = package.value("pressure").toDouble();
+        double currentPressure = package.value("pressure").toDouble() * 1000;
 
         // Calculate the boundary desired pressure
         double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
         double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
+
+        qDebug() << "VALVE TWO" << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
+                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble();
 
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
@@ -472,12 +478,16 @@ namespace App { namespace Experiment { namespace Machines
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        // Current pressure value
-        double currentPressure = package.value("pressure").toDouble();
+        // Current pressure value and convert to mbar
+        double currentPressure = package.value("pressure").toDouble() * 1000;
 
         // Calculate the boundary desired pressure
         double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
         double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
+
+        qDebug() << "VALVE SEVEN" << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
+                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble();
+
 
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
@@ -525,8 +535,6 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         emit emit_timerActive();
-
-        qDebug() << "timer 1";
     }
 
     /**
@@ -555,8 +563,6 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         emit emit_timerActive();
-
-        qDebug() << "timer 2";
     }
 
     /**
@@ -583,12 +589,9 @@ namespace App { namespace Experiment { namespace Machines
             // Setup timer
             t_pulseValveSeven.setSingleShot(false);
             t_pulseValveSeven.start();
-            qDebug() << "timer 7 enavled";
         }
 
         emit emit_timerActive();
-
-        qDebug() << "timer 7 retunred";
     }
 
     /**
