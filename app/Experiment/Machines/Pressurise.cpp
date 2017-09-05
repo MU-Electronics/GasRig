@@ -105,21 +105,21 @@ namespace App { namespace Experiment { namespace Machines
     void Pressurise::setParams(double pressure, int input, int frequency)
     {
         // What is the target pressure
-        params.insert("pressure", 5000);
+        params.insert("pressure", 6000);
 
         // What is the step size in pressure
         params.insert("step_size", 2000);
 
         // What is the accurcy
         params.insert("tolerance_valve_seven", 500);
-        params.insert("tolerance_valve_two", 300);
-        params.insert("tolerance_valve_one", 300);
+        params.insert("tolerance_valve_two", 100);
+        params.insert("tolerance_valve_one", 100);
 
         // How fast to pulse valve 7
-        params.insert("valve_7_pulse", 100);
+        params.insert("valve_7_pulse", 50);
 
         // How fast to pulse valve 2
-        params.insert("valve_2_pulse", 50);
+        params.insert("valve_2_pulse", 40);
 
         // How fast to pulse valve 1
         params.insert("valve_1_pulse", 5000);
@@ -312,7 +312,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Open valve 2
-        valves()->sm_openSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenHighPressureInput);
+        valves()->sm_openSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenSlowExhuastPath);
             // Valve closed successfully
             valves()->sm_validateOpenSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForValveTwoTimer);
             // Valve failed to close
@@ -389,7 +389,13 @@ namespace App { namespace Experiment { namespace Machines
         qDebug() << "VALVE ONE" << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
                  << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble();
 
-        // Is the pressure at the correct level with a tolerance
+        // Stop as pressure is correct
+        //double maxend = (params.value("pressure").toDouble()) + params.value("tolerance_valve_one").toDouble();
+        //double minend = (params.value("pressure").toDouble()) - params.value("tolerance_valve_one").toDouble();
+        //if(currentPressure)
+
+
+        // pressure within step tolerance
         if(currentPressure < max && currentPressure > min)
         {
             // Save the pressure value
@@ -401,7 +407,7 @@ namespace App { namespace Experiment { namespace Machines
             // No more action needed here
             return;
         }
-        else if (currentPressure > max)
+        else if (currentPressure > max) // Pressure to high
         {
             // Reduce the pressure with value 2
             emit emit_pressureToHigh();
@@ -409,7 +415,7 @@ namespace App { namespace Experiment { namespace Machines
             // No more action needed here
             return;
         }
-        else if (currentPressure < min)
+        else if (currentPressure < min) // Pressure too low
         {
             // Back to increase the pressure
             emit emit_pressureToLow();
