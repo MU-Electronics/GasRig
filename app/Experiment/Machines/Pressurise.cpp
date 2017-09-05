@@ -156,6 +156,13 @@ namespace App { namespace Experiment { namespace Machines
         // Get all states from machine and loop through them
         removeAllTransitions();
 
+        // Close valves
+        valves()->closeOutput();
+        valves()->closeExhuast();
+        valves()->closeFastExhuastPath();
+        valves()->closeSlowExhuastPath();
+        valves()->closeHighPressureInput();
+
         // Stop timers
         stopValveOnePulseTimer();
         stopValveTwoPulseTimer();
@@ -180,6 +187,13 @@ namespace App { namespace Experiment { namespace Machines
 
         // Get all states from machine and loop through them
         removeAllTransitions();
+
+        // Close valves
+        valves()->closeOutput();
+        valves()->closeExhuast();
+        valves()->closeFastExhuastPath();
+        valves()->closeSlowExhuastPath();
+        valves()->closeHighPressureInput();
 
         // Stop timers
         stopValveOnePulseTimer();
