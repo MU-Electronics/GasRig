@@ -61,7 +61,7 @@ namespace App { namespace Experiment { namespace Machines
 
     }
 
-    void Pressurise::testMethod() { qDebug() << "Waiting for pressure valve 2"; }
+
     /**
      * Connect local states to methods
      *
@@ -73,9 +73,6 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_startValveOneTimer, &QState::entered, this, &Pressurise::startValveOnePulseTimer);
         connect(&sml_startValveTwoTimer, &QState::entered, this, &Pressurise::startValveTwoPulseTimer);
         connect(&sml_startValveSevenTimer, &QState::entered, this, &Pressurise::startValveSevenPulseTimer);
-
-        connect(&sml_waitForPressureAfterValveTwo, &QState::entered, this, &Pressurise::testMethod);
-        // Addtional states
 
         // Copy states that are used more than once to make then unique
         connect(&sml_closeHighPressureInput_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
@@ -102,10 +99,10 @@ namespace App { namespace Experiment { namespace Machines
      * @param turbo
      * @param gasMode
      */
-    void Pressurise::setParams(double pressure, int input, int frequency)
+    void Pressurise::setParams(double pressure)
     {
         // What is the target pressure
-        params.insert("pressure", 6000);
+        params.insert("pressure", pressure);
 
         // What is the step size in pressure
         params.insert("step_size", 2000);
@@ -138,6 +135,10 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Pressurise::start()
     {
+        // Reset vars
+        pressure = 1;
+
+        // Start machine
         machine.start();
     }
 

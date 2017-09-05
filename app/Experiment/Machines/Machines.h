@@ -44,7 +44,7 @@ namespace App { namespace Experiment { namespace Machines
             int pulseValve(int valve, int cycles, int timeOpen, int timeClosed);
             void stopPulseValve();
 
-            int setPressure(double pressure, int input, int frequency);
+            int setPressure(double pressure);
             void stopSetPressure();
 
             int outputPressure(int frequency);
@@ -71,7 +71,8 @@ namespace App { namespace Experiment { namespace Machines
 
             void emit_purgeSystemMachineState(bool state);
 
-            void emit_pressuriseStarted(double pressure, int input, int frequency);
+            void emit_pressuriseStarted(double pressure);
+            void emit_pressuriseStopped();
 
         public slots:
             void vacDownFinished(QVariantMap params);
@@ -85,6 +86,9 @@ namespace App { namespace Experiment { namespace Machines
 
             void sensorReadingsFinished(QVariantMap params);
             void sensorReadingsFailed(QVariantMap params);
+
+            void pressuriseFinished(QVariantMap params);
+            void pressuriseFailed(QVariantMap params);
 
         private:
             // Are the sensors being monitored?

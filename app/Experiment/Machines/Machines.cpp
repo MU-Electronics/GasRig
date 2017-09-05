@@ -53,7 +53,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Connect the finished signals for the machine output pressure
 
-        // Connect the finished signals for the machine set high pressure
+        // Connect the finished signals for the machine set pressure emit_pressuriseStopped
+        connect(&m_pressurise, &Pressurise::emit_pressuriseFinished, this, &Machines::pressuriseFinished);
+        connect(&m_pressurise, &Pressurise::emit_pressuriseFailed, this, &Machines::pressuriseFailed);
     }
 
 
@@ -433,14 +435,14 @@ namespace App { namespace Experiment { namespace Machines
      * @param input
      * @param frequency
      */
-    int Machines::setPressure(double pressure, int input, int frequency)
+    int Machines::setPressure(double pressure)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
         // Set params
-        m_pressurise.setParams(pressure, input, frequency);
+        m_pressurise.setParams(pressure);
 
         // Build the machine
         m_pressurise.buildMachine();
@@ -449,7 +451,7 @@ namespace App { namespace Experiment { namespace Machines
         m_pressurise.start();
 
         // Emit machine started
-        emit emit_pressuriseStarted(pressure, input, frequency);
+        emit emit_pressuriseStarted(pressure);
 
         // Return success
         return 1;
@@ -463,7 +465,30 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::stopSetPressure()
     {
+        emit emit_pressuriseStopped();
+    }
 
+
+    /**
+     * Ran when the pressurise state machine has finished
+     *
+     * @brief Machines::pressuriseFinished
+     * @param params
+     */
+    void Machines::pressuriseFinished(QVariantMap params)
+    {
+        emit emit_pressuriseStopped();
+    }
+
+    /**
+     * Ran when the pressurise state machine has failed
+     *
+     * @brief Machines::pressuriseFailed
+     * @param params
+     */
+    void Machines::pressuriseFailed(QVariantMap params)
+    {
+        emit emit_pressuriseStopped();
     }
 
 

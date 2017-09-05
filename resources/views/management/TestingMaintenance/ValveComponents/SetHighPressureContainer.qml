@@ -43,7 +43,7 @@ FluidControls.Card
         {
             width: setHighPressure.width - 10
             type: "Danger"
-            textContent: qsTr("This function will set a high pressure within the system. Ensure the rig is correctly setup before running.")
+            textContent: qsTr("This function will set a high pressure (output valve will open periodically), ensure the rig is correctly setup before running.")
         }
 
         Row
@@ -53,7 +53,7 @@ FluidControls.Card
             width: parent.width
             height: 50
             Text {
-                text: qsTr("Pressure (in bar): ")
+                text: qsTr("Pressure (min 1100 mBar): ")
                 color: "#777777"
                 visible: parent.opacity
                 font.pixelSize: 16
@@ -63,17 +63,17 @@ FluidControls.Card
             TextField
             {
                 id: setHighPressure_pressure
-                validator: IntValidator { bottom:0; top: 90 }
+                validator: IntValidator { bottom:1100; top: 90000 }
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
-                width: parent.width - 170
-                placeholderText: "10"
+                width: parent.width - 220
+                placeholderText: "1100"
             }
         }
         Row{
             spacing: 20
-            opacity: (!setHighPressure_pressure.text) ? 0 : 1;
-            height: (!setHighPressure_pressure.text) ? 0 : 50;
+            opacity: (!setHighPressure_pressure.text < 1100) ? 0 : 1;
+            height: (!setHighPressure_pressure.text < 1100) ? 0 : 50;
             width: parent.width
             Behavior on opacity {
                 NumberAnimation {

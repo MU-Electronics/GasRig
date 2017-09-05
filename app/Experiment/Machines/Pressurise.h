@@ -30,7 +30,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ~Pressurise();
 
-            void setParams(double pressure, int input, int frequency);
+            void setParams(double pressure);
 
             void start();
 
@@ -42,9 +42,6 @@ namespace App { namespace Experiment { namespace Machines
 
             void connectStatesToMethods();
 
-
-            // Referance to QObject
-            //QObject *parent;
 
             // Holds the application settings
             Settings::Container m_settings;
@@ -96,9 +93,6 @@ namespace App { namespace Experiment { namespace Machines
             void emit_timerActive();
 
         public slots:
-            // States
-            void testMethod();
-
             // Validator states
             void validatePressureAfterValveOne();
             void validatePressureAfterValveTwo();
