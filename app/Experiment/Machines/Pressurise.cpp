@@ -228,16 +228,16 @@ namespace App { namespace Experiment { namespace Machines
         // Close the flow controller valve
         valves()->sm_closeFlowController.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseFlowController);
             // Valve closed successfully
-            valves()->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeExhuast);
+            valves()->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openExhuast);
             // Valve failed to close
             valves()->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the exhuast valve
-        valves()->sm_closeExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseExhuast);
+        valves()->sm_openExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenExhuast);
             // Close the output
-            valves()->sm_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeOutput);
+            valves()->sm_validateOpenExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeOutput);
             // Valve failed to close
-            valves()->sm_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            valves()->sm_validateOpenExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the output valve
         valves()->sm_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseOutput);
@@ -371,8 +371,6 @@ namespace App { namespace Experiment { namespace Machines
 
     void Pressurise::validatePressureAfterValveOne()
     {
-        qDebug() << "validate valve 1";
-
         // Get the validator state instance
         States::CommandValidatorState* state = (States::CommandValidatorState*)sender();
 
@@ -382,25 +380,16 @@ namespace App { namespace Experiment { namespace Machines
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
-        // Calculate the boundary desired pressure
-        double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_one").toDouble();
-        double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_one").toDouble();
-
-        qDebug() << "VALVE ONE" << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
-                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble();
-
         // Stop as pressure is correct
-        //double maxend = (params.value("pressure").toDouble()) + params.value("tolerance_valve_one").toDouble();
-        //double minend = (params.value("pressure").toDouble()) - params.value("tolerance_valve_one").toDouble();
-        //if(currentPressure)
+        double max = params.value("pressure").toDouble() + params.value("tolerance_valve_one").toDouble();
+        double min = params.value("pressure").toDouble() - params.value("tolerance_valve_one").toDouble();
 
+        qDebug() << "VALVE ONE - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
+                 << "set pressure: " << params.value("pressure").toDouble() << "tollerance: " <<  params.value("tolerance_valve_one").toDouble();
 
         // pressure within step tolerance
         if(currentPressure < max && currentPressure > min)
         {
-            // Save the pressure value
-            pressure = currentPressure;
-
             // Open the output value to top the vile up
             emit emit_pressureWithinTolerance();
 
@@ -427,8 +416,6 @@ namespace App { namespace Experiment { namespace Machines
 
     void Pressurise::validatePressureAfterValveTwo()
     {
-        qDebug() << "validate valve 2";
-
         // Get the validator state instance
         States::CommandValidatorState* state = (States::CommandValidatorState*)sender();
 
@@ -439,11 +426,22 @@ namespace App { namespace Experiment { namespace Machines
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
         // Calculate the boundary desired pressure
-        double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
-        double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
+        // Calculate increase
+        if(params.value("pressure").toDouble() < (pressure + params.value("step_size").toDouble()))
+        {
+            // Calculate the boundary desired pressure
+            double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
+            double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
+        }
+        else
+        {
+            // Calculate the boundary desired pressure
+            double max = params.value("pressure").toDouble() + params.value("tolerance_valve_two").toDouble();
+            double min = params.value("pressure").toDouble() - params.value("tolerance_valve_two").toDouble();
+        }
 
-        qDebug() << "VALVE TWO" << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
-                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble();
+        qDebug() << "VALVE TWO - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
+                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_two").toDouble();
 
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
@@ -477,7 +475,6 @@ namespace App { namespace Experiment { namespace Machines
 
     void Pressurise::validatePressureAfterValveSeven()
     {
-       qDebug() << "validate valve 7";
         // Get the validator state instance
         States::CommandValidatorState* state = (States::CommandValidatorState*)sender();
 
@@ -487,11 +484,21 @@ namespace App { namespace Experiment { namespace Machines
         // Current pressure value and convert to mbar
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
-        // Calculate the boundary desired pressure
-        double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
-        double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
+        // Calculate increase
+        if(params.value("pressure").toDouble() < (pressure + params.value("step_size").toDouble()))
+        {
+            // Calculate the boundary desired pressure
+            double max = (pressure + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
+            double min = (pressure + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
+        }
+        else
+        {
+            // Calculate the boundary desired pressure
+            double max = params.value("pressure").toDouble() + params.value("tolerance_valve_seven").toDouble();
+            double min = params.value("pressure").toDouble();
+        }
 
-        qDebug() << "VALVE SEVEN" << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
+        qDebug() << "VALVE SEVEN - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
                  << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble();
 
 
