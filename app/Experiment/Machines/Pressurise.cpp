@@ -26,6 +26,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_waitForValveOneTimer(&machine)
         ,   sml_waitForValveTwoTimer(&machine)
         ,   sml_waitForValveSevenTimer(&machine)
+        ,   sml_waitForInitalVacDown(&machine)
 
             // Copy states that are used more than once to make then unique
         ,   sml_closeHighPressureInput_2(&machine)
@@ -53,6 +54,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_pulseValveOne(parent)
         ,   t_pulseValveTwo(parent)
         ,   t_pulseValveSeven(parent)
+        ,   t_initalVacDown(parent)
     {
         // Connect signals and slots
         connectStatesToMethods();
@@ -137,7 +139,7 @@ namespace App { namespace Experiment { namespace Machines
         t_pulseValveSeven.setInterval(params.value("valve_7_pulse").toInt());
 
         // Set the timer for the inital vac down time
-
+        t_initalVacDown.setInterval(params.value("inital_vac_down_time").toInt());
     }
 
 
@@ -292,12 +294,12 @@ namespace App { namespace Experiment { namespace Machines
                 // Open the vacuum valve
                 valves()->sm_openVacuumIn.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenVacuumIn);
                     // Valve closed successfully
-                    valves()->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeOutput);
+                    valves()->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForInitalVacDown);
                     // Valve failed to close
                     valves()->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
                 // Spending some time vacing down
-                // @todo
+                sml_waitForInitalVacDown.addTransition(&t_initalVacDown, &QTimer::timeout, &valves()->sm_closeOutput);
         }
         else
         {

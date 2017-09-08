@@ -50,9 +50,10 @@ namespace App { namespace Experiment { namespace Machines
             double pressure = 1;
 
             // Timers for state machine
-            QTimer t_pulseValveOne;
-            QTimer t_pulseValveTwo;
-            QTimer t_pulseValveSeven;
+            QTimer  t_pulseValveOne
+            ,       t_pulseValveTwo
+            ,       t_pulseValveSeven
+            ,       t_initalVacDown;
 
             QState  sml_startValveOneTimer
             ,       sml_startValveTwoTimer
@@ -65,6 +66,7 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_waitForValveOneTimer
             ,       sml_waitForValveTwoTimer
             ,       sml_waitForValveSevenTimer
+            ,       sml_waitForInitalVacDown
 
             ,       sml_closeSlowExhuastPath_2
             ,       sml_closeOutput_2
