@@ -131,10 +131,10 @@ namespace App { namespace Experiment { namespace Machines
         // When do we need a vacuum backing for the exhaust
         params.insert("vacuum_backing", 1500);
 
-        // Inital vac down time
+        // Vac down the exhuast void to provide a initial buffer
         params.insert("exhuast_void_vac_down_time", 5000);
 
-        // Initall vac down system to
+        // Initall vac down system to in mbar
         params.insert("vac_down_to", 20);
 
 
