@@ -65,6 +65,7 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_waitForPressureAfterValveSeven
             ,       sml_waitForInitalPressure
             ,       sml_waitForExhuastVoidVacDown
+            ,       sml_waitForPressureAfterInitValveOne
 
             ,       sml_waitForValveOneTimer
             ,       sml_waitForValveTwoTimer
@@ -83,6 +84,8 @@ namespace App { namespace Experiment { namespace Machines
                     sml_validatePressureAfterValveSeven
             ,       sml_validatePressureAfterValveTwo
             ,       sml_validatePressureAfterValveOne
+
+            ,       sml_validatePressureForVacuumAfterValveOne
 
             ,       sml_validateInitialSystemVacuum
 

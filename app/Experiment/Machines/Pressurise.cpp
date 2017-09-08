@@ -24,6 +24,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_waitForPressureAfterValveSeven(&machine)
         ,   sml_waitForInitalPressure(&machine)
         ,   sml_waitForInitialSystemVacDown(&machine)
+        ,   sml_waitForPressureAfterInitValveOne(&machine)
 
         ,   sml_waitForValveOneTimer(&machine)
         ,   sml_waitForValveTwoTimer(&machine)
@@ -42,6 +43,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validateCloseOutput_2(&machine)
         ,   sml_validateOpenVacuumIn_2(&machine)
         ,   sml_validateOpenOutput_2(&machine)
+        ,   sml_validatePressureForVacuumAfterValveOne(&machine)
 
 
             // Addtional validator states for state machine
@@ -97,7 +99,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validateCloseSlowExhuastPath_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseSlowExhuastPath);
         connect(&sml_validateOpenVacuumIn_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
         connect(&sml_validateOpenOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenOutput);
-
+        connect(&sml_validatePressureForVacuumAfterValveOne, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validatePressureForVacuum);
 
         // Addtional validator states
         connect(&sml_validatePressureAfterValveOne, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveOne);
@@ -329,12 +331,16 @@ namespace App { namespace Experiment { namespace Machines
         // Open output
         valves()->sm_openOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenOutput);
             // Valve closed successfully
-            valves()->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &vacuum()->sm_disableTurboPump);
+            valves()->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForPressureAfterInitValveOne);
             // Valve failed to close
             valves()->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Check the pressure now the output is open
-
+        sml_waitForPressureAfterInitValveOne.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &pressure()->sm_validatePressureForVacuum);
+            // Pressure is low enough
+            pressure()->sm_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationSuccess, &vacuum()->sm_disableTurboPump);
+            // Pressure is too high
+            pressure()->sm_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationFailed, &sm_stopAsFailed);
 
         // Disable the vac station turbo
         vacuum()->sm_disableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_turboPumpAlreadyDisabled, &vacuum()->sm_validateDisableTurboPump);
