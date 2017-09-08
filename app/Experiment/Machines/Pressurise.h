@@ -58,6 +58,7 @@ namespace App { namespace Experiment { namespace Machines
             QState  sml_startValveOneTimer
             ,       sml_startValveTwoTimer
             ,       sml_startValveSevenTimer
+            ,       sml_startInitalVacDownTimer
 
             ,       sml_waitForPressureAfterValveOne
             ,       sml_waitForPressureAfterValveTwo
@@ -106,10 +107,12 @@ namespace App { namespace Experiment { namespace Machines
             void startValveOnePulseTimer();
             void startValveTwoPulseTimer();
             void startValveSevenPulseTimer();
+            void startInitalVacDownTimer();
 
             void stopValveOnePulseTimer();
             void stopValveTwoPulseTimer();
             void stopValveSevenPulseTimer();
+            void stopInitalVacDownTimer();
 
     };
 }}}

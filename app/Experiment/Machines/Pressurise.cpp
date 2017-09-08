@@ -49,6 +49,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_startValveOneTimer(&machine)
         ,   sml_startValveTwoTimer(&machine)
         ,   sml_startValveSevenTimer(&machine)
+        ,   sml_startInitalVacDownTimer(&machine)
 
             // Timers for state machine
         ,   t_pulseValveOne(parent)
@@ -77,6 +78,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_startValveOneTimer, &QState::entered, this, &Pressurise::startValveOnePulseTimer);
         connect(&sml_startValveTwoTimer, &QState::entered, this, &Pressurise::startValveTwoPulseTimer);
         connect(&sml_startValveSevenTimer, &QState::entered, this, &Pressurise::startValveSevenPulseTimer);
+        connect(&sml_startInitalVacDownTimer, &QState::entered, this, &Pressurise::startInitalVacDownTimer);
 
         // Copy states that are used more than once to make then unique
         connect(&sml_closeHighPressureInput_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
@@ -117,7 +119,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("vacuum_backing", 1500);
 
         // Inital vac down time
-        params.insert("inital_vac_down_time", 60000);
+        params.insert("inital_vac_down_time", 5000);
 
         // What is the accurcy
         params.insert("tolerance_valve_seven", 500);
@@ -177,6 +179,7 @@ namespace App { namespace Experiment { namespace Machines
         valves()->closeFastExhuastPath();
         valves()->closeSlowExhuastPath();
         valves()->closeHighPressureInput();
+        valves()->closeVacuumIn();
 
         // Turn off vacuum pum
         vacuum()->disableBackingPump();
@@ -186,6 +189,7 @@ namespace App { namespace Experiment { namespace Machines
         stopValveOnePulseTimer();
         stopValveTwoPulseTimer();
         stopValveSevenPulseTimer();
+        stopInitalVacDownTimer();
 
         qDebug() << "Stopped";
 
@@ -213,6 +217,7 @@ namespace App { namespace Experiment { namespace Machines
         valves()->closeFastExhuastPath();
         valves()->closeSlowExhuastPath();
         valves()->closeHighPressureInput();
+        valves()->closeVacuumIn();
 
         // Turn off vacuum pum
         vacuum()->disableBackingPump();
@@ -222,6 +227,7 @@ namespace App { namespace Experiment { namespace Machines
         stopValveOnePulseTimer();
         stopValveTwoPulseTimer();
         stopValveSevenPulseTimer();
+        stopInitalVacDownTimer();
 
         qDebug() << "Stopped as failed";
 
@@ -294,11 +300,12 @@ namespace App { namespace Experiment { namespace Machines
                 // Open the vacuum valve
                 valves()->sm_openVacuumIn.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenVacuumIn);
                     // Valve closed successfully
-                    valves()->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForInitalVacDown);
+                    valves()->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_startInitalVacDownTimer);
                     // Valve failed to close
                     valves()->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
                 // Spending some time vacing down
+                sml_startInitalVacDownTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_waitForInitalVacDown);
                 sml_waitForInitalVacDown.addTransition(&t_initalVacDown, &QTimer::timeout, &valves()->sm_closeOutput);
         }
         else
@@ -699,6 +706,35 @@ namespace App { namespace Experiment { namespace Machines
     {
         t_pulseValveSeven.stop();
     }
+
+
+    /**
+     * Start the timer for  inital vac down
+     *
+     * @brief Pressurise::startInitalVacDownTimer
+     */
+    void Pressurise::startInitalVacDownTimer()
+    {
+        if(!t_initalVacDown.isActive())
+        {
+            // Setup timer
+            t_initalVacDown.setSingleShot(false);
+            t_initalVacDown.start();
+        }
+
+        emit emit_timerActive();
+    }
+
+    /**
+     * Stop the timer for valve inital vac down
+     *
+     * @brief Pressurise::stopInitalVacDownTimer
+     */
+    void Pressurise::stopInitalVacDownTimer()
+    {
+        t_initalVacDown.stop();
+    }
+
 
 }}}
 
