@@ -107,6 +107,9 @@ namespace App { namespace Experiment { namespace Machines
         // What is the step size in pressure
         params.insert("step_size", 2000);
 
+        // When do we need a vacuum backing for the exhaust
+        params.insert("vacuum_backing", 1500);
+
         // What is the accurcy
         params.insert("tolerance_valve_seven", 500);
         params.insert("tolerance_valve_two", 100);
@@ -242,17 +245,50 @@ namespace App { namespace Experiment { namespace Machines
 
         // Close the flow controller valve
         valves()->sm_closeFlowController.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseFlowController);
-            // Valve closed successfully
-            valves()->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openExhuast);
+            // Valve closed successfully      @ see if statement below
             // Valve failed to close
             valves()->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
-        // Close the exhuast valve
-        valves()->sm_openExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenExhuast);
-            // Close the output
-            valves()->sm_validateOpenExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeOutput);
-            // Valve failed to close
-            valves()->sm_validateOpenExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+
+        // Do we require a vacumm if below 1.5 bar
+        if(params.value("vacuum_backing").toInt() <= 1500)
+        {
+            // Valve closed successfully
+            valves()->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeExhuast);
+
+                // Close the exhuast valve
+                valves()->sm_closeExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseExhuast);
+                    // Close the output
+                    valves()->sm_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &vacuum()->sm_enableBackingPump);
+                    // Valve failed to close
+                    valves()->sm_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+
+                // Enabled the backing pump
+                vacuum()->sm_enableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &vacuum()->sm_validateEnableBackingPump);
+                    // Validate backing pump on
+                    vacuum()->sm_validateEnableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &valves()->sm_openVacuumIn);
+                    // Backing pump failed
+                    vacuum()->sm_validateEnableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+
+                // Open the vacuum valve
+                valves()->sm_openVacuumIn.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenVacuumIn);
+                    // Valve closed successfully
+                    valves()->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeOutput);
+                    // Valve failed to close
+                    valves()->sm_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+        }
+        else
+        {
+            // Valve closed successfully
+            valves()->sm_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openExhuast);
+
+                // Open the exhuast valve and move on
+                valves()->sm_openExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenExhuast);
+                    // Close the output
+                    valves()->sm_validateOpenExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeOutput);
+                    // Valve failed to close
+                    valves()->sm_validateOpenExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+        }
 
         // Set the output valve
         valves()->sm_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseOutput);
