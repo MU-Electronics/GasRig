@@ -264,6 +264,9 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         // Get the package data from the instance
         QVariantMap package = state->package;
 
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+
         qDebug() << package;
     }
 
