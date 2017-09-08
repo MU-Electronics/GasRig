@@ -7,7 +7,7 @@
     "vacuum":{
         "max_rise": "0.5",
         "max_fall": "0.5",
-        "vacuum_from": "1.1"
+        "vacuum_from": "1.5"
     },
 
     "turbo_pump": {

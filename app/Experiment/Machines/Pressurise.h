@@ -47,27 +47,30 @@ namespace App { namespace Experiment { namespace Machines
             Settings::Container m_settings;
 
             // Hold the pressure for the previous stage
-            double pressure = 1;
+            double pressureReading = 1;
 
             // Timers for state machine
             QTimer  t_pulseValveOne
             ,       t_pulseValveTwo
             ,       t_pulseValveSeven
-            ,       t_initalVacDown;
+            ,       t_exhuastVoidVacDownTimer;
 
             QState  sml_startValveOneTimer
             ,       sml_startValveTwoTimer
             ,       sml_startValveSevenTimer
-            ,       sml_startInitalVacDownTimer
+            ,       sml_startExhuastVoidVacDownTimer
 
             ,       sml_waitForPressureAfterValveOne
             ,       sml_waitForPressureAfterValveTwo
             ,       sml_waitForPressureAfterValveSeven
+            ,       sml_waitForInitalPressure
+            ,       sml_waitForExhuastVoidVacDown
 
             ,       sml_waitForValveOneTimer
             ,       sml_waitForValveTwoTimer
             ,       sml_waitForValveSevenTimer
             ,       sml_waitForInitalVacDown
+            ,       sml_waitForInitialSystemVacDown
 
             ,       sml_closeSlowExhuastPath_2
             ,       sml_closeOutput_2
@@ -79,6 +82,8 @@ namespace App { namespace Experiment { namespace Machines
                     sml_validatePressureAfterValveSeven
             ,       sml_validatePressureAfterValveTwo
             ,       sml_validatePressureAfterValveOne
+
+            ,       sml_validateInitialSystemVacuum
 
             ,       sml_validateCloseHighPressureInput_2
             ,       sml_validateCloseSlowExhuastPath_2
@@ -94,6 +99,10 @@ namespace App { namespace Experiment { namespace Machines
             void emit_pressureToHigh();
             void emit_pressureWithinTolerance();
 
+            void emit_initialSystemVacuumTooHigh();
+            void emit_initialSystemVacuumWithinTolerance();
+
+
             // Timer signals
             void emit_timerActive();
 
@@ -102,17 +111,18 @@ namespace App { namespace Experiment { namespace Machines
             void validatePressureAfterValveOne();
             void validatePressureAfterValveTwo();
             void validatePressureAfterValveSeven();
+            void validateInitialSystemVacuum();
 
             // Timers
             void startValveOnePulseTimer();
             void startValveTwoPulseTimer();
             void startValveSevenPulseTimer();
-            void startInitalVacDownTimer();
+            void startExhuastVoidVacDownTimer();
 
             void stopValveOnePulseTimer();
             void stopValveTwoPulseTimer();
             void stopValveSevenPulseTimer();
-            void stopInitalVacDownTimer();
+            void stopExhuastVoidVacDownTimer();
 
     };
 }}}
