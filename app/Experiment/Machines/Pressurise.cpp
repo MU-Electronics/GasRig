@@ -120,6 +120,7 @@ namespace App { namespace Experiment { namespace Machines
         // What is the step size in pressure
         params.insert("step_size", 2000);
 
+
         // When do we need a vacuum backing for the exhaust
         params.insert("vacuum_backing", 1500);
 
@@ -129,10 +130,16 @@ namespace App { namespace Experiment { namespace Machines
         // Initall vac down system to
         params.insert("vac_down_to", 20);
 
-        // What is the accurcy
+
+        // What is the tolerance of valve 7
         params.insert("tolerance_valve_seven", 500);
+
+        // What is the tolerance of valve 2
         params.insert("tolerance_valve_two", 100);
+
+        // What is the tolerance of valve 1
         params.insert("tolerance_valve_one", 30);
+
 
         // How fast to pulse valve 7
         params.insert("valve_7_pulse", 100);
@@ -143,10 +150,16 @@ namespace App { namespace Experiment { namespace Machines
         // How fast to pulse valve 1
         params.insert("valve_1_pulse", 5000);
 
-        // Set the timers for the pulse width of the valves
+
+        // Set the timer for the pulse width for valve 1
         t_pulseValveOne.setInterval(params.value("valve_1_pulse").toInt());
+
+        // Set the timer for the pulse width for valve 2
         t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+
+        // Set the timer for the pulse width for valve 7
         t_pulseValveSeven.setInterval(params.value("valve_7_pulse").toInt());
+
 
         // Set the timer for the inital vac down time
         t_exhuastVoidVacDownTimer.setInterval(params.value("exhuast_void_vac_down_time").toInt());
