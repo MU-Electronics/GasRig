@@ -53,7 +53,7 @@ FluidControls.Card
             width: parent.width
             height: 50
             Text {
-                text: qsTr("Pressure (min 1100 mBar): ")
+                text: qsTr("Pressure (min 1 mBar): ")
                 color: "#777777"
                 visible: parent.opacity
                 font.pixelSize: 16
@@ -63,7 +63,7 @@ FluidControls.Card
             TextField
             {
                 id: setHighPressure_pressure
-                validator: IntValidator { bottom:1100; top: 90000 }
+                validator: IntValidator { bottom:1; top: 90000 }
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: parent.width - 220
@@ -72,8 +72,8 @@ FluidControls.Card
         }
         Row{
             spacing: 20
-            opacity: (setHighPressure_pressure.text < 1100) ? 0 : 1;
-            height: (setHighPressure_pressure.text < 1100) ? 0 : 50;
+            opacity: (setHighPressure_pressure.text < 1) ? 0 : 1;
+            height: (setHighPressure_pressure.text < 1) ? 0 : 50;
             width: parent.width
             Behavior on opacity {
                 NumberAnimation {
