@@ -75,7 +75,8 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_closeSlowExhuastPath_2
             ,       sml_closeOutput_2
             ,       sml_closeHighPressureInput_2
-            ,       sml_openVacuumIn_2;
+            ,       sml_openVacuumIn_2
+            ,       sml_openOutput_2;
 
 
             States::CommandValidatorState
@@ -88,7 +89,8 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_validateCloseHighPressureInput_2
             ,       sml_validateCloseSlowExhuastPath_2
             ,       sml_validateCloseOutput_2
-            ,       sml_validateOpenVacuumIn_2;
+            ,       sml_validateOpenVacuumIn_2
+            ,       sml_validateOpenOutput_2;
 
         signals:
             void emit_pressuriseFinished(QVariantMap params);

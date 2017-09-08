@@ -35,11 +35,13 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_closeSlowExhuastPath_2(&machine)
         ,   sml_closeOutput_2(&machine)
         ,   sml_openVacuumIn_2(&machine)
+        ,   sml_openOutput_2(&machine)
 
         ,   sml_validateCloseSlowExhuastPath_2(&machine)
         ,   sml_validateCloseHighPressureInput_2(&machine)
         ,   sml_validateCloseOutput_2(&machine)
         ,   sml_validateOpenVacuumIn_2(&machine)
+        ,   sml_validateOpenOutput_2(&machine)
 
 
             // Addtional validator states for state machine
@@ -88,11 +90,14 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_closeOutput_2, &QState::entered, this->valves(), &States::Valves::closeOutput);
         connect(&sml_closeSlowExhuastPath_2, &QState::entered, this->valves(), &States::Valves::closeSlowExhuastPath);
         connect(&sml_openVacuumIn_2, &QState::entered, this->valves(), &States::Valves::openVacuumIn);
+        connect(&sml_openOutput_2, &QState::entered, this->valves(), &States::Valves::openOutput);
 
         connect(&sml_validateCloseHighPressureInput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureInput);
         connect(&sml_validateCloseOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseOutput);
         connect(&sml_validateCloseSlowExhuastPath_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseSlowExhuastPath);
         connect(&sml_validateOpenVacuumIn_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
+        connect(&sml_validateOpenOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenOutput);
+
 
         // Addtional validator states
         connect(&sml_validatePressureAfterValveOne, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveOne);
@@ -276,6 +281,7 @@ namespace App { namespace Experiment { namespace Machines
             // Pressure is too high
             pressure()->sm_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationFailed, &sm_stopAsFailed);
 
+
         // Close the high pressure valve
         valves()->sm_closeHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseHighPressureInput);
             // Valve closed successfully
@@ -316,9 +322,18 @@ namespace App { namespace Experiment { namespace Machines
         // Close Slow Exhuast
         valves()->sm_closeSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseSlowExhuastPath);
             // Open the fast exhaust path valve
-            valves()->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &vacuum()->sm_disableTurboPump);
+            valves()->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openOutput);
             // Valve failed to close
             valves()->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+
+        // Open output
+        valves()->sm_openOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenOutput);
+            // Valve closed successfully
+            valves()->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &vacuum()->sm_disableTurboPump);
+            // Valve failed to close
+            valves()->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+
+        // Check the pressure now the output is open
 
 
         // Disable the vac station turbo
@@ -448,7 +463,7 @@ namespace App { namespace Experiment { namespace Machines
             // Too high go to pulse valve 2
             sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureToHigh, &valves()->sm_openSlowExhuastPath);
             // Within tolerence go to open valve 1
-            sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &valves()->sm_openOutput);
+            sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_openOutput_2);
 
 
 
@@ -477,17 +492,17 @@ namespace App { namespace Experiment { namespace Machines
             // Too high go to pulse valve 2
             sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureToHigh, &valves()->sm_openSlowExhuastPath);
             // Within tolerence go to open valve 1
-            sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &valves()->sm_openOutput);
+            sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_openOutput_2);
 
 
 
 
         // Open valve 1
-        valves()->sm_openOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenOutput);
+        sml_openOutput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenOutput_2);
             // Valve closed successfully
-            valves()->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForValveOneTimer);
+            sml_validateOpenOutput_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForValveOneTimer);
             // Valve failed to close
-            valves()->sm_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateOpenOutput_2.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Wait for timer valve 1
         sml_waitForValveOneTimer.addTransition(&t_pulseValveOne, &QTimer::timeout, &sml_closeOutput_2);
