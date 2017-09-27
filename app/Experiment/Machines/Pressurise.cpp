@@ -410,7 +410,7 @@ namespace App { namespace Experiment { namespace Machines
 
                 // Disable the backing pump
                 vacuum()->sm_disableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &vacuum()->sm_validateDisableBackingPump);
-                    // Validate backing pump on
+                    // Validate backing pump on_1_MSVC2015_32bit-Debug\debug\GasRig.exe exited with code 0
                     vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &valves()->sm_openExhuast);
                     // Backing pump failed
                     vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
@@ -543,8 +543,10 @@ namespace App { namespace Experiment { namespace Machines
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
+        qDebug() << currentPressure << params.value("vac_down_to").toDouble();
+
         // Is the pressure lower than required
-        if(currentPressure < package.value("vac_down_to").toDouble())
+        if(currentPressure < params.value("vac_down_to").toDouble())
         {
             // Move to next stage
             emit emit_initialSystemVacuumWithinTolerance();
