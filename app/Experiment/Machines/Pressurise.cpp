@@ -142,17 +142,17 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("tolerance_valve_seven", 500);
 
         // What is the tolerance of valve 2
-        params.insert("tolerance_valve_two", 100);
+        params.insert("tolerance_valve_two", 200);
 
         // What is the tolerance of valve 1
         params.insert("tolerance_valve_one", 30);
 
 
         // How fast to pulse valve 7
-        params.insert("valve_7_pulse", 100);
+        params.insert("valve_7_pulse", 40);
 
         // How fast to pulse valve 2
-        params.insert("valve_2_pulse", 50);
+        params.insert("valve_2_pulse", 30);
 
         // How fast to pulse valve 1
         params.insert("valve_1_pulse", 5000);
@@ -700,6 +700,9 @@ namespace App { namespace Experiment { namespace Machines
             // Save the pressure value
             pressureReading = currentPressure;
 
+            // Reset valve time
+            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+
             // Open the output value to top the vile up
             emit emit_pressureWithinTolerance();
 
@@ -708,6 +711,11 @@ namespace App { namespace Experiment { namespace Machines
         }
         else if (currentPressure > max)
         {
+
+            // Set new valve time
+            if((currentPressure - max) > 1000)
+                t_pulseValveTwo.setInterval(40);
+
             // Reduce the pressure with value 2
             emit emit_pressureToHigh();
 
@@ -716,6 +724,9 @@ namespace App { namespace Experiment { namespace Machines
         }
         else if (currentPressure < min)
         {
+            // Reset valve time
+            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+
             // Back to increase the pressure
             emit emit_pressureToLow();
 
