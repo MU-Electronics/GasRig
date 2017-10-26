@@ -77,11 +77,11 @@ namespace App { namespace Experiment { namespace Machines
         // Stop the machine
         machine.stop();
 
-        // Make sure valve closed
-        closeValve(params.value("valve").toInt());
-
         // Get all states from machine and loop through them
         removeAllTransitions();
+
+        // Make sure valve closed
+        closeValve(params.value("valve").toInt());
 
         // Emit the machine is finished
         emit emit_pulseValveFinished(params);
@@ -98,11 +98,11 @@ namespace App { namespace Experiment { namespace Machines
         // Stop the machine
         machine.stop();
 
-        // Make sure valve closed
-        closeValve(params.value("valve").toInt());
-
         // Get all states from machine and loop through them
         removeAllTransitions();
+
+        // Make sure valve closed
+        closeValve(params.value("valve").toInt());
 
         // Emit the machine is finished
         emit emit_pulseValveFailed(params);
