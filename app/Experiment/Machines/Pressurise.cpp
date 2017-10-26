@@ -142,11 +142,13 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("tolerance_valve_seven", 500);
 
         // What is the tolerance of valve 2
-        params.insert("tolerance_valve_two", 200);
+        params.insert("tolerance_valve_two", 250);
 
         // What is the tolerance of valve 1
-        params.insert("tolerance_valve_one", 30);
-
+        int finalTol = pressure * 0.002;
+        if(finalTol < 30)
+            finalTol = 30;
+        params.insert("tolerance_valve_one", finalTol);
 
         // How fast to pulse valve 7
         params.insert("valve_7_pulse", 40);
