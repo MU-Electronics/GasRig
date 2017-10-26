@@ -180,6 +180,10 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("valve_1_pulse", 5000);
 
 
+        // Between valve 2 how long should vac down be when setting pressure below 1.5bar
+        params.insert("exhuast_void_vac_down_time_pulse", 1000);
+
+
         // Set the timer for the pulse width for valve 1
         t_pulseValveOne.setInterval(params.value("valve_1_pulse").toInt());
 
@@ -190,8 +194,13 @@ namespace App { namespace Experiment { namespace Machines
         t_pulseValveSeven.setInterval(params.value("valve_7_pulse").toInt());
 
 
+
         // Set the timer for the inital vac down time
         t_exhuastVoidVacDownTimer.setInterval(params.value("exhuast_void_vac_down_time").toInt());
+
+
+        // Set timer for valve 5 (vac in)
+        t_vacuumValveTimer.setInterval(params.value("exhuast_void_vac_down_time_pulse").toInt());
     }
 
 
