@@ -175,7 +175,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("valve_7_pulse", 40);
 
         // How fast to pulse valve 2
-        params.insert("valve_2_pulse", 50);
+        params.insert("valve_2_pulse", 30);
 
         // How fast to pulse valve 1
         params.insert("valve_1_pulse", 5000);
@@ -460,7 +460,7 @@ namespace App { namespace Experiment { namespace Machines
         // Set the output valve
         valves()->sm_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseOutput);
             // Close the fast exhuast valve
-            valves()->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_startValveTwoTimer);
+            valves()->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openHighPressureInput);
             // Valve failed to close
             valves()->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
@@ -468,13 +468,13 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Set timer for valve 2 &timers()->t_vacTime
-        sml_startValveTwoTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_startValveOneTimer);
+        //sml_startValveTwoTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_startValveOneTimer);
 
         // Set timer for valve 1
-        sml_startValveOneTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_startValveSevenTimer);
+        //sml_startValveOneTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_startValveSevenTimer);
 
         // Set timer for valve 7
-        sml_startValveSevenTimer.addTransition(this, &Pressurise::emit_timerActive, &valves()->sm_openHighPressureInput);
+       // sml_startValveSevenTimer.addTransition(this, &Pressurise::emit_timerActive, &valves()->sm_openHighPressureInput);
 
 
 
@@ -482,12 +482,12 @@ namespace App { namespace Experiment { namespace Machines
         // Open valve 7
         valves()->sm_openHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenHighPressureInput);
             // Valve closed successfully
-            valves()->sm_validateOpenHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForValveSevenTimer);
+            valves()->sm_validateOpenHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_startValveSevenTimer);
             // Valve failed to close
             valves()->sm_validateOpenHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Wait for timer valve 7
-        sml_waitForValveSevenTimer.addTransition(&t_pulseValveSeven, &QTimer::timeout, &sml_closeHighPressureInput_2);
+        sml_startValveSevenTimer.addTransition(&t_pulseValveSeven, &QTimer::timeout, &sml_closeHighPressureInput_2);
 
         // Close valve 7
         sml_closeHighPressureInput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseHighPressureInput_2);
@@ -523,12 +523,12 @@ namespace App { namespace Experiment { namespace Machines
         // Open valve 2
         valves()->sm_openSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenSlowExhuastPath);
             // Valve closed successfully
-            valves()->sm_validateOpenSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForValveTwoTimer);
+            valves()->sm_validateOpenSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_startValveTwoTimer);
             // Valve failed to close
             valves()->sm_validateOpenSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Wait for timer valve 2
-        sml_waitForValveTwoTimer.addTransition(&t_pulseValveTwo, &QTimer::timeout, &sml_closeSlowExhuastPath_2);
+        sml_startValveTwoTimer.addTransition(&t_pulseValveTwo, &QTimer::timeout, &sml_closeSlowExhuastPath_2);
 
         // Close valve 2
         sml_closeSlowExhuastPath_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseSlowExhuastPath_2);
@@ -568,12 +568,12 @@ namespace App { namespace Experiment { namespace Machines
         // Open valve 1
         sml_openOutput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenOutput_2);
             // Valve closed successfully
-            sml_validateOpenOutput_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForValveOneTimer);
+            sml_validateOpenOutput_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_startValveOneTimer);
             // Valve failed to close
             sml_validateOpenOutput_2.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Wait for timer valve 1
-        sml_waitForValveOneTimer.addTransition(&t_pulseValveOne, &QTimer::timeout, &sml_closeOutput_2);
+        sml_startValveOneTimer.addTransition(&t_pulseValveOne, &QTimer::timeout, &sml_closeOutput_2);
 
         // Close valve 1
         sml_closeOutput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseOutput_2);
@@ -823,7 +823,7 @@ namespace App { namespace Experiment { namespace Machines
         if(!t_pulseValveOne.isActive())
         {
             // Setup timer
-            t_pulseValveOne.setSingleShot(false);
+            t_pulseValveOne.setSingleShot(true);
             t_pulseValveOne.start();
         }
 
@@ -851,7 +851,7 @@ namespace App { namespace Experiment { namespace Machines
         if(!t_pulseValveTwo.isActive())
         {
             // Setup timer
-            t_pulseValveTwo.setSingleShot(false);
+            t_pulseValveTwo.setSingleShot(true);
             t_pulseValveTwo.start();
         }
 
@@ -877,14 +877,14 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Pressurise::startValveSevenPulseTimer()
     {
-        if(!t_pulseValveSeven.isActive())
-        {
+        //if(!t_pulseValveSeven.isActive())
+        //{
             // Setup timer
-            t_pulseValveSeven.setSingleShot(false);
+            t_pulseValveSeven.setSingleShot(true);
             t_pulseValveSeven.start();
-        }
+       // }
 
-        emit emit_timerActive();
+        //emit emit_timerActive();
     }
 
     /**
@@ -937,7 +937,7 @@ namespace App { namespace Experiment { namespace Machines
         if(!t_vacuumValveTimer.isActive())
         {
             // Setup timer
-            t_vacuumValveTimer.setSingleShot(false);
+            t_vacuumValveTimer.setSingleShot(true);
             t_vacuumValveTimer.start();
         }
 
