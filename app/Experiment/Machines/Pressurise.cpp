@@ -168,13 +168,14 @@ namespace App { namespace Experiment { namespace Machines
         int finalTol = pressure * 0.002;
         if(finalTol < 30)
             finalTol = 30;
+
         params.insert("tolerance_valve_one", finalTol);
 
         // How fast to pulse valve 7
         params.insert("valve_7_pulse", 40);
 
         // How fast to pulse valve 2
-        params.insert("valve_2_pulse", 30);
+        params.insert("valve_2_pulse", 50);
 
         // How fast to pulse valve 1
         params.insert("valve_1_pulse", 5000);
@@ -822,7 +823,7 @@ namespace App { namespace Experiment { namespace Machines
         if(!t_pulseValveOne.isActive())
         {
             // Setup timer
-            t_pulseValveOne.setSingleShot(true);
+            t_pulseValveOne.setSingleShot(false);
             t_pulseValveOne.start();
         }
 
@@ -850,7 +851,7 @@ namespace App { namespace Experiment { namespace Machines
         if(!t_pulseValveTwo.isActive())
         {
             // Setup timer
-            t_pulseValveTwo.setSingleShot(true);
+            t_pulseValveTwo.setSingleShot(false);
             t_pulseValveTwo.start();
         }
 
@@ -879,7 +880,7 @@ namespace App { namespace Experiment { namespace Machines
         if(!t_pulseValveSeven.isActive())
         {
             // Setup timer
-            t_pulseValveSeven.setSingleShot(true);
+            t_pulseValveSeven.setSingleShot(false);
             t_pulseValveSeven.start();
         }
 
@@ -907,7 +908,7 @@ namespace App { namespace Experiment { namespace Machines
         if(!t_exhuastVoidVacDownTimer.isActive())
         {
             // Setup timer
-            t_exhuastVoidVacDownTimer.setSingleShot(true);
+            t_exhuastVoidVacDownTimer.setSingleShot(false);
             t_exhuastVoidVacDownTimer.start();
         }
 
@@ -936,7 +937,7 @@ namespace App { namespace Experiment { namespace Machines
         if(!t_vacuumValveTimer.isActive())
         {
             // Setup timer
-            t_vacuumValveTimer.setSingleShot(true);
+            t_vacuumValveTimer.setSingleShot(false);
             t_vacuumValveTimer.start();
         }
 
