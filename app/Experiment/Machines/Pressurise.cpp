@@ -141,12 +141,24 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Pressurise::setParams(double pressure)
     {
+
+        /*#######################################
+         # Pressure Settings
+         ######################################*/
+
         // What is the target pressure
         params.insert("pressure", pressure);
 
         // What is the step size in pressure
         params.insert("step_size", 2000);
 
+
+
+
+
+        /*#######################################
+         # Vacuum Backing Settings
+         ######################################*/
 
         // When do we need a vacuum backing for the exhaust
         params.insert("vacuum_backing", 1500);
@@ -158,32 +170,96 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("vac_down_to", 20);
 
 
+
+
+
+        /*#######################################
+         # Tolerance Settings
+         ######################################*/
+
         // What is the tolerance of valve 7
         params.insert("tolerance_valve_seven", 500);
 
         // What is the tolerance of valve 2
         params.insert("tolerance_valve_two", 250);
 
-        // What is the tolerance of valve 1
+        // What is the tolerance of valve 1 (end tolerance, 0.2% or 30 mBar)
         int finalTol = pressure * 0.002;
         if(finalTol < 30)
             finalTol = 30;
-
         params.insert("tolerance_valve_one", finalTol);
 
-        // How fast to pulse valve 7
-        params.insert("valve_7_pulse", 40);
 
-        // How fast to pulse valve 2
-        params.insert("valve_2_pulse", 30);
 
-        // How fast to pulse valve 1
+
+
+        /*#######################################
+         # Valve inital pulsing speeds
+         ######################################*/
+
+        // Starting speed to pulse valve 7
+        params.insert("valve_7_pulse", 20);
+
+        // Starting speed to pulse valve 2
+        params.insert("valve_2_pulse", 20);
+
+        // Speed to pulse valve 1
         params.insert("valve_1_pulse", 5000);
 
 
         // Between valve 2 how long should vac down be when setting pressure below 1.5bar
         params.insert("exhuast_void_vac_down_time_pulse", 1000);
 
+
+
+
+
+        /*#######################################
+         # Valve Pulse Speed Tunner
+         ######################################*/
+
+        // Valve 7: Desired pressure increase between pulses
+        params.insert("valve_7_step_size", 100);
+
+        // Valve 7: Tolerence for desired pressure increase between pulses
+        params.insert("valve_7_step_size_tolerance", 30);
+
+        // Valve 7: Increment pulse width when pressure increase was too small / no change
+        params.insert("valve_7_increment", 5);
+
+        // Valve 7: Decrement pulse width when pressure increase was too large
+        params.insert("valve_7_decrement", 5);
+
+        // Valve 7: Decrease pulse width when at 75% of disired main pressure
+        params.insert("valve_7_peak_decrement", 0.2);
+
+        // Valve 7: Previous tunning pressure
+        params.insert("valve_7_previous_pressure", -1);
+
+
+        // Valve 2: Desired pressure increase between pulses
+        params.insert("valve_2_step_size", 100);
+
+        // Valve 2: Tolerence for desired pressure increase between pulses
+        params.insert("valve_2_step_size_tolerance", 30);
+
+        // Valve 2: Increment pulse width when pressure increase was too small / no change
+        params.insert("valve_2_increment", 5);
+
+        // Valve 2: Decrement pulse width when pressure increase was too large
+        params.insert("valve_2_decrement", 5);
+
+        // Valve 2: Decrease pulse width when at 75% of disired main pressure
+        params.insert("valve_2_peak_decrement", 0.2);
+
+        // Valve 2: Previous tunning pressure
+        params.insert("valve_2_previous_pressure", -1);
+
+
+
+        /*#######################################
+         # Timer Settings
+         ######################################*/
 
         // Set the timer for the pulse width for valve 1
         t_pulseValveOne.setInterval(params.value("valve_1_pulse").toInt());
@@ -195,13 +271,14 @@ namespace App { namespace Experiment { namespace Machines
         t_pulseValveSeven.setInterval(params.value("valve_7_pulse").toInt());
 
 
-
         // Set the timer for the inital vac down time
         t_exhuastVoidVacDownTimer.setInterval(params.value("exhuast_void_vac_down_time").toInt());
 
 
         // Set timer for valve 5 (vac in)
         t_vacuumValveTimer.setInterval(params.value("exhuast_void_vac_down_time_pulse").toInt());
+
+
     }
 
 
@@ -444,7 +521,7 @@ namespace App { namespace Experiment { namespace Machines
 
                 // Disable the backing pump
                 vacuum()->sm_disableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &vacuum()->sm_validateDisableBackingPump);
-                    // Validate backing pump on_1_MSVC2015_32bit-Debug\debug\GasRig.exe exited with code 0
+                    // Validate backing pump on
                     vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &valves()->sm_openExhuast);
                     // Backing pump failed
                     vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
@@ -463,18 +540,6 @@ namespace App { namespace Experiment { namespace Machines
             valves()->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openHighPressureInput);
             // Valve failed to close
             valves()->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
-
-
-
-
-        // Set timer for valve 2 &timers()->t_vacTime
-        //sml_startValveTwoTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_startValveOneTimer);
-
-        // Set timer for valve 1
-        //sml_startValveOneTimer.addTransition(this, &Pressurise::emit_timerActive, &sml_startValveSevenTimer);
-
-        // Set timer for valve 7
-       // sml_startValveSevenTimer.addTransition(this, &Pressurise::emit_timerActive, &valves()->sm_openHighPressureInput);
 
 
 
@@ -714,6 +779,9 @@ namespace App { namespace Experiment { namespace Machines
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
         {
+            // Reset valve time
+            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+
             // Save the pressure value
             pressureReading = currentPressure;
 
@@ -725,6 +793,10 @@ namespace App { namespace Experiment { namespace Machines
         }
         else if (currentPressure > max)
         {
+            // Set new valve time
+            if((currentPressure - max) > 1000)
+                t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt() + 10);
+
             // Reduce the pressure with value 2
             emit emit_pressureToHigh();
 
@@ -733,6 +805,9 @@ namespace App { namespace Experiment { namespace Machines
         }
         else if (currentPressure < min)
         {
+            // Reset valve time
+            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+
             // Back to increase the pressure
             emit emit_pressureToLow();
 
@@ -777,9 +852,6 @@ namespace App { namespace Experiment { namespace Machines
             // Save the pressure value
             pressureReading = currentPressure;
 
-            // Reset valve time
-            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
-
             // Open the output value to top the vile up
             emit emit_pressureWithinTolerance();
 
@@ -788,10 +860,8 @@ namespace App { namespace Experiment { namespace Machines
         }
         else if (currentPressure > max)
         {
-
-            // Set new valve time
-            if((currentPressure - max) > 1000)
-                t_pulseValveTwo.setInterval(40);
+            // Reset valve time
+            t_pulseValveSeven.setInterval(params.value("valve_7_pulse").toInt());
 
             // Reduce the pressure with value 2
             emit emit_pressureToHigh();
@@ -801,8 +871,31 @@ namespace App { namespace Experiment { namespace Machines
         }
         else if (currentPressure < min)
         {
-            // Reset valve time
-            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+            // Previous tunning pressure
+            int previousPressure = params.value("valve_7_previous_pressure").toInt();
+
+            // Does the valve timing need tunning?
+            int currentMinPressure = currentPressure - params.value("valve_7_step_size_tolerance").toInt();
+            int currentMaxPressure = currentPressure + params.value("valve_7_step_size_tolerance").toInt();
+            if( previousPressure != -1 &&
+                !(
+                    (abs(previousPressure - currentMinPressure) <= params.value("valve_7_step_size").toInt()) &&
+                    (abs(previousPressure - currentMaxPressure) >= params.value("valve_7_step_size").toInt())
+                )
+            )
+            {
+                if(abs(previousPressure - currentPressure) < params.value("valve_7_step_size").toInt())
+                { // Step size too small
+                    t_pulseValveSeven.setInterval(t_pulseValveSeven.interval() + params.value("valve_7_increment").toInt());
+                }
+                else if(abs(previousPressure - currentPressure) > params.value("valve_7_step_size").toInt())
+                { // Step size too large
+                    t_pulseValveSeven.setInterval(t_pulseValveSeven.interval() - params.value("valve_7_decrement").toInt());
+                }
+            }
+
+            // Update the previous pressure with current pressure
+            params.insert("valve_7_previous_pressure", currentPressure);
 
             // Back to increase the pressure
             emit emit_pressureToLow();
@@ -877,14 +970,14 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Pressurise::startValveSevenPulseTimer()
     {
-        //if(!t_pulseValveSeven.isActive())
-        //{
+        if(!t_pulseValveSeven.isActive())
+        {
             // Setup timer
             t_pulseValveSeven.setSingleShot(true);
             t_pulseValveSeven.start();
-       // }
+        }
 
-        //emit emit_timerActive();
+        emit emit_timerActive();
     }
 
     /**
