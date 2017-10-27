@@ -219,7 +219,7 @@ namespace App { namespace Experiment { namespace Machines
          ######################################*/
 
         // Valve 7: Desired pressure increase between pulses
-        params.insert("valve_7_step_size", 100);
+        params.insert("valve_7_step_size", 400);
 
         // Valve 7: Tolerence for desired pressure increase between pulses
         params.insert("valve_7_step_size_tolerance", 30);
@@ -238,10 +238,10 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Valve 2: Desired pressure increase between pulses
-        params.insert("valve_2_step_size", 100);
+        params.insert("valve_2_step_size", 80);
 
         // Valve 2: Tolerence for desired pressure increase between pulses
-        params.insert("valve_2_step_size_tolerance", 30);
+        params.insert("valve_2_step_size_tolerance", 20);
 
         // Valve 2: Increment pulse width when pressure increase was too small / no change
         params.insert("valve_2_increment", 5);
@@ -807,11 +807,11 @@ namespace App { namespace Experiment { namespace Machines
                 // Change the valve timing in the correct direction
                 if(abs(previousPressure - currentPressure) < params.value("valve_2_step_size").toInt())
                 { // Step size too small
-                    t_pulseValveTwo.setInterval(t_pulseValveSeven.interval() + params.value("valve_2_increment").toInt());
+                    t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + params.value("valve_2_increment").toInt());
                 }
                 else if(abs(previousPressure - currentPressure) > params.value("valve_2_step_size").toInt())
                 { // Step size too large
-                    t_pulseValveTwo.setInterval(t_pulseValveSeven.interval() - params.value("valve_2_decrement").toInt());
+                    t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() - params.value("valve_2_decrement").toInt());
                 }
             }
 
@@ -827,7 +827,7 @@ namespace App { namespace Experiment { namespace Machines
         else if (currentPressure < min)
         {
             // Reset valve time
-            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+            //t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
 
             // Back to increase the pressure
             emit emit_pressureToLow();
