@@ -219,7 +219,10 @@ namespace App { namespace Experiment { namespace Machines
          ######################################*/
 
         // Valve 7: Desired pressure increase between pulses
-        params.insert("valve_7_step_size", 400);
+        // Valve 2: Desired pressure increase between pulses for normal stage and final stage
+        params.insert("valve_7_normal_step_size", 400);
+        params.insert("valve_7_final_step_size", 200);
+        params.insert("valve_7_step_size", params.value("valve_7_normal_step_size").toInt());
 
         // Valve 7: Tolerence for desired pressure increase between pulses
         params.insert("valve_7_step_size_tolerance", 30);
@@ -230,18 +233,18 @@ namespace App { namespace Experiment { namespace Machines
         // Valve 7: Decrement pulse width when pressure increase was too large
         params.insert("valve_7_decrement", 5);
 
-        // Valve 7: Decrease pulse width when at 75% of disired main pressure
-        params.insert("valve_7_peak_decrement", 0.2);
-
         // Valve 7: Previous tunning pressure
         params.insert("valve_7_previous_pressure", -1);
 
 
-        // Valve 2: Desired pressure increase between pulses
-        params.insert("valve_2_step_size", 80);
+
+        // Valve 2: Desired pressure increase between pulses for normal stage and final stage
+        params.insert("valve_2_normal_step_size", 80);
+        params.insert("valve_2_final_step_size", 20);
+        params.insert("valve_2_step_size", params.value("valve_2_normal_step_size").toInt());
 
         // Valve 2: Tolerence for desired pressure increase between pulses
-        params.insert("valve_2_step_size_tolerance", 20);
+        params.insert("valve_2_step_size_tolerance", 10);
 
         // Valve 2: Increment pulse width when pressure increase was too small / no change
         params.insert("valve_2_increment", 5);
@@ -249,8 +252,8 @@ namespace App { namespace Experiment { namespace Machines
         // Valve 2: Decrement pulse width when pressure increase was too large
         params.insert("valve_2_decrement", 5);
 
-        // Valve 2: Decrease pulse width when at 75% of disired main pressure
-        params.insert("valve_2_peak_decrement", 0.2);
+
+
 
         // Valve 2: Previous tunning pressure
         params.insert("valve_2_previous_pressure", -1);
@@ -765,17 +768,23 @@ namespace App { namespace Experiment { namespace Machines
             // Calculate the boundary desired pressure
             max = (pressureReading + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
             min = (pressureReading + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
+
+            // If on the pressure tunning stage decrease vavle tunning params
+            params.insert("valve_2_step_size", params.value("valve_2_normal_step_size").toInt());
         }
         else
         {
             // Calculate the boundary desired pressure
             max = params.value("pressure").toDouble() + params.value("tolerance_valve_two").toDouble();
             min = params.value("pressure").toDouble() - params.value("tolerance_valve_two").toDouble();
+
+            // If on the pressure tunning stage decrease vavle tunning params
+            params.insert("valve_2_step_size", params.value("valve_2_final_step_size").toInt());
         }
 
         qDebug() << "VALVE TWO - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
                  << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_two").toDouble()
-                 << "valve speed" << t_pulseValveTwo.interval();
+                 << "valve speed" << t_pulseValveTwo.interval();       
 
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
@@ -855,12 +864,18 @@ namespace App { namespace Experiment { namespace Machines
             // Calculate the boundary desired pressure
             max = (pressureReading + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
             min = (pressureReading + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
+
+            // If on the pressure tunning stage decrease vavle tunning params
+            params.insert("valve_7_step_size", params.value("valve_7_normal_step_size").toInt());
         }
         else
         {
             // Calculate the boundary desired pressure
             max = params.value("pressure").toDouble() + params.value("tolerance_valve_seven").toDouble();
             min = params.value("pressure").toDouble();
+
+            // If on the pressure tunning stage decrease vavle tunning params
+            params.insert("valve_7_step_size", params.value("valve_7_final_step_size").toInt());
         }
 
         qDebug() << "VALVE SEVEN - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
