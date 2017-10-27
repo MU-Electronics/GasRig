@@ -779,12 +779,13 @@ namespace App { namespace Experiment { namespace Machines
             min = params.value("pressure").toDouble() - params.value("tolerance_valve_two").toDouble();
 
             // If on the pressure tunning stage decrease vavle tunning params
+            qDebug() << "Value two step sizeswitches to small: " << params.value("valve_2_final_step_size").toInt();
             params.insert("valve_2_step_size", params.value("valve_2_final_step_size").toInt());
         }
 
         qDebug() << "VALVE TWO - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
                  << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_two").toDouble()
-                 << "valve speed" << t_pulseValveTwo.interval();       
+                 << "valve speed: " << t_pulseValveTwo.interval();
 
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
@@ -836,7 +837,7 @@ namespace App { namespace Experiment { namespace Machines
         else if (currentPressure < min)
         {
             // Reset valve time
-            //t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
 
             // Back to increase the pressure
             emit emit_pressureToLow();
