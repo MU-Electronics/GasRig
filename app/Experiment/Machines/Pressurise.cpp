@@ -774,14 +774,12 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         qDebug() << "VALVE TWO - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
-                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_two").toDouble();
+                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_two").toDouble()
+                 << "valve speed" << t_pulseValveTwo.interval();
 
         // Is the pressure at the correct level with a tolerance
         if(currentPressure < max && currentPressure > min)
         {
-            // Reset valve time
-            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
-
             // Save the pressure value
             pressureReading = currentPressure;
 
@@ -793,9 +791,32 @@ namespace App { namespace Experiment { namespace Machines
         }
         else if (currentPressure > max)
         {
-            // Set new valve time
-            if((currentPressure - max) > 1000)
-                t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt() + 10);
+            // Previous tunning pressure
+            int previousPressure = params.value("valve_2_previous_pressure").toInt();
+
+            // Does the valve timing need tunning?
+            int currentMinPressure = currentPressure - params.value("valve_2_step_size_tolerance").toInt();
+            int currentMaxPressure = currentPressure + params.value("valve_2_step_size_tolerance").toInt();
+            if( previousPressure != -1 &&
+                !(
+                    (abs(previousPressure - currentMinPressure) <= params.value("valve_2_step_size").toInt()) &&
+                    (abs(previousPressure - currentMaxPressure) >= params.value("valve_2_step_size").toInt())
+                )
+            )
+            {
+                // Change the valve timing in the correct direction
+                if(abs(previousPressure - currentPressure) < params.value("valve_2_step_size").toInt())
+                { // Step size too small
+                    t_pulseValveTwo.setInterval(t_pulseValveSeven.interval() + params.value("valve_2_increment").toInt());
+                }
+                else if(abs(previousPressure - currentPressure) > params.value("valve_2_step_size").toInt())
+                { // Step size too large
+                    t_pulseValveTwo.setInterval(t_pulseValveSeven.interval() - params.value("valve_2_decrement").toInt());
+                }
+            }
+
+            // Update the previous pressure with current pressure
+            params.insert("valve_2_previous_pressure", currentPressure);
 
             // Reduce the pressure with value 2
             emit emit_pressureToHigh();
@@ -843,7 +864,8 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         qDebug() << "VALVE SEVEN - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
-                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble();
+                 << "step size: " << params.value("step_size").toDouble() << "tollerance: " <<  params.value("tolerance_valve_seven").toDouble()
+                 << "valve speed" << t_pulseValveSeven.interval();
 
 
         // Is the pressure at the correct level with a tolerance
@@ -884,6 +906,7 @@ namespace App { namespace Experiment { namespace Machines
                 )
             )
             {
+                // Change the valve timing in the correct direction
                 if(abs(previousPressure - currentPressure) < params.value("valve_7_step_size").toInt())
                 { // Step size too small
                     t_pulseValveSeven.setInterval(t_pulseValveSeven.interval() + params.value("valve_7_increment").toInt());
