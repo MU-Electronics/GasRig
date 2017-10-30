@@ -177,17 +177,21 @@ namespace App { namespace Experiment { namespace Machines
          # Tolerance Settings
          ######################################*/
 
-        // What is the tolerance of valve 7
-        params.insert("tolerance_valve_seven", 500);
-
-        // What is the tolerance of valve 2
-        params.insert("tolerance_valve_two", 250);
-
         // What is the tolerance of valve 1 (end tolerance, 0.2% or 30 mBar)
         int finalTol = pressure * 0.002;
         if(finalTol < 30)
             finalTol = 30;
         params.insert("tolerance_valve_one", finalTol);
+
+        // What is the tolerance of valve 2
+        int valveTwoTol = finalTol + (pressure * 0.002);
+        if(valveTwoTol > 250)
+            valveTwoTol = 250;
+        params.insert("tolerance_valve_two", valveTwoTol);
+
+        // What is the tolerance of valve 7
+        params.insert("tolerance_valve_seven", 500);
+
 
 
 
@@ -779,7 +783,7 @@ namespace App { namespace Experiment { namespace Machines
             min = params.value("pressure").toDouble() - params.value("tolerance_valve_two").toDouble();
 
             // If on the pressure tunning stage decrease vavle tunning params
-            qDebug() << "Value two step sizeswitches to small: " << params.value("valve_2_final_step_size").toInt();
+            qDebug() << "Value two step size switches to small: " << params.value("valve_2_final_step_size").toInt();
             params.insert("valve_2_step_size", params.value("valve_2_final_step_size").toInt());
         }
 
@@ -814,6 +818,7 @@ namespace App { namespace Experiment { namespace Machines
                 )
             )
             {
+                qDebug() << "Tunning valve two, pressure change: " << abs(previousPressure - currentPressure) << " tolerance: " << params.value("valve_2_step_size").toInt();
                 // Change the valve timing in the correct direction
                 if(abs(previousPressure - currentPressure) < params.value("valve_2_step_size").toInt())
                 { // Step size too small
