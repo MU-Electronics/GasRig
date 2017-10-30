@@ -65,6 +65,8 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_startValveSevenTimer(&machine)
         ,   sml_startExhuastVoidVacDownTimer(&machine)
         ,   sml_waitForVacuumValveTimer(&machine)
+        ,   sml_waitForVacuumValveTimer_2(&machine)
+        ,   sml_waitForVacuumValveTimer_3(&machine)
 
             // Timers for state machine
         ,   t_pulseValveOne(parent)
@@ -96,6 +98,8 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_startValveSevenTimer, &QState::entered, this, &Pressurise::startValveSevenPulseTimer);
         connect(&sml_startExhuastVoidVacDownTimer, &QState::entered, this, &Pressurise::startExhuastVoidVacDownTimer);
         connect(&sml_waitForVacuumValveTimer, &QState::entered, this, &Pressurise::startVacuumValveTimer);
+        connect(&sml_waitForVacuumValveTimer_2, &QState::entered, this, &Pressurise::startVacuumValveTimer);
+        connect(&sml_waitForVacuumValveTimer_3, &QState::entered, this, &Pressurise::startVacuumValveTimer);
 
 
         // Copy states that are used more than once to make then unique
@@ -252,6 +256,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Valve 2: Increment pulse width when pressure increase was too small / no change
         params.insert("valve_2_increment", 5);
+
+        // Valve 2: Corse increment pulse width when pressure increase was too small / no change
+        params.insert("valve_2_increment_corse", 20);
 
         // Valve 2: Decrement pulse width when pressure increase was too large
         params.insert("valve_2_decrement", 5);
@@ -589,8 +596,10 @@ namespace App { namespace Experiment { namespace Machines
             //Close valve 5
             sml_closeVacuumInForSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseVacuumInForSlowExhuast);
                 // Validate valive 5 closed
-                sml_validateCloseVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openSlowExhuastPath);
                 sml_validateCloseVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+                sml_validateCloseVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForVacuumValveTimer_2);
+                    // Wait for valve to close
+                    sml_waitForVacuumValveTimer_2.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &valves()->sm_openSlowExhuastPath);
 
         // Open valve 2
         valves()->sm_openSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenSlowExhuastPath);
@@ -611,12 +620,14 @@ namespace App { namespace Experiment { namespace Machines
 
         // Should vacuum in valve be opened?
         sml_shouldOpenValveFive.addTransition(this, &Pressurise::emit_shouldOpenValveFiveFalse, &sml_waitForPressureAfterValveTwo);
-        sml_shouldOpenValveFive.addTransition(this, &Pressurise::emit_shouldOpenValveFiveTrue, &sml_openVacuumInForSlowExhuast);
-            // Open the vacumm in valve
-            sml_openVacuumInForSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenVacuumInForSlowExhuast);
-                // Validate the vacuum in valve
-                sml_validateOpenVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForVacuumValveTimer);
-                sml_validateOpenVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+        sml_shouldOpenValveFive.addTransition(this, &Pressurise::emit_shouldOpenValveFiveTrue, &sml_waitForVacuumValveTimer_3);
+            // Wait for valve to close
+            sml_waitForVacuumValveTimer_3.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_openVacuumInForSlowExhuast);
+                // Open the vacumm in valve
+                sml_openVacuumInForSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenVacuumInForSlowExhuast);
+                    // Validate the vacuum in valve
+                    sml_validateOpenVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForVacuumValveTimer);
+                    sml_validateOpenVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Allow vaccum in to vac down exhaust void for some time
         sml_waitForVacuumValveTimer.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_waitForPressureAfterValveTwo);
@@ -818,11 +829,14 @@ namespace App { namespace Experiment { namespace Machines
                 )
             )
             {
-                qDebug() << "Tunning valve two, pressure change: " << abs(previousPressure - currentPressure) << " tolerance: " << params.value("valve_2_step_size").toInt();
+                qDebug() << "Tunning valve two, pressure change: " << abs(previousPressure - currentPressure) << " target step size: " << params.value("valve_2_step_size").toInt();
                 // Change the valve timing in the correct direction
                 if(abs(previousPressure - currentPressure) < params.value("valve_2_step_size").toInt())
                 { // Step size too small
-                    t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + params.value("valve_2_increment").toInt());
+                    int inc = params.value("valve_2_increment").toInt();
+                    if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.1))
+                        inc = params.value("valve_2_increment_corse").toInt();
+                    t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + inc);
                 }
                 else if(abs(previousPressure - currentPressure) > params.value("valve_2_step_size").toInt())
                 { // Step size too large

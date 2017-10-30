@@ -61,6 +61,8 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_startValveSevenTimer
             ,       sml_startExhuastVoidVacDownTimer
             ,       sml_waitForVacuumValveTimer
+            ,       sml_waitForVacuumValveTimer_2
+            ,       sml_waitForVacuumValveTimer_3
 
             ,       sml_waitForPressureAfterValveOne
             ,       sml_waitForPressureAfterValveTwo
