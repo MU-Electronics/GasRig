@@ -217,7 +217,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Valves::closeExhuast()
     {
-        valveHelper("3", false);
+        valveHelper("3", false);           
     }
 
     void Valves::closeOutput()
@@ -318,7 +318,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Valves::openExhuast()
     {
-        valveHelper("3", true);
+        valveHelper("3", true);  qDebug() << "opening exhuast";
     }
 
     void Valves::openOutput()
@@ -367,7 +367,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Valves::validateOpenExhuast()
     {
-        validateValveHelper("3", true);
+        validateValveHelper("3", true);  qDebug() << "opening exhuast va;lidate";
     }
 
     void Valves::validateOpenOutput()

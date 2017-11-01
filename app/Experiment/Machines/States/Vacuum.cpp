@@ -266,6 +266,7 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
         QVariantMap success;
         emit emit_validationSuccess(success);
+        qDebug()<<"validating disable pump";
 
         qDebug() << package;
     }

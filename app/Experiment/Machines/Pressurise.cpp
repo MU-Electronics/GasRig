@@ -165,7 +165,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validateCloseExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseExhuast);
 
         connect(&sml_validateEnableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
-        connect(&sml_validateDisableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
+        connect(&sml_validateDisableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateDisableBackingPump);
 
     }
 
@@ -777,6 +777,8 @@ namespace App { namespace Experiment { namespace Machines
         // Save that we're about to disable the backing pump
         backingPumpEnabled = false;
 
+        qDebug() << "record disable";
+
         emit emit_recordedBackingPumpState();
     }
 
@@ -805,7 +807,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
-
+        qDebug() << "should open check";
         if(params.value("vacuum_backing").toDouble() > currentPressure)
         {
             emit emit_shouldOpenValveFiveTrue();
@@ -825,7 +827,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
-
+qDebug() << "should close check";
         if(params.value("vacuum_backing").toDouble() > currentPressure)
         {
             emit emit_shouldCloseValveFiveTrue();
