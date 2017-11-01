@@ -49,12 +49,19 @@ namespace App { namespace Experiment { namespace Machines
             // Hold the pressure for the previous stage
             double pressureReading = 1;
 
+            // Hold the state of the backing pump
+            bool backingPumpEnabled = false;
+
             // Timers for state machine
             QTimer  t_pulseValveOne
             ,       t_pulseValveTwo
             ,       t_pulseValveSeven
             ,       t_exhuastVoidVacDownTimer
             ,       t_vacuumValveTimer;
+
+
+
+
 
             QState  sml_startValveOneTimer
             ,       sml_startValveTwoTimer
@@ -63,6 +70,7 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_waitForVacuumValveTimer
             ,       sml_waitForVacuumValveTimer_2
             ,       sml_waitForVacuumValveTimer_3
+            ,       sml_waitForVacuumValveTimer_4
 
             ,       sml_waitForPressureAfterValveOne
             ,       sml_waitForPressureAfterValveTwo
@@ -70,6 +78,8 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_waitForInitalPressure
             ,       sml_waitForExhuastVoidVacDown
             ,       sml_waitForPressureAfterInitValveOne
+            ,       sml_waitForPressureBeforeValveFive
+            ,       sml_waitForPressureAfterValveFive
 
             ,       sml_waitForValveOneTimer
             ,       sml_waitForValveTwoTimer
@@ -77,22 +87,30 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_waitForInitalVacDown
             ,       sml_waitForInitialSystemVacDown
 
+            ,       sml_openExhuast_2
+            ,       sml_closeExhuast_2
             ,       sml_closeSlowExhuastPath_2
             ,       sml_closeOutput_2
             ,       sml_closeHighPressureInput_2
             ,       sml_openVacuumIn_2
             ,       sml_openOutput_2
 
-            ,       sml_shouldOpenValveFive
-            ,       sml_shouldCloseValveFive
+            ,       sml_enableBackingPump_2
+
             ,       sml_closeVacuumInForSlowExhuast
-            ,       sml_openVacuumInForSlowExhuast;
+            ,       sml_openVacuumInForSlowExhuast
+
+            ,       sml_shouldEnableBackingPump
+            ,       sml_disableBackingPump_2;
 
 
             States::CommandValidatorState
                     sml_validatePressureAfterValveSeven
             ,       sml_validatePressureAfterValveTwo
             ,       sml_validatePressureAfterValveOne
+
+            ,       sml_shouldOpenValveFive
+            ,       sml_shouldCloseValveFive
 
             ,       sml_validatePressureForVacuumAfterValveOne
 
@@ -105,7 +123,12 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_validateCloseSlowExhuastPath_2
             ,       sml_validateCloseOutput_2
             ,       sml_validateOpenVacuumIn_2
-            ,       sml_validateOpenOutput_2;
+            ,       sml_validateOpenOutput_2
+            ,       sml_validateOpenExhuast_2
+            ,       sml_validateCloseExhuast_2
+
+            ,       sml_validateEnableBackingPump_2
+            ,       sml_validateDisableBackingPump_2;
 
         signals:
             void emit_pressuriseFinished(QVariantMap params);
@@ -125,6 +148,11 @@ namespace App { namespace Experiment { namespace Machines
             void emit_shouldCloseValveFiveTrue();
             void emit_shouldCloseValveFiveFalse();
 
+            void emit_shouldEnableBackingPumpTrue();
+            void emit_shouldEnableBackingPumpSkip();
+
+            void emit_recordedBackingPumpState();
+
             // Timer signals
             void emit_timerActive();
 
@@ -136,6 +164,8 @@ namespace App { namespace Experiment { namespace Machines
             void validateInitialSystemVacuum();
             void shouldOpenValveFive();
             void shouldCloseValveFive();
+            void shouldEnableBackingPump();
+            void recordDisablingBackingPump();
 
             // Timers
             void startValveOnePulseTimer();
