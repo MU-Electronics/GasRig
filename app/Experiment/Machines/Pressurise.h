@@ -71,6 +71,7 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_waitForVacuumValveTimer_2
             ,       sml_waitForVacuumValveTimer_3
             ,       sml_waitForVacuumValveTimer_4
+            ,       sml_waitForVacuumValveTimer_5
 
             ,       sml_waitForPressureAfterValveOne
             ,       sml_waitForPressureAfterValveTwo
@@ -99,6 +100,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ,       sml_closeVacuumInForSlowExhuast
             ,       sml_openVacuumInForSlowExhuast
+            ,       sml_closeVacuumInForSlowExhuast_2
 
             ,       sml_shouldEnableBackingPump
             ,       sml_disableBackingPump_2
@@ -119,6 +121,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ,       sml_validateCloseVacuumInForSlowExhuast
             ,       sml_validateOpenVacuumInForSlowExhuast
+            ,       sml_validateCloseVacuumInForSlowExhuast_2
 
             ,       sml_validateCloseHighPressureInput_2
             ,       sml_validateCloseSlowExhuastPath_2
