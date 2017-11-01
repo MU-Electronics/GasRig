@@ -49,6 +49,8 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_openVacuumInForSlowExhuast(&machine)
         ,   sml_closeVacuumInForSlowExhuast_2(&machine)
 
+        ,   sml_openExhuast_2(&machine)
+        ,   sml_closeExhuast_2(&machine)
 
         ,   sml_validateCloseSlowExhuastPath_2(&machine)
         ,   sml_validateCloseHighPressureInput_2(&machine)
@@ -203,7 +205,7 @@ namespace App { namespace Experiment { namespace Machines
          ######################################*/
 
         // When do we need a vacuum backing for the exhaust
-        params.insert("vacuum_backing", 2000);
+        params.insert("vacuum_backing", 4000);
 
         // Vac down the exhuast void to provide a initial buffer
         params.insert("exhuast_void_vac_down_time", 5000);
@@ -827,13 +829,14 @@ namespace App { namespace Experiment { namespace Machines
 
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
-qDebug() << "should close check";
+
         if(params.value("vacuum_backing").toDouble() > currentPressure)
         {
             emit emit_shouldCloseValveFiveTrue();
+            qDebug() << "Bscking pump should be endabled";
             return;
         }
-
+        qDebug() << "Bscking pump should not be endabled";
         emit emit_shouldCloseValveFiveFalse();
     }
 
