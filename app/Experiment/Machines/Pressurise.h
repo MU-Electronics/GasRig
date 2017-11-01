@@ -101,7 +101,8 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_openVacuumInForSlowExhuast
 
             ,       sml_shouldEnableBackingPump
-            ,       sml_disableBackingPump_2;
+            ,       sml_disableBackingPump_2
+            ,       sml_recordDisablingBackingPump;
 
 
             States::CommandValidatorState

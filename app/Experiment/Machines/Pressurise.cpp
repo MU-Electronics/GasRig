@@ -36,7 +36,8 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_shouldOpenValveFive(&machine)
         ,   sml_shouldCloseValveFive(&machine)
 
-        ,   sml_shouldReEnableBackingPump(&machine)
+        ,   sml_shouldEnableBackingPump(&machine)
+        ,   sml_recordDisablingBackingPump(&machine)
 
             // Copy states that are used more than once to make then unique
         ,   sml_closeHighPressureInput_2(&machine)
@@ -46,8 +47,8 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_openOutput_2(&machine)
         ,   sml_closeVacuumInForSlowExhuast(&machine)
         ,   sml_openVacuumInForSlowExhuast(&machine)
-        ,   sml_openVacuumIn_2(&machine)
-        ,   sml_openOutput_2(&machine)
+        //,   sml_openVacuumIn_2(&machine)
+        //,   sml_openOutput_2(&machine)
 
         ,   sml_validateCloseSlowExhuastPath_2(&machine)
         ,   sml_validateCloseHighPressureInput_2(&machine)
@@ -143,6 +144,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_openVacuumInForSlowExhuast, &QState::entered, this->valves(), &States::Valves::openVacuumIn);
 
         connect(&sml_shouldEnableBackingPump, &QState::entered, this, &Pressurise::shouldEnableBackingPump);
+        connect(&sml_recordDisablingBackingPump, &QState::entered, this, &Pressurise::recordDisablingBackingPump);
 
         connect(&sml_enableBackingPump_2, &QState::entered, this->vacuum(), &States::Vacuum::enableBackingPump);
         connect(&sml_disableBackingPump_2, &QState::entered, this->vacuum(), &States::Vacuum::disableBackingPump);
@@ -483,7 +485,7 @@ namespace App { namespace Experiment { namespace Machines
             if(!params.value("disable_init_vac_down").toBool()){
                 valves()->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openOutput);
             }else{
-                valves()->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &vvalves()->sm_closeFastExhuastPath);
+                valves()->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeFastExhuastPath);
             }
             // Valve failed to close
             valves()->sm_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
@@ -639,6 +641,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Should vacuum in valve be closed?
         sml_shouldCloseValveFive.addTransition(this, &Pressurise::emit_shouldCloseValveFiveFalse, &sml_openExhuast_2);
+            // Close vacuum in
+            // Turn off vacuum pump
             // Open exhuast valve 3
             sml_openExhuast_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenExhuast_2);
                 // Valve failed to close
