@@ -49,7 +49,7 @@ namespace App { namespace View { namespace Managers
             void listen_critialSerialError(QVariantMap package);
             void listen_timeoutSerialError(QVariantMap package);
             void request_reconnect(QString item);
-
+            void allConnections();
 
 
         private:

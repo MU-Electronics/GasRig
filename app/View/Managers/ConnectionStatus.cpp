@@ -22,15 +22,17 @@ namespace App { namespace View { namespace Managers
           m_settings(settings)
     {
         // USB connection start out as not working
-        m_hardwareConnection.insert("VacStation", "0");
-        m_hardwareConnection.insert("PressureSensor", "0");
-        m_hardwareConnection.insert("LabJack", "0");
-        m_hardwareConnection.insert("FlowController", "0");
-        m_hardwareConnection.insert("Supplies", "0");
-        m_hardwareConnection.insert("SystemCondition", "0");
-        m_hardwareConnection.insert("SafetyMonitor", "0");
-        m_hardwareConnection.insert("HardwareGateway", "0");
+        m_hardwareConnection.insert("vac_station", "0");
+        m_hardwareConnection.insert("pressure_sensor", "0");
+        m_hardwareConnection.insert("lab_jack", "0");
+        m_hardwareConnection.insert("flow_controller", "0");
+//        m_hardwareConnection.insert("Supplies", "0");
+//        m_hardwareConnection.insert("SystemCondition", "0");
+//        m_hardwareConnection.insert("SafetyMonitor", "0");
+//        m_hardwareConnection.insert("HardwareGateway", "0");
 
+        // All connects ok
+        m_hardwareConnection.insert("all_connections", false);
     }
 
 
@@ -49,9 +51,7 @@ namespace App { namespace View { namespace Managers
         connect(&hardware, &Hardware::Access::emit_critialSerialError, this, &ConnectionStatus::listen_critialSerialError);
 
         // Listen for power supply signals
-
         // Listen for safety monitor signals
-
         // Listen for system safe conition
 
         // Requests for hardware reconnects
@@ -60,7 +60,19 @@ namespace App { namespace View { namespace Managers
 
 
 
+    void ConnectionStatus::allConnections()
+    {
+        if( m_hardwareConnection.value("vac_station").toInt() == 1 &&
+            m_hardwareConnection.value("pressure_sensor").toInt() == 1  &&
+            m_hardwareConnection.value("lab_jack").toInt() == 1  &&
+            m_hardwareConnection.value("flow_controller").toInt() == 1)
+        {
+            m_hardwareConnection.insert("all_connections", true);
+            return;
+        }
 
+        m_hardwareConnection.insert("all_connections", false);
+    }
 
     void ConnectionStatus::request_reconnect(QString item)
     {
@@ -95,7 +107,6 @@ namespace App { namespace View { namespace Managers
             command["method"] = "resetConnection";                   
         }
 
-        //qDebug() << command;
         // Send the command to the hardware
         emit emit_hardwareAccess(command);
     }
@@ -121,6 +132,9 @@ namespace App { namespace View { namespace Managers
             m_hardwareConnection.insert(package["responsability"].toString(), "1");
         }
 
+        // Update summary
+        allConnections();
+
         // Update GUI
         emit_hardwareConnectionChanged(m_hardwareConnection);
     }
@@ -137,6 +151,9 @@ namespace App { namespace View { namespace Managers
         // Set connection to timeout error
         m_hardwareConnection.insert(package["responsability"].toString(), "2");
 
+        // Update summary
+        allConnections();
+
         // Update GUI
         emit_hardwareConnectionChanged(m_hardwareConnection);
     }
@@ -152,6 +169,9 @@ namespace App { namespace View { namespace Managers
     {
         // Set connection to critial error
         m_hardwareConnection.insert(package["responsability"].toString(), "3");
+
+        // Update summary
+        allConnections();
 
         // Update GUI
         emit_hardwareConnectionChanged(m_hardwareConnection);

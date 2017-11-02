@@ -28,10 +28,10 @@ Pane {
         highlighted: true
         onClicked: {
             // Remove highligh from mode selection
-            listView.currentIndex = -1
+            modeNavigation.currentIndex = -1
 
             //Add highligh to this tab
-            connectionTab.highlighted = false
+            connectionTab.highlighted = true
 
             // Push the view update
             stackView.push("qrc:/views/management/ConnectionStatus.qml")
@@ -41,15 +41,16 @@ Pane {
     }
 
     ListView {
-        id: listView
+        id: modeNavigation
         anchors.fill: parent
         anchors.topMargin: 50
         currentIndex: -1
+        enabled: ConnectionStatusManager.hardwareConnection["all_connections"];
         model: ListModel {
             ListElement { title: qsTr("Pressurise Cell"); source: "qrc:/views/modes/PressuriseCell.qml" }
             ListElement { title: qsTr("De-Pressurise Cell"); source: "qrc:/views/modes/DepressuriseCell.qml" }
             ListElement { title: qsTr("Vacuum Station"); source: "qrc:/views/modes/VacuumStation.qml" }
-            ListElement { title: qsTr("Change Gas"); source: "qrc:/views/modes/VacuumStation.qml" }
+            ListElement { title: qsTr("Change Gas"); source: "qrc:/views/modes/ChangeGas.qml" }
             ListElement { title: qsTr("Cycle Pressure"); source: "qrc:/views/modes/CyclePressure.qml" }
             ListElement { title: qsTr("Continuous Flow"); source: "qrc:/views/modes/ContinuousFlow.qml" }
             ListElement { title: qsTr("Remote Control"); source: "qrc:/views/modes/RemoteControl.qml"  }
@@ -67,7 +68,7 @@ Pane {
                 connectionTab.highlighted = false
 
                 // Add highligh to mode
-                listView.currentIndex = index
+                modeNavigation.currentIndex = index
 
                 // Push the view update
                 stackView.push(model.source)

@@ -2,6 +2,6 @@ import "../parts"
 
 
 Mode_NotSupported{
-    featureName: qsTr("Continuous Flow Not Supported Yet")
+    featureName: qsTr("Vacuum Station Not Supported Yet")
 }
 

@@ -46,7 +46,7 @@ Item {
             BodyLabel {
                 text: qsTr("<p>This feature has yet to be impliment into the program " +
                            "but is planned in the near future.</p>" +
-                           "<p>If you require is feature please speak to JFET Services. " +
+                           "<p>If you require is feature please speak to Electronic Services. " +
                            "<br/>Phone: 54641 <br/> Email: chemelec@listserv.manchester.ac.uk </p>")
                 wrapMode: Text.WordWrap
                 width: parent.width
