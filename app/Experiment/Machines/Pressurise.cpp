@@ -695,7 +695,7 @@ namespace App { namespace Experiment { namespace Machines
                             // Wait for valve to close
                             sml_waitForVacuumValveTimer_2.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_shouldEnableBackingPump);
                                 // Skip any action on the backing pump
-                                sml_shouldEnableBackingPump.addTransition(this, &Pressurise::emit_shouldEnableBackingPumpSkip, &sml_openVacuumInForSlowExhuast);
+                                sml_shouldEnableBackingPump.addTransition(this, &Pressurise::emit_shouldEnableBackingPumpSkip, &valves()->sm_openSlowExhuastPath);
                                 // Backing pump needs enabling
                                 sml_shouldEnableBackingPump.addTransition(this, &Pressurise::emit_shouldEnableBackingPumpTrue, &sml_enableBackingPump_2);
                                     // Enable backing pump
