@@ -684,16 +684,26 @@ namespace App { namespace Experiment { namespace Machines
                 // Valve failed to close
                 sml_validateCloseExhuast_2.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
                 // Close the output
-                sml_validateCloseExhuast_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForVacuumValveTimer_4);
+                sml_validateCloseExhuast_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_closeVacuumInForSlowExhuast);
                     // Wait for valve to close
-                    sml_waitForVacuumValveTimer_4.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_closeVacuumInForSlowExhuast);
-                        // Close valve 5
-                        sml_closeVacuumInForSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseVacuumInForSlowExhuast);
-                            // Validate valive 5 closed
-                            sml_validateCloseVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
-                            sml_validateCloseVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForVacuumValveTimer_2);
-                                // Wait for valve to close
-                                sml_waitForVacuumValveTimer_2.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &valves()->sm_openSlowExhuastPath);
+                    //sml_waitForVacuumValveTimer_4.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_closeVacuumInForSlowExhuast);
+                    // Close valve 5
+                    sml_closeVacuumInForSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseVacuumInForSlowExhuast);
+                        // Validate valive 5 closed
+                        sml_validateCloseVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+                        sml_validateCloseVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForVacuumValveTimer_2);
+                            // Wait for valve to close
+                            sml_waitForVacuumValveTimer_2.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_shouldEnableBackingPump);
+                                // Skip any action on the backing pump
+                                sml_shouldEnableBackingPump.addTransition(this, &Pressurise::emit_shouldEnableBackingPumpSkip, &sml_openVacuumInForSlowExhuast);
+                                // Backing pump needs enabling
+                                sml_shouldEnableBackingPump.addTransition(this, &Pressurise::emit_shouldEnableBackingPumpTrue, &sml_enableBackingPump_2);
+                                    // Enable backing pump
+                                    sml_enableBackingPump_2.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &sml_validateEnableBackingPump_2);
+                                        // Backing pump failed
+                                        sml_validateEnableBackingPump_2.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+                                        // Validate backing pump on
+                                        sml_validateEnableBackingPump_2.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &valves()->sm_openSlowExhuastPath);
 
         // Open valve 2
         valves()->sm_openSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenSlowExhuastPath);
@@ -719,25 +729,15 @@ namespace App { namespace Experiment { namespace Machines
         sml_shouldOpenValveFive.addTransition(this, &Pressurise::emit_shouldOpenValveFiveFalse, &sml_waitForPressureAfterValveTwo);
         // Open vacuum in valve and ensure backing pump on
         sml_shouldOpenValveFive.addTransition(this, &Pressurise::emit_shouldOpenValveFiveTrue, &sml_waitForVacuumValveTimer_3);
-            // Wait for valve to close
-            sml_waitForVacuumValveTimer_3.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_shouldEnableBackingPump);
-                // Skip any action on the backing pump
-                sml_shouldEnableBackingPump.addTransition(this, &Pressurise::emit_shouldEnableBackingPumpSkip, &sml_openVacuumInForSlowExhuast);
-                // Backing pump needs enabling
-                sml_shouldEnableBackingPump.addTransition(this, &Pressurise::emit_shouldEnableBackingPumpTrue, &sml_enableBackingPump_2);
-                    // Enable backing pump
-                    sml_enableBackingPump_2.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &sml_validateEnableBackingPump_2);
-                        // Backing pump failed
-                        sml_validateEnableBackingPump_2.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
-                        // Validate backing pump on
-                        sml_validateEnableBackingPump_2.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sml_openVacuumInForSlowExhuast);
-                            // Open the vacumm in valve
-                            sml_openVacuumInForSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenVacuumInForSlowExhuast);
-                                // Validate the vacuum in valve
-                                sml_validateOpenVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForVacuumValveTimer);
-                                sml_validateOpenVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
-                                    // Allow vaccum in to vac down exhaust void for some time
-                                    sml_waitForVacuumValveTimer.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_waitForPressureAfterValveTwo);
+            // Wait for valve to open
+            sml_waitForVacuumValveTimer_3.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_openVacuumInForSlowExhuast);
+                // Open the vacumm in valve
+                sml_openVacuumInForSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenVacuumInForSlowExhuast);
+                    // Validate the vacuum in valve
+                    sml_validateOpenVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForVacuumValveTimer);
+                    sml_validateOpenVacuumInForSlowExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+                        // Allow vaccum in to vac down exhaust void for some time
+                        sml_waitForVacuumValveTimer.addTransition(&t_vacuumValveTimer, &QTimer::timeout, &sml_waitForPressureAfterValveTwo);
 
         // Compare pressure to step size
         sml_waitForPressureAfterValveTwo.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterValveTwo);
