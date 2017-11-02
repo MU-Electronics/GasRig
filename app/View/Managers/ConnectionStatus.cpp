@@ -22,10 +22,10 @@ namespace App { namespace View { namespace Managers
           m_settings(settings)
     {
         // USB connection start out as not working
-        m_hardwareConnection.insert("vac_station", "0");
-        m_hardwareConnection.insert("pressure_sensor", "0");
-        m_hardwareConnection.insert("lab_jack", "0");
-        m_hardwareConnection.insert("flow_controller", "0");
+        m_hardwareConnection.insert("VacStation", "0");
+        m_hardwareConnection.insert("PressureSensor", "0");
+        m_hardwareConnection.insert("LabJack", "0");
+        m_hardwareConnection.insert("FlowController", "0");
 //        m_hardwareConnection.insert("Supplies", "0");
 //        m_hardwareConnection.insert("SystemCondition", "0");
 //        m_hardwareConnection.insert("SafetyMonitor", "0");
@@ -62,10 +62,10 @@ namespace App { namespace View { namespace Managers
 
     void ConnectionStatus::allConnections()
     {
-        if( m_hardwareConnection.value("vac_station").toInt() == 1 &&
-            m_hardwareConnection.value("pressure_sensor").toInt() == 1  &&
-            m_hardwareConnection.value("lab_jack").toInt() == 1  &&
-            m_hardwareConnection.value("flow_controller").toInt() == 1)
+        if( m_hardwareConnection.value("VacStation").toInt() == 1 &&
+            m_hardwareConnection.value("PressureSensor").toInt() == 1  &&
+            m_hardwareConnection.value("LabJack").toInt() == 1  &&
+            m_hardwareConnection.value("FlowController").toInt() == 1)
         {
             m_hardwareConnection.insert("all_connections", true);
             return;
