@@ -48,11 +48,10 @@ Pane {
         model: ListModel {
             ListElement { title: qsTr("Pressurise Cell"); source: "qrc:/views/modes/PressuriseCell.qml" }
             ListElement { title: qsTr("De-Pressurise Cell"); source: "qrc:/views/modes/DepressuriseCell.qml" }
-            ListElement { title: qsTr("Cycle Pressure"); source: "qrc:/views/modes/CyclePressure.qml" }
-            ListElement { title: qsTr("Continuous Flow"); source: "qrc:/views/modes/ContinuousFlow.qml"  }
             ListElement { title: qsTr("Vacuum Station"); source: "qrc:/views/modes/VacuumStation.qml" }
-            ListElement { title: qsTr("Custom Experiment"); source: "qrc:/views/modes/CustomExperiment.qml" }
-            ListElement { title: qsTr("Safe Manual Control"); source: "qrc:/views/modes/SafeManualControl.qml" }
+            ListElement { title: qsTr("Change Gas"); source: "qrc:/views/modes/VacuumStation.qml" }
+            ListElement { title: qsTr("Cycle Pressure"); source: "qrc:/views/modes/CyclePressure.qml" }
+            ListElement { title: qsTr("Continuous Flow"); source: "qrc:/views/modes/ContinuousFlow.qml" }
             ListElement { title: qsTr("Remote Control"); source: "qrc:/views/modes/RemoteControl.qml"  }
         }
         header: Subheader {

@@ -1,5 +1,7 @@
 #include "Pressurise.h"
 
+#include <cmath>
+
 // Include extenral deps
 #include <QObject>
 
