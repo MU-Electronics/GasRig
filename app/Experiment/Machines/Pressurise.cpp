@@ -37,7 +37,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_shouldCloseValveFive(&machine)
 
         ,   sml_shouldEnableBackingPump(&machine)
-        ,   sml_recordDisablingBackingPump(&machine)
+        ,   sml_shouldDisablingBackingPump(&machine)
 
             // Copy states that are used more than once to make then unique
         ,   sml_closeHighPressureInput_2(&machine)
@@ -225,6 +225,8 @@ namespace App { namespace Experiment { namespace Machines
         int finalTol = pressure * 0.002;
         if(finalTol < 30)
             finalTol = 30;
+        if(pressure < 2000)
+            finalTol = 10;
         params.insert("tolerance_valve_one", finalTol);
 
         // What is the tolerance of valve 2
@@ -256,7 +258,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Between valve 2 how long should vac down be when setting pressure below 1.5bar
-        params.insert("exhuast_void_vac_down_time_pulse", 1000);
+        params.insert("exhuast_void_vac_down_time_pulse", 300);
 
 
 
@@ -269,7 +271,7 @@ namespace App { namespace Experiment { namespace Machines
         // Valve 7: Desired pressure increase between pulses
         // Valve 2: Desired pressure increase between pulses for normal stage and final stage
         params.insert("valve_7_normal_step_size", 400);
-        params.insert("valve_7_final_step_size", 200);
+        params.insert("valve_7_final_step_size", 100);
         params.insert("valve_7_step_size", params.value("valve_7_normal_step_size").toInt());
 
         // Valve 7: Tolerence for desired pressure increase between pulses
@@ -288,7 +290,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Valve 2: Desired pressure increase between pulses for normal stage and final stage
         params.insert("valve_2_normal_step_size", 80);
-        params.insert("valve_2_final_step_size", 20);
+        params.insert("valve_2_final_step_size", 10);
         params.insert("valve_2_step_size", params.value("valve_2_normal_step_size").toInt());
 
         // Valve 2: Tolerence for desired pressure increase between pulses
@@ -299,6 +301,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Valve 2: Corse increment pulse width when pressure increase was too small / no change
         params.insert("valve_2_increment_corse", 20);
+
+        // Valve 2: Fine increment pulse width when pressure increase needs to be small
+        params.insert("valve_2_increment_fine", 2);
 
         // Valve 2: Decrement pulse width when pressure increase was too large
         params.insert("valve_2_decrement", 5);
@@ -806,16 +811,7 @@ namespace App { namespace Experiment { namespace Machines
 
     void Pressurise::shouldOpenValveFive()
     {
-        // Get the validator state instance
-        States::CommandValidatorState* state = (States::CommandValidatorState*)sender();
-
-        // Get the package data from the instance
-        QVariantMap package = state->package;
-
-        // Current pressure value
-        double currentPressure = package.value("pressure").toDouble() * 1000;
-
-        if(params.value("vacuum_backing").toDouble() > currentPressure)
+        if(exhuastMode)
         {
             emit emit_shouldOpenValveFiveTrue();
             return;
@@ -838,8 +834,10 @@ namespace App { namespace Experiment { namespace Machines
         if(params.value("vacuum_backing").toDouble() > currentPressure)
         {
             emit emit_shouldCloseValveFiveTrue();
+            exhuastMode = true;
             return;
         }
+        exhuastMode = false;
         emit emit_shouldCloseValveFiveFalse();
     }
 
@@ -947,6 +945,7 @@ namespace App { namespace Experiment { namespace Machines
             // If on the pressure tunning stage decrease vavle tunning params
             qDebug() << "Value two step size switches to small: " << params.value("valve_2_final_step_size").toInt();
             params.insert("valve_2_step_size", params.value("valve_2_final_step_size").toInt());
+
         }
 
         qDebug() << "VALVE TWO - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
@@ -987,6 +986,8 @@ namespace App { namespace Experiment { namespace Machines
                     int inc = params.value("valve_2_increment").toInt();
                     if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.1))
                         inc = params.value("valve_2_increment_corse").toInt();
+                    //if(abs(previousPressure - currentPressure) < (inc * 2))
+                    //   inc = params.value("valve_2_increment_fine").toInt();
                     t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + inc);
                 }
                 else if(abs(previousPressure - currentPressure) > params.value("valve_2_step_size").toInt())
