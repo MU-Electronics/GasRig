@@ -52,6 +52,9 @@ namespace App { namespace Experiment { namespace Machines
             // Hold the state of the backing pump
             bool backingPumpEnabled = false;
 
+            // Exhuast mode
+            bool exhuastMode = false;
+
             // Timers for state machine
             QTimer  t_pulseValveOne
             ,       t_pulseValveTwo
@@ -104,7 +107,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ,       sml_shouldEnableBackingPump
             ,       sml_disableBackingPump_2
-            ,       sml_recordDisablingBackingPump;
+            ,       sml_shouldDisablingBackingPump;
 
 
             States::CommandValidatorState
@@ -155,7 +158,8 @@ namespace App { namespace Experiment { namespace Machines
             void emit_shouldEnableBackingPumpTrue();
             void emit_shouldEnableBackingPumpSkip();
 
-            void emit_recordedBackingPumpState();
+            void emit_shouldDisableBackingPumpTrue();
+            void emit_shouldDisableBackingPumpFalse();
 
             // Timer signals
             void emit_timerActive();
@@ -169,7 +173,7 @@ namespace App { namespace Experiment { namespace Machines
             void shouldOpenValveFive();
             void shouldCloseValveFive();
             void shouldEnableBackingPump();
-            void recordDisablingBackingPump();
+            void shouldDisablingBackingPump();
 
             // Timers
             void startValveOnePulseTimer();
