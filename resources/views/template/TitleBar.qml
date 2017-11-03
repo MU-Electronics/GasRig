@@ -26,6 +26,9 @@ TabbedPage {
                 tooltip: qsTr("Settings")
                 onTriggered: {
                     stackView.push("qrc:/views/management/TestingMaintenance/Index.qml")
+
+                    // Update current nav
+                    GlobalManager.currentNavigation = 1;
                 }
             },
             Action {
@@ -34,6 +37,9 @@ TabbedPage {
                 tooltip: qsTr("Settings")
                 onTriggered: {
                     stackView.push("qrc:/views/management/Settings.qml")
+
+                    // Update current nav
+                    GlobalManager.currentNavigation = 1;
                 }
             },
             Action {

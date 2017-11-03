@@ -108,7 +108,8 @@ SOURCES += \
     app/Experiment/Machines/States/Pressure.cpp \
     app/Experiment/Machines/States/Timers.cpp \
     app/Experiment/Machines/PulseValve.cpp \
-    app/Experiment/Machines/Pressurise.cpp
+    app/Experiment/Machines/Pressurise.cpp \
+    app/View/Managers/Global.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -193,4 +194,5 @@ HEADERS += \
     app/Experiment/Machines/States/Pressure.h \
     app/Experiment/Machines/States/Timers.h \
     app/Experiment/Machines/PulseValve.h \
-    app/Experiment/Machines/Pressurise.h
+    app/Experiment/Machines/Pressurise.h \
+    app/View/Managers/Global.h

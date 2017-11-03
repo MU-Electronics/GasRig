@@ -8,6 +8,22 @@ import "../modes"
 
 Pane {
     id: listPane
+
+
+    Connections {
+        target: GlobalManager
+        onCurrentNavigationChanged: {
+            // Removed hightling of old page
+            if(GlobalManager.currentNavigation == 1)
+            {
+                connectionTab.highlighted = false
+                modeNavigation.currentIndex = -1
+            }
+        }
+    }
+
+    property int currentNavigationWindow: 2
+
     anchors {
         left: parent.left
         top: parent.top
@@ -36,7 +52,8 @@ Pane {
             // Push the view update
             stackView.push("qrc:/views/management/ConnectionStatus.qml")
 
-            //listPane.enabled = false
+            // Update current nav
+            GlobalManager.currentNavigation = 2;
         }
     }
 
@@ -72,7 +89,9 @@ Pane {
 
                 // Push the view update
                 stackView.push(model.source)
-                //listPane.enabled = false
+
+                // Update current nav
+                GlobalManager.currentNavigation = 2;
             }
         }
         ScrollBar.vertical: ScrollBar {}

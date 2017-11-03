@@ -30,6 +30,7 @@ ApplicationWindow {
     // Title for the program
     title: qsTr("Electronic Services: Gas Rig Controller")
 
+    // Set the app bar properties
     appBar.maxActionCount: 1
 
     // Set the default colours
@@ -41,7 +42,9 @@ ApplicationWindow {
     initialPage: TitleBar{}
 
     // Draw the side bar
-    SideBar{ id: listPane }
+    SideBar{
+        id: listPane
+    }
 
     // Draw the stack / main view
     StackView {

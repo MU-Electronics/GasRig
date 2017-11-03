@@ -14,6 +14,7 @@
 #include "View/Managers/ConnectionStatus.h"
 #include "View/Managers/SystemStatus.h"
 #include "View/Managers/MachineStatus.h"
+#include "View/Managers/Global.h"
 
 // Objects to the threaded
 #include "Safety/Monitor.h"
@@ -52,6 +53,7 @@ namespace App
             Experiment::Engine& experiment_engine;
 
             // View managers
+            View::Managers::Global& manager_global;
             View::Managers::Testing& manager_testing;
             View::Managers::ConnectionStatus& manager_connection;
             View::Managers::SystemStatus& manager_systemStatus;

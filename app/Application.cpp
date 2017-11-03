@@ -60,6 +60,7 @@ namespace App
         ,    experiment_engine(*new Experiment::Engine(this, settings_container, hardware, monitor))
 
             // Create instance for each view manager
+        ,   manager_global(*new View::Managers::Global(parent, engine, settings_container, experiment_engine))
         ,   manager_testing(*new View::Managers::Testing(parent, engine, settings_container, experiment_engine))
         ,   manager_connection(*new View::Managers::ConnectionStatus(parent, engine, settings_container, experiment_engine))
         ,   manager_systemStatus(*new View::Managers::SystemStatus(parent, engine, settings_container, experiment_engine))
@@ -118,6 +119,9 @@ namespace App
      */
     void Application::registerManagers()
     {
+        // Set global manger
+        m_engine->rootContext()->setContextProperty("GlobalManager", &manager_global);
+
         // Set testing manager
         m_engine->rootContext()->setContextProperty("TestingManager", &manager_testing);
 
@@ -189,6 +193,9 @@ namespace App
      */
     void Application::connectViewToThreads()
     {
+        // Make connections for global view manager
+        manager_global.makeConnections(hardware, monitor);
+
         // Make connections for testing view manager
         manager_testing.makeConnections(hardware, monitor);
 
