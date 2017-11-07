@@ -10,7 +10,6 @@
         <file>views/modes/RemoteControl.qml</file>
         <file>views/modes/CustomExperiment.qml</file>
         <file>views/modes/VacuumStation.qml</file>
-        <file>views/modes/PressuriseCell.qml</file>
         <file>views/modes/DepressuriseCell.qml</file>
         <file>views/modes/CyclePressure.qml</file>
         <file>views/modes/ContinuousFlow.qml</file>
@@ -47,5 +46,8 @@
         <file>views/management/TestingMaintenance/ValveComponents/ExhaustSystemContainer.qml</file>
         <file>views/management/TestingMaintenance/ValveComponents/SetHighPressureContainer.qml</file>
         <file>views/modes/ChangeGas.qml</file>
+        <file>views/modes/PressuriseCell/Index.qml</file>
+        <file>views/modes/PressuriseCell/Purge.qml</file>
+        <file>views/modes/PressuriseCell/VacDown.qml</file>
     </qresource>
 </RCC>

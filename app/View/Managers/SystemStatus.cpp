@@ -41,8 +41,8 @@ namespace App { namespace View { namespace Managers
         m_valveState.insert("9", 0);
 
         // Pressure reading
-        m_pressureSensor.insert("pressure", 50);
-        m_pressureSensor.insert("pressure_round_3", 50.000);
+        m_pressureSensor.insert("pressure", 0);
+        m_pressureSensor.insert("pressure_round_3", 0);
 
         // Default vacuum states
         m_vacuumState.insert("backing_pump", 0);

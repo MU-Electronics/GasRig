@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.3
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Core 1.0 as FluidCore
 
-import '../parts'
+import '../../parts'
 
 Item
 {
@@ -18,12 +18,18 @@ Item
         width: (parent.width) / 2
         anchors.left: parent.left
 
-        Text{
-            text: "Hello World!"
-            font.family: "Helvetica"
-            font.pointSize: 24
-            color: "red"
+        Purge{
+            id: purgeContainer
+            anchors.top: parent.top
+            anchors.topMargin: 25
+            shouldEnable: true
         }
+        VacDown{
+            anchors.top: purgeContainer.bottom
+            anchors.topMargin: 40
+            shouldEnable: false
+        }
+
     }
     Rectangle
     {

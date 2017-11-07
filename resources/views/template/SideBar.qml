@@ -64,7 +64,7 @@ Pane {
         currentIndex: -1
         enabled: ConnectionStatusManager.hardwareConnection["all_connections"];
         model: ListModel {
-            ListElement { title: qsTr("Pressurise Cell"); source: "qrc:/views/modes/PressuriseCell.qml" }
+            ListElement { title: qsTr("Pressurise Cell"); source: "qrc:/views/modes/PressuriseCell/Index.qml" }
             ListElement { title: qsTr("De-Pressurise Cell"); source: "qrc:/views/modes/DepressuriseCell.qml" }
             ListElement { title: qsTr("Vacuum Station"); source: "qrc:/views/modes/VacuumStation.qml" }
             ListElement { title: qsTr("Change Gas"); source: "qrc:/views/modes/ChangeGas.qml" }
