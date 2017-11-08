@@ -5,101 +5,131 @@ import QtQuick.Layouts 1.3
 
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Core 1.0 as FluidCore
+import Fluid.Layouts 1.0 as FluidLayouts
 
+// Global part files
 import "../../parts"
+
+// Mode part files
+import "../parts"
 
 Item {
 
-    width: parent.width - 30
-    height: 80 + purgeSettingsForm.height
+    width: parent.width
+    height: purgeCellWizard.height
 
     anchors.left: parent.left;
     anchors.leftMargin: 15
 
     property bool shouldEnable: false
 
-    FluidControls.Card
-    {
-        width: parent.width
-        height: parent.height
+    WizardContainer{
+        id: purgeCellWizard
 
-        Rectangle
-        {
-            width: parent.width
-            height: 40
-            color: Material.color(Material.Grey, Material.Shade50)
+        title: "Stage One: Purge Cell"
 
-            FluidControls.TitleLabel
+        topContainer: Item{
+
+            width: parent.width - 90
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.margins: 10
+
+            WizardContainerTitle{
+                id: paramContainerTitle
+            }
+
+            FluidLayouts.AutomaticGrid
             {
-                id: purgeTitleBarHeading
+                id: paramsLayoutGrid
 
-                text: "Purge Cell"
-                horizontalAlignment: Text.AlignHCenter
+                property var noInColoum: 2
+                property var noInRow: 2
 
-                anchors.fill: parent
-                anchors.top: parent.top
+                width: parent.width
+                height: height.width
+
+                cellWidth: 130
+                cellHeight: 20
+
+                anchors.top: paramContainerTitle.bottom
                 anchors.topMargin: 5
 
-                color: Material.color(Material.Grey, Material.Shade700)
-            }
+                model: ListModel {
+                    ListElement { title: qsTr("Vac down to: "); value: "10" }
+                    ListElement { title: qsTr("Number of cycles: "); value: "25" }
+                    ListElement { title: qsTr("Use Nitrogen: "); value: "Yes" }
+                    ListElement { title: qsTr("Nitrogen Pressure: "); value: "5.25 Bar" }
+                }
 
+                delegate: WizardParamValue{
+                    title: model.title
+                    value: model.value
+                    width: 130
+                    height: 20
+                }
+            }
+        }
+
+        bottomContainer: Text{
+            text: 'bottom container'
+        }
+
+        sideBarContainer: Item
+        {
+            width: parent.width
+            height: purgeCellWizard.height
             Column
             {
-                id: purgeSettingsForm
+                 width: parent.width
+                 spacing: 11.9
 
-                anchors.top: purgeTitleBarHeading.bottom
-                anchors.topMargin: 10
-                anchors.left: parent.left
-                anchors.leftMargin: 5
-
-                spacing: 3;
-                width: parent.width
-
-                AlertBox
-                {
-                    width: parent.width - 10
-                    type: "Notice"
-                    textContent: qsTr("Configure the purging sequence, before starting the purge sequence")
+                 WizardSideButton {
+                    text: "Edit Parameters"
+                    onClicked: purgeCellWizard.paramDialogId.open()
+                    backgroundInit: Material.color(Material.Blue, Material.Shade400)
+                    backgroundPressed: Material.color(Material.Blue, Material.Shade600)
+                    textColorInit: "#ffffff"
+                    textColorPressed: "#ffffff"
                 }
 
-                Button {
-                    text: "Click me"
-                    onClicked: editParamsAertDialog.open()
+                WizardSideButton{
+                    text: "Start"
+                    onClicked: {
+                        console.log("Start state machine")
+                    }
+                    backgroundInit: Material.color(Material.Green, Material.Shade400)
+                    backgroundPressed: Material.color(Material.Green, Material.Shade600)
+                    textColorInit: "#ffffff"
+                    textColorPressed: "#ffffff"
+                }
+
+                WizardSideButton{
+                    text: "Cancel Mode"
+                    onClicked: {
+                        purgeCellWizard.cancelDialogId.open();
+                    }
+                    backgroundInit: Material.color(Material.Red, Material.Shade400)
+                    backgroundPressed: Material.color(Material.Red, Material.Shade600)
+                    textColorInit: "#ffffff"
+                    textColorPressed: "#ffffff"
+                }
+
+                WizardSideButton{
+                    text: "Next Mode"
+                    onClicked: {
+                        console.log("Next Stage mode")
+                    }
+                    backgroundInit: Material.color(Material.Orange, Material.Shade400)
+                    backgroundPressed: Material.color(Material.Orange, Material.Shade600)
+                    textColorInit: "#ffffff"
+                    textColorPressed: "#ffffff"
                 }
             }
         }
-    }
 
-
-    FluidControls.AlertDialog
-    {
-        id: editParamsAertDialog
-
-        // Size of the alert box
-        width: (window.width / 2)
-        height: (window.height / 2)
-
-        // Location of alert box in window
-        x: ((window.width - width) / 2) - 220 // X relative to parent so remove side bar width
-        y: ((window.height - height) / 2) - 50 // Y relative to parent so remove top bar height
-
-        // Define the buttons we want showing
-        standardButtons: Dialog.Cancel | Dialog.SaveAll
-
-        // When accepted we need to update the variables
-        onAccepted: {
-            console.log('Appling new values')
-        }
-
-        // When rejected we need to reset the controls back to the current set values
-        onRejected: {
-            console.log('Discarding new values')
-        }
-
-        title: "Edit Purge Parameters"
-
-        // Content within the alert box
-        content: Column
+        paramDialogContainer: Column
         {
             width: parent.width
             height: parent.height
@@ -212,6 +242,12 @@ Item {
                 }
             }
         }
+
+        paramDialogOnAccepted: (function() { console.log("Update params") })
+
+        paramDialogOnRejected: (function() { console.log("Reset component values") })
+
+        cancelDialogOnAccepted: (function() { console.log("Cancel the current mode") })
     }
 
 }

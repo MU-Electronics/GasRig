@@ -49,5 +49,9 @@
         <file>views/modes/PressuriseCell/Index.qml</file>
         <file>views/modes/PressuriseCell/Purge.qml</file>
         <file>views/modes/PressuriseCell/VacDown.qml</file>
+        <file>views/modes/parts/WizardContainer.qml</file>
+        <file>views/modes/parts/WizardSideButton.qml</file>
+        <file>views/modes/parts/WizardContainerTitle.qml</file>
+        <file>views/modes/parts/WizardParamValue.qml</file>
     </qresource>
 </RCC>

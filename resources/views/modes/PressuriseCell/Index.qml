@@ -26,7 +26,7 @@ Item
         }
         VacDown{
             anchors.top: purgeContainer.bottom
-            anchors.topMargin: 40
+            anchors.topMargin: 25
             shouldEnable: false
         }
 
