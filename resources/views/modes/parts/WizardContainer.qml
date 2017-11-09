@@ -37,7 +37,7 @@ Item {
     property var cancelDialogOnRejected: (function() { console.log("Rejected cancel") })
 
     // Properties for container size
-    property var containerHeight: 400
+    property var containerHeight: 200
     property var topContainerHeight: containerHeight / 2
     property var bottomContainerHeight: (containerHeight / 2) - 2
 
@@ -147,7 +147,7 @@ Item {
                                         State {
                                             name: "2"
                                             PropertyChanges { target: statusIcon; name: "action/assignment_turned_in"; visible: true; color: Material.color(Material.Green, Material.Shade500)} //done
-                                            PropertyChanges { target: statusText; text: "Finished awaiting user"; color: Material.color(Material.Green, Material.Shade700)}
+                                            PropertyChanges { target: statusText; text: "Finished Awaiting User"; color: Material.color(Material.Green, Material.Shade700)}
                                             PropertyChanges { target: statusIcon_inProgress; visible: false; }
                                         },
                                         // Error
@@ -207,7 +207,7 @@ Item {
                                         wrapMode: Text.WordWrap
 
                                         anchors.top: modeStageStatus.top
-                                        anchors.topMargin: statusIcon.anchors.topMargin + statusIcon.height + 5
+                                        anchors.topMargin: statusIcon.anchors.topMargin + statusIcon.height
                                     }
                                 }
                             }

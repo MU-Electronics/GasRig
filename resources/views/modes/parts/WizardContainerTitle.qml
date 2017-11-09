@@ -7,11 +7,11 @@ Row{
     property var titleSmall: 'Edit Parameters on the right'
 
     Text{
-        text: 'Parameters'
+        text: parent.title
         font.pointSize: 20
     }
     Text{
-        text: 'Edit Parameters on the right'
+        text: parent.titleSmall
         font.pointSize: 14
         topPadding: 5.5
     }

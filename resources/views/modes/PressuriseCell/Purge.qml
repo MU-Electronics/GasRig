@@ -15,6 +15,8 @@ import "../parts"
 
 Item {
 
+    id: root
+
     width: parent.width
     height: purgeCellWizard.height
 
@@ -23,12 +25,14 @@ Item {
 
     property bool shouldEnable: false
 
+    property var currentState: 1
+
     WizardContainer{
         id: purgeCellWizard
 
         title: "Stage One: Purge Cell"
 
-        stage: 2
+        stage: root.currentState
         shouldEnable: true
 
         topContainer: Item{
@@ -43,19 +47,7 @@ Item {
                 id: paramContainerTitle
             }
 
-            FluidLayouts.AutomaticGrid
-            {
-                id: paramsLayoutGrid
-
-                property var noInColoum: 2
-                property var noInRow: 2
-
-                width: parent.width - 10
-                height: height.width
-
-                cellWidth: 180
-                cellHeight: 20
-
+            WizardParamsList{
                 anchors.top: paramContainerTitle.bottom
                 anchors.topMargin: 5
 
@@ -65,70 +57,32 @@ Item {
                     ListElement { title: qsTr("Use Nitrogen: "); value: "Yes" }
                     ListElement { title: qsTr("Pressure: "); value: "5.25 Bar" }
                 }
-
-                delegate: WizardParamValue{
-                    title: model.title
-                    value: model.value
-                    width: 180
-                    height: 20
-                }
             }
         }
 
-        bottomContainer: Text{
-            text: 'bottom container'
+        bottomContainer: WizardJobStatus{
+            state: root.currentState
+
+            progressContainer: Text{
+                text: 'Container to show progress';
+                anchors.top: parent.top
+                anchors.topMargin: 30
+            }
         }
 
         sideBarContainer: Item
         {
             width: parent.width
             height: purgeCellWizard.height
-            Column
-            {
-                 width: parent.width
-                 spacing: 11.9
 
-                 WizardSideButton {
-                    text: "Edit Parameters"
-                    onClicked: purgeCellWizard.paramDialogId.open()
-                    backgroundInit: Material.color(Material.Blue, Material.Shade400)
-                    backgroundPressed: Material.color(Material.Blue, Material.Shade600)
-                    textColorInit: "#ffffff"
-                    textColorPressed: "#ffffff"
-                }
+            WizardSideBar{
 
-                WizardSideButton{
-                    text: "Start"
-                    onClicked: {
-                        console.log("Start state machine")
-                    }
-                    backgroundInit: Material.color(Material.Green, Material.Shade400)
-                    backgroundPressed: Material.color(Material.Green, Material.Shade600)
-                    textColorInit: "#ffffff"
-                    textColorPressed: "#ffffff"
-                }
+                stage: root.currentState
 
-                WizardSideButton{
-                    text: "Cancel Mode"
-                    onClicked: {
-                        purgeCellWizard.cancelDialogId.open();
-                    }
-                    backgroundInit: Material.color(Material.Red, Material.Shade400)
-                    backgroundPressed: Material.color(Material.Red, Material.Shade600)
-                    textColorInit: "#ffffff"
-                    textColorPressed: "#ffffff"
-                }
-
-                WizardSideButton{
-                    text: "Next Mode"
-                    onClicked: {
-                        console.log("Next Stage mode")
-                    }
-                    backgroundInit: Material.color(Material.Orange, Material.Shade400)
-                    backgroundPressed: Material.color(Material.Orange, Material.Shade600)
-                    textColorInit: "#ffffff"
-                    textColorPressed: "#ffffff"
-                }
+                editParamsPressed: ( function(){ purgeCellWizard.paramDialogId.open() } )
+                startPressed: ( function(){ console.log('Start was pressed') } )
+                cancelPressed: ( function(){ purgeCellWizard.cancelDialogId.open() } )
+                nextPressed: ( function(){ console.log('Next stage was pressed') } )
             }
         }
 

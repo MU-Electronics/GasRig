@@ -53,5 +53,8 @@
         <file>views/modes/parts/WizardSideButton.qml</file>
         <file>views/modes/parts/WizardContainerTitle.qml</file>
         <file>views/modes/parts/WizardParamValue.qml</file>
+        <file>views/modes/parts/WizardSideBar.qml</file>
+        <file>views/modes/parts/WizardParamsList.qml</file>
+        <file>views/modes/parts/WizardJobStatus.qml</file>
     </qresource>
 </RCC>
