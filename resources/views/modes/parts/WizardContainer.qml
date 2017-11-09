@@ -14,9 +14,6 @@ Item {
 
     id: wizardContainerRoot
 
-    width: parent.width - 30
-    height: 40 + wizardContainerSettingsForm.height
-
     // Properties for wizard container layout
     property alias title: wizardContainerTitleBarHeading.text
     property alias sideBarContainer: sideBarPlaceHolder.data
@@ -25,6 +22,7 @@ Item {
 
     // Property to set the current statuses of the container
     property int stage: 0
+    property bool shouldEnable: false
 
     // Properties for param Dialog
     property alias paramDialogId: paramDialog
@@ -38,10 +36,19 @@ Item {
     property var cancelDialogOnAccepted: (function() { console.log("Accepted cancel") })
     property var cancelDialogOnRejected: (function() { console.log("Rejected cancel") })
 
+    // Properties for container size
+    property var containerHeight: 200
+    property var topContainerHeight: containerHeight / 2
+    property var bottomContainerHeight: (containerHeight / 2) - 2
+
+    width: parent.width - 30
+    height: 40 + wizardContainerSettingsForm.height
+    opacity: (wizardContainerRoot.shouldEnable) ? 1 : 0.7
+
     FluidControls.Card
     {
         width: parent.width
-        height: parent.height
+        height: (wizardContainerRoot.shouldEnable) ? parent.height : 40
 
         Rectangle
         {
@@ -72,15 +79,19 @@ Item {
                 spacing: 3;
                 width: parent.width
 
+                height: (wizardContainerRoot.shouldEnable) ? wizardContainerRoot.containerHeight : 0
+                visible: (wizardContainerRoot.shouldEnable) ? 1 : 0
+
                 Row{
                     width: parent.width
-                    height: 200
+                    height: parent.height
+
                     Column{
                         width: parent.width - 150
                         height: parent.height
                         Rectangle{
                             width: parent.width
-                            height: parent.height / 2
+                            height: wizardContainerRoot.topContainerHeight
 
                             Item{
                                 id: topContainerPlaceHolder
@@ -95,7 +106,7 @@ Item {
                         }
                         Rectangle{
                             width: parent.width
-                            height: (parent.height / 2) - 2
+                            height: wizardContainerRoot.bottomContainerHeight
                             Row
                             {
                                 width: parent.width

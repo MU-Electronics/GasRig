@@ -29,6 +29,7 @@ Item {
         title: "Stage One: Purge Cell"
 
         stage: 2
+        shouldEnable: true
 
         topContainer: Item{
 
