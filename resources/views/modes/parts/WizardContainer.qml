@@ -23,6 +23,9 @@ Item {
     property alias topContainer: topContainerPlaceHolder.data
     property alias bottomContainer: bottomContainerPlaceHolder.data
 
+    // Property to set the current statuses of the container
+    property int stage: 0
+
     // Properties for param Dialog
     property alias paramDialogId: paramDialog
     property alias paramDialogContainer: paramDialogContainerPlaceHolder.data
@@ -113,27 +116,34 @@ Item {
                                     width: 98
                                     height: parent.height
 
-                                    state: "0"
+                                    state: wizardContainerRoot.stage
                                     states: [
                                         // Awaiting users input
                                         State {
                                             name: "0"
-                                            PropertyChanges { target: statusIcon; name: "image/timelapse"; visible: true; color: Material.color(Material.Orange, Material.Shade500)} //done
-                                            PropertyChanges { target: statusText; text: "Waiting User"; }
+                                            PropertyChanges { target: statusIcon; name: "social/person"; visible: true; color: Material.color(Material.Orange, Material.Shade500)} //done
+                                            PropertyChanges { target: statusText; text: "Waiting User"; color: Material.color(Material.Orange, Material.Shade700)}
                                             PropertyChanges { target: statusIcon_inProgress; visible: false; }
                                         },
                                         // In process
                                         State {
                                             name: "1"
                                             PropertyChanges { target: statusIcon; name: "action/cached"; visible: false; color: Material.color(Material.Blue, Material.Shade500) } //done
-                                            PropertyChanges { target: statusText; text: "In Progress"; }
+                                            PropertyChanges { target: statusText; text: "In Progress"; color: Material.color(Material.Blue, Material.Shade700)}
                                             PropertyChanges { target: statusIcon_inProgress; visible: true; }
+                                        },
+                                        // Finished awaiting user action
+                                        State {
+                                            name: "2"
+                                            PropertyChanges { target: statusIcon; name: "action/assignment_turned_in"; visible: true; color: Material.color(Material.Green, Material.Shade500)} //done
+                                            PropertyChanges { target: statusText; text: "Finished awaiting user"; color: Material.color(Material.Green, Material.Shade700)}
+                                            PropertyChanges { target: statusIcon_inProgress; visible: false; }
                                         },
                                         // Error
                                         State {
-                                            name: "2"
-                                            PropertyChanges { target: statusIcon; name: "action/cancel"; visible: true; color: Material.color(Material.Red, Material.Shade500)} //done
-                                            PropertyChanges { target: statusText; text: "Error"; }
+                                            name: "3"
+                                            PropertyChanges { target: statusIcon; name: "navigation/cancel"; visible: true; color: Material.color(Material.Red, Material.Shade500)} //done
+                                            PropertyChanges { target: statusText; text: "Error Occurred"; color: Material.color(Material.Red, Material.Shade700)}
                                             PropertyChanges { target: statusIcon_inProgress; visible: false; }
                                         }
                                     ]
@@ -147,11 +157,11 @@ Item {
                                         size: 100
                                         color: Material.color(Material.Red, Material.Shade500)
 
-                                        width: 70
-                                        height: 70
+                                        width: 60
+                                        height: 60
 
                                         anchors.left: modeStageStatus.left
-                                        anchors.leftMargin: 10
+                                        anchors.leftMargin: 20
                                         anchors.top: modeStageStatus.top
                                         anchors.topMargin: 5
 
@@ -163,11 +173,11 @@ Item {
                                         running: true
                                         visible: false
 
-                                        width: 70
-                                        height: 70
+                                        width: 60
+                                        height: 60
 
                                         anchors.left: modeStageStatus.left
-                                        anchors.leftMargin: 10
+                                        anchors.leftMargin: 20
                                         anchors.top: modeStageStatus.top
                                         anchors.topMargin: 5
                                     }
@@ -175,16 +185,18 @@ Item {
                                     Text{
                                         id:statusText
 
-                                        text: "temp"
+                                        text: "Error"
+                                        color: "#000000"
 
                                         width: parent.width
-                                        height: 20
+                                        height: 35
 
                                         horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
                                         wrapMode: Text.WordWrap
 
                                         anchors.top: modeStageStatus.top
-                                        anchors.topMargin: 73
+                                        anchors.topMargin: 63
                                     }
                                 }
                             }

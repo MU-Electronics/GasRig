@@ -4,6 +4,7 @@ Row{
     id: paramValue
 
     spacing: 5
+    rightPadding: 10
 
     property var title: 'Parameter: '
     property var value: ''
@@ -11,6 +12,7 @@ Row{
     Text{
         text: paramValue.title
         font.pointSize: 12
+        font.weight: Font.Bold
     }
     Text{
         text: paramValue.value

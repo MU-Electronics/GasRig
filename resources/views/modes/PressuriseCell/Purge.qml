@@ -28,9 +28,11 @@ Item {
 
         title: "Stage One: Purge Cell"
 
+        stage: 2
+
         topContainer: Item{
 
-            width: parent.width - 90
+            width: parent.width
 
             anchors.top: parent.top
             anchors.left: parent.left
@@ -47,17 +49,17 @@ Item {
                 property var noInColoum: 2
                 property var noInRow: 2
 
-                width: parent.width
+                width: parent.width - 10
                 height: height.width
 
-                cellWidth: 130
+                cellWidth: 180
                 cellHeight: 20
 
                 anchors.top: paramContainerTitle.bottom
                 anchors.topMargin: 5
 
                 model: ListModel {
-                    ListElement { title: qsTr("Vac down to: "); value: "10" }
+                    ListElement { title: qsTr("Vac down to: "); value: "10 mBar" }
                     ListElement { title: qsTr("Number of cycles: "); value: "25" }
                     ListElement { title: qsTr("Use Nitrogen: "); value: "Yes" }
                     ListElement { title: qsTr("Nitrogen Pressure: "); value: "5.25 Bar" }
@@ -66,7 +68,7 @@ Item {
                 delegate: WizardParamValue{
                     title: model.title
                     value: model.value
-                    width: 130
+                    width: 180
                     height: 20
                 }
             }
