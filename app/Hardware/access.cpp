@@ -398,8 +398,6 @@ namespace App { namespace Hardware
 
             // Add to the queue
             m_queue.enqueue(command);
-
-            qDebug() << m_queue;
         }
     }
 
