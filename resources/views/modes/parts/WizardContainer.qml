@@ -37,7 +37,7 @@ Item {
     property var cancelDialogOnRejected: (function() { console.log("Rejected cancel") })
 
     // Properties for container size
-    property var containerHeight: 200
+    property var containerHeight: 400
     property var topContainerHeight: containerHeight / 2
     property var bottomContainerHeight: (containerHeight / 2) - 2
 
@@ -174,7 +174,7 @@ Item {
                                         anchors.left: modeStageStatus.left
                                         anchors.leftMargin: 20
                                         anchors.top: modeStageStatus.top
-                                        anchors.topMargin: 5
+                                        anchors.topMargin: (parent.height - height - statusText.height) / 2
 
                                         visible: true
                                     }
@@ -207,7 +207,7 @@ Item {
                                         wrapMode: Text.WordWrap
 
                                         anchors.top: modeStageStatus.top
-                                        anchors.topMargin: 63
+                                        anchors.topMargin: statusIcon.anchors.topMargin + statusIcon.height + 5
                                     }
                                 }
                             }
