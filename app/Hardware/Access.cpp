@@ -209,13 +209,14 @@ namespace App { namespace Hardware
         if(!m_queue.isEmpty())
         {
             // Run the command
-            executeHalMethods(m_queue.head());
+            bool needsPause = executeHalMethods(m_queue.head());
 
             // Remove item from queue
             m_queue.dequeue();
 
             // Cycle immediate
-            return;
+            if(!needsPause)
+                return;
         }
 
         // Sleep the thread for a while; this reduces cpu usage massivly 15-20%!
@@ -229,7 +230,7 @@ namespace App { namespace Hardware
      * @brief Access::executeHalMethods
      * @param command
      */
-    void Access::executeHalMethods(QVariantMap command)
+    bool Access::executeHalMethods(QVariantMap command)
     {
         // Get the hardware and method
         QString hardware = command.value("hardware").toString();
@@ -267,7 +268,7 @@ namespace App { namespace Hardware
                 //qDebug() << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
-                return;
+                return true;
             }
 
             // Set the method params
@@ -289,7 +290,7 @@ namespace App { namespace Hardware
                 //qDebug() << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
-                return;
+                return true;
             }
 
             // Set the method params
@@ -310,7 +311,7 @@ namespace App { namespace Hardware
                 //qDebug() << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
-                return;
+                return true;
             }
 
             // Set the method params
@@ -331,7 +332,7 @@ namespace App { namespace Hardware
                 //qDebug() << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
-                return;
+                return true;
             }
 
             // Set the method params
@@ -358,11 +359,16 @@ namespace App { namespace Hardware
 
                 // Failed to run method not allowed
                 status["resulting_status"]  = false;
+
+                return true;
             }
         }
 
         // Emit the result
         emit_methodAttemptResults(status);
+
+        // No need for time out
+        return false;
     }
 
 
@@ -377,8 +383,23 @@ namespace App { namespace Hardware
     {
         if(command.contains("hardware") && command.contains("method"))
         {
+            // Dont requeue exsisting commands, allowing a min queue size of five before action is taken << Need sorting very inefficent
+            if(m_queue.size() > 5)
+            {
+                for (int i = 4; i < m_queue.size(); ++i) {
+                    if (m_queue.at(i).value("hardware").toString() == command.value("hardware").toString() &&
+                        m_queue.at(i).value("method").toString() == command.value("method").toString())
+                    {
+                        // Remove the previous command
+                        m_queue.removeAt(i);
+                    }
+                }
+            }
+
             // Add to the queue
             m_queue.enqueue(command);
+
+            qDebug() << m_queue;
         }
     }
 

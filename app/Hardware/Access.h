@@ -125,7 +125,7 @@ namespace App { namespace Hardware
             QVariantMap m_lastcommands;
 
             // Runs the correct HAL function
-            void executeHalMethods(QVariantMap command);
+            bool executeHalMethods(QVariantMap command);
 
             void proccessDataFromHals(QString responable, QString method, QVariantMap commands, QStringList halData);
 

@@ -62,7 +62,7 @@ Item {
                     ListElement { title: qsTr("Vac down to: "); value: "10 mBar" }
                     ListElement { title: qsTr("Number of cycles: "); value: "25" }
                     ListElement { title: qsTr("Use Nitrogen: "); value: "Yes" }
-                    ListElement { title: qsTr("Nitrogen Pressure: "); value: "5.25 Bar" }
+                    ListElement { title: qsTr("Pressure: "); value: "5.25 Bar" }
                 }
 
                 delegate: WizardParamValue{
