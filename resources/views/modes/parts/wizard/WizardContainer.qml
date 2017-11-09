@@ -18,7 +18,7 @@ Item {
     property alias bottomContainer: bottomContainerPlaceHolder.data
 
     // Property to set the current statuses of the container
-    property int stage: 0
+    property string stage: "0"
     property bool shouldEnable: false
 
     // Properties for param Dialog

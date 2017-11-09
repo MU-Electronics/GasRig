@@ -26,9 +26,11 @@ Item {
     anchors.left: parent.left;
     anchors.leftMargin: 15
 
+    // Is this the current stage?
     property bool shouldEnable: false
 
-    property var currentState: 0
+    // What state are we at during this stage?
+    property string currentState: "0"
 
     WizardContainer{
         id: purgeCellWizard
@@ -36,7 +38,7 @@ Item {
         title: "Stage One: Purge Cell"
 
         stage: root.currentState
-        shouldEnable: true
+        shouldEnable: root.shouldEnable
 
         topContainer: Item{
 
