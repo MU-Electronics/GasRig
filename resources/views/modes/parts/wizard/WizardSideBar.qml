@@ -12,15 +12,15 @@ Column
      // Current stage of process
      property var stage: 0
 
-     // Button actions on pressed
-     property var editParamsPressed: (function(){ console.log('Edit params pressed') });
-     property var startPressed: (function(){ console.log('Start was pressed') });
-     property var cancelPressed: (function(){ console.log('Cancel was pressed') });
-     property var nextPressed: (function(){ console.log('Next stage was pressed') });
+     // Button ids
+     property alias editButton: editButton
+     property alias startButton: startButton;
+     property alias cancelButton: cancelButton;
+     property alias nextButton: nextButton;
 
      WizardSideButton {
+         id: editButton
         text: "Edit Parameters"
-        onClicked: rootSideBar.editParamsPressed()
         backgroundInit: Material.color(Material.Blue, Material.Shade400)
         backgroundPressed: Material.color(Material.Blue, Material.Shade600)
         textColorInit: "#ffffff"
@@ -29,8 +29,8 @@ Column
     }
 
     WizardSideButton{
+        id: startButton
         text: (rootSideBar.stage === 1 || rootSideBar.stage === 2 || rootSideBar.stage === 3) ? qsTr('Restart') : qsTr('Start')
-        onClicked: rootSideBar.startPressed()
         backgroundInit: Material.color(Material.Green, Material.Shade400)
         backgroundPressed: Material.color(Material.Green, Material.Shade600)
         textColorInit: "#ffffff"
@@ -39,8 +39,8 @@ Column
     }
 
     WizardSideButton{
+        id: cancelButton
         text: "Cancel Mode"
-        onClicked: rootSideBar.cancelPressed()
         backgroundInit: Material.color(Material.Red, Material.Shade400)
         backgroundPressed: Material.color(Material.Red, Material.Shade600)
         textColorInit: "#ffffff"
@@ -48,8 +48,8 @@ Column
     }
 
     WizardSideButton{
+        id: nextButton
         text: "Next Stage"
-        onClicked: rootSideBar.nextPressed()
         backgroundInit: Material.color(Material.Orange, Material.Shade400)
         backgroundPressed: Material.color(Material.Orange, Material.Shade600)
         textColorInit: "#ffffff"

@@ -7,9 +7,6 @@ import QtQuick.Layouts 1.3
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Core 1.0 as FluidCore
 
-// Mode part files
-import "../parts"
-
 Item {
 
     id: wizardContainerRoot

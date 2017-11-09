@@ -49,12 +49,14 @@
         <file>views/modes/PressuriseCell/Index.qml</file>
         <file>views/modes/PressuriseCell/Purge.qml</file>
         <file>views/modes/PressuriseCell/VacDown.qml</file>
-        <file>views/modes/parts/WizardContainer.qml</file>
-        <file>views/modes/parts/WizardSideButton.qml</file>
-        <file>views/modes/parts/WizardContainerTitle.qml</file>
-        <file>views/modes/parts/WizardParamValue.qml</file>
-        <file>views/modes/parts/WizardSideBar.qml</file>
-        <file>views/modes/parts/WizardParamsList.qml</file>
-        <file>views/modes/parts/WizardJobStatus.qml</file>
+        <file>views/modes/parts/wizard/WizardContainer.qml</file>
+        <file>views/modes/parts/wizard/WizardContainerTitle.qml</file>
+        <file>views/modes/parts/wizard/WizardJobStatus.qml</file>
+        <file>views/modes/parts/wizard/WizardParamsList.qml</file>
+        <file>views/modes/parts/wizard/WizardParamValue.qml</file>
+        <file>views/modes/parts/wizard/WizardSideBar.qml</file>
+        <file>views/modes/parts/wizard/WizardSideButton.qml</file>
+        <file>views/modes/parts/purge/PurgeParamForm.qml</file>
+        <file>views/modes/parts/purge/PurgeProgress.qml</file>
     </qresource>
 </RCC>
