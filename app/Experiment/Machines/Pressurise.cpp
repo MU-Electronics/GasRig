@@ -1025,17 +1025,29 @@ namespace App { namespace Experiment { namespace Machines
             )
             {
                 qDebug() << "Tunning valve two, pressure change: " << abs(previousPressure - currentPressure) << " target step size: " << params.value("valve_2_step_size").toInt();
+
+                // Find pressure difference
+                double pressureDiff = abs(previousPressure - currentPressure);
+
                 // Change the valve timing in the correct direction
-                if(abs(previousPressure - currentPressure) < params.value("valve_2_step_size").toInt())
+                if(
+                   pressureDiff < params.value("valve_2_step_size").toDouble() + (params.value("valve_2_step_size").toInt() * 0.1) &&
+                   pressureDiff > params.value("valve_2_step_size").toDouble() - (params.value("valve_2_step_size").toInt() * 0.1)
+                )
                 {
                     // Step size too small
                     int inc = params.value("valve_2_increment").toInt();
                     if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.05))
                         inc = params.value("valve_2_increment_corse").toInt();
+                    if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.2))
+                        inc = params.value("valve_2_increment_fine").toInt();
 
                     t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + inc);
                 }
-                else if(abs(previousPressure - currentPressure) > params.value("valve_2_step_size").toInt())
+                else if(
+                        pressureDiff > params.value("valve_2_step_size").toDouble() + (params.value("valve_2_step_size").toInt() * 0.1) &&
+                        pressureDiff < params.value("valve_2_step_size").toDouble() - (params.value("valve_2_step_size").toInt() * 0.1)
+                )
                 {
                     // Step size too large
                     t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() - params.value("valve_2_decrement").toInt());
