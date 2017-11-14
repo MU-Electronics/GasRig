@@ -76,7 +76,7 @@ FluidControls.Card
             width: parent.width
             height: 50
             Text {
-                text: qsTr("Inital Vac Down: ")
+                text: qsTr("Disable Inital Vac Down: ")
                 color: "#595959"
                 visible: parent.opacity
                 font.pixelSize: 16
@@ -85,7 +85,7 @@ FluidControls.Card
             }
             CheckBox {
                 id: setUseVac_pressure
-                checked: false
+                checked: true
             }
         }
         Row{
