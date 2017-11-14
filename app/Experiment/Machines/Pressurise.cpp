@@ -590,17 +590,9 @@ namespace App { namespace Experiment { namespace Machines
                 // Disable the backing pump
                 vacuum()->sm_disableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &vacuum()->sm_validateDisableBackingPump);
                     // Validate backing pump on
-                    //vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &valves()->sm_openExhuast);
                     vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &valves()->sm_closeOutput);
                     // Backing pump failed
                     vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
-
-                // Open the exhuast valve and move on
-                /*valves()->sm_openExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenExhuast);
-                    // Close the output
-                    valves()->sm_validateOpenExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_closeOutput);
-                    // Valve failed to close
-                    valves()->sm_validateOpenExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);*/
         }
 
         // Set the output valve

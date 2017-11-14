@@ -11,12 +11,12 @@ Row{
 
     Text{
         text: paramValue.title
-        font.pointSize: 12
+        font.pointSize: 11
         font.weight: Font.Bold
     }
     Text{
         text: paramValue.value
-        font.pointSize: 12
+        font.pointSize: 11
     }
 }
 

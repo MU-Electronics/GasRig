@@ -8,11 +8,11 @@ Row{
 
     Text{
         text: parent.title
-        font.pointSize: 20
+        font.pointSize: 18
     }
     Text{
         text: parent.titleSmall
-        font.pointSize: 14
+        font.pointSize: 12
         topPadding: 5.5
     }
 }
