@@ -15,10 +15,14 @@ import "../../../parts"
   */
 FluidControls.Card
 {
+    id: root
+
     width: parent.width - 10
     height: setHighPressureContainer.height + 30
     padding: 5
 
+    property int labelWidth: 220
+    property int labelPadding: 20
 
     Behavior on height {
         PropertyAnimation {
@@ -53,21 +57,48 @@ FluidControls.Card
             width: parent.width
             height: 50
             Text {
-                text: qsTr("Pressure (min 1 mBar): ")
+                text: qsTr("Desired end pressure (mBar): ")
                 color: "#777777"
                 visible: parent.opacity
                 font.pixelSize: 16
                 verticalAlignment : Text.AlignVCenter
                 height: parent.height
+                width: root.labelWidth
             }
             TextField
             {
                 id: setHighPressure_pressure
-                validator: IntValidator { bottom:1; top: 90000 }
+                validator: IntValidator { bottom:20; top: 90000 }
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
-                width: parent.width - 220
-                placeholderText: "1100"
+                width: parent.width - root.labelWidth - root.labelPadding
+                placeholderText: "Minimum: 20 mBar;      Maximum: 90000 mBar"
+            }
+        }
+        Row
+        {
+            anchors.left: parent.left
+            spacing: 10
+            width: parent.width
+            height: 50
+            Text {
+                text: qsTr("Valve one step size (mBar): ")
+                color: "#777777"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth
+            }
+            TextField
+            {
+                id: setStepSize_pressure
+                validator: IntValidator { bottom:100; top: 6000 }
+                inputMethodHints: Qt.ImhDigitsOnly
+                height: parent.height
+                width: parent.width - root.labelWidth - root.labelPadding
+                text: "2000"
+                placeholderText: "Minimum: 100 mBar;      Maximum: 6000 mBar"
             }
         }
         Row
@@ -76,22 +107,24 @@ FluidControls.Card
             width: parent.width
             height: 50
             Text {
-                text: qsTr("Disable Inital Vac Down: ")
+                text: qsTr("Disable inital vac down: ")
                 color: "#595959"
                 visible: parent.opacity
                 font.pixelSize: 16
                 verticalAlignment : Text.AlignVCenter
                 height: parent.height
+                width: root.labelWidth
             }
             CheckBox {
                 id: setUseVac_pressure
                 checked: true
+                text: (!setUseVac_pressure.checked) ? "Init pressure must be atmospheric" : ""
             }
         }
         Row{
             spacing: 20
-            opacity: (setHighPressure_pressure.text < 1) ? 0 : 1;
-            height: (setHighPressure_pressure.text < 1) ? 0 : 50;
+            opacity: (setHighPressure_pressure.text < 20 || setStepSize_pressure.text < 100) ? 0 : 1;
+            height: (setHighPressure_pressure.text < 20 || setStepSize_pressure.text < 100) ? 0 : 50;
             width: parent.width
             Behavior on opacity {
                 NumberAnimation {
@@ -111,7 +144,7 @@ FluidControls.Card
                 visible: (MachineStatusManager.pressuriseMachine["status"] === false) ? 1 : 0;
                 onClicked:
                 {
-                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked);
+                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text);
                 }
             }
             Button

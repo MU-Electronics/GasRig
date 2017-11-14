@@ -44,7 +44,7 @@ namespace App { namespace Experiment { namespace Machines
             int pulseValve(int valve, int cycles, int timeOpen, int timeClosed);
             void stopPulseValve();
 
-            int setPressure(double pressure, bool initVacDown);
+            int setPressure(double pressure, bool initVacDown, int stepSize);
             void stopSetPressure();
 
             int outputPressure(int frequency);
@@ -71,7 +71,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void emit_purgeSystemMachineState(bool state);
 
-            void emit_pressuriseStarted(double pressure, bool initVacDown);
+            void emit_pressuriseStarted(double pressure, bool initVacDown, int stepSize);
             void emit_pressuriseStopped();
 
         public slots:

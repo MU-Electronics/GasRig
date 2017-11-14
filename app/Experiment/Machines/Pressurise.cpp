@@ -183,7 +183,7 @@ namespace App { namespace Experiment { namespace Machines
      * @param turbo
      * @param gasMode
      */
-    void Pressurise::setParams(double pressure, bool initVacDown)
+    void Pressurise::setParams(double pressure, bool initVacDown, int stepSize = 2000)
     {
         /*#######################################
          # Configuration Settings
@@ -196,7 +196,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("disable_init_vac_down", initVacDown);
 
         // What is the step size in pressure
-        params.insert("step_size", 2000);
+        params.insert("step_size", stepSize);
 
 
 

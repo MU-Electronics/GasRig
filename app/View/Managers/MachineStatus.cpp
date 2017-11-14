@@ -42,7 +42,7 @@ namespace App { namespace View { namespace Managers
         m_pressuriseMachine.insert("status", false);
         m_pressuriseMachine.insert("pressure", -1);
         m_pressuriseMachine.insert("initVacDown", -1);
-
+        m_pressuriseMachine.insert("stepSize", -1);
     }
 
 
@@ -77,11 +77,12 @@ namespace App { namespace View { namespace Managers
 
 
 
-    void MachineStatus::pressuriseStarted(double pressure, bool initVacDown)
+    void MachineStatus::pressuriseStarted(double pressure, bool initVacDown, int stepSize)
     {
         m_pressuriseMachine.insert("status", true);
         m_pressuriseMachine.insert("pressure", pressure);
         m_pressuriseMachine.insert("initVacDown", initVacDown);
+        m_pressuriseMachine.insert("stepSize", stepSize);
 
         emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }

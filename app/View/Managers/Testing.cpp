@@ -733,11 +733,11 @@ namespace App { namespace View { namespace Managers
 
 
 
-    void Testing::requestHighPressure(QString pressure, bool initVacDown)
+    void Testing::requestHighPressure(QString pressure, bool initVacDown, int stepSize)
     {
         qDebug() << "Running high pressure";
 
-        m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown);
+        m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize);
     }
 
     void Testing::requestHighPressureStop()
