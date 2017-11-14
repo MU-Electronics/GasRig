@@ -1027,16 +1027,17 @@ namespace App { namespace Experiment { namespace Machines
                 qDebug() << "Tunning valve two, pressure change: " << abs(previousPressure - currentPressure) << " target step size: " << params.value("valve_2_step_size").toInt();
                 // Change the valve timing in the correct direction
                 if(abs(previousPressure - currentPressure) < params.value("valve_2_step_size").toInt())
-                { // Step size too small
+                {
+                    // Step size too small
                     int inc = params.value("valve_2_increment").toInt();
-                    if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.1))
+                    if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.05))
                         inc = params.value("valve_2_increment_corse").toInt();
-                    //if(abs(previousPressure - currentPressure) < (inc * 2))
-                    //   inc = params.value("valve_2_increment_fine").toInt();
+
                     t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + inc);
                 }
                 else if(abs(previousPressure - currentPressure) > params.value("valve_2_step_size").toInt())
-                { // Step size too large
+                {
+                    // Step size too large
                     t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() - params.value("valve_2_decrement").toInt());
                 }
             }
