@@ -799,6 +799,9 @@ namespace App { namespace Experiment { namespace Machines
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
+        // Save the pressure value
+        pressureReading = currentPressure;
+
         if(currentPressure < params.value("pressure").toDouble())
         {
             emit emit_pressureToLow();
@@ -965,6 +968,15 @@ namespace App { namespace Experiment { namespace Machines
             // Calculate the boundary desired pressure
             max = (pressureReading + params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
             min = (pressureReading + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
+
+            // If on the pressure tunning stage decrease vavle tunning params
+            params.insert("valve_2_step_size", params.value("valve_2_normal_step_size").toInt());
+        }
+        else if(params.value("pressure").toDouble() < (pressureReading + params.value("step_size").toDouble()))
+        {
+            // Calculate the boundary desired pressure
+            max = (pressureReading - params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
+            min = (pressureReading - params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
 
             // If on the pressure tunning stage decrease vavle tunning params
             params.insert("valve_2_step_size", params.value("valve_2_normal_step_size").toInt());
