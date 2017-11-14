@@ -972,7 +972,7 @@ namespace App { namespace Experiment { namespace Machines
             // If on the pressure tunning stage decrease vavle tunning params
             params.insert("valve_2_step_size", params.value("valve_2_normal_step_size").toInt());
         }
-        else if(params.value("pressure").toDouble() < (pressureReading + params.value("step_size").toDouble()))
+        else if(params.value("pressure").toDouble() < (pressureReading - params.value("tolerance_valve_two").toDouble()))
         {
             // Calculate the boundary desired pressure
             max = (pressureReading - params.value("step_size").toDouble()) + params.value("tolerance_valve_two").toDouble();
