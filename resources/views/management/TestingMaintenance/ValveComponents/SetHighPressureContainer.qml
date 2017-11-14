@@ -70,6 +70,24 @@ FluidControls.Card
                 placeholderText: "1100"
             }
         }
+        Row
+        {
+            spacing: 10
+            width: parent.width
+            height: 50
+            Text {
+                text: qsTr("Inital Vac Down: ")
+                color: "#595959"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+            }
+            CheckBox {
+                id: setUseVac_pressure
+                checked: false
+            }
+        }
         Row{
             spacing: 20
             opacity: (setHighPressure_pressure.text < 1) ? 0 : 1;
@@ -92,7 +110,7 @@ FluidControls.Card
                 enabled: (setHighPressure_confirm.checked) ? true : false;
                 onClicked:
                 {
-                    TestingManager.requestHighPressure(setHighPressure_pressure.text);
+                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked);
                 }
             }
         }

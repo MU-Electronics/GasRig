@@ -63,7 +63,7 @@ namespace App { namespace View { namespace Managers
             void requestFlowControllerTemperature(QString controller);
 
             // Request experiment methods
-            void requestHighPressure(QString pressure);
+            void requestHighPressure(QString pressure, bool initVacDown);
             void requestExhuast(int filterType, int frequency);
             void requestPurgeSystemMethodOne(bool outputValve, int cycles, QString pressure);
             void requestPurgeSystemMethodTwo(int minutes, QString pressure);

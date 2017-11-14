@@ -44,7 +44,7 @@ namespace App { namespace Experiment { namespace Machines
             int pulseValve(int valve, int cycles, int timeOpen, int timeClosed);
             void stopPulseValve();
 
-            int setPressure(double pressure);
+            int setPressure(double pressure, bool initVacDown);
             void stopSetPressure();
 
             int outputPressure(int frequency);

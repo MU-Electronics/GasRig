@@ -435,14 +435,14 @@ namespace App { namespace Experiment { namespace Machines
      * @param input
      * @param frequency
      */
-    int Machines::setPressure(double pressure)
+    int Machines::setPressure(double pressure, bool initVacDown)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
         // Set params
-        m_pressurise.setParams(pressure);
+        m_pressurise.setParams(pressure, initVacDown);
 
         // Build the machine
         m_pressurise.buildMachine();

@@ -30,7 +30,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ~Pressurise();
 
-            void setParams(double pressure);
+            void setParams(double pressure, bool initVacDown);
 
             void start();
 
