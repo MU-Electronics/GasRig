@@ -451,7 +451,7 @@ namespace App { namespace Experiment { namespace Machines
         m_pressurise.start();
 
         // Emit machine started
-        emit emit_pressuriseStarted(pressure);
+        emit emit_pressuriseStarted(pressure, initVacDown);
 
         // Return success
         return 1;
@@ -465,6 +465,9 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::stopSetPressure()
     {
+        // Stop the pulse valve machine
+        m_pressurise.stop();
+
         emit emit_pressuriseStopped();
     }
 

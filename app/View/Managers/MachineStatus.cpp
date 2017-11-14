@@ -38,6 +38,11 @@ namespace App { namespace View { namespace Managers
         m_pulseValveMachine.insert("timeOpen", -1);
         m_pulseValveMachine.insert("timeClosed", -1);
 
+        // Default values for pressurise state machine
+        m_pressuriseMachine.insert("status", false);
+        m_pressuriseMachine.insert("pressure", -1);
+        m_pressuriseMachine.insert("initVacDown", -1);
+
     }
 
 
@@ -61,7 +66,35 @@ namespace App { namespace View { namespace Managers
         // Connect signals to and from experiment engine
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStarted, this, &MachineStatus::pulseValveStarted);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStopped, this, &MachineStatus::pulseValveStopped);
+
+        // Connect signals to and from experiment engine
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseStarted, this, &MachineStatus::pressuriseStarted);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseStopped, this, &MachineStatus::pressuriseStopped);
     }
+
+
+
+
+
+
+    void MachineStatus::pressuriseStarted(double pressure, bool initVacDown)
+    {
+        m_pressuriseMachine.insert("status", true);
+        m_pressuriseMachine.insert("pressure", pressure);
+        m_pressuriseMachine.insert("initVacDown", initVacDown);
+
+        emit emit_pressuriseMachineChanged(m_pressuriseMachine);
+    }
+
+    void MachineStatus::pressuriseStopped()
+    {
+        m_pressuriseMachine.insert("status", false);
+
+        emit emit_pressuriseMachineChanged(m_pressuriseMachine);
+    }
+
+
+
 
 
 

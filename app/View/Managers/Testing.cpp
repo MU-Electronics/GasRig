@@ -740,6 +740,11 @@ namespace App { namespace View { namespace Managers
         m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown);
     }
 
+    void Testing::requestHighPressureStop()
+    {
+        m_experimentEngine.machines().stopSetPressure();
+    }
+
     void Testing::requestExhuast(int filterType, int frequency)
     {
         qDebug() << "Running exhuast";

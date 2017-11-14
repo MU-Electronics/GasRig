@@ -71,7 +71,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void emit_purgeSystemMachineState(bool state);
 
-            void emit_pressuriseStarted(double pressure);
+            void emit_pressuriseStarted(double pressure, bool initVacDown);
             void emit_pressuriseStopped();
 
         public slots:

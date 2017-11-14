@@ -75,6 +75,7 @@ namespace App { namespace View { namespace Managers
             // Request experiment methods to be stopped
             void requestVacDownStop();
             void requestPulseValveStop();
+            void requestHighPressureStop();
 
 
 

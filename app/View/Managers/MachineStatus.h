@@ -30,6 +30,7 @@ namespace App { namespace View { namespace Managers
         // Vac down state machine status
         Q_PROPERTY(QVariantMap vacDownMachine READ vacDownMachine NOTIFY emit_vacDownMachineChanged)
         Q_PROPERTY(QVariantMap pulseValveMachine READ pulseValveMachine NOTIFY emit_pulseValveMachineChanged)
+        Q_PROPERTY(QVariantMap pressuriseMachine READ pressuriseMachine NOTIFY emit_pressuriseMachineChanged)
 
         public:
             MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
@@ -40,6 +41,7 @@ namespace App { namespace View { namespace Managers
             // Return the data for the state machines
             QVariantMap vacDownMachine() const { return m_vacDownMachine; }
             QVariantMap pulseValveMachine() const { return m_pulseValveMachine; }
+            QVariantMap pressuriseMachine() const { return m_pressuriseMachine; }
 
         signals:
             void emit_hardwareAccess(QVariantMap command);
@@ -47,6 +49,7 @@ namespace App { namespace View { namespace Managers
             // Signals for properties
             void emit_vacDownMachineChanged(QVariantMap);
             void emit_pulseValveMachineChanged(QVariantMap);
+            void emit_pressuriseMachineChanged(QVariantMap);
 
         public slots:
             void vacDownStarted(int mintues, bool turbo, int gasMode, int mode);
@@ -54,6 +57,9 @@ namespace App { namespace View { namespace Managers
 
             void pulseValveStarted(int valve, int cycles, int timeOpen, int timeClosed);
             void pulseValveStopped();
+
+            void pressuriseStarted(double pressure, bool initVacDown);
+            void pressuriseStopped();
 
 
         private:
@@ -70,6 +76,9 @@ namespace App { namespace View { namespace Managers
 
             // Holds the pulse valve machine statuses
             QVariantMap m_pulseValveMachine;
+
+            // Holds the pressurise machine statuses
+            QVariantMap m_pressuriseMachine;
 
     };
 }}}

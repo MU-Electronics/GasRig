@@ -108,9 +108,19 @@ FluidControls.Card
             {
                 text: qsTr("Set high pressure")
                 enabled: (setHighPressure_confirm.checked) ? true : false;
+                visible: (MachineStatusManager.pressuriseMachine["status"] === false) ? 1 : 0;
                 onClicked:
                 {
                     TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked);
+                }
+            }
+            Button
+            {
+                text: qsTr("Stop")
+                visible: (MachineStatusManager.pressuriseMachine["status"] === true) ? 1 : 0;
+                onClicked:
+                {
+                    TestingManager.requestHighPressureStop();
                 }
             }
         }
