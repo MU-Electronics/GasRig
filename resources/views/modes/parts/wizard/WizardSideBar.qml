@@ -10,7 +10,7 @@ Column
      spacing: 11.9
 
      // Current stage of process
-     property var stage: 0
+     property var stage: "0"
 
      // Button ids
      property alias editButton: editButton
@@ -25,17 +25,17 @@ Column
         backgroundPressed: Material.color(Material.Blue, Material.Shade600)
         textColorInit: "#ffffff"
         textColorPressed: "#ffffff"
-        enabled: (rootSideBar.stage === 0 || rootSideBar.stage === 2 || rootSideBar.stage === 3) ? true : false
+        enabled: (rootSideBar.stage === "0" || rootSideBar.stage === "2" || rootSideBar.stage === "3") ? true : false
     }
 
     WizardSideButton{
         id: startButton
-        text: (rootSideBar.stage === 1 || rootSideBar.stage === 2 || rootSideBar.stage === 3) ? qsTr('Restart') : qsTr('Start')
+        text: (rootSideBar.stage === "1" || rootSideBar.stage === "2" || rootSideBar.stage === "3") ? qsTr('Restart') : qsTr('Start')
         backgroundInit: Material.color(Material.Green, Material.Shade400)
         backgroundPressed: Material.color(Material.Green, Material.Shade600)
         textColorInit: "#ffffff"
         textColorPressed: "#ffffff"
-        enabled: (rootSideBar.stage === 0 || rootSideBar.stage === 2 || rootSideBar.stage === 3) ? true : false
+        enabled: (rootSideBar.stage === "0" || rootSideBar.stage === "2" || rootSideBar.stage === "3") ? true : false
     }
 
     WizardSideButton{
@@ -54,6 +54,6 @@ Column
         backgroundPressed: Material.color(Material.Orange, Material.Shade600)
         textColorInit: "#ffffff"
         textColorPressed: "#ffffff"
-        enabled: (rootSideBar.stage === 0 || rootSideBar.stage === 2 || rootSideBar.stage === 3) ? true : false
+        enabled: (rootSideBar.stage === "0" || rootSideBar.stage === "2" || rootSideBar.stage === "3") ? true : false
     }
 }

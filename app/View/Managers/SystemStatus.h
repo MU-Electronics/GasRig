@@ -120,7 +120,10 @@ namespace App { namespace View { namespace Managers
             // Holds the pressure sensor statuses for all values
             QVariantMap m_pressureSensor;
 
-            void setInitialValues();
+            // Has initial commands been sent to devices
+            QMap<QString, bool> initalCommands;
+
+            void setInitialValues(QVariantMap package);
     };
 }}}
 
