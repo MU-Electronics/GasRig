@@ -42,6 +42,12 @@ Item {
     height: 40 + wizardContainerSettingsForm.height
     opacity: (wizardContainerRoot.shouldEnable) ? 1 : 0.7
 
+    Behavior on height {
+        PropertyAnimation {
+            duration: 500
+        }
+    }
+
     FluidControls.Card
     {
         width: parent.width
@@ -78,6 +84,10 @@ Item {
 
                 height: (wizardContainerRoot.shouldEnable) ? wizardContainerRoot.containerHeight : 0
                 visible: (wizardContainerRoot.shouldEnable) ? 1 : 0
+
+                move: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 500 }
+                }
 
                 Row{
                     width: parent.width

@@ -22,16 +22,11 @@ Item
             id: purgeContainer
             anchors.top: parent.top
             anchors.topMargin: 25
-
             shouldEnable: true
-            currentState: "0"
         }
         VacDown{
             anchors.top: purgeContainer.bottom
             anchors.topMargin: 25
-
-            shouldEnable: false
-            //currentState: "0"
         }
 
     }

@@ -30,7 +30,7 @@ Item {
     property bool shouldEnable: false
 
     // What state are we at during this stage?
-    property string currentState: "0"
+    property string currentState: "2"
 
     WizardContainer{
         id: purgeCellWizard
