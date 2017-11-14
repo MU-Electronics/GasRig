@@ -29,6 +29,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_waitForPressureAfterInitValveOne(&machine)
         ,   sml_waitForPressureBeforeValveFive(&machine)
         ,   sml_waitForPressureAfterValveFive(&machine)
+        ,   sml_waitForPressureBeforeSelectValve(&machine)
 
         ,   sml_waitForValveOneTimer(&machine)
         ,   sml_waitForValveTwoTimer(&machine)
@@ -80,6 +81,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validatePressureAfterValveTwo(&machine)
         ,   sml_validatePressureAfterValveOne(&machine)
         ,   sml_validateInitialSystemVacuum(&machine)
+        ,   sml_validatePressureBeforeSelectValve(&machine)
 
             // Timer states
         ,   sml_startValveOneTimer(&machine)
@@ -161,6 +163,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validatePressureAfterValveOne, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveOne);
         connect(&sml_validatePressureAfterValveTwo, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveTwo);
         connect(&sml_validatePressureAfterValveSeven, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveSeven);
+        connect(&sml_validatePressureBeforeSelectValve, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureBeforeSelectValve);
         connect(&sml_validateInitialSystemVacuum, &States::CommandValidatorState::entered, this, &Pressurise::validateInitialSystemVacuum);
         connect(&sml_validateCloseVacuumInForSlowExhuast, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseVacuumIn);
         connect(&sml_validateCloseVacuumInForSlowExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseVacuumIn);
@@ -598,15 +601,23 @@ namespace App { namespace Experiment { namespace Machines
         // Set the output valve
         valves()->sm_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateCloseOutput);
             // Close the fast exhuast valve
-            valves()->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &valves()->sm_openHighPressureInput);
+            valves()->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForPressureBeforeSelectValve);
             // Valve failed to close
             valves()->sm_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
 
 
-        // Set inital direction
 
 
+
+        // Set inital valve to use
+        sml_waitForPressureBeforeSelectValve.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureBeforeSelectValve);
+            // Too low go to open valve 7
+            sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureToLow, &valves()->sm_openHighPressureInput);
+            // Too high go to pulse valve 2
+            sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureToHigh, &sml_waitForPressureBeforeValveFive);
+            // Within tolerence go to open valve 1
+            sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_openOutput_2);
 
 
 
@@ -775,6 +786,34 @@ namespace App { namespace Experiment { namespace Machines
             // Calculated new step size is it less than the tolerence then finish
             sml_validatePressureAfterValveOne.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sm_stop);
 
+    }
+
+    void Pressurise::validatePressureBeforeSelectValve()
+    {
+        // Get the validator state instance
+        States::CommandValidatorState* state = (States::CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Current pressure value
+        double currentPressure = package.value("pressure").toDouble() * 1000;
+
+        if(currentPressure < params.value("pressure").toDouble())
+        {
+            emit emit_pressureToLow();
+            return;
+        }
+        else if(currentPressure > params.value("pressure").toDouble())
+        {
+            emit emit_pressureToHigh();
+            return;
+        }
+        else if(currentPressure == params.value("pressure").toDouble())
+        {
+            emit emit_pressureWithinTolerance();
+            return;
+        }
     }
 
     void Pressurise::shouldDisablingBackingPump()

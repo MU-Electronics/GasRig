@@ -84,6 +84,7 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_waitForPressureAfterInitValveOne
             ,       sml_waitForPressureBeforeValveFive
             ,       sml_waitForPressureAfterValveFive
+            ,       sml_waitForPressureBeforeSelectValve
 
             ,       sml_waitForValveOneTimer
             ,       sml_waitForValveTwoTimer
@@ -114,6 +115,7 @@ namespace App { namespace Experiment { namespace Machines
                     sml_validatePressureAfterValveSeven
             ,       sml_validatePressureAfterValveTwo
             ,       sml_validatePressureAfterValveOne
+            ,       sml_validatePressureBeforeSelectValve
 
             ,       sml_shouldOpenValveFive
             ,       sml_shouldCloseValveFive
@@ -170,6 +172,7 @@ namespace App { namespace Experiment { namespace Machines
             void validatePressureAfterValveTwo();
             void validatePressureAfterValveSeven();
             void validateInitialSystemVacuum();
+            void validatePressureBeforeSelectValve();
             void shouldOpenValveFive();
             void shouldCloseValveFive();
             void shouldEnableBackingPump();
