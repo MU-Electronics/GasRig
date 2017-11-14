@@ -23,7 +23,7 @@ Item {
         width: parent.width
         height: window.height - 180
         contentWidth: parent.width
-        contentHeight: purgeSystemFunction.height + pulsingValveControl.height + valveStateControl.height + outputHighPressure.height + exhuastSystem.height + setHighPressure.height + 50;
+        contentHeight: purgeSystemFunction.height + pulsingValveControl.height + valveStateControl.height + /*outputHighPressure.height +*/ exhuastSystem.height + setHighPressure.height + 50;
 
         SetHighPressureContainer{
             id: setHighPressure
@@ -36,15 +36,21 @@ Item {
             anchors.topMargin: 15
         }
 
-        OutputHighPressureContainer{
-            id: outputHighPressure
-            anchors.top: exhuastSystem.bottom
-            anchors.topMargin: 15
-        }
+        /**
+         * Not requires for first release
+         *
+            OutputHighPressureContainer{
+                id: outputHighPressure
+                anchors.top: exhuastSystem.bottom
+                anchors.topMargin: 15
+            }
+         *
+         */
 
         PurgeSystemContainer{
             id: purgeSystemFunction
-            anchors.top: outputHighPressure.bottom
+            // anchors.top: outputHighPressure.bottom
+            anchors.top: exhuastSystem.bottom
             anchors.topMargin: 15
         }
 
