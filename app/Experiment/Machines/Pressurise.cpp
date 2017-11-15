@@ -1014,54 +1014,44 @@ namespace App { namespace Experiment { namespace Machines
             // Previous tunning pressure
             int previousPressure = params.value("valve_2_previous_pressure").toInt();
 
-            // Does the valve timing need tunning?
-            /*int currentMinPressure = currentPressure - params.value("valve_2_step_size_tolerance").toInt();
-            int currentMaxPressure = currentPressure + params.value("valve_2_step_size_tolerance").toInt();
-            if( previousPressure != -1 &&
-                !(
-                    (abs(previousPressure - currentMinPressure) <= params.value("valve_2_step_size").toInt()) &&
-                    (abs(previousPressure - currentMaxPressure) >= params.value("valve_2_step_size").toInt())
-                )
-            )
-            {*/
-                qDebug() << "Tunning valve two, pressure change: " << abs(previousPressure - currentPressure) << " target step size: " << params.value("valve_2_step_size").toInt();
+            qDebug() << "Tunning valve two, pressure change: " << abs(previousPressure - currentPressure) << " target step size: " << params.value("valve_2_step_size").toInt();
 
-                // Find pressure difference
-                double pressureDiff = abs(previousPressure - currentPressure);
+            // Find pressure difference
+            double pressureDiff = abs(previousPressure - currentPressure);
 
-                // Desired step size
-                double stepSize = params.value("valve_2_step_size").toDouble();
+            // Desired step size
+            double stepSize = params.value("valve_2_step_size").toDouble();
 
-                // Change the valve timing in the correct direction
-                if( pressureDiff < (stepSize + (stepSize * 0.3)) && pressureDiff > (stepSize - (stepSize * 0.3)))
+            // Change the valve timing in the correct direction
+            if( pressureDiff < (stepSize + (stepSize * 0.3)) && pressureDiff > (stepSize - (stepSize * 0.3)))
+            {
+                // Do nothing the step size is perfect
+                qDebug() << "Tune doing nothing";
+            }
+            else if(pressureDiff < stepSize) // Step size to small
+            {
+                // Increase by default amount
+                int inc = params.value("valve_2_increment").toInt();
+
+                // Increase by corse or fine?
+                if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.05))
                 {
-                    // Do nothing the step size is perfect
-                    qDebug() << "Tune doing nothing";
+                    inc = params.value("valve_2_increment_corse").toInt();
                 }
-                else if(pressureDiff < stepSize)
+                else if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.2))
                 {
-                    // Step size too small set default increment
-                    int inc = params.value("valve_2_increment").toInt();
-
-
-                    if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.05))
-                    {
-                        inc = params.value("valve_2_increment_corse").toInt();
-                    }
-                    else if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.2))
-                    {
-                        inc = params.value("valve_2_increment_fine").toInt();
-                    }
-
-                    // Save new speed
-                    t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + inc);
+                    inc = params.value("valve_2_increment_fine").toInt();
                 }
-                else if(pressureDiff > stepSize)
-                {
-                    // Step size too large reduce speed
-                    t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() - params.value("valve_2_decrement").toInt());
-                }
-            //}
+
+                // Save new speed
+                t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + inc);
+            }
+            else if(pressureDiff > stepSize) // Step size too large reduce speed
+            {
+                // Decrease the timing and save the new speed
+                t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() - params.value("valve_2_decrement").toInt());
+            }
+
 
             // Update the previous pressure with current pressure
             params.insert("valve_2_previous_pressure", currentPressure);
