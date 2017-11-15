@@ -1015,7 +1015,7 @@ namespace App { namespace Experiment { namespace Machines
             int previousPressure = params.value("valve_2_previous_pressure").toInt();
 
             // Does the valve timing need tunning?
-            int currentMinPressure = currentPressure - params.value("valve_2_step_size_tolerance").toInt();
+            /*int currentMinPressure = currentPressure - params.value("valve_2_step_size_tolerance").toInt();
             int currentMaxPressure = currentPressure + params.value("valve_2_step_size_tolerance").toInt();
             if( previousPressure != -1 &&
                 !(
@@ -1023,36 +1023,45 @@ namespace App { namespace Experiment { namespace Machines
                     (abs(previousPressure - currentMaxPressure) >= params.value("valve_2_step_size").toInt())
                 )
             )
-            {
+            {*/
                 qDebug() << "Tunning valve two, pressure change: " << abs(previousPressure - currentPressure) << " target step size: " << params.value("valve_2_step_size").toInt();
 
                 // Find pressure difference
                 double pressureDiff = abs(previousPressure - currentPressure);
 
-                // Change the valve timing in the correct direction
-                if(
-                   pressureDiff < params.value("valve_2_step_size").toDouble() + (params.value("valve_2_step_size").toInt() * 0.1) &&
-                   pressureDiff > params.value("valve_2_step_size").toDouble() - (params.value("valve_2_step_size").toInt() * 0.1)
-                )
-                {
-                    // Step size too small
-                    int inc = params.value("valve_2_increment").toInt();
-                    if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.05))
-                        inc = params.value("valve_2_increment_corse").toInt();
-                    if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.2))
-                        inc = params.value("valve_2_increment_fine").toInt();
+                // Desired step size
+                double stepSize = params.value("valve_2_step_size").toDouble();
 
+                // Change the valve timing in the correct direction
+                if( pressureDiff < (stepSize + (stepSize * 0.3)) && pressureDiff > (stepSize - (stepSize * 0.3)))
+                {
+                    // Do nothing the step size is perfect
+                    qDebug() << "Tune doing nothing";
+                }
+                else if(pressureDiff < stepSize)
+                {
+                    // Step size too small set default increment
+                    int inc = params.value("valve_2_increment").toInt();
+
+
+                    if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.05))
+                    {
+                        inc = params.value("valve_2_increment_corse").toInt();
+                    }
+                    else if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.2))
+                    {
+                        inc = params.value("valve_2_increment_fine").toInt();
+                    }
+
+                    // Save new speed
                     t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() + inc);
                 }
-                else if(
-                        pressureDiff > params.value("valve_2_step_size").toDouble() + (params.value("valve_2_step_size").toInt() * 0.1) &&
-                        pressureDiff < params.value("valve_2_step_size").toDouble() - (params.value("valve_2_step_size").toInt() * 0.1)
-                )
+                else if(pressureDiff > stepSize)
                 {
-                    // Step size too large
+                    // Step size too large reduce speed
                     t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() - params.value("valve_2_decrement").toInt());
                 }
-            }
+            //}
 
             // Update the previous pressure with current pressure
             params.insert("valve_2_previous_pressure", currentPressure);
