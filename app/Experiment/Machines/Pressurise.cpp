@@ -51,6 +51,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_closeVacuumInForSlowExhuast(&machine)
         ,   sml_openVacuumInForSlowExhuast(&machine)
         ,   sml_closeVacuumInForSlowExhuast_2(&machine)
+        ,   sml_closeHighPressureNitrogen_2(&machine)
 
         ,   sml_openExhuast_2(&machine)
         ,   sml_closeExhuast_2(&machine)
@@ -66,6 +67,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validateOpenExhuast_2(&machine)
         ,   sml_validateCloseExhuast_2(&machine)
         ,   sml_validateCloseVacuumInForSlowExhuast_2(&machine)
+        ,   sml_validateCloseHighPressureNitrogen_2(&machine)
 
 
         ,   sml_enableBackingPump_2(&machine)
@@ -138,6 +140,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_openOutput_2, &QState::entered, this->valves(), &States::Valves::openOutput);
         connect(&sml_openExhuast_2, &QState::entered, this->valves(), &States::Valves::openExhuast);
         connect(&sml_closeExhuast_2, &QState::entered, this->valves(), &States::Valves::closeExhuast);
+        connect(&sml_closeHighPressureNitrogen_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureNitrogen);
 
         connect(&sml_validateCloseHighPressureInput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureInput);
         connect(&sml_validateCloseOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseOutput);
@@ -170,6 +173,8 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validateOpenVacuumInForSlowExhuast, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
         connect(&sml_validateOpenExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenExhuast);
         connect(&sml_validateCloseExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseExhuast);
+        connect(&sml_validateCloseHighPressureNitrogen_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureNitrogen);
+
 
         connect(&sml_validateEnableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
         connect(&sml_validateDisableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateDisableBackingPump);
@@ -182,11 +187,15 @@ namespace App { namespace Experiment { namespace Machines
      * Set the commands to be used by the machine
      *
      * @brief setParams
-     * @param mintues
-     * @param turbo
-     * @param gasMode
+     * @param pressure, set the end pressure
+     * @param initVacDown, should we vac down the output first?
+     * @param stepSize, what pressure increases for the output
+     * @param inputValve, which input valve to use?   MHG = true, Nitrogen in = false
      */
-    void Pressurise::setParams(double pressure, bool initVacDown, int stepSize = 2000)
+    // Below show the to be implimented function vars
+    // Valve 7 init step size, Valve 7 final step size, Valve 2 init step size, Valve 2 final step size
+    // Valve 1 tolerance, Valve 2 tolerance, Valve 7 tolerance
+    void Pressurise::setParams(double pressure, bool initVacDown, int stepSize = 2000, bool inputValve = true)
     {
         /*#######################################
          # Configuration Settings
@@ -200,6 +209,28 @@ namespace App { namespace Experiment { namespace Machines
 
         // What is the step size in pressure
         params.insert("step_size", stepSize);
+
+        // What input valve should we use?
+        if(inputValve)
+        {
+            // Open the multi purpose high pressure valve
+            inputValveOpen = &valves()->sm_openHighPressureInput;
+            inputValveOpenValidation = &valves()->sm_validateOpenHighPressureInput;
+
+            // Close the multi purpose high pressure valve
+            inputValveClose = &sml_closeHighPressureInput_2;
+            inputValveCloseValidation = &sml_validateCloseHighPressureInput_2;
+        }
+        else
+        {
+            // Open the nitrogen high pressure valve
+            inputValveOpen = &valves()->sm_openHighPressureNitrogen;
+            inputValveOpenValidation = &valves()->sm_validateOpenHighPressureNitrogen;
+
+            // Close the nitrogen high pressure valve
+            inputValveClose = &sml_closeHighPressureNitrogen_2;
+            inputValveCloseValidation = &sml_validateCloseHighPressureNitrogen_2;
+        }
 
 
 
@@ -312,9 +343,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Valve 2: Decrement pulse width when pressure increase was too large
         params.insert("valve_2_decrement", 5);
-
-
-
 
         // Valve 2: Previous tunning pressure
         params.insert("valve_2_previous_pressure", -1);
@@ -613,7 +641,7 @@ namespace App { namespace Experiment { namespace Machines
         // Set inital valve to use
         sml_waitForPressureBeforeSelectValve.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureBeforeSelectValve);
             // Too low go to open valve 7
-            sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureToLow, &valves()->sm_openHighPressureInput);
+            sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureToLow, inputValveOpen);
             // Too high go to pulse valve 2
             sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureToHigh, &sml_waitForPressureBeforeValveFive);
             // Within tolerence go to open valve 1
@@ -624,27 +652,29 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
+
+
         // Open valve 7
-        valves()->sm_openHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &valves()->sm_validateOpenHighPressureInput);
+        inputValveOpen->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, inputValveOpenValidation);
             // Valve closed successfully
-            valves()->sm_validateOpenHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_startValveSevenTimer);
+            inputValveOpenValidation->addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_startValveSevenTimer);
             // Valve failed to close
-            valves()->sm_validateOpenHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            inputValveOpenValidation->addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Wait for timer valve 7
-        sml_startValveSevenTimer.addTransition(&t_pulseValveSeven, &QTimer::timeout, &sml_closeHighPressureInput_2);
+        sml_startValveSevenTimer.addTransition(&t_pulseValveSeven, &QTimer::timeout, inputValveClose);
 
         // Close valve 7
-        sml_closeHighPressureInput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseHighPressureInput_2);
+        inputValveClose->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, inputValveCloseValidation);
             // Valve closed successfully
-            sml_validateCloseHighPressureInput_2.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForPressureAfterValveSeven);
+            inputValveCloseValidation->addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_waitForPressureAfterValveSeven);
             // Valve failed to close
-            sml_validateCloseHighPressureInput_2.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            inputValveCloseValidation->addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Compare pressure to step size
         sml_waitForPressureAfterValveSeven.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterValveSeven);
             // Too low go back to open valve 7
-            sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureToLow, &valves()->sm_openHighPressureInput);
+            sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureToLow, inputValveOpen);
             // Too high go to pulse valve 2
             sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureToHigh, &sml_waitForPressureBeforeValveFive);
             // Within tolerence go to open valve 1
@@ -747,7 +777,7 @@ namespace App { namespace Experiment { namespace Machines
         // Compare pressure to step size
         sml_waitForPressureAfterValveTwo.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterValveTwo);
             // Too low go back to open valve 7
-            sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureToLow, &valves()->sm_openHighPressureInput);
+            sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureToLow, inputValveOpen);
             // Too high go to pulse valve 2
             sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureToHigh, &sml_waitForPressureBeforeValveFive);
             // Within tolerence go to open valve 1
@@ -782,7 +812,7 @@ namespace App { namespace Experiment { namespace Machines
             // Calculated new step size is it more than tolerence the go to open valve 2
             sml_validatePressureAfterValveOne.addTransition(this, &Pressurise::emit_pressureToHigh, &sml_waitForPressureBeforeValveFive);
             // Calculated new step size is it less than zero then go to open valve 7
-            sml_validatePressureAfterValveOne.addTransition(this, &Pressurise::emit_pressureToLow, &valves()->sm_openHighPressureInput);
+            sml_validatePressureAfterValveOne.addTransition(this, &Pressurise::emit_pressureToLow, inputValveOpen);
             // Calculated new step size is it less than the tolerence then finish
             sml_validatePressureAfterValveOne.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sm_stop);
 

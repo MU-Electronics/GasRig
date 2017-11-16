@@ -58,7 +58,7 @@ namespace App { namespace View { namespace Managers
             void pulseValveStarted(int valve, int cycles, int timeOpen, int timeClosed);
             void pulseValveStopped();
 
-            void pressuriseStarted(double pressure, bool initVacDown, int stepSize);
+            void pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve);
             void pressuriseStopped();
 
 

@@ -106,6 +106,32 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
+            enabled: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
+            Text {
+                text: qsTr("Select valve:")
+                color: "#777777"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth
+            }
+            ComboBox {
+                id: setInputValve_pressure
+                height: parent.height
+                width: parent.width - root.labelWidth - root.labelPadding
+                textRole: "key"
+                model: ListModel {
+                    ListElement { key: "Valve 7 (High Pressure In)"; value: true }
+                    ListElement { key: "Valve 8 (High Pressure Nitrogen In)"; value: false }
+                }
+            }
+        }
+        Row
+        {
+            spacing: 10
+            width: parent.width
+            height: 50
             Text {
                 text: qsTr("Disable inital vac down: ")
                 color: "#595959"
@@ -144,7 +170,7 @@ FluidControls.Card
                 visible: (MachineStatusManager.pressuriseMachine["status"] === false) ? 1 : 0;
                 onClicked:
                 {
-                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text);
+                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text, setInputValve_pressure.model.get(setInputValve_pressure.currentIndex).value);
                 }
             }
             Button

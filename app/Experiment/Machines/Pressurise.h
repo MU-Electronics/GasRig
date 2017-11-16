@@ -30,7 +30,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ~Pressurise();
 
-            void setParams(double pressure, bool initVacDown, int stepSize);
+            void setParams(double pressure, bool initVacDown, int stepSize, bool inputValve);
 
             void start();
 
@@ -63,7 +63,11 @@ namespace App { namespace Experiment { namespace Machines
             ,       t_vacuumValveTimer;
 
 
-
+            // Valve to open and close
+            QState* inputValveOpen;
+            States::CommandValidatorState* inputValveOpenValidation;
+            QState* inputValveClose;
+            States::CommandValidatorState* inputValveCloseValidation;
 
 
             QState  sml_startValveOneTimer
@@ -99,6 +103,7 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_closeHighPressureInput_2
             ,       sml_openVacuumIn_2
             ,       sml_openOutput_2
+            ,       sml_closeHighPressureNitrogen_2
 
             ,       sml_enableBackingPump_2
 
@@ -135,6 +140,7 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_validateOpenOutput_2
             ,       sml_validateOpenExhuast_2
             ,       sml_validateCloseExhuast_2
+            ,       sml_validateCloseHighPressureNitrogen_2
 
             ,       sml_validateEnableBackingPump_2
             ,       sml_validateDisableBackingPump_2;
