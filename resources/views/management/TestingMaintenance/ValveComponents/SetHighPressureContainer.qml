@@ -56,6 +56,7 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
             Text {
                 text: qsTr("Desired end pressure (mBar): ")
                 color: "#777777"
@@ -81,6 +82,7 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
             Text {
                 text: qsTr("Valve one step size (mBar): ")
                 color: "#777777"
@@ -106,7 +108,7 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
-            enabled: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
             Text {
                 text: qsTr("Select valve:")
                 color: "#777777"
@@ -132,6 +134,7 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
             Text {
                 text: qsTr("Disable inital vac down: ")
                 color: "#595959"
@@ -162,6 +165,7 @@ FluidControls.Card
                 id:setHighPressure_confirm
                 checked: false
                 text: qsTr("Comfirm rig setup")
+                enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
             }
             Button
             {
