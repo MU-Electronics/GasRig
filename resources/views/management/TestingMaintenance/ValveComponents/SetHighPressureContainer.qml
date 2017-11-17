@@ -125,7 +125,7 @@ FluidControls.Card
                 textRole: "key"
                 model: ListModel {
                     ListElement { key: "Valve 7 (High Pressure In)"; value: true }
-                    ListElement { key: "Valve 8 (High Pressure Nitrogen In)"; value: false }
+                    ListElement { key: "Valve 9 (Nitrogen In)"; value: false }
                 }
             }
         }

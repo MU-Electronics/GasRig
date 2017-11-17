@@ -62,8 +62,8 @@ FluidControls.Card
                     ListElement { key: "Valve 5 (Vacuum In)"; value: 5 }
                     ListElement { key: "Valve 6 (Vacuum Out)"; value: 6 }
                     ListElement { key: "Valve 7 (High Pressure In)"; value: 7 }
-                    ListElement { key: "Valve 8 (High Pressure Nitrogen In)"; value: 8 }
-                    ListElement { key: "Valve 9 (Flow Controllers)"; value: 9 }
+                    ListElement { key: "Valve 8 (Flow Controllers)"; value: 8 }
+                    ListElement { key: "Valve 9 (Nitrogen In)"; value: 9 }
                 }
             }
         }
