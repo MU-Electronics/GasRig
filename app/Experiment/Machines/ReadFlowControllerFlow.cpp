@@ -17,7 +17,23 @@ namespace App { namespace Experiment { namespace Machines
 {
     ReadFlowControllerFlow::ReadFlowControllerFlow(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
+
+            // Flow states
+        ,   sml_flowControllerOneFlow_1(&machine)
+        ,   sml_flowControllerTwoFlow_1(&machine)
+
+            // Timer states
+        ,   sml_startFlowControllerFlowMonitor(&machine)
+
+            // Timer
+        ,   t_flowControllerFlowMonitor(parent)
     {
+        // Flow
+        connect(&sml_flowControllerOneFlow_1, &QState::entered, this->flow(), &States::Flow::flowControllerOneFlow);
+        connect(&sml_flowControllerTwoFlow_1, &QState::entered, this->flow(), &States::Flow::flowControllerTwoFlow);
+
+        // Timers
+        connect(&sml_startFlowControllerFlowMonitor, &QState::entered, this, &ReadFlowControllerFlow::startFlowControllerFlowMonitor);
 
     }
 
@@ -41,7 +57,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("flowControllerTimeInter", flowControllerTimeInter);
 
         // Setup timer
-        timers()->t_flowControllerFlowMonitor.setInterval(flowControllerTimeInter);
+        t_flowControllerFlowMonitor.setInterval(flowControllerTimeInter);
     }
 
 
@@ -64,7 +80,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::stop()
     {
         // Stop all the timers
-        timers()->stopFlowControllerFlowMonitor();
+        stopFlowControllerFlowMonitor();
 
         // Stop the machine
         machine.stop();
@@ -85,7 +101,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::stopAsFailed()
     {
         // Stop all the timers
-        timers()->stopFlowControllerFlowMonitor();
+        stopFlowControllerFlowMonitor();
 
         // Stop the machine
         machine.stop();
@@ -106,21 +122,42 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&timers()->sm_startFlowControllerFlowMonitor);
+        machine.setInitialState(&sml_startFlowControllerFlowMonitor);
 
         // Start the flow controller flow monitor
-        timers()->sm_startFlowControllerFlowMonitor.addTransition(this->timers(), &States::Timers::emit_timerActive, &timers()->sm_timerWait);
-
-        // Wait for a timer event
-        timers()->sm_timerWait.addTransition(&timers()->t_flowControllerFlowMonitor, &QTimer::timeout, &flow()->sm_flowControllerOneFlow);
+        sml_startFlowControllerFlowMonitor.addTransition(&t_flowControllerFlowMonitor, &QTimer::timeout, &sml_flowControllerOneFlow_1);
 
         // Read the flow controller flow sensor
-        flow()->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &flow()->sm_flowControllerTwoFlow);
-        flow()->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &timers()->sm_timerWait);
+        sml_flowControllerOneFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &sml_flowControllerTwoFlow_1);
+        sml_flowControllerTwoFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &sml_startFlowControllerFlowMonitor);
 
         // Account for com issues
-        flow()->sm_flowControllerOneFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
-        flow()->sm_flowControllerTwoFlow.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
+        sml_flowControllerOneFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startFlowControllerFlowMonitor);
+        sml_flowControllerTwoFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startFlowControllerFlowMonitor);
+    }
+
+
+    /**
+     * Timer to use to trigger reading the flow controller flow sensor
+     *
+     * @brief ReadFlowControllerFlow::startPressureMonitor
+     */
+    void ReadFlowControllerFlow::startFlowControllerFlowMonitor()
+    {
+        // Setup timer
+        t_flowControllerFlowMonitor.setSingleShot(false);
+        t_flowControllerFlowMonitor.start();
+    }
+
+
+    /**
+     * Stop the timer triggering reading of the flow controller flow sensor
+     *
+     * @brief ReadFlowControllerFlow::stopPressureMonitor
+     */
+    void ReadFlowControllerFlow::stopFlowControllerFlowMonitor()
+    {
+        t_flowControllerFlowMonitor.stop();
     }
 }}}
 
