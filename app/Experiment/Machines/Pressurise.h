@@ -102,6 +102,21 @@ namespace App { namespace Experiment { namespace Machines
 
 
                     // States relating to valve functions
+            ,       sml_openHighPressureInput_1
+            ,       sml_openHighPressureNitrogen_1
+            ,       sml_closeHighPressureInput_1
+            ,       sml_closeHighPressureNitrogen_1
+            ,       sml_closeVacuumOut_1
+            ,       sml_closeFlowController_1
+            ,       sml_closeExhuast_1
+            ,       sml_closeSlowExhuastPath_1
+            ,       sml_closeFastExhuastPath_1
+            ,       sml_closeVacuumIn_1
+            ,       sml_closeOutput_1
+            ,       sml_openSlowExhuastPath_1
+            ,       sml_openOutput_1
+            ,       sml_openVacuumIn_1
+            ,       sml_openFastExhuastPath_1
             ,       sml_openExhuast_2
             ,       sml_closeExhuast_2
             ,       sml_closeSlowExhuastPath_2
@@ -118,8 +133,10 @@ namespace App { namespace Experiment { namespace Machines
 
                     // States relating to vac pump
             ,       sml_enableBackingPump_2
-            ,       sml_disableBackingPump_2;
-
+            ,       sml_disableBackingPump_2
+            ,       sml_disableTurboPump_1
+            ,       sml_enableBackingPump_1
+            ,       sml_disableBackingPump_1;
 
 
             States::CommandValidatorState
@@ -140,7 +157,27 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
+                    // States realting to vacuum station validation
+            ,       sml_validateDisableTurboPump_1
+            ,       sml_validateEnableBackingPump_1
+            ,       sml_validateDisableBackingPump_1
+
                     // States relating to validation of valve functions
+            ,       sml_validateOpenHighPressureInput_1
+            ,       sml_validateOpenHighPressureNitrogen_1
+            ,       sml_validateCloseHighPressureInput_1
+            ,       sml_validateCloseHighPressureNitrogen_1
+            ,       sml_validateCloseVacuumOut_1
+            ,       sml_validateCloseFlowController_1
+            ,       sml_validateCloseExhuast_1
+            ,       sml_validateCloseSlowExhuastPath_1
+            ,       sml_validateOpenOutput_1
+            ,       sml_validateOpenVacuumIn_1
+            ,       sml_validateOpenFastExhuastPath_1
+            ,       sml_validateCloseFastExhuastPath_1
+            ,       sml_validateCloseVacuumIn_1
+            ,       sml_validateCloseOutput_1
+            ,       sml_validateOpenSlowExhuastPath_1
             ,       sml_validateCloseVacuumInForSlowExhuast
             ,       sml_validateOpenVacuumInForSlowExhuast
             ,       sml_validateCloseVacuumInForSlowExhuast_2
