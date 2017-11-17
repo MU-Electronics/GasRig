@@ -135,6 +135,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
                     // States relating to pressure
+            ,       sml_validatePressureForVacuum
             ,       sml_validatePressureForVacuumAfterValveOne
 
 

@@ -32,7 +32,10 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_waitForInitialSystemVacDown(&machine)
         ,   sml_shouldEnableBackingPump(&machine)
         ,   sml_shouldDisablingBackingPump(&machine)
+
+            // States realting to validate pressure
         ,   sml_validatePressureForVacuumAfterValveOne(&machine)
+        ,   sml_validatePressureForVacuum(&machine)
 
 
 
@@ -129,13 +132,17 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Pressurise::connectStatesToMethods()
     {
-        // States relating to pressure
+        // States relating validating pressure
         connect(&sml_validatePressureAfterValveOne, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveOne);
         connect(&sml_validatePressureAfterValveTwo, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveTwo);
         connect(&sml_validatePressureAfterValveSeven, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveSeven);
         connect(&sml_validatePressureBeforeSelectValve, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureBeforeSelectValve);
+
+        connect(&sml_validatePressureForVacuum, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validatePressureForVacuum);
         connect(&sml_validatePressureForVacuumAfterValveOne, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validatePressureForVacuum);
+
         connect(&sml_validateInitialSystemVacuum, &States::CommandValidatorState::entered, this, &Pressurise::validateInitialSystemVacuum);
+
 
 
         // Misc states
@@ -175,7 +182,6 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
-
         // States relating to vac pump
         connect(&sml_enableBackingPump_2, &QState::entered, this->vacuum(), &States::Vacuum::enableBackingPump);
         connect(&sml_disableBackingPump_2, &QState::entered, this->vacuum(), &States::Vacuum::disableBackingPump);
@@ -183,7 +189,6 @@ namespace App { namespace Experiment { namespace Machines
         // States relating to validating vac pump functions
         connect(&sml_validateEnableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
         connect(&sml_validateDisableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateDisableBackingPump);
-
 
 
 
@@ -498,11 +503,11 @@ namespace App { namespace Experiment { namespace Machines
         (params.value("disable_init_vac_down").toBool()) ? machine.setInitialState(&valves()->sm_closeHighPressureInput) : machine.setInitialState(&sml_waitForInitalPressure) ;
 
         // Check the system pressure
-        sml_waitForInitalPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &pressure()->sm_validatePressureForVacuum);
+        sml_waitForInitalPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureForVacuum);
             // Pressure is low enough
-            pressure()->sm_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationSuccess, &valves()->sm_closeHighPressureInput);
+            sml_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationSuccess, &valves()->sm_closeHighPressureInput);
             // Pressure is too high
-            pressure()->sm_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationFailed, &sm_stopAsFailed);
+            sml_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationFailed, &sm_stopAsFailed);
 
 
         // Close the high pressure valve
