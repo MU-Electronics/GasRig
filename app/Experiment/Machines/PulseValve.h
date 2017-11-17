@@ -40,6 +40,12 @@ namespace App { namespace Experiment { namespace Machines
 
             void buildMachine();
 
+            // How long to open pulse valve
+            QTimer t_pulseValveOpen;
+
+            // How long to close pulse valve
+            QTimer t_pulseValveClose;
+
         signals:
             void emit_pulseValveFinished(QVariantMap params);
             void emit_pulseValveFailed(QVariantMap params);
@@ -49,6 +55,11 @@ namespace App { namespace Experiment { namespace Machines
 
         public slots:
             void cycle();
+
+            void startPulseValveOpenTimer();
+            void stopPulseValveOpenTimer();
+            void startPulseValveCloseTimer();
+            void stopPulseValveCloseTimer();
 
         private:
             // Referance to QObject
@@ -62,7 +73,29 @@ namespace App { namespace Experiment { namespace Machines
             QState* valvePointerClose;
 
             // Should be continue cycling
-            QState sml_cycle;
+            QState sml_cycle
+            ,   sml_startPulseValveOpenTimer
+            ,   sml_startPulseValveCloseTimer
+
+                // Valve states
+            ,   sml_closeOutput_1
+            ,   sml_openOutput_1
+            ,   sml_closeSlowExhuastPath_1
+            ,   sml_openSlowExhuastPath_1
+            ,   sml_closeExhuast_1
+            ,   sml_openExhuast_1
+            ,   sml_closeFastExhuastPath_1
+            ,   sml_openFastExhuastPath_1
+            ,   sml_closeVacuumIn_1
+            ,   sml_openVacuumIn_1
+            ,   sml_closeVacuumOut_1
+            ,   sml_openVacuumOut_1
+            ,   sml_closeHighPressureInput_1
+            ,   sml_openHighPressureInput_1
+            ,   sml_closeFlowController_1
+            ,   sml_openFlowController_1
+            ,   sml_closeHighPressureNitrogen_1
+            ,   sml_openHighPressureNitrogen_1;
 
             // Count number of pulses
             int cyclesCount;
