@@ -710,16 +710,16 @@ namespace App { namespace Experiment { namespace Machines
                 // Close the vacuum input valve
                 sml_closeVacuumIn_1.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseVacuumIn_1);
                     // Valve closed successfully
-                    sml_validateCloseVacuumIn_1.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &vacuum()->sm_disableBackingPump);
+                    sml_validateCloseVacuumIn_1.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_disableBackingPump_1);
                     // Valve failed to close
                     sml_validateCloseVacuumIn_1.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
 
                 // Disable the backing pump
-                vacuum()->sm_disableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &vacuum()->sm_validateDisableBackingPump);
+                sml_disableBackingPump_1.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &sml_validateDisableBackingPump_1);
                     // Validate backing pump on
-                    vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sml_closeOutput_1);
+                    sml_validateDisableBackingPump_1.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sml_closeOutput_1);
                     // Backing pump failed
-                    vacuum()->sm_validateDisableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+                    sml_validateDisableBackingPump_1.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
         }
 
         // Set the output valve
