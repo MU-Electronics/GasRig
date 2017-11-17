@@ -11,10 +11,10 @@ import Fluid.Layouts 1.0 as FluidLayouts
 import "../../parts"
 
 // Imnport wizard parts
-import "../parts/wizard"
+import "../Components/Wizard"
 
 // Import purge defaults
-import "../parts/purge"
+import "../Components/Purge"
 
 Item {
 

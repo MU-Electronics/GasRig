@@ -20,7 +20,6 @@
         <file>views/management/TestingMaintenance/Index.qml</file>
         <file>views/management/TestingMaintenance/RigStatus.qml</file>
         <file>views/management/TestingMaintenance/Vacuum.qml</file>
-        <file>views/management/TestingMaintenance/Valve.qml</file>
         <file>views/management/ConnectionStatus.qml</file>
         <file>views/parts/Mode_NotSupported.qml</file>
         <file>views/parts/View_Status.qml</file>
@@ -39,24 +38,24 @@
         <file>views/parts/system_status/SystemDiagramBoxedText.qml</file>
         <file>views/parts/system_status/SystemDiagramPipes.qml</file>
         <file>views/parts/system_status/SystemDiagramPipe.qml</file>
-        <file>views/management/TestingMaintenance/ValveComponents/PulseValveContainer.qml</file>
-        <file>views/management/TestingMaintenance/ValveComponents/SafeValveContainer.qml</file>
-        <file>views/management/TestingMaintenance/ValveComponents/PurgeSystemContainer.qml</file>
-        <file>views/management/TestingMaintenance/ValveComponents/OutputHighPressureContainer.qml</file>
-        <file>views/management/TestingMaintenance/ValveComponents/ExhaustSystemContainer.qml</file>
-        <file>views/management/TestingMaintenance/ValveComponents/SetHighPressureContainer.qml</file>
         <file>views/modes/ChangeGas.qml</file>
+        <file>views/modes/Components/Purge/PurgeParamForm.qml</file>
+        <file>views/modes/Components/Purge/PurgeProgress.qml</file>
+        <file>views/modes/Components/Wizard/WizardContainer.qml</file>
+        <file>views/modes/Components/Wizard/WizardContainerTitle.qml</file>
+        <file>views/modes/Components/Wizard/WizardJobStatus.qml</file>
+        <file>views/modes/Components/Wizard/WizardParamsList.qml</file>
+        <file>views/modes/Components/Wizard/WizardParamValue.qml</file>
+        <file>views/modes/Components/Wizard/WizardSideBar.qml</file>
+        <file>views/modes/Components/Wizard/WizardSideButton.qml</file>
         <file>views/modes/PressuriseCell/Index.qml</file>
         <file>views/modes/PressuriseCell/Purge.qml</file>
         <file>views/modes/PressuriseCell/VacDown.qml</file>
-        <file>views/modes/parts/wizard/WizardContainer.qml</file>
-        <file>views/modes/parts/wizard/WizardContainerTitle.qml</file>
-        <file>views/modes/parts/wizard/WizardJobStatus.qml</file>
-        <file>views/modes/parts/wizard/WizardParamsList.qml</file>
-        <file>views/modes/parts/wizard/WizardParamValue.qml</file>
-        <file>views/modes/parts/wizard/WizardSideBar.qml</file>
-        <file>views/modes/parts/wizard/WizardSideButton.qml</file>
-        <file>views/modes/parts/purge/PurgeParamForm.qml</file>
-        <file>views/modes/parts/purge/PurgeProgress.qml</file>
+        <file>views/management/TestingMaintenance/Valve/ExhaustSystem.qml</file>
+        <file>views/management/TestingMaintenance/Valve/Index.qml</file>
+        <file>views/management/TestingMaintenance/Valve/PulseValve.qml</file>
+        <file>views/management/TestingMaintenance/Valve/PurgeSystem.qml</file>
+        <file>views/management/TestingMaintenance/Valve/SafeValve.qml</file>
+        <file>views/management/TestingMaintenance/Valve/SetHighPressure.qml</file>
     </qresource>
 </RCC>

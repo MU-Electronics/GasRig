@@ -6,6 +6,9 @@ import QtQuick.Layouts 1.3
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Core 1.0 as FluidCore
 
+// Import tabs
+import "Valve" as Valve
+
 Item
 {
     // Show reply to requests in the terminal panel
@@ -59,7 +62,7 @@ Item
             Item {
                 id: valveTab
                 width: parent.width
-                Valve{}
+                Valve.Index{}
             }
             Item {
                 id: vacuumTab
