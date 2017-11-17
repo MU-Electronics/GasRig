@@ -20,29 +20,25 @@ namespace App { namespace Experiment { namespace Machines
     Pressurise::Pressurise(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
-            // Addtion states for state machine
+            // States relating to read pressure
         ,   sml_waitForPressureAfterValveOne(&machine)
         ,   sml_waitForPressureAfterValveTwo(&machine)
         ,   sml_waitForPressureAfterValveSeven(&machine)
         ,   sml_waitForInitalPressure(&machine)
-        ,   sml_waitForInitialSystemVacDown(&machine)
         ,   sml_waitForPressureAfterInitValveOne(&machine)
         ,   sml_waitForPressureBeforeValveFive(&machine)
         ,   sml_waitForPressureAfterValveFive(&machine)
         ,   sml_waitForPressureBeforeSelectValve(&machine)
-
-        ,   sml_waitForValveOneTimer(&machine)
-        ,   sml_waitForValveTwoTimer(&machine)
-        ,   sml_waitForValveSevenTimer(&machine)
-        ,   sml_waitForExhuastVoidVacDown(&machine)
-
-        ,   sml_shouldOpenValveFive(&machine)
-        ,   sml_shouldCloseValveFive(&machine)
-
+        ,   sml_waitForInitialSystemVacDown(&machine)
         ,   sml_shouldEnableBackingPump(&machine)
         ,   sml_shouldDisablingBackingPump(&machine)
+        ,   sml_validatePressureForVacuumAfterValveOne(&machine)
 
-            // Copy states that are used more than once to make then unique
+
+
+
+
+            // States relating to valve functions
         ,   sml_closeHighPressureInput_2(&machine)
         ,   sml_closeSlowExhuastPath_2(&machine)
         ,   sml_closeOutput_2(&machine)
@@ -52,16 +48,15 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_openVacuumInForSlowExhuast(&machine)
         ,   sml_closeVacuumInForSlowExhuast_2(&machine)
         ,   sml_closeHighPressureNitrogen_2(&machine)
-
         ,   sml_openExhuast_2(&machine)
         ,   sml_closeExhuast_2(&machine)
 
+            // States relating to validation of valve functions
         ,   sml_validateCloseSlowExhuastPath_2(&machine)
         ,   sml_validateCloseHighPressureInput_2(&machine)
         ,   sml_validateCloseOutput_2(&machine)
         ,   sml_validateOpenVacuumIn_2(&machine)
         ,   sml_validateOpenOutput_2(&machine)
-        ,   sml_validatePressureForVacuumAfterValveOne(&machine)
         ,   sml_validateCloseVacuumInForSlowExhuast(&machine)
         ,   sml_validateOpenVacuumInForSlowExhuast(&machine)
         ,   sml_validateOpenExhuast_2(&machine)
@@ -70,31 +65,45 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validateCloseHighPressureNitrogen_2(&machine)
 
 
+
+
+            // States relating to vac pump
         ,   sml_enableBackingPump_2(&machine)
         ,   sml_disableBackingPump_2(&machine)
 
-
+            // States relating to validating vac pump functions
         ,   sml_validateEnableBackingPump_2(&machine)
         ,   sml_validateDisableBackingPump_2(&machine)
 
 
-            // Addtional validator states for state machine
+
+
+            // Validator Misc
+        ,   sml_shouldOpenValveFive(&machine)
+        ,   sml_shouldCloseValveFive(&machine)
         ,   sml_validatePressureAfterValveSeven(&machine)
         ,   sml_validatePressureAfterValveTwo(&machine)
         ,   sml_validatePressureAfterValveOne(&machine)
         ,   sml_validateInitialSystemVacuum(&machine)
         ,   sml_validatePressureBeforeSelectValve(&machine)
 
+
+
+
             // Timer states
         ,   sml_startValveOneTimer(&machine)
         ,   sml_startValveTwoTimer(&machine)
         ,   sml_startValveSevenTimer(&machine)
         ,   sml_startExhuastVoidVacDownTimer(&machine)
+        ,   sml_waitForExhuastVoidVacDown(&machine)
         ,   sml_waitForVacuumValveTimer(&machine)
         ,   sml_waitForVacuumValveTimer_2(&machine)
         ,   sml_waitForVacuumValveTimer_3(&machine)
         ,   sml_waitForVacuumValveTimer_4(&machine)
         ,   sml_waitForVacuumValveTimer_5(&machine)
+
+
+
 
             // Timers for state machine
         ,   t_pulseValveOne(parent)
@@ -120,6 +129,64 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Pressurise::connectStatesToMethods()
     {
+        // States relating to pressure
+        connect(&sml_validatePressureAfterValveOne, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveOne);
+        connect(&sml_validatePressureAfterValveTwo, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveTwo);
+        connect(&sml_validatePressureAfterValveSeven, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveSeven);
+        connect(&sml_validatePressureBeforeSelectValve, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureBeforeSelectValve);
+        connect(&sml_validatePressureForVacuumAfterValveOne, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validatePressureForVacuum);
+        connect(&sml_validateInitialSystemVacuum, &States::CommandValidatorState::entered, this, &Pressurise::validateInitialSystemVacuum);
+
+
+        // Misc states
+        connect(&sml_shouldOpenValveFive, &States::CommandValidatorState::entered, this, &Pressurise::shouldOpenValveFive);
+        connect(&sml_shouldCloseValveFive, &States::CommandValidatorState::entered, this, &Pressurise::shouldCloseValveFive);
+
+        connect(&sml_shouldEnableBackingPump, &QState::entered, this, &Pressurise::shouldEnableBackingPump);
+        connect(&sml_shouldDisablingBackingPump, &QState::entered, this, &Pressurise::shouldDisablingBackingPump);
+
+
+
+        // States relating to valve functions
+        connect(&sml_closeHighPressureInput_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
+        connect(&sml_closeOutput_2, &QState::entered, this->valves(), &States::Valves::closeOutput);
+        connect(&sml_closeSlowExhuastPath_2, &QState::entered, this->valves(), &States::Valves::closeSlowExhuastPath);
+        connect(&sml_openVacuumIn_2, &QState::entered, this->valves(), &States::Valves::openVacuumIn);
+        connect(&sml_openOutput_2, &QState::entered, this->valves(), &States::Valves::openOutput);
+        connect(&sml_openExhuast_2, &QState::entered, this->valves(), &States::Valves::openExhuast);
+        connect(&sml_closeExhuast_2, &QState::entered, this->valves(), &States::Valves::closeExhuast);
+        connect(&sml_closeHighPressureNitrogen_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureNitrogen);
+        connect(&sml_closeVacuumInForSlowExhuast, &QState::entered, this->valves(), &States::Valves::closeVacuumIn);
+        connect(&sml_closeVacuumInForSlowExhuast_2, &QState::entered, this->valves(), &States::Valves::closeVacuumIn);
+        connect(&sml_openVacuumInForSlowExhuast, &QState::entered, this->valves(), &States::Valves::openVacuumIn);
+
+        // States relating to validation of valve functions
+        connect(&sml_validateCloseHighPressureInput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureInput);
+        connect(&sml_validateCloseOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseOutput);
+        connect(&sml_validateCloseSlowExhuastPath_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseSlowExhuastPath);
+        connect(&sml_validateOpenVacuumIn_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
+        connect(&sml_validateOpenOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenOutput);
+        connect(&sml_validateCloseVacuumInForSlowExhuast, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseVacuumIn);
+        connect(&sml_validateCloseVacuumInForSlowExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseVacuumIn);
+        connect(&sml_validateOpenVacuumInForSlowExhuast, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
+        connect(&sml_validateOpenExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenExhuast);
+        connect(&sml_validateCloseExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseExhuast);
+        connect(&sml_validateCloseHighPressureNitrogen_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureNitrogen);
+
+
+
+
+        // States relating to vac pump
+        connect(&sml_enableBackingPump_2, &QState::entered, this->vacuum(), &States::Vacuum::enableBackingPump);
+        connect(&sml_disableBackingPump_2, &QState::entered, this->vacuum(), &States::Vacuum::disableBackingPump);
+
+        // States relating to validating vac pump functions
+        connect(&sml_validateEnableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
+        connect(&sml_validateDisableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateDisableBackingPump);
+
+
+
+
         // Timers
         connect(&sml_startValveOneTimer, &QState::entered, this, &Pressurise::startValveOnePulseTimer);
         connect(&sml_startValveTwoTimer, &QState::entered, this, &Pressurise::startValveTwoPulseTimer);
@@ -130,55 +197,6 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_waitForVacuumValveTimer_3, &QState::entered, this, &Pressurise::startVacuumValveTimer);
         connect(&sml_waitForVacuumValveTimer_4, &QState::entered, this, &Pressurise::startVacuumValveTimer);
         connect(&sml_waitForVacuumValveTimer_5, &QState::entered, this, &Pressurise::startVacuumValveTimer);
-
-
-        // Copy states that are used more than once to make then unique
-        connect(&sml_closeHighPressureInput_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
-        connect(&sml_closeOutput_2, &QState::entered, this->valves(), &States::Valves::closeOutput);
-        connect(&sml_closeSlowExhuastPath_2, &QState::entered, this->valves(), &States::Valves::closeSlowExhuastPath);
-        connect(&sml_openVacuumIn_2, &QState::entered, this->valves(), &States::Valves::openVacuumIn);
-        connect(&sml_openOutput_2, &QState::entered, this->valves(), &States::Valves::openOutput);
-        connect(&sml_openExhuast_2, &QState::entered, this->valves(), &States::Valves::openExhuast);
-        connect(&sml_closeExhuast_2, &QState::entered, this->valves(), &States::Valves::closeExhuast);
-        connect(&sml_closeHighPressureNitrogen_2, &QState::entered, this->valves(), &States::Valves::closeHighPressureNitrogen);
-
-        connect(&sml_validateCloseHighPressureInput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureInput);
-        connect(&sml_validateCloseOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseOutput);
-        connect(&sml_validateCloseSlowExhuastPath_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseSlowExhuastPath);
-        connect(&sml_validateOpenVacuumIn_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
-        connect(&sml_validateOpenOutput_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenOutput);
-        connect(&sml_validatePressureForVacuumAfterValveOne, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validatePressureForVacuum);
-
-        connect(&sml_shouldOpenValveFive, &States::CommandValidatorState::entered, this, &Pressurise::shouldOpenValveFive);
-        connect(&sml_shouldCloseValveFive, &States::CommandValidatorState::entered, this, &Pressurise::shouldCloseValveFive);
-
-        connect(&sml_closeVacuumInForSlowExhuast, &QState::entered, this->valves(), &States::Valves::closeVacuumIn);
-        connect(&sml_closeVacuumInForSlowExhuast_2, &QState::entered, this->valves(), &States::Valves::closeVacuumIn);
-        connect(&sml_openVacuumInForSlowExhuast, &QState::entered, this->valves(), &States::Valves::openVacuumIn);
-
-        connect(&sml_shouldEnableBackingPump, &QState::entered, this, &Pressurise::shouldEnableBackingPump);
-        connect(&sml_shouldDisablingBackingPump, &QState::entered, this, &Pressurise::shouldDisablingBackingPump);
-
-        connect(&sml_enableBackingPump_2, &QState::entered, this->vacuum(), &States::Vacuum::enableBackingPump);
-        connect(&sml_disableBackingPump_2, &QState::entered, this->vacuum(), &States::Vacuum::disableBackingPump);
-
-        // Addtional validator states
-        connect(&sml_validatePressureAfterValveOne, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveOne);
-        connect(&sml_validatePressureAfterValveTwo, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveTwo);
-        connect(&sml_validatePressureAfterValveSeven, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureAfterValveSeven);
-        connect(&sml_validatePressureBeforeSelectValve, &States::CommandValidatorState::entered, this, &Pressurise::validatePressureBeforeSelectValve);
-        connect(&sml_validateInitialSystemVacuum, &States::CommandValidatorState::entered, this, &Pressurise::validateInitialSystemVacuum);
-        connect(&sml_validateCloseVacuumInForSlowExhuast, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseVacuumIn);
-        connect(&sml_validateCloseVacuumInForSlowExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseVacuumIn);
-        connect(&sml_validateOpenVacuumInForSlowExhuast, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
-        connect(&sml_validateOpenExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenExhuast);
-        connect(&sml_validateCloseExhuast_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseExhuast);
-        connect(&sml_validateCloseHighPressureNitrogen_2, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureNitrogen);
-
-
-        connect(&sml_validateEnableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
-        connect(&sml_validateDisableBackingPump_2, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateDisableBackingPump);
-
     }
 
 

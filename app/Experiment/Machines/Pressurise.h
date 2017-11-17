@@ -70,32 +70,38 @@ namespace App { namespace Experiment { namespace Machines
             States::CommandValidatorState* inputValveCloseValidation;
 
 
-            QState  sml_startValveOneTimer
+            QState
+                    // Timer related states
+                    sml_startValveOneTimer
             ,       sml_startValveTwoTimer
             ,       sml_startValveSevenTimer
             ,       sml_startExhuastVoidVacDownTimer
+            ,       sml_waitForExhuastVoidVacDown
             ,       sml_waitForVacuumValveTimer
             ,       sml_waitForVacuumValveTimer_2
             ,       sml_waitForVacuumValveTimer_3
             ,       sml_waitForVacuumValveTimer_4
             ,       sml_waitForVacuumValveTimer_5
+            ,       sml_shouldEnableBackingPump
+            ,       sml_shouldDisablingBackingPump
+          //,       sml_waitForInitalVacDown
 
+
+
+                    // States relating to read pressure
             ,       sml_waitForPressureAfterValveOne
             ,       sml_waitForPressureAfterValveTwo
             ,       sml_waitForPressureAfterValveSeven
             ,       sml_waitForInitalPressure
-            ,       sml_waitForExhuastVoidVacDown
             ,       sml_waitForPressureAfterInitValveOne
             ,       sml_waitForPressureBeforeValveFive
             ,       sml_waitForPressureAfterValveFive
             ,       sml_waitForPressureBeforeSelectValve
-
-            ,       sml_waitForValveOneTimer
-            ,       sml_waitForValveTwoTimer
-            ,       sml_waitForValveSevenTimer
-            ,       sml_waitForInitalVacDown
             ,       sml_waitForInitialSystemVacDown
 
+
+
+                    // States relating to valve functions
             ,       sml_openExhuast_2
             ,       sml_closeExhuast_2
             ,       sml_closeSlowExhuastPath_2
@@ -104,35 +110,39 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_openVacuumIn_2
             ,       sml_openOutput_2
             ,       sml_closeHighPressureNitrogen_2
-
-            ,       sml_enableBackingPump_2
-
             ,       sml_closeVacuumInForSlowExhuast
             ,       sml_openVacuumInForSlowExhuast
             ,       sml_closeVacuumInForSlowExhuast_2
 
-            ,       sml_shouldEnableBackingPump
-            ,       sml_disableBackingPump_2
-            ,       sml_shouldDisablingBackingPump;
+
+
+                    // States relating to vac pump
+            ,       sml_enableBackingPump_2
+            ,       sml_disableBackingPump_2;
+
 
 
             States::CommandValidatorState
+                    // Validator Misc
                     sml_validatePressureAfterValveSeven
             ,       sml_validatePressureAfterValveTwo
             ,       sml_validatePressureAfterValveOne
             ,       sml_validatePressureBeforeSelectValve
-
             ,       sml_shouldOpenValveFive
             ,       sml_shouldCloseValveFive
-
-            ,       sml_validatePressureForVacuumAfterValveOne
-
             ,       sml_validateInitialSystemVacuum
 
+
+
+                    // States relating to pressure
+            ,       sml_validatePressureForVacuumAfterValveOne
+
+
+
+                    // States relating to validation of valve functions
             ,       sml_validateCloseVacuumInForSlowExhuast
             ,       sml_validateOpenVacuumInForSlowExhuast
             ,       sml_validateCloseVacuumInForSlowExhuast_2
-
             ,       sml_validateCloseHighPressureInput_2
             ,       sml_validateCloseSlowExhuastPath_2
             ,       sml_validateCloseOutput_2
@@ -142,6 +152,9 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_validateCloseExhuast_2
             ,       sml_validateCloseHighPressureNitrogen_2
 
+
+
+                    // States relating to validating vac pump functions
             ,       sml_validateEnableBackingPump_2
             ,       sml_validateDisableBackingPump_2;
 
