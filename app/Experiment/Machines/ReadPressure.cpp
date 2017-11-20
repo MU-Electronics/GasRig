@@ -17,8 +17,16 @@ namespace App { namespace Experiment { namespace Machines
 {
     ReadPressure::ReadPressure(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
-    {
 
+            // States
+        ,   sml_startPressureMonitor(&machine)
+        ,   sml_systemPressure(&machine)
+
+            // Timers
+        ,   t_pressureMonitor(parent)
+    {
+        connect(&sml_systemPressure, &QState::entered, this->pressure(), &States::Pressure::systemPressure);
+        connect(&sml_startPressureMonitor, &QState::entered, this, &ReadPressure::startPressureMonitor);
     }
 
     ReadPressure::~ReadPressure()
@@ -41,7 +49,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("pressureSensorTimeInter", pressureSensorTimeInter);
 
         // Setup timers
-        timers()->t_pressureMonitor.setInterval(pressureSensorTimeInter);
+        t_pressureMonitor.setInterval(pressureSensorTimeInter);
     }
 
 
@@ -106,20 +114,29 @@ namespace App { namespace Experiment { namespace Machines
     void ReadPressure::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&timers()->sm_startPressureMonitor);
+        machine.setInitialState(&sml_startPressureMonitor);
 
         // Start the pressure monitor
-        timers()->sm_startPressureMonitor.addTransition(this->timers(), &States::Timers::emit_timerActive, &timers()->sm_timerWait);
-
-        // Wait for a timer event
-        timers()->sm_timerWait.addTransition(&timers()->t_pressureMonitor, &QTimer::timeout, &pressure()->sm_systemPressure);
+        sml_startPressureMonitor.addTransition(&t_pressureMonitor, &QTimer::timeout, &sml_systemPressure);
 
         // Read the pressure sensor
-        pressure()->sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &timers()->sm_timerWait);
+        sml_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_startPressureMonitor);
 
         // Account for com issues
-        pressure()->sm_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
+        sml_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startPressureMonitor);
+    }
 
+
+    /**
+     * Timer to use to trigger reading the pressure sensor
+     *
+     * @brief ReadPressure::startPressureMonitor
+     */
+    void ReadPressure::startPressureMonitor()
+    {
+        // Setup timer
+        t_pressureMonitor.setSingleShot(true);
+        t_pressureMonitor.start();
     }
 }}}
 
