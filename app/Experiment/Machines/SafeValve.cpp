@@ -62,11 +62,6 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validateOpenVacuumIn(&machine)
         ,   sml_validateOpenVacuumOut(&machine)
     {
-
-    }
-
-    SafeValve::~SafeValve()
-    {
         // Link close valve states
         connect(&sml_closeHighPressureInput, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
         connect(&sml_closeHighPressureNitrogen, &QState::entered, this->valves(), &States::Valves::closeHighPressureNitrogen);
@@ -110,6 +105,11 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validateOpenFastExhuastPath, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenFastExhuastPath);
         connect(&sml_validateOpenVacuumIn, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
         connect(&sml_validateOpenVacuumOut, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumOut);
+
+    }
+
+    SafeValve::~SafeValve()
+    {
     }
 
 
