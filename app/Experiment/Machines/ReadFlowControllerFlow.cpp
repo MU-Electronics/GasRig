@@ -34,7 +34,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Timers
         connect(&sml_startFlowControllerFlowMonitor, &QState::entered, this, &ReadFlowControllerFlow::startFlowControllerFlowMonitor);
-
     }
 
     ReadFlowControllerFlow::~ReadFlowControllerFlow()

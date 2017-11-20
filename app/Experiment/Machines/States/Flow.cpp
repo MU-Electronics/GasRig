@@ -62,6 +62,45 @@ namespace App { namespace Experiment { namespace Machines { namespace States
     }
 
 
+    void Flow::flowControllerOneTemperature()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getFlowControllerTemperature("FlowControllerOne"));
+    }
+
+
+    void Flow::validateFlowControllerOneTemperature()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+    }
+
+    void Flow::flowControllerTwoTemperature()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.getFlowControllerTemperature("FlowControllerTwo"));
+    }
+
+
+    void Flow::validateFlowControllerTwoTemperature()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        QVariantMap success;
+        emit emit_validationSuccess(success);
+    }
+
+
     void Flow::flowControllerOneFlow()
     {
         // Emit siganl to HAL

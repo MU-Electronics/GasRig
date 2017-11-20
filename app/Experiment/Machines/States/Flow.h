@@ -74,10 +74,15 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             // States relating to controlling the flow controller
             void flowControllerOneFlow();
             void flowControllerTwoFlow();
+            void flowControllerOneTemperature();
+            void flowControllerTwoTemperature();
 
             // States relating to validating the flow controller
             void validateFlowControllerOneFlow();
             void validateFlowControllerTwoFlow();
+            void validateFlowControllerOneTemperature();
+            void validateFlowControllerTwoTemperature();
+
 
         private:
 

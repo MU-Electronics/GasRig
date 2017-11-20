@@ -41,12 +41,25 @@ namespace App { namespace Experiment { namespace Machines
             void emit_readFlowControllerTemperaturesStopped(QVariantMap params);
             void emit_readFlowControllerTemperaturesFailed(QVariantMap params);
 
+        public slots:
+            void startFlowControllerTemperatureMonitor();
+
         private:
             // Referance to QObject
             QObject *parent;
 
             // Holds the application settings
             Settings::Container m_settings;
+
+            // Timer for flow
+            QTimer t_flowControllerTemperatureMonitor;
+
+            // States
+            QState
+                sml_readTemperature_1
+            ,   sml_readTemperature_2
+            ,   sml_startFlowControllerMonitor;
+
 
     };
 }}}

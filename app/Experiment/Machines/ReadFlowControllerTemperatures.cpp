@@ -17,8 +17,21 @@ namespace App { namespace Experiment { namespace Machines
 {
     ReadFlowControllerTemperatures::ReadFlowControllerTemperatures(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
-    {
 
+            // States
+        ,   sml_readTemperature_1(&machine)
+        ,   sml_readTemperature_2(&machine)
+        ,   sml_startFlowControllerMonitor(&machine)
+
+            // Timers
+        ,   t_flowControllerTemperatureMonitor(parent)
+    {
+        // Flow temperature
+        connect(&sml_readTemperature_1, &QState::entered, this->flow(), &States::Flow::flowControllerOneTemperature);
+        connect(&sml_readTemperature_2, &QState::entered, this->flow(), &States::Flow::flowControllerTwoTemperature);
+
+        // Timers
+        connect(&sml_startFlowControllerMonitor, &QState::entered, this, &ReadFlowControllerTemperatures::startFlowControllerTemperatureMonitor);
     }
 
     ReadFlowControllerTemperatures::~ReadFlowControllerTemperatures()
@@ -41,7 +54,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("interval", interval);
 
         // Setup timers
-        timers()->t_flowControllerTemperatureMonitor.setInterval(interval);
+        t_flowControllerTemperatureMonitor.setInterval(interval);
     }
 
 
@@ -104,7 +117,27 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerTemperatures::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&timers()->sm_startVacuumPressureMonitor);
+        machine.setInitialState(&sml_startFlowControllerMonitor);
+
+        // Start the flow controller temperature monitor
+        sml_startFlowControllerMonitor.addTransition(&t_flowControllerTemperatureMonitor, &QTimer::timeout, &sml_readTemperature_1);
+
+        // Read flow rate
+        sml_readTemperature_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, &sml_readTemperature_2);
+        sml_readTemperature_2.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, &sml_startFlowControllerMonitor);
+    }
+
+
+    /**
+     * Timer to use to trigger reading the flow controller temperature sensor
+     *
+     * @brief ReadFlowControllerTemperatures::startFlowControllerTemperatureMonitor
+     */
+    void ReadFlowControllerTemperatures::startFlowControllerTemperatureMonitor()
+    {
+        // Setup timer
+        t_flowControllerTemperatureMonitor.setSingleShot(true);
+        t_flowControllerTemperatureMonitor.start();
     }
 }}}
 
