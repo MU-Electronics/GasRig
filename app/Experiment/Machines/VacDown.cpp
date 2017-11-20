@@ -89,8 +89,8 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_vacDown(parent)
     {
         // Pressure validator states
-        connect(&sml_validateVacPressureForTurbo, &QState::entered, this->pressure(), &States::Pressure::validateVacPressureForTurbo);
-        connect(&sml_validatePressureForVacuum, &QState::entered, this->pressure(), &States::Pressure::validatePressureForVacuum);
+        connect(&sml_validateVacPressureForTurbo, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validateVacPressureForTurbo);
+        connect(&sml_validatePressureForVacuum, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validatePressureForVacuum);
 
         // Vacuum states
         connect(&sml_enableBackingPump, &QState::entered, this->vacuum(), &States::Vacuum::enableBackingPump);
@@ -98,9 +98,9 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_disableTurboPump, &QState::entered, this->vacuum(), &States::Vacuum::disableTurboPump);
 
         // Validator vacuum states
-        connect(&sml_validateDisableTurboPump, &QState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
-        connect(&sml_validateEnableTurboPump, &QState::entered, this->vacuum(), &States::Vacuum::validateEnableTurboPump);
-        connect(&sml_validateDisableTurboPump, &QState::entered, this->vacuum(), &States::Vacuum::validateDisableTurboPump);
+        connect(&sml_validateEnableBackingPump, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
+        connect(&sml_validateEnableTurboPump, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableTurboPump);
+        connect(&sml_validateDisableTurboPump, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateDisableTurboPump);
 
 
         // Link close valve states
@@ -153,7 +153,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Finishing sequence
-        connect(&sm_finishVacSession, &QState::entered, this, &VacDown::finish);
+        //connect(&sm_finishVacSession, &QState::entered, this, &VacDown::finish);
     }
 
     VacDown::~VacDown()
@@ -455,6 +455,10 @@ namespace App { namespace Experiment { namespace Machines
      */
     void VacDown::startVacuumTimer()
     {
+        if(t_vacDown.isActive())
+            return;
+
+        qDebug() << "timer started " << t_vacDown.interval();
         // Setup timer
         t_vacDown.setSingleShot(true);
 
