@@ -48,18 +48,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             // Hold instance of command constructor
             Hardware::CommandConstructor& m_commandConstructor;
 
-            // Create the states for the machine
-            QState
-                sm_vacPressure
-            ,   sm_systemPressure;
-
-
-            // Create command validator states
-            CommandValidatorState
-                // Validate pressure
-                sm_validateVacPressureForTurbo
-            ,   sm_validatePressureForVacuum;
-
             // Connect state to methods
             void connectStatesToMethods();
 
@@ -92,8 +80,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
             // Pressure
             double m_pressureSensor = 0;
-
-
     };
 
 }}}}

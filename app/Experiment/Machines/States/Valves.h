@@ -48,53 +48,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             // Hold instance of command constructor
             Hardware::CommandConstructor& m_commandConstructor;
 
-            // Create the states for the machine
-            QState
-                // Close valves
-                sm_closeHighPressureInput
-            ,   sm_closeHighPressureNitrogen
-            ,   sm_closeFlowController
-            ,   sm_closeExhuast
-            ,   sm_closeOutput
-            ,   sm_closeSlowExhuastPath
-            ,   sm_closeFastExhuastPath
-            ,   sm_closeVacuumIn
-            ,   sm_closeVacuumOut
-                // Open valve related states
-            ,   sm_openHighPressureInput
-            ,   sm_openHighPressureNitrogen
-            ,   sm_openFlowController
-            ,   sm_openExhuast
-            ,   sm_openOutput
-            ,   sm_openSlowExhuastPath
-            ,   sm_openFastExhuastPath
-            ,   sm_openVacuumIn
-            ,   sm_openVacuumOut;
-
-            // Create command validator states
-            CommandValidatorState
-                // Validate close valves
-                sm_validateCloseHighPressureInput
-            ,   sm_validateCloseHighPressureNitrogen
-            ,   sm_validateCloseFlowController
-            ,   sm_validateCloseExhuast
-            ,   sm_validateCloseOutput
-            ,   sm_validateCloseSlowExhuastPath
-            ,   sm_validateCloseFastExhuastPath
-            ,   sm_validateCloseVacuumIn
-            ,   sm_validateCloseVacuumOut
-                // Validate open valve
-            ,   sm_validateOpenHighPressureInput
-            ,   sm_validateOpenHighPressureNitrogen
-            ,   sm_validateOpenFlowController
-            ,   sm_validateOpenExhuast
-            ,   sm_validateOpenOutput
-            ,   sm_validateOpenSlowExhuastPath
-            ,   sm_validateOpenFastExhuastPath
-            ,   sm_validateOpenVacuumIn
-            ,   sm_validateOpenVacuumOut;
-
-
             void connectStatesToMethods();
 
         signals:

@@ -29,18 +29,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   m_machine(machine)
         ,   m_params(params)
         ,   m_commandConstructor(commandConstructor)
-
-
-            // Pressure sensor
-        ,   sm_systemPressure(&machine)
-
-            // Get vacuum pressure
-        ,   sm_vacPressure(&machine)
-
-            // Conditional validation
-        ,   sm_validatePressureForVacuum(&machine)
-        ,   sm_validateVacPressureForTurbo(&machine)
-
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &Pressure::hardwareRequest, &m_hardware, &Hardware::Access::hardwareAccess);
@@ -59,13 +47,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Pressure::connectStatesToMethods()
     {
-        // Pressure
-        connect(&sm_systemPressure, &QState::entered, this, &Pressure::systemPressure);
-        connect(&sm_vacPressure, &QState::entered, this, &Pressure::vacPressure);
-
-        // Contional validation
-        connect(&sm_validateVacPressureForTurbo, &CommandValidatorState::entered, this, &Pressure::validateVacPressureForTurbo);
-        connect(&sm_validatePressureForVacuum, &CommandValidatorState::entered, this, &Pressure::validatePressureForVacuum);
     }
 
 

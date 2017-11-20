@@ -458,7 +458,6 @@ namespace App { namespace Experiment { namespace Machines
         if(t_vacDown.isActive())
             return;
 
-        qDebug() << "timer started " << t_vacDown.interval();
         // Setup timer
         t_vacDown.setSingleShot(true);
 

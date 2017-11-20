@@ -48,40 +48,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             // Hold instance of command constructor
             Hardware::CommandConstructor& m_commandConstructor;
 
-            // Create the states for the machine
-            QState
-                // States relating to controlling the vac station
-                sm_disableTurboPump
-            ,   sm_enableTurboPump
-            ,   sm_disableBackingPump
-            ,   sm_enableBackingPump
-            ,   sm_setGasModeHeavy
-            ,   sm_setGasModeMedium
-            ,   sm_setGasModeHelium
-            ,   sm_vacPressure
-            ,   sm_getBearingTemperature
-            ,   sm_getTC110ElectronicsTemperature
-            ,   sm_getPumpBottomTemperature
-            ,   sm_getMotorTemperature;
-
-
-            // Create command validator states
-            CommandValidatorState
-                // States relating to controlling the vac station
-                sm_validateDisableTurboPump
-            ,   sm_validateEnableTurboPump
-            ,   sm_validateDisableBackingPump
-            ,   sm_validateEnableBackingPump
-            ,   sm_validateSetGasModeHeavy
-            ,   sm_validateSetGasModeMedium
-            ,   sm_validateSetGasModeHelium
-            ,   sm_validateStartVacuumPressureMonitor
-            ,   sm_validateGetBearingTemperature
-            ,   sm_validateGetTC110ElectronicsTemperature
-            ,   sm_validateGetPumpBottomTemperature
-            ,   sm_validateGetMotorTemperature;
-
-
             void connectStatesToMethods();
 
         signals:

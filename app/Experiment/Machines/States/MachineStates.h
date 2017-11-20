@@ -26,7 +26,6 @@
 #include "Vacuum.h"
 #include "Pressure.h"
 #include "Flow.h"
-#include "Timers.h"
 
 namespace App { namespace Experiment { namespace Machines { namespace States
 {
@@ -60,7 +59,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             Vacuum* m_vacuum;
             Pressure* m_pressure;
             Flow* m_flow;
-            Timers* m_timers;
 
 
             // State getters
@@ -68,21 +66,12 @@ namespace App { namespace Experiment { namespace Machines { namespace States
             Vacuum* vacuum();
             Pressure* pressure();
             Flow* flow();
-            Timers* timers();
 
             // Create the states for the machine
             QState
-                // Finishing sequence
-                sm_finishVacSession
-            ,   // Re-implimention of stop for each machine
+               // Re-implimention of stop for each machine
                 sm_stop
             ,   sm_stopAsFailed;
-
-
-
-            // Create command validator states
-            //CommandValidatorState
-
 
             // Helper methods
             void removeAllTransitions();

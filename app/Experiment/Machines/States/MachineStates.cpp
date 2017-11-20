@@ -36,10 +36,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   m_vacuum(new Vacuum(parent, settings, hardware, safety, machine, params, m_commandConstructor))
         ,   m_pressure(new Pressure(parent, settings, hardware, safety, machine, params, m_commandConstructor))
         ,   m_flow(new Flow(parent, settings, hardware, safety, machine, params, m_commandConstructor))
-        ,   m_timers(new Timers(parent, settings, hardware, safety, machine, params, m_commandConstructor))
-
-            // Finishing sequence
-        ,   sm_finishVacSession(&machine)
 
             // Re-implimention of stop for each machine
         ,   sm_stop(&machine)
@@ -59,7 +55,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         delete m_vacuum;
         delete m_pressure;
         delete m_flow;
-        delete m_timers;
     }
 
 
@@ -123,18 +118,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
     Flow* MachineStates::flow()
     {
         return m_flow;
-    }
-
-
-    /**
-     * Returns the timer instances
-     *
-     * @brief MachineStates::timers
-     * @return
-     */
-    Timers* MachineStates::timers()
-    {
-        return m_timers;
     }
 
 

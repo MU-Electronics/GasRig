@@ -27,37 +27,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
         ,   m_machine(machine)
         ,   m_params(params)
         ,   m_commandConstructor(commandConstructor)
-
-            // States relating to controlling the vac station
-        ,   sm_disableTurboPump(&machine)
-        ,   sm_enableTurboPump(&machine)
-        ,   sm_disableBackingPump(&machine)
-        ,   sm_enableBackingPump(&machine)
-        ,   sm_setGasModeHeavy(&machine)
-        ,   sm_setGasModeMedium(&machine)
-        ,   sm_setGasModeHelium(&machine)
-        ,   sm_getBearingTemperature(&machine)
-        ,   sm_getTC110ElectronicsTemperature(&machine)
-        ,   sm_getPumpBottomTemperature(&machine)
-        ,   sm_getMotorTemperature(&machine)
-
-            // States relating to validating the vac station
-        ,   sm_validateDisableTurboPump(&machine)
-        ,   sm_validateEnableTurboPump(&machine)
-        ,   sm_validateDisableBackingPump(&machine)
-        ,   sm_validateEnableBackingPump(&machine)
-        ,   sm_validateSetGasModeHeavy(&machine)
-        ,   sm_validateSetGasModeMedium(&machine)
-        ,   sm_validateSetGasModeHelium(&machine)
-        ,   sm_validateStartVacuumPressureMonitor(&machine)
-        ,   sm_validateGetBearingTemperature(&machine)
-        ,   sm_validateGetTC110ElectronicsTemperature(&machine)
-        ,   sm_validateGetPumpBottomTemperature(&machine)
-        ,   sm_validateGetMotorTemperature(&machine)
-
-
-
-
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &Vacuum::hardwareRequest, &m_hardware, &Hardware::Access::hardwareAccess);
@@ -73,32 +42,6 @@ namespace App { namespace Experiment { namespace Machines { namespace States
 
     void Vacuum::connectStatesToMethods()
     {
-        // Link vac station states
-        connect(&sm_disableTurboPump, &QState::entered, this, &Vacuum::disableTurboPump);
-        connect(&sm_enableTurboPump, &QState::entered, this, &Vacuum::enableTurboPump);
-        connect(&sm_disableBackingPump, &QState::entered, this, &Vacuum::disableBackingPump);
-        connect(&sm_enableBackingPump, &QState::entered, this, &Vacuum::enableBackingPump);
-        connect(&sm_setGasModeHeavy, &QState::entered, this, &Vacuum::setGasModeHeavy);
-        connect(&sm_setGasModeMedium, &QState::entered, this, &Vacuum::setGasModeMedium);
-        connect(&sm_setGasModeHelium, &QState::entered, this, &Vacuum::setGasModeHelium);
-
-        connect(&sm_getBearingTemperature, &QState::entered, this, &Vacuum::getBearingTemperature);
-        connect(&sm_getTC110ElectronicsTemperature, &QState::entered, this, &Vacuum::getTC110ElectronicsTemperature);
-        connect(&sm_getPumpBottomTemperature, &QState::entered, this, &Vacuum::getPumpBottomTemperature);
-        connect(&sm_getMotorTemperature, &QState::entered, this, &Vacuum::getMotorTemperature);
-
-        // Link vac station validation states
-        connect(&sm_validateDisableTurboPump, &CommandValidatorState::entered, this, &Vacuum::validateDisableTurboPump);
-        connect(&sm_validateEnableTurboPump, &CommandValidatorState::entered, this, &Vacuum::validateEnableTurboPump);
-        connect(&sm_validateDisableBackingPump, &CommandValidatorState::entered, this, &Vacuum::validateDisableBackingPump);
-        connect(&sm_validateEnableBackingPump, &CommandValidatorState::entered, this, &Vacuum::validateEnableBackingPump);
-        connect(&sm_validateSetGasModeHeavy, &CommandValidatorState::entered, this, &Vacuum::validateSetGasModeHeavy);
-        connect(&sm_validateSetGasModeMedium, &CommandValidatorState::entered, this, &Vacuum::validateSetGasModeMedium);
-        connect(&sm_validateSetGasModeHelium, &CommandValidatorState::entered, this, &Vacuum::validateSetGasModeHelium);
-        connect(&sm_validateGetBearingTemperature, &CommandValidatorState::entered, this, &Vacuum::validateGetBearingTemperature);
-        connect(&sm_validateGetTC110ElectronicsTemperature, &CommandValidatorState::entered, this, &Vacuum::validateGetTC110ElectronicsTemperature);
-        connect(&sm_validateGetPumpBottomTemperature, &CommandValidatorState::entered, this, &Vacuum::validateGetPumpBottomTemperature);
-        connect(&sm_validateGetMotorTemperature, &CommandValidatorState::entered, this, &Vacuum::validateGetMotorTemperature);
 
     }
 
