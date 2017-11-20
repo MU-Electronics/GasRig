@@ -17,8 +17,16 @@ namespace App { namespace Experiment { namespace Machines
 {
     ReadVacuum::ReadVacuum(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
-    {
 
+            // States
+        ,   sml_vacPressure(&machine)
+        ,   sml_startVacuumPressureMonitor(&machine)
+
+            // Timers
+        ,   t_vacPressureMonitor(parent)
+    {
+        connect(&sml_vacPressure, &QState::entered, this->pressure(), &States::Pressure::vacPressure);
+        connect(&sml_startVacuumPressureMonitor, &QState::entered, this, &ReadVacuum::startVacuumPressureMonitor);
     }
 
     ReadVacuum::~ReadVacuum()
@@ -41,7 +49,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("vacSensorTimeInter", vacSensorTimeInter);
 
         // Setup timers
-        timers()->t_vacPressureMonitor.setInterval(vacSensorTimeInter);
+        t_vacPressureMonitor.setInterval(vacSensorTimeInter);
     }
 
 
@@ -63,9 +71,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ReadVacuum::stop()
     {
-        // Stop all the timers
-        timers()->stopVacuumPressureMonitor();
-
         // Stop the machine
         machine.stop();
 
@@ -84,9 +89,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ReadVacuum::stopAsFailed()
     {
-        // Stop all the timers
-        timers()->stopVacuumPressureMonitor();
-
         // Stop the machine
         machine.stop();
 
@@ -106,19 +108,28 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacuum::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&timers()->sm_startVacuumPressureMonitor);
+        machine.setInitialState(&sml_startVacuumPressureMonitor);
 
         // Start the vacuum monitor
-        timers()->sm_startVacuumPressureMonitor.addTransition(this->timers(), &States::Timers::emit_timerActive, &timers()->sm_timerWait);
-
-        // Wait for a timer event
-        timers()->sm_timerWait.addTransition(&timers()->t_vacPressureMonitor, &QTimer::timeout, &pressure()->sm_vacPressure);
+        sml_startVacuumPressureMonitor.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sml_vacPressure);
 
         // Read the vacuum sensor
-        pressure()->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &timers()->sm_timerWait);
+        sml_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &sml_startVacuumPressureMonitor);
 
         // Account for com issues
-        pressure()->sm_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &timers()->sm_timerWait);
+        sml_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startVacuumPressureMonitor);
+    }
+
+    /**
+     * Timer to use to trigger reading the vacuum sensor
+     *
+     * @brief ReadVacuum::startVacuumPressureMonitor
+     */
+    void ReadVacuum::startVacuumPressureMonitor()
+    {
+        // Setup timer
+        t_vacPressureMonitor.setSingleShot(false);
+        t_vacPressureMonitor.start();
     }
 }}}
 

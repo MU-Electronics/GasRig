@@ -41,12 +41,23 @@ namespace App { namespace Experiment { namespace Machines
             void emit_readVacuumStopped(QVariantMap params);
             void emit_readVacuumFailed(QVariantMap params);
 
+        public slots:
+            void startVacuumPressureMonitor();
+
         private:
             // Referance to QObject
             QObject *parent;
 
             // Holds the application settings
             Settings::Container m_settings;
+
+            // Timers
+            QTimer t_vacPressureMonitor;
+
+            // States
+            QState
+                sml_startVacuumPressureMonitor
+            ,   sml_vacPressure;
 
     };
 }}}
