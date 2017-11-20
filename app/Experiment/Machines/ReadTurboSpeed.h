@@ -41,12 +41,23 @@ namespace App { namespace Experiment { namespace Machines
             void emit_readTurboSpeedStopped(QVariantMap params);
             void emit_readTurboSpeedFailed(QVariantMap params);
 
+        public slots:
+            void startTurboTimer();
+
         private:
             // Referance to QObject
             QObject *parent;
 
             // Holds the application settings
             Settings::Container m_settings;
+
+            // Timers
+            QTimer t_turboSpeed;
+
+            // States
+            QState
+                sml_startTurboSpeedTimer
+            ,   sml_readTurboSpeed;
 
     };
 }}}

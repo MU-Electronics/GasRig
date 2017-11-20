@@ -17,8 +17,16 @@ namespace App { namespace Experiment { namespace Machines
 {
     ReadTurboSpeed::ReadTurboSpeed(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
-    {
 
+            // States
+        ,   sml_startTurboSpeedTimer(&machine)
+        ,   sml_readTurboSpeed(&machine)
+
+            // Timers
+        ,   t_turboSpeed(parent)
+    {
+        connect(&sml_readTurboSpeed, &QState::entered, this->vacuum(), &States::Vacuum::getTurboSpeed);
+        connect(&sml_startTurboSpeedTimer, &QState::entered, this, &ReadTurboSpeed::startTurboTimer);
     }
 
     ReadTurboSpeed::~ReadTurboSpeed()
@@ -41,7 +49,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("interval", interval);
 
         // Setup timers
-        timers()->t_turboSpeedMonitor.setInterval(interval);
+        t_turboSpeed.setInterval(interval);
     }
 
 
@@ -63,8 +71,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ReadTurboSpeed::stop()
     {
-        // @todo
-
         // Stop the machine
         machine.stop();
 
@@ -83,8 +89,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ReadTurboSpeed::stopAsFailed()
     {
-        // @todo
-
         // Stop the machine
         machine.stop();
 
@@ -104,7 +108,29 @@ namespace App { namespace Experiment { namespace Machines
     void ReadTurboSpeed::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&timers()->sm_startVacuumPressureMonitor);
+        machine.setInitialState(&sml_startTurboSpeedTimer);
+
+        // Start the speed monitor
+        sml_startTurboSpeedTimer.addTransition(&t_turboSpeed, &QTimer::timeout, &sml_readTurboSpeed);
+
+        // Read the speed sensor
+        sml_readTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, &sml_startTurboSpeedTimer);
+
+        // Account for com issues
+        sml_readTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startTurboSpeedTimer);
+    }
+
+
+    /**
+     * Timer to use to trigger reading the pressure sensor
+     *
+     * @brief ReadTurboSpeed::startTurboTimer
+     */
+    void ReadTurboSpeed::startTurboTimer()
+    {
+        // Setup timer
+        t_turboSpeed.setSingleShot(true);
+        t_turboSpeed.start();
     }
 }}}
 
