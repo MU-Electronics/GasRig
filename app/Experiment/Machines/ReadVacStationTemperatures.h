@@ -41,12 +41,26 @@ namespace App { namespace Experiment { namespace Machines
             void emit_readVacStationTemperaturesStopped(QVariantMap params);
             void emit_readVacStationTemperaturesFailed(QVariantMap params);
 
+        public slots:
+            void startTemperatureTimer();
+
         private:
             // Referance to QObject
             QObject *parent;
 
             // Holds the application settings
             Settings::Container m_settings;
+
+            // Timers
+            QTimer t_temperatureMonitor;
+
+            // States
+            QState
+                sml_startVacuumTemperatureTimer
+            ,   sml_getBearingTemperature
+            ,   sml_getTC110ElectronicsTemperature
+            ,   sml_getMotorTemperature
+            ,   sml_getPumpBottomTemperature;
 
     };
 }}}

@@ -122,7 +122,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
     /**
-     * Timer to use to trigger reading the pressure sensor
+     * Timer to use to trigger reading the turbo speed
      *
      * @brief ReadTurboSpeed::startTurboTimer
      */

@@ -17,8 +17,25 @@ namespace App { namespace Experiment { namespace Machines
 {
     ReadVacStationTemperatures::ReadVacStationTemperatures(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
-    {
 
+            // States
+        ,   sml_startVacuumTemperatureTimer(&machine)
+        ,   sml_getBearingTemperature(&machine)
+        ,   sml_getTC110ElectronicsTemperature(&machine)
+        ,   sml_getMotorTemperature(&machine)
+        ,   sml_getPumpBottomTemperature(&machine)
+
+            // Timers
+        ,   t_temperatureMonitor(parent)
+    {
+        // States
+        connect(&sml_getBearingTemperature, &QState::entered, this->vacuum(), &States::Vacuum::getBearingTemperature);
+        connect(&sml_getTC110ElectronicsTemperature, &QState::entered, this->vacuum(), &States::Vacuum::getTC110ElectronicsTemperature);
+        connect(&sml_getMotorTemperature, &QState::entered, this->vacuum(), &States::Vacuum::getMotorTemperature);
+        connect(&sml_getPumpBottomTemperature, &QState::entered, this->vacuum(), &States::Vacuum::getPumpBottomTemperature);
+
+        // Timer
+        connect(&sml_startVacuumTemperatureTimer, &QState::entered, this, &ReadVacStationTemperatures::startTemperatureTimer);
     }
 
     ReadVacStationTemperatures::~ReadVacStationTemperatures()
@@ -41,7 +58,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("interval", interval);
 
         // Setup timers
-        timers()->t_vacStationTemperatureMonitor.setInterval(interval);
+        t_temperatureMonitor.setInterval(interval);
     }
 
 
@@ -63,8 +80,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ReadVacStationTemperatures::stop()
     {
-        // @todo
-
         // Stop the machine
         machine.stop();
 
@@ -83,8 +98,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ReadVacStationTemperatures::stopAsFailed()
     {
-        // @todo
-
         // Stop the machine
         machine.stop();
 
@@ -104,38 +117,35 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacStationTemperatures::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&vacuum()->sm_getBearingTemperature);
+        machine.setInitialState(&sml_startVacuumTemperatureTimer);
+
+        // Start timer
+        sml_startVacuumTemperatureTimer.addTransition(&t_temperatureMonitor, &QTimer::timeout, &sml_getBearingTemperature);
 
         // Get the bearing temperture
-        vacuum()->sm_getBearingTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &vacuum()->sm_validateGetBearingTemperature);
-            // Success
-            vacuum()->sm_validateGetBearingTemperature.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &vacuum()->sm_getTC110ElectronicsTemperature);
-            // Failed
-            // Com issue
+        sml_getBearingTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getTC110ElectronicsTemperature);
 
         // Get the electronics temperature
-        vacuum()->sm_getTC110ElectronicsTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &vacuum()->sm_validateGetTC110ElectronicsTemperature);
-            // Success
-            vacuum()->sm_validateGetTC110ElectronicsTemperature.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &vacuum()->sm_getMotorTemperature);
-            // Failed
-            // Com issue
+        sml_getTC110ElectronicsTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getMotorTemperature);
 
         // Get the motor temperature
-        vacuum()->sm_getMotorTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &vacuum()->sm_validateGetMotorTemperature);
-            // Success
-            vacuum()->sm_validateGetMotorTemperature.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &vacuum()->sm_getPumpBottomTemperature);
-            // Failed
-            // Com issue
+        sml_getMotorTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getPumpBottomTemperature);
 
         // Get the pump bottom temperature
-        vacuum()->sm_getPumpBottomTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &vacuum()->sm_validateGetPumpBottomTemperature);
-            // Success
-            vacuum()->sm_validateGetPumpBottomTemperature.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sm_stop);
-            // Failed
-            // Com issue
+        sml_getPumpBottomTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_startVacuumTemperatureTimer);
+    }
 
-        // Timer  @TODO IMPLIMENT THE TIMER TO TRIGGER CYCLING
 
+    /**
+     * Timer to use to trigger reading the vac station temperature
+     *
+     * @brief ReadVacStationTemperatures::startTemperatureTimer
+     */
+    void ReadVacStationTemperatures::startTemperatureTimer()
+    {
+        // Setup timer
+        t_temperatureMonitor.setSingleShot(true);
+        t_temperatureMonitor.start();
     }
 }}}
 
