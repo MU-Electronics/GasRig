@@ -71,9 +71,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ReadPressure::stop()
     {
-        // Stop all the timers
-        timers()->stopPressureMonitor();
-
         // Stop the machine
         machine.stop();
 
@@ -92,9 +89,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ReadPressure::stopAsFailed()
     {
-        // Stop all the timers
-        timers()->stopPressureMonitor();
-
         // Stop the machine
         machine.stop();
 
