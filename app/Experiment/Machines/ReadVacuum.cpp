@@ -128,7 +128,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacuum::startVacuumPressureMonitor()
     {
         // Setup timer
-        t_vacPressureMonitor.setSingleShot(false);
+        t_vacPressureMonitor.setSingleShot(true);
         t_vacPressureMonitor.start();
     }
 }}}
