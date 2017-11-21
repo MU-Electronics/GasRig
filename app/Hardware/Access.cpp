@@ -431,8 +431,9 @@ namespace App { namespace Hardware
 
         // Labjack presenter
         if(responable == "LabJack")
+        {
             package = m_labJackPresenter.proccess(method, commands, halData);
-
+        }
         // Once the data is formatted run the correct signal
         if(!package.isEmpty() && !package["method"].isNull())
             // Trigger the correct access class signal
