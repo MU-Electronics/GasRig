@@ -1,7 +1,7 @@
 #include "PresenterSupport.h"
 
 #include <QStringList>
-
+#include <QDebug>
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
 
@@ -32,7 +32,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         QString override = commands.value("emit_override").toString();
 
         if(override != "")
-            package.value("method", override);
+            package.insert("method", override);
 
         return package;
     }
