@@ -54,7 +54,7 @@ namespace App { namespace View { namespace Managers
         // Connect incomming signals to actions for the LabJack
         connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &Testing::receiveValveStatus);
         connect(&hardware, &Hardware::Access::emit_configureIO, this, &Testing::receiveLabJackConfig);
-        connect(&hardware, &Hardware::Access::emit_readAnaloguePort, this, &Testing::receiveVacuumReading);
+        connect(&hardware, &Hardware::Access::emit_readVacuumPressure, this, &Testing::receiveVacuumReading);
 
         // Connect incomming signals to actions for the flow controllers
         connect(&hardware, &Hardware::Access::emit_setFlowControllerValveOverride, this, &Testing::receiveFlowControllerValveOverride);
