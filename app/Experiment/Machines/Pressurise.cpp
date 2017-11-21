@@ -1164,7 +1164,7 @@ namespace App { namespace Experiment { namespace Machines
                 {
                     inc = params.value("valve_2_increment_corse").toInt();
                 }
-                else if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.2))
+                else if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.6))
                 {
                     inc = params.value("valve_2_increment_fine").toInt();
                 }
