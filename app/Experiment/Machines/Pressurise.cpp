@@ -1218,7 +1218,7 @@ namespace App { namespace Experiment { namespace Machines
         {
             // Calculate the boundary desired pressure
             max = (pressureReading - params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
-            min = (pressureReading - params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
+            min = (pressureReading - params.value("step_size").toDouble());
 
             // If on the pressure tunning stage decrease vavle tunning params
             params.insert("valve_7_step_size", params.value("valve_7_normal_step_size").toInt());
