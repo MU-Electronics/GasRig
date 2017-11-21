@@ -5,7 +5,7 @@
 #include <QStateMachine>
 #include <QVariantMap>
 
-namespace App { namespace Experiment { namespace Machines { namespace States
+namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
     class CommandValidatorState: public QState

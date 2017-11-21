@@ -11,7 +11,7 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -29,10 +29,10 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_temperatureMonitor(parent)
     {
         // States
-        connect(&sml_getBearingTemperature, &QState::entered, this->vacuum(), &States::Vacuum::getBearingTemperature);
-        connect(&sml_getTC110ElectronicsTemperature, &QState::entered, this->vacuum(), &States::Vacuum::getTC110ElectronicsTemperature);
-        connect(&sml_getMotorTemperature, &QState::entered, this->vacuum(), &States::Vacuum::getMotorTemperature);
-        connect(&sml_getPumpBottomTemperature, &QState::entered, this->vacuum(), &States::Vacuum::getPumpBottomTemperature);
+        connect(&sml_getBearingTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getBearingTemperature);
+        connect(&sml_getTC110ElectronicsTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getTC110ElectronicsTemperature);
+        connect(&sml_getMotorTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getMotorTemperature);
+        connect(&sml_getPumpBottomTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getPumpBottomTemperature);
 
         // Timer
         connect(&sml_startVacuumTemperatureTimer, &QState::entered, this, &ReadVacStationTemperatures::startTemperatureTimer);

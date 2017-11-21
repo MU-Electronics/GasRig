@@ -11,7 +11,7 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -25,7 +25,7 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_turboSpeed(parent)
     {
-        connect(&sml_readTurboSpeed, &QState::entered, this->vacuum(), &States::Vacuum::getTurboSpeed);
+        connect(&sml_readTurboSpeed, &QState::entered, this->vacuum(), &Functions::Vacuum::getTurboSpeed);
         connect(&sml_startTurboSpeedTimer, &QState::entered, this, &ReadTurboSpeed::startTurboTimer);
     }
 

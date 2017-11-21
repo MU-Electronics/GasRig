@@ -27,7 +27,7 @@
 #include "Pressure.h"
 #include "Flow.h"
 
-namespace App { namespace Experiment { namespace Machines { namespace States
+namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
     class MachineStates : public QObject
     {

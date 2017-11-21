@@ -11,7 +11,7 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -25,7 +25,7 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_vacPressureMonitor(parent)
     {
-        connect(&sml_vacPressure, &QState::entered, this->pressure(), &States::Pressure::vacPressure);
+        connect(&sml_vacPressure, &QState::entered, this->pressure(), &Functions::Pressure::vacPressure);
         connect(&sml_startVacuumPressureMonitor, &QState::entered, this, &ReadVacuum::startVacuumPressureMonitor);
     }
 

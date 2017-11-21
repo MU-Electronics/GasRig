@@ -15,7 +15,7 @@
 // Include valaitor state
 #include "CommandValidatorState.h"
 
-namespace App { namespace Experiment { namespace Machines { namespace States
+namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
     Vacuum::Vacuum(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap &params, Hardware::CommandConstructor &commandConstructor)

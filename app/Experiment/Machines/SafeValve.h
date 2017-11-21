@@ -14,11 +14,11 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
-    class SafeValve    :   public States::MachineStates
+    class SafeValve    :   public Functions::MachineStates
     {
         Q_OBJECT
 
@@ -88,7 +88,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Create command validator states
-            States::CommandValidatorState
+            Functions::CommandValidatorState
                 // Validate close valves
                 sml_validateCloseHighPressureInput
             ,   sml_validateCloseHighPressureNitrogen

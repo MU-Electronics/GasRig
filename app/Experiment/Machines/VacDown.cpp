@@ -11,7 +11,7 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -89,63 +89,63 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_vacDown(parent)
     {
         // Pressure validator states
-        connect(&sml_validateVacPressureForTurbo, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validateVacPressureForTurbo);
-        connect(&sml_validatePressureForVacuum, &States::CommandValidatorState::entered, this->pressure(), &States::Pressure::validatePressureForVacuum);
+        connect(&sml_validateVacPressureForTurbo, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validateVacPressureForTurbo);
+        connect(&sml_validatePressureForVacuum, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validatePressureForVacuum);
 
         // Vacuum states
-        connect(&sml_enableBackingPump, &QState::entered, this->vacuum(), &States::Vacuum::enableBackingPump);
-        connect(&sml_enableTurboPump, &QState::entered, this->vacuum(), &States::Vacuum::enableTurboPump);
-        connect(&sml_disableTurboPump, &QState::entered, this->vacuum(), &States::Vacuum::disableTurboPump);
+        connect(&sml_enableBackingPump, &QState::entered, this->vacuum(), &Functions::Vacuum::enableBackingPump);
+        connect(&sml_enableTurboPump, &QState::entered, this->vacuum(), &Functions::Vacuum::enableTurboPump);
+        connect(&sml_disableTurboPump, &QState::entered, this->vacuum(), &Functions::Vacuum::disableTurboPump);
 
         // Validator vacuum states
-        connect(&sml_validateEnableBackingPump, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableBackingPump);
-        connect(&sml_validateEnableTurboPump, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateEnableTurboPump);
-        connect(&sml_validateDisableTurboPump, &States::CommandValidatorState::entered, this->vacuum(), &States::Vacuum::validateDisableTurboPump);
+        connect(&sml_validateEnableBackingPump, &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateEnableBackingPump);
+        connect(&sml_validateEnableTurboPump, &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateEnableTurboPump);
+        connect(&sml_validateDisableTurboPump, &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateDisableTurboPump);
 
 
         // Link close valve states
-        connect(&sml_closeHighPressureInput, &QState::entered, this->valves(), &States::Valves::closeHighPressureInput);
-        connect(&sml_closeHighPressureNitrogen, &QState::entered, this->valves(), &States::Valves::closeHighPressureNitrogen);
-        connect(&sml_closeFlowController, &QState::entered, this->valves(), &States::Valves::closeFlowController);
-        connect(&sml_closeExhuast, &QState::entered, this->valves(), &States::Valves::closeExhuast);
-        connect(&sml_closeOutput, &QState::entered, this->valves(), &States::Valves::closeOutput);
-        connect(&sml_closeSlowExhuastPath, &QState::entered, this->valves(), &States::Valves::closeSlowExhuastPath);
-        connect(&sml_closeFastExhuastPath, &QState::entered, this->valves(), &States::Valves::closeFastExhuastPath);
-        connect(&sml_closeVacuumIn, &QState::entered, this->valves(), &States::Valves::closeVacuumIn);
-        connect(&sml_closeVacuumOut, &QState::entered, this->valves(), &States::Valves::closeVacuumOut);
+        connect(&sml_closeHighPressureInput, &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
+        connect(&sml_closeHighPressureNitrogen, &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
+        connect(&sml_closeFlowController, &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
+        connect(&sml_closeExhuast, &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
+        connect(&sml_closeOutput, &QState::entered, this->valves(), &Functions::Valves::closeOutput);
+        connect(&sml_closeSlowExhuastPath, &QState::entered, this->valves(), &Functions::Valves::closeSlowExhuastPath);
+        connect(&sml_closeFastExhuastPath, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_closeVacuumIn, &QState::entered, this->valves(), &Functions::Valves::closeVacuumIn);
+        connect(&sml_closeVacuumOut, &QState::entered, this->valves(), &Functions::Valves::closeVacuumOut);
 
         // Link close valve validator states
-        connect(&sml_validateCloseHighPressureInput, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureInput);
-        connect(&sml_validateCloseHighPressureNitrogen, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseHighPressureNitrogen);
-        connect(&sml_validateCloseFlowController, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseFlowController);
-        connect(&sml_validateCloseExhuast, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseExhuast);
-        connect(&sml_validateCloseOutput, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseOutput);
-        connect(&sml_validateCloseSlowExhuastPath, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseSlowExhuastPath);
-        connect(&sml_validateCloseFastExhuastPath, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseFastExhuastPath);
-        connect(&sml_validateCloseVacuumIn, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseVacuumIn);
-        connect(&sml_validateCloseVacuumOut, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateCloseVacuumOut);
+        connect(&sml_validateCloseHighPressureInput, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureInput);
+        connect(&sml_validateCloseHighPressureNitrogen, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureNitrogen);
+        connect(&sml_validateCloseFlowController, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
+        connect(&sml_validateCloseExhuast, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseExhuast);
+        connect(&sml_validateCloseOutput, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseOutput);
+        connect(&sml_validateCloseSlowExhuastPath, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseSlowExhuastPath);
+        connect(&sml_validateCloseFastExhuastPath, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFastExhuastPath);
+        connect(&sml_validateCloseVacuumIn, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumIn);
+        connect(&sml_validateCloseVacuumOut, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumOut);
 
         // Link open valve states
-        connect(&sml_openHighPressureInput, &QState::entered, this->valves(), &States::Valves::openHighPressureInput);
-        connect(&sml_openHighPressureNitrogen, &QState::entered, this->valves(), &States::Valves::openHighPressureNitrogen);
-        connect(&sml_openFlowController, &QState::entered, this->valves(), &States::Valves::openFlowController);
-        connect(&sml_openExhuast, &QState::entered, this->valves(), &States::Valves::openExhuast);
-        connect(&sml_openOutput, &QState::entered, this->valves(), &States::Valves::openOutput);
-        connect(&sml_openSlowExhuastPath, &QState::entered, this->valves(), &States::Valves::openSlowExhuastPath);
-        connect(&sml_openFastExhuastPath, &QState::entered, this->valves(), &States::Valves::openFastExhuastPath);
-        connect(&sml_openVacuumIn, &QState::entered, this->valves(), &States::Valves::openVacuumIn);
-        connect(&sml_openVacuumOut, &QState::entered, this->valves(), &States::Valves::openVacuumOut);
+        connect(&sml_openHighPressureInput, &QState::entered, this->valves(), &Functions::Valves::openHighPressureInput);
+        connect(&sml_openHighPressureNitrogen, &QState::entered, this->valves(), &Functions::Valves::openHighPressureNitrogen);
+        connect(&sml_openFlowController, &QState::entered, this->valves(), &Functions::Valves::openFlowController);
+        connect(&sml_openExhuast, &QState::entered, this->valves(), &Functions::Valves::openExhuast);
+        connect(&sml_openOutput, &QState::entered, this->valves(), &Functions::Valves::openOutput);
+        connect(&sml_openSlowExhuastPath, &QState::entered, this->valves(), &Functions::Valves::openSlowExhuastPath);
+        connect(&sml_openFastExhuastPath, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_openVacuumIn, &QState::entered, this->valves(), &Functions::Valves::openVacuumIn);
+        connect(&sml_openVacuumOut, &QState::entered, this->valves(), &Functions::Valves::openVacuumOut);
 
         // Link open valve validator states
-        connect(&sml_validateOpenHighPressureInput, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenHighPressureInput);
-        connect(&sml_validateOpenHighPressureNitrogen, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenHighPressureNitrogen);
-        connect(&sml_validateOpenFlowController, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenFlowController);
-        connect(&sml_validateOpenExhuast, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenExhuast);
-        connect(&sml_validateOpenOutput, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenOutput);
-        connect(&sml_validateOpenSlowExhuastPath, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenSlowExhuastPath);
-        connect(&sml_validateOpenFastExhuastPath, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenFastExhuastPath);
-        connect(&sml_validateOpenVacuumIn, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumIn);
-        connect(&sml_validateOpenVacuumOut, &States::CommandValidatorState::entered, this->valves(), &States::Valves::validateOpenVacuumOut);
+        connect(&sml_validateOpenHighPressureInput, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenHighPressureInput);
+        connect(&sml_validateOpenHighPressureNitrogen, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenHighPressureNitrogen);
+        connect(&sml_validateOpenFlowController, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFlowController);
+        connect(&sml_validateOpenExhuast, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenExhuast);
+        connect(&sml_validateOpenOutput, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenOutput);
+        connect(&sml_validateOpenSlowExhuastPath, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenSlowExhuastPath);
+        connect(&sml_validateOpenFastExhuastPath, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFastExhuastPath);
+        connect(&sml_validateOpenVacuumIn, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumIn);
+        connect(&sml_validateOpenVacuumOut, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumOut);
 
 
         // Timer states
@@ -279,30 +279,30 @@ namespace App { namespace Experiment { namespace Machines
         // Check the system pressure
         sml_checkPressureForVacuum.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureForVacuum);
             // Pressure is low enough
-            sml_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationSuccess, &sml_closeHighPressureInput);
+            sml_validatePressureForVacuum.addTransition(this->pressure(), &Functions::Pressure::emit_validationSuccess, &sml_closeHighPressureInput);
             // Pressure is too high
-            sml_validatePressureForVacuum.addTransition(this->pressure(), &States::Pressure::emit_validationFailed, &sm_stopAsFailed);
+            sml_validatePressureForVacuum.addTransition(this->pressure(), &Functions::Pressure::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the high pressure valve
         sml_closeHighPressureInput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseHighPressureInput);
             // Valve closed successfully
-            sml_validateCloseHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_closeHighPressureNitrogen);
+            sml_validateCloseHighPressureInput.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_closeHighPressureNitrogen);
             // Valve failed to close
-            sml_validateCloseHighPressureInput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseHighPressureInput.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the nitrogen valve
         sml_closeHighPressureNitrogen.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseHighPressureNitrogen);
             // Valve closed successfully
-            sml_validateCloseHighPressureNitrogen.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_closeFlowController);
+            sml_validateCloseHighPressureNitrogen.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_closeFlowController);
             // Valve failed to close
-            sml_validateCloseHighPressureNitrogen.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseHighPressureNitrogen.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the flow controller valve
         sml_closeFlowController.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseFlowController);
             // Valve closed successfully
-            sml_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_closeExhuast);
+            sml_validateCloseFlowController.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_closeExhuast);
             // Valve failed to close
-            sml_validateCloseFlowController.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseFlowController.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Close the exhuast valve
         sml_closeExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseExhuast);
@@ -310,15 +310,15 @@ namespace App { namespace Experiment { namespace Machines
             if(params.value("mode").toInt() == 2 || params.value("mode").toInt() == 3)
             {
                 // Close the output
-                sml_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_closeOutput);
+                sml_validateCloseExhuast.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_closeOutput);
             }
             else if(params.value("mode").toInt() == 1)
             {
                 // Open the output
-                sml_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_openOutput);
+                sml_validateCloseExhuast.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_openOutput);
             }
             // Valve failed to close
-            sml_validateCloseExhuast.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseExhuast.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the output valve
         sml_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseOutput);
@@ -327,21 +327,21 @@ namespace App { namespace Experiment { namespace Machines
             if(params.value("mode").toInt() == 2)
             {
                 // Close the fast exhuast valve
-                sml_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_closeFastExhuastPath);
+                sml_validateCloseOutput.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_closeFastExhuastPath);
             }
             if(params.value("mode").toInt() == 3)
             {
                 // Open the fast exhuast path valve
-                sml_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_openFastExhuastPath);
+                sml_validateCloseOutput.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_openFastExhuastPath);
             }
             else if(params.value("mode").toInt() == 1)
             {
                 // Open the fast exhaust path valve
-                sml_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_openFastExhuastPath);
+                sml_validateOpenOutput.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_openFastExhuastPath);
             }
             // Valve failed to close
-            sml_validateCloseOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
-            sml_validateOpenOutput.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseOutput.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateOpenOutput.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the exhuast path valve fast
         sml_closeFastExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseFastExhuastPath);
@@ -350,21 +350,21 @@ namespace App { namespace Experiment { namespace Machines
             if(params.value("mode").toInt() == 2)
             {
                 // Close the slow exhuast valve
-                sml_validateCloseFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_closeSlowExhuastPath);
+                sml_validateCloseFastExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_closeSlowExhuastPath);
             }
             else if(params.value("mode").toInt() == 3)
             {
                 // Open the slow exhuast path valve
-                sml_validateOpenFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_openSlowExhuastPath);
+                sml_validateOpenFastExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_openSlowExhuastPath);
             }
             else if(params.value("mode").toInt() == 1)
             {
                 // Open the slow exhaust path valve
-                sml_validateOpenFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_openSlowExhuastPath);
+                sml_validateOpenFastExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_openSlowExhuastPath);
             }
             // Valve failed to close
-            sml_validateCloseFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
-            sml_validateOpenFastExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseFastExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateOpenFastExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the exhuast path valve slow
         sml_closeSlowExhuastPath.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseSlowExhuastPath);
@@ -373,16 +373,16 @@ namespace App { namespace Experiment { namespace Machines
             if(params.value("mode").toInt() == 2)
             {
                 // Open the vacuum out valve
-                sml_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_openVacuumOut);
+                sml_validateCloseSlowExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_openVacuumOut);
             }
             else if(params.value("mode").toInt() == 3 || params.value("mode").toInt() == 1)
             {
                 // Close the vacuum out valve
-                sml_validateOpenSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_closeVacuumOut);
+                sml_validateOpenSlowExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_closeVacuumOut);
             }
             // Valve failed to close
-            sml_validateCloseSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
-            sml_validateOpenSlowExhuastPath.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseSlowExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateOpenSlowExhuastPath.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set vacuum out valve
         sml_closeVacuumOut.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseVacuumOut);
@@ -391,32 +391,32 @@ namespace App { namespace Experiment { namespace Machines
             if(params.value("mode").toInt() == 2)
             {
                 // Open the vacuum in valve
-                sml_validateOpenVacuumOut.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_openVacuumIn);
+                sml_validateOpenVacuumOut.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_openVacuumIn);
             }
             else if(params.value("mode").toInt() == 3 || params.value("mode").toInt() == 1)
             {
                 // Close the vacuum out valve
-                sml_validateCloseVacuumOut.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_openVacuumIn);
+                sml_validateCloseVacuumOut.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_openVacuumIn);
             }
             // Valve failed to close
-            sml_validateOpenVacuumOut.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
-            sml_validateCloseVacuumOut.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateOpenVacuumOut.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateCloseVacuumOut.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
 
         // Set the vacuum in valve open
         sml_openVacuumIn.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenVacuumIn);
             // Valve closed successfully
-            sml_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationSuccess, &sml_disableTurboPump);
+            sml_validateOpenVacuumIn.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_disableTurboPump);
             // Valve failed to close
-            sml_validateOpenVacuumIn.addTransition(this->valves(), &States::Valves::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateOpenVacuumIn.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Disable the vac station turbo
-        sml_disableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_turboPumpAlreadyDisabled, &sml_startVacuumTimer);
+        sml_disableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_turboPumpAlreadyDisabled, &sml_startVacuumTimer);
         sml_disableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &sml_validateDisableTurboPump);
             // Turbo pump was disabled
-            sml_validateDisableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sml_startVacuumTimer);
+            sml_validateDisableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sml_startVacuumTimer);
             // Turbo pump could not be disabled
-            sml_validateDisableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateDisableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sm_stopAsFailed);
 
         // Start vac time
         sml_startVacuumTimer.addTransition(this, &VacDown::emit_timerActive, &sml_enableBackingPump);
@@ -424,24 +424,24 @@ namespace App { namespace Experiment { namespace Machines
         // Turn on backing pump
         sml_enableBackingPump.addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, &sml_validateEnableBackingPump);
             // Validate backing pump on
-            sml_validateEnableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sml_timerWait);
+            sml_validateEnableBackingPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sml_timerWait);
             // Backing pump failed
-            sml_validateEnableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateEnableBackingPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sm_stopAsFailed);
 
         // Read vac pressure
         sml_timerWait.addTransition(&m_hardware, &Hardware::Access::emit_readVacuumPressure, &sml_validateVacPressureForTurbo);
             // Pressure low enough for turbo so enable it
-            sml_validateVacPressureForTurbo.addTransition(this->pressure(), &States::Pressure::emit_validationSuccess, &sml_enableTurboPump);
+            sml_validateVacPressureForTurbo.addTransition(this->pressure(), &Functions::Pressure::emit_validationSuccess, &sml_enableTurboPump);
             // Pressure too high for turbo, wait for next time out untill we check again
-            sml_validateVacPressureForTurbo.addTransition(this->pressure(), &States::Pressure::emit_validationFailed, &sml_timerWait);
+            sml_validateVacPressureForTurbo.addTransition(this->pressure(), &Functions::Pressure::emit_validationFailed, &sml_timerWait);
 
         // Enable turbo pump
-        sml_enableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_turboPumpAlreadyEnabled, &sml_timerWait);
+        sml_enableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_turboPumpAlreadyEnabled, &sml_timerWait);
         sml_enableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &sml_validateEnableTurboPump);
             // Successfully enabled
-            sml_validateEnableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationSuccess, &sml_timerWait);
+            sml_validateEnableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sml_timerWait);
             // Could not enable
-            sml_validateEnableTurboPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateEnableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sm_stopAsFailed);
 
         // End vac session when timer limit ends t_vacTime
         sml_timerWait.addTransition(&t_vacDown, &QTimer::timeout, &sm_stop);

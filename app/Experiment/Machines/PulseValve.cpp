@@ -11,7 +11,7 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -58,23 +58,23 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_cycle, &QState::entered, this, &PulseValve::cycle);
 
         // Valves
-        connect(&sml_closeOutput_1, &QState::entered, this->valves(), &States::Valves::closeOutput);
-        connect(&sml_openOutput_1, &QState::entered, this->valves(), &States::Valves::openOutput);
-        connect(&sml_closeSlowExhuastPath_1, &QState::entered, this->valves(), &States::Valves::closeSlowExhuastPath);
-        connect(&sml_openSlowExhuastPath_1, &QState::entered, this->valves(), &States::Valves::openSlowExhuastPath);
-        connect(&sml_closeExhuast_1, &QState::entered, this->valves(), &States::Valves::closeExhuast);
-        connect(&sml_openExhuast_1, &QState::entered, this->valves(), &States::Valves::openExhuast);
-        connect(&sml_closeFastExhuastPath_1, &QState::entered, this->valves(), &States::Valves::closeFastExhuastPath);
-        connect(&sml_openFastExhuastPath_1, &QState::entered, this->valves(), &States::Valves::openFastExhuastPath);
-        connect(&sml_closeVacuumIn_1, &QState::entered, this->valves(), &States::Valves::closeVacuumIn);
-        connect(&sml_openVacuumIn_1, &QState::entered, this->valves(), &States::Valves::openVacuumIn);
-        connect(&sml_closeVacuumOut_1, &QState::entered, this->valves(), &States::Valves::closeVacuumOut);
-        connect(&sml_openVacuumOut_1, &QState::entered, this->valves(), &States::Valves::openVacuumOut);
-        connect(&sml_openHighPressureInput_1, &QState::entered, this->valves(), &States::Valves::openHighPressureInput);
-        connect(&sml_closeFlowController_1, &QState::entered, this->valves(), &States::Valves::closeFlowController);
-        connect(&sml_closeHighPressureNitrogen_1, &QState::entered, this->valves(), &States::Valves::closeHighPressureNitrogen);
-        connect(&sml_openFlowController_1, &QState::entered, this->valves(), &States::Valves::openFlowController);
-        connect(&sml_openHighPressureNitrogen_1, &QState::entered, this->valves(), &States::Valves::openHighPressureNitrogen);
+        connect(&sml_closeOutput_1, &QState::entered, this->valves(), &Functions::Valves::closeOutput);
+        connect(&sml_openOutput_1, &QState::entered, this->valves(), &Functions::Valves::openOutput);
+        connect(&sml_closeSlowExhuastPath_1, &QState::entered, this->valves(), &Functions::Valves::closeSlowExhuastPath);
+        connect(&sml_openSlowExhuastPath_1, &QState::entered, this->valves(), &Functions::Valves::openSlowExhuastPath);
+        connect(&sml_closeExhuast_1, &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
+        connect(&sml_openExhuast_1, &QState::entered, this->valves(), &Functions::Valves::openExhuast);
+        connect(&sml_closeFastExhuastPath_1, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_openFastExhuastPath_1, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_closeVacuumIn_1, &QState::entered, this->valves(), &Functions::Valves::closeVacuumIn);
+        connect(&sml_openVacuumIn_1, &QState::entered, this->valves(), &Functions::Valves::openVacuumIn);
+        connect(&sml_closeVacuumOut_1, &QState::entered, this->valves(), &Functions::Valves::closeVacuumOut);
+        connect(&sml_openVacuumOut_1, &QState::entered, this->valves(), &Functions::Valves::openVacuumOut);
+        connect(&sml_openHighPressureInput_1, &QState::entered, this->valves(), &Functions::Valves::openHighPressureInput);
+        connect(&sml_closeFlowController_1, &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
+        connect(&sml_closeHighPressureNitrogen_1, &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
+        connect(&sml_openFlowController_1, &QState::entered, this->valves(), &Functions::Valves::openFlowController);
+        connect(&sml_openHighPressureNitrogen_1, &QState::entered, this->valves(), &Functions::Valves::openHighPressureNitrogen);
 
 
 

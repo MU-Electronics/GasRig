@@ -19,7 +19,7 @@
 // Include command validator states
 #include "CommandValidatorState.h"
 
-namespace App { namespace Experiment { namespace Machines { namespace States
+namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
     class Valves : public QObject
     {

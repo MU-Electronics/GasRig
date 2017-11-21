@@ -11,7 +11,7 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -29,8 +29,8 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_flowControllerFlowMonitor(parent)
     {
         // Flow
-        connect(&sml_flowControllerOneFlow_1, &QState::entered, this->flow(), &States::Flow::flowControllerOneFlow);
-        connect(&sml_flowControllerTwoFlow_1, &QState::entered, this->flow(), &States::Flow::flowControllerTwoFlow);
+        connect(&sml_flowControllerOneFlow_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneFlow);
+        connect(&sml_flowControllerTwoFlow_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoFlow);
 
         // Timers
         connect(&sml_startFlowControllerFlowMonitor, &QState::entered, this, &ReadFlowControllerFlow::startFlowControllerFlowMonitor);

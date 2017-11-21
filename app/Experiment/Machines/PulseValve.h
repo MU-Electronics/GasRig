@@ -14,14 +14,14 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 // Include valiator
-#include "States/CommandValidatorState.h"
+#include "Functions/CommandValidatorState.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
-    class PulseValve    :   public States::MachineStates
+    class PulseValve    :   public Functions::MachineStates
     {
         Q_OBJECT
 

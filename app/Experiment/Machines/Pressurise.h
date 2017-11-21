@@ -14,14 +14,14 @@
 #include "../../Safety/Monitor.h"
 
 // Include possable machine states
-#include "States/MachineStates.h"
+#include "Functions/MachineStates.h"
 
 // Include valiator
-#include "States/CommandValidatorState.h"
+#include "Functions/CommandValidatorState.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
-    class Pressurise    :   public States::MachineStates
+    class Pressurise    :   public Functions::MachineStates
     {
         Q_OBJECT
 
@@ -65,9 +65,9 @@ namespace App { namespace Experiment { namespace Machines
 
             // Valve to open and close
             QState* inputValveOpen;
-            States::CommandValidatorState* inputValveOpenValidation;
+            Functions::CommandValidatorState* inputValveOpenValidation;
             QState* inputValveClose;
-            States::CommandValidatorState* inputValveCloseValidation;
+            Functions::CommandValidatorState* inputValveCloseValidation;
 
 
             QState
@@ -139,7 +139,7 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_disableBackingPump_1;
 
 
-            States::CommandValidatorState
+            Functions::CommandValidatorState
                     // Validator Misc
                     sml_validatePressureAfterValveSeven
             ,       sml_validatePressureAfterValveTwo

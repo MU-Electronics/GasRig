@@ -91,8 +91,8 @@ SOURCES += \
     app/Hardware/HAL/Presenters/PresenterSupport.cpp \
     app/Hardware/CommandConstructor.cpp \
     app/Experiment/Machines/VacDown.cpp \
-    app/Experiment/Machines/States/MachineStates.cpp \
-    app/Experiment/Machines/States/CommandValidatorState.cpp \
+    app/Experiment/Machines/Functions/MachineStates.cpp \
+    app/Experiment/Machines/Functions/CommandValidatorState.cpp \
     app/Experiment/Machines/Machines.cpp \
     app/View/Managers/MachineStatus.cpp \
     app/Experiment/Machines/SafeValve.cpp \
@@ -102,10 +102,10 @@ SOURCES += \
     app/Experiment/Machines/ReadFlowControllerTemperatures.cpp \
     app/Experiment/Machines/ReadVacStationTemperatures.cpp \
     app/Experiment/Machines/ReadTurboSpeed.cpp \
-    app/Experiment/Machines/States/Valves.cpp \
-    app/Experiment/Machines/States/Vacuum.cpp \
-    app/Experiment/Machines/States/Flow.cpp \
-    app/Experiment/Machines/States/Pressure.cpp \
+    app/Experiment/Machines/Functions/Valves.cpp \
+    app/Experiment/Machines/Functions/Vacuum.cpp \
+    app/Experiment/Machines/Functions/Flow.cpp \
+    app/Experiment/Machines/Functions/Pressure.cpp \
     app/Experiment/Machines/PulseValve.cpp \
     app/Experiment/Machines/Pressurise.cpp \
     app/View/Managers/Global.cpp
@@ -176,8 +176,8 @@ HEADERS += \
     app/Hardware/HAL/Presenters/PresenterSupport.h \
     app/Hardware/CommandConstructor.h \
     app/Experiment/Machines/VacDown.h \
-    app/Experiment/Machines/States/MachineStates.h \
-    app/Experiment/Machines/States/CommandValidatorState.h \
+    app/Experiment/Machines/Functions/MachineStates.h \
+    app/Experiment/Machines/Functions/CommandValidatorState.h \
     app/Experiment/Machines/Machines.h \
     app/View/Managers/MachineStatus.h \
     app/Experiment/Machines/SafeValve.h \
@@ -187,10 +187,10 @@ HEADERS += \
     app/Experiment/Machines/ReadFlowControllerTemperatures.h \
     app/Experiment/Machines/ReadVacStationTemperatures.h \
     app/Experiment/Machines/ReadTurboSpeed.h \
-    app/Experiment/Machines/States/Valves.h \
-    app/Experiment/Machines/States/Vacuum.h \
-    app/Experiment/Machines/States/Flow.h \
-    app/Experiment/Machines/States/Pressure.h \
+    app/Experiment/Machines/Functions/Valves.h \
+    app/Experiment/Machines/Functions/Vacuum.h \
+    app/Experiment/Machines/Functions/Flow.h \
+    app/Experiment/Machines/Functions/Pressure.h \
     app/Experiment/Machines/PulseValve.h \
     app/Experiment/Machines/Pressurise.h \
     app/View/Managers/Global.h
