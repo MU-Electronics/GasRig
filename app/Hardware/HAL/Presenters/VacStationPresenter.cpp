@@ -29,47 +29,47 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Select the correct presenter
         if(method == "getTemperature" && expectedPackage(commands, package, "342,330,326,346", 20))
         {
-            return getTemperature(commands, package);
+            return methodOverride(commands, getTemperature(commands, package));
         }
         else if (method == "getTurboSpeed" && expectedPackage(commands, package, "398,336,399,397", 20))
         {
-            return getTurboSpeed(commands, package);
+            return methodOverride(commands, getTurboSpeed(commands, package));
         }
         else if (method == "getError" && expectedPackage(commands, package, "360,361,362,363,364,365,366,367,368,369", 20))
         {
-            return getError(commands, package);
+            return methodOverride(commands, getError(commands, package));
         }
         else if (method == "getGasMode" && expectedPackage(commands, package, "027", 17))
         {
-            return getGasMode(commands, package);
+            return methodOverride(commands, getGasMode(commands, package));
         }
         else if (method == "getBackingPumpMode" && expectedPackage(commands, package, "025", 17))
         {
-            return getBackingPumpMode(commands, package);
+            return methodOverride(commands, getBackingPumpMode(commands, package));
         }
         else if (method == "getTurboPumpState" && expectedPackage(commands, package, "023", 20))
         {
-            return getTurboPumpState(commands, package);
+            return methodOverride(commands, getTurboPumpState(commands, package));
         }
         else if (method == "getPumpingState" && expectedPackage(commands, package, "010", 20))
         {
-            return getPumpingState(commands, package);
+            return methodOverride(commands, getPumpingState(commands, package));
         }
         else if (method == "setGasMode" && expectedPackage(commands, package, "027", 17))
         {
-            return setGasMode(commands, package);
+            return methodOverride(commands, setGasMode(commands, package));
         }
         else if (method == "setBackingPumpMode" && expectedPackage(commands, package, "025", 17))
         {
-            return setBackingPumpMode(commands, package);
+            return methodOverride(commands, setBackingPumpMode(commands, package));
         }
         else if (method == "setTurboPumpState" && expectedPackage(commands, package, "023", 20))
         {
-            return setTurboPumpState(commands, package);
+            return methodOverride(commands, setTurboPumpState(commands, package));
         }
         else if (method == "setPumpingState" && expectedPackage(commands, package, "010", 20))
         {
-            return setPumpingState(commands, package);
+            return methodOverride(commands, setPumpingState(commands, package));
         }
 
         // There was an error

@@ -532,6 +532,7 @@ namespace App { namespace Hardware
         QVariantMap command;
         command.insert("hardware", "LabJack");
         command.insert("method", "readAnaloguePort");
+        command.insert("emit_override", "emit_readVacuumPressure");
         command.insert("port", connection);
         command.insert("slope", slope);
         command.insert("offset", offset);

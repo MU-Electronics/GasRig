@@ -114,7 +114,7 @@ namespace App { namespace Experiment { namespace Machines
         sml_startVacuumPressureMonitor.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sml_vacPressure);
 
         // Read the vacuum sensor
-        sml_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &sml_startVacuumPressureMonitor);
+        sml_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readVacuumPressure, &sml_startVacuumPressureMonitor);
 
         // Account for com issues
         sml_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startVacuumPressureMonitor);

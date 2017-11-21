@@ -429,7 +429,6 @@ namespace App { namespace Hardware
         if(responable == "FlowController")
             package = m_flowControllerPresenter.proccess(method, commands, halData);
 
-
         // Labjack presenter
         if(responable == "LabJack")
             package = m_labJackPresenter.proccess(method, commands, halData);

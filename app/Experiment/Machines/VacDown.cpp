@@ -429,7 +429,7 @@ namespace App { namespace Experiment { namespace Machines
             sml_validateEnableBackingPump.addTransition(this->vacuum(), &States::Vacuum::emit_validationFailed, &sm_stopAsFailed);
 
         // Read vac pressure
-        sml_timerWait.addTransition(&m_hardware, &Hardware::Access::emit_readAnaloguePort, &sml_validateVacPressureForTurbo);
+        sml_timerWait.addTransition(&m_hardware, &Hardware::Access::emit_readVacuumPressure, &sml_validateVacPressureForTurbo);
             // Pressure low enough for turbo so enable it
             sml_validateVacPressureForTurbo.addTransition(this->pressure(), &States::Pressure::emit_validationSuccess, &sml_enableTurboPump);
             // Pressure too high for turbo, wait for next time out untill we check again

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QStringList>
+#include <QVariantMap>
 
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
@@ -11,6 +12,8 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             PresenterSupport();
 
             bool validatePackageSize(QStringList package, int size);
+
+            QVariantMap methodOverride(QVariantMap commands, QVariantMap package);
 
             // Convert 4 btyes to float
             union FourByteFloatConvertion
