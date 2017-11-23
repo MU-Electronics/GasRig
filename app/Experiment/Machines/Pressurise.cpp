@@ -390,7 +390,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Between valve 2 how long should vac down be when setting pressure below 1.5bar
-        params.insert("exhuast_void_vac_down_time_pulse", 300);
+        params.insert("exhuast_void_vac_down_time_pulse", 100);
 
 
 
