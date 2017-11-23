@@ -1042,9 +1042,18 @@ namespace App { namespace Experiment { namespace Machines
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
-        // Stop as pressure is correct
-        double max = params.value("pressure").toDouble() + params.value("tolerance_valve_one").toDouble();
-        double min = params.value("pressure").toDouble() - params.value("tolerance_valve_one").toDouble();
+        // Calculate the boundary desired pressure
+        double max, min;
+        if(params.value("pressure").toDouble() < (pressureReading - params.value("step_size").toDouble()))
+        {
+            max = (pressureReading - params.value("step_size").toDouble()) + params.value("tolerance_valve_one").toDouble();
+            min = (pressureReading - params.value("step_size").toDouble()) - params.value("tolerance_valve_one").toDouble();
+        }
+        else
+        {
+            double max = params.value("pressure").toDouble() + params.value("tolerance_valve_one").toDouble();
+            double min = params.value("pressure").toDouble() - params.value("tolerance_valve_one").toDouble();
+        }
 
         qDebug() << "VALVE ONE - " << "max pressure: " << max << " Min pressure: " << min << " current pressure: " << currentPressure
                  << "set pressure: " << params.value("pressure").toDouble() << "tollerance: " <<  params.value("tolerance_valve_one").toDouble();
