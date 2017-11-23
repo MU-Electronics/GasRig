@@ -1162,7 +1162,7 @@ namespace App { namespace Experiment { namespace Machines
                 int inc = params.value("valve_2_increment").toInt();
 
                 // Increase by corse or fine?
-                if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.02))
+                if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.2))
                 {
                     // Valve can sometime stick so lets check tjis did not happen
                     if(valveTwoCorse == 3)
@@ -1177,7 +1177,7 @@ namespace App { namespace Experiment { namespace Machines
                         inc = params.value("valve_2_increment_fine").toInt();
                     }
                 }
-                else if(abs(previousPressure - currentPressure) > (params.value("valve_2_step_size").toInt() * 0.6))
+                else if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.8))
                 {
                     valveTwoCorse = 0;
                     inc = params.value("valve_2_increment_fine").toInt();
