@@ -403,7 +403,7 @@ namespace App { namespace Experiment { namespace Machines
         // Valve 7: Desired pressure increase between pulses
         // Valve 2: Desired pressure increase between pulses for normal stage and final stage
         params.insert("valve_7_normal_step_size", 400);
-        params.insert("valve_7_final_step_size", 100);
+        params.insert("valve_7_final_step_size", 50);
         params.insert("valve_7_step_size", params.value("valve_7_normal_step_size").toInt());
 
         // Valve 7: Tolerence for desired pressure increase between pulses
@@ -1152,6 +1152,9 @@ namespace App { namespace Experiment { namespace Machines
             {
                 // Do nothing the step size is perfect
                 qDebug() << "Tune doing nothing";
+
+                // Valve did not stick
+                valveTwoSmall = false;
             }
             else if(pressureDiff < stepSize) // Step size to small
             {
@@ -1159,9 +1162,17 @@ namespace App { namespace Experiment { namespace Machines
                 int inc = params.value("valve_2_increment").toInt();
 
                 // Increase by corse or fine?
-                if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.05))
+                if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.02))
                 {
-                    inc = params.value("valve_2_increment_corse").toInt();
+                    // Valve can sometime stick so lets check tjis did not happen
+                    if(valveTwoSmall)
+                    {
+                        inc = params.value("valve_2_increment_corse").toInt();
+                    }
+                    else
+                    {
+                        valveTwoSmall = true;
+                    }
                 }
                 else if(abs(previousPressure - currentPressure) < (params.value("valve_2_step_size").toInt() * 0.6))
                 {
@@ -1173,6 +1184,9 @@ namespace App { namespace Experiment { namespace Machines
             }
             else if(pressureDiff > stepSize) // Step size too large reduce speed
             {
+                // Valve did not stick
+                valveTwoSmall = false;
+
                 // Decrease the timing and save the new speed
                 t_pulseValveTwo.setInterval(t_pulseValveTwo.interval() - params.value("valve_2_decrement").toInt());
             }

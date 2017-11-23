@@ -55,6 +55,9 @@ namespace App { namespace Experiment { namespace Machines
             // Exhuast mode
             bool exhuastMode = false;
 
+            // Did previous valve two stick?
+            bool valveTwoSmall = false;
+
             // Timers for state machine
             QTimer  t_pulseValveOne
             ,       t_pulseValveTwo
