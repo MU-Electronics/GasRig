@@ -56,7 +56,7 @@ namespace App { namespace Experiment { namespace Machines
             bool exhuastMode = false;
 
             // Did previous valve two stick?
-            bool valveTwoSmall = false;
+            int valveTwoCorse = 0;
 
             // Timers for state machine
             QTimer  t_pulseValveOne
