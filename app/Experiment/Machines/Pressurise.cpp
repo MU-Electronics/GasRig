@@ -1230,9 +1230,13 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         // Should the valve speed be decremented?
-        if(pressureChangeAverage > (desiredStepSize * 1.5))
+        if(pressureChangeAverage > (desiredStepSize + pow(log(desiredStepSize), 2.5) + 20))
         {
             return currentSpeed - 5;
+        }
+        else if(pressureChangeAverage > (desiredStepSize))
+        {
+            return currentSpeed - 2;
         }
 
         // If not decision then return current valve speed;
