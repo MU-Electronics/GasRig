@@ -1165,38 +1165,37 @@ namespace App { namespace Experiment { namespace Machines
 
         // Add the new value
         previousPressures.append(currentPressure);
-        qDebug() << previousPressures;
 
         // We need a sample of three to make decisions
-        if(previousPressures.size() <= 2)
+        if(previousPressures.size() <= 3)
         {
             return currentSpeed;
         }
-        else if(previousPressures.size() == 3)
+        else if(previousPressures.size() == 4)
         {
             // Remove the first value
             previousPressures.pop_front();
         }
 
+        qDebug() << previousPressures;
 
         // Calculate the current average pressure change
-        double pressureAverage;
+        double pressureAverage = 0;
         for (int i = 0; i < previousPressures.size(); ++i) {
             pressureAverage = pressureAverage + previousPressures.at(i);
         }
-        pressureAverage = pressureAverage / (previousPressures.size() + 1);
+        pressureAverage = pressureAverage / previousPressures.size();
         double pressureChangeAverage = abs(pressureAverage - currentPressure);
-
 
         // Account for larger pressure changes
         if(currentPressure > (pressureAverage * 2))
         {
-            // Reset valve timing
-            return 15;
-
             // Reset pressure cache
             previousPressures.pop_front();
             previousPressures.pop_front();
+
+            // Reset valve timing
+            return 15;
         }
 
 
