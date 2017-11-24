@@ -76,7 +76,7 @@ namespace App { namespace Experiment { namespace Machines
             Functions::CommandValidatorState* inputValveCloseValidation;
 
             // Valve tuning function
-            int tuneValveSpeed(double currentPressure, QList<double> previousPressures, double desiredStepSize, int currentSpeed);
+            int tuneValveSpeed(double currentPressure, QList<double>& previousPressures, double desiredStepSize, int currentSpeed);
 
 
             QState

@@ -1138,6 +1138,8 @@ namespace App { namespace Experiment { namespace Machines
         {
             t_pulseValveTwo.setInterval(tuneValveSpeed(currentPressure, exhuastValvePressureChange, params.value("valve_2_step_size").toDouble(), t_pulseValveTwo.interval()));
 
+            qDebug() << "New valve speed: " << t_pulseValveTwo.interval();
+
             // Reduce the pressure with value 2
             emit emit_pressureToHigh();
 
@@ -1147,7 +1149,7 @@ namespace App { namespace Experiment { namespace Machines
         else if (currentPressure < min)
         {
             // Reset valve time
-            t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
+            //t_pulseValveTwo.setInterval(params.value("valve_2_pulse").toInt());
 
             // Back to increase the pressure
             emit emit_pressureToLow();
@@ -1157,21 +1159,46 @@ namespace App { namespace Experiment { namespace Machines
         }
     }
 
-    int Pressurise::tuneValveSpeed(double currentPressure, QList<double> previousPressures, double desiredStepSize, int currentSpeed)
+    int Pressurise::tuneValveSpeed(double currentPressure, QList<double>& previousPressures, double desiredStepSize, int currentSpeed)
     {
+        qDebug() << "################ Tunning ##################";
+
+        // Add the new value
+        previousPressures.append(currentPressure);
+        qDebug() << previousPressures;
+
         // We need a sample of three to make decisions
-        if(previousPressures.size() < 2)
+        if(previousPressures.size() <= 2)
         {
             return currentSpeed;
         }
-        else
+        else if(previousPressures.size() == 3)
         {
-            // Add the new value
-            previousPressures.append(currentPressure);
-
             // Remove the first value
             previousPressures.pop_front();
         }
+
+
+        // Calculate the current average pressure change
+        double pressureAverage;
+        for (int i = 0; i < previousPressures.size(); ++i) {
+            pressureAverage = pressureAverage + previousPressures.at(i);
+        }
+        pressureAverage = pressureAverage / (previousPressures.size() + 1);
+        double pressureChangeAverage = abs(pressureAverage - currentPressure);
+
+
+        // Account for larger pressure changes
+        if(currentPressure > (pressureAverage * 2))
+        {
+            // Reset valve timing
+            return 15;
+
+            // Reset pressure cache
+            previousPressures.pop_front();
+            previousPressures.pop_front();
+        }
+
 
         // Find pressure difference for most recent pressure change
         double lastPressureChange = abs(previousPressures.at(previousPressures.size() - 1) - currentPressure);
@@ -1187,18 +1214,7 @@ namespace App { namespace Experiment { namespace Machines
         }
 
 
-
-        // Calculate the current average pressure change
-        double pressureChangeAverage;
-        for (int i = 0; i < previousPressures.size(); ++i) {
-            pressureChangeAverage = pressureChangeAverage + previousPressures.at(i);
-        }
-        pressureChangeAverage = pressureChangeAverage / (previousPressures.size() + 1);
-
-
-
         qDebug() << "Tunning valve, average pressure change: " << pressureChangeAverage << " target step size: " << desiredStepSize << " Last pressure change: " << lastPressureChange;
-
 
 
         // Should the valve speed be incremented by a corse value?
