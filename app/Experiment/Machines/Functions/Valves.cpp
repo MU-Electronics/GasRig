@@ -231,7 +231,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
     void Valves::openExhuast()
     {
-        valveHelper("3", true);  qDebug() << "opening exhuast";
+        valveHelper("3", true);
     }
 
     void Valves::openOutput()
@@ -280,7 +280,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
     void Valves::validateOpenExhuast()
     {
-        validateValveHelper("3", true);  qDebug() << "opening exhuast va;lidate";
+        validateValveHelper("3", true);
     }
 
     void Valves::validateOpenOutput()

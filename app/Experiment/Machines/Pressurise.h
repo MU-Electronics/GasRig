@@ -19,6 +19,8 @@
 // Include valiator
 #include "Functions/CommandValidatorState.h"
 
+#include <QList>
+
 namespace App { namespace Experiment { namespace Machines
 {
     class Pressurise    :   public Functions::MachineStates
@@ -55,8 +57,9 @@ namespace App { namespace Experiment { namespace Machines
             // Exhuast mode
             bool exhuastMode = false;
 
-            // Did previous valve two stick?
-            int valveTwoCorse = 0;
+            // Pressure changes cache
+            QList<double> exhuastValvePressureChange;
+            QList<double> inputValvePressureChange;
 
             // Timers for state machine
             QTimer  t_pulseValveOne
@@ -71,6 +74,9 @@ namespace App { namespace Experiment { namespace Machines
             Functions::CommandValidatorState* inputValveOpenValidation;
             QState* inputValveClose;
             Functions::CommandValidatorState* inputValveCloseValidation;
+
+            // Valve tuning function
+            int tuneValveSpeed(double currentPressure, QList<double> previousPressures, double desiredStepSize, int currentSpeed);
 
 
             QState
