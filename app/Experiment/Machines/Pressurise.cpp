@@ -490,6 +490,12 @@ namespace App { namespace Experiment { namespace Machines
         stopExhuastVoidVacDownTimer();
         stopVacuumValveTimer();
 
+        // Reset vars
+        backingPumpEnabled = false;
+        pressureReading = 1;
+        exhuastValvePressureChange.clear();
+        inputValvePressureChange.clear();
+
         qDebug() << "Stopped";
 
         // Emit the machine is finished
@@ -528,6 +534,12 @@ namespace App { namespace Experiment { namespace Machines
         stopValveSevenPulseTimer();
         stopExhuastVoidVacDownTimer();
         stopVacuumValveTimer();
+
+        // Reset vars
+        backingPumpEnabled = false;
+        pressureReading = 1;
+        exhuastValvePressureChange.clear();
+        inputValvePressureChange.clear();
 
         qDebug() << "Stopped as failed";
 
@@ -931,6 +943,7 @@ namespace App { namespace Experiment { namespace Machines
 
     void Pressurise::shouldEnableBackingPump()
     {
+        qDebug() << "should enable backing pump: " << backingPumpEnabled;
         if(!backingPumpEnabled)
         {
             // Save that we're about to enable the backing pump
