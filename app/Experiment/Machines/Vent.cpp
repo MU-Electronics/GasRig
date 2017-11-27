@@ -34,15 +34,6 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_waitForPressureAfterFlowOnePipe(&machine)
         ,   sml_waitForPressureAfterFlowTwoPipe(&machine)
 
-        ,   sml_validatePressureAfterSlowExhuast(&machine)
-        ,   sml_validatePressureAfterOutput(&machine)
-        ,   sml_validatePressureAfterVacOutput(&machine)
-        ,   sml_validatePressureAfterFlowCavity(&machine)
-        ,   sml_validatePressureAfterNitrogenPipe(&machine)
-        ,   sml_validatePressureAfterMultiPipe(&machine)
-        ,   sml_validatePressureAfterFlowOnePipe(&machine)
-        ,   sml_validatePressureAfterFlowTwoPipe(&machine)
-
 
             // Close valve related states
         ,   sml_closeHighPressureInput(&machine)
@@ -88,20 +79,29 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validateOpenVacuumIn(&machine)
         ,   sml_validateOpenVacuumOut(&machine)
 
-
+        ,   sml_validatePressureAfterSlowExhuast(&machine)
+        ,   sml_validatePressureAfterOutput(&machine)
+        ,   sml_validatePressureAfterVacOutput(&machine)
+        ,   sml_validatePressureAfterFlowCavity(&machine)
+        ,   sml_validatePressureAfterNitrogenPipe(&machine)
+        ,   sml_validatePressureAfterMultiPipe(&machine)
+        ,   sml_validatePressureAfterFlowOnePipe(&machine)
+        ,   sml_validatePressureAfterFlowTwoPipe(&machine)
             // Timers
 
     {
         // General
         connect(&sml_stageFinder, &QState::entered, this, &Vent::stageFinder);
-        connect(&sml_validatePressureAfterSlowExhuast, &QState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(&sml_validatePressureAfterOutput, &QState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(&sml_validatePressureAfterVacOutput, &QState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(&sml_validatePressureAfterFlowCavity, &QState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(&sml_validatePressureAfterNitrogenPipe, &QState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(&sml_validatePressureAfterMultiPipe, &QState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(&sml_validatePressureAfterFlowOnePipe, &QState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(&sml_validatePressureAfterFlowTwoPipe, &QState::entered, this, &Vent::validatePressureForAtmospheric);
+
+        // Validate pressure for atmospheric
+        connect(&sml_validatePressureAfterSlowExhuast, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(&sml_validatePressureAfterOutput, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(&sml_validatePressureAfterVacOutput, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(&sml_validatePressureAfterFlowCavity, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(&sml_validatePressureAfterNitrogenPipe, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(&sml_validatePressureAfterMultiPipe, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(&sml_validatePressureAfterFlowOnePipe, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(&sml_validatePressureAfterFlowTwoPipe, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
 
 
         // Link close valve states
@@ -209,6 +209,10 @@ namespace App { namespace Experiment { namespace Machines
         // Get all states from machine and loop through them
         removeAllTransitions();
 
+        // Close valves
+        valves()->closeSlowExhuastPath();
+        valves()->closeExhuast();
+
         // Emit the machine is finished
         emit emit_ventFinished(params);
     }
@@ -226,6 +230,10 @@ namespace App { namespace Experiment { namespace Machines
 
         // Get all states from machine and loop through them
         removeAllTransitions();
+
+        // Close valves
+        valves()->closeSlowExhuastPath();
+        valves()->closeExhuast();
 
         // Emit the machine is finished
         emit emit_ventFailed(params);
@@ -275,8 +283,8 @@ namespace App { namespace Experiment { namespace Machines
                 // Wait for pressure reading?
                 sml_waitForPressureAfterSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterSlowExhuast);
                     // Are we at atmopheric
-                    sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationSuccess, sml_stageFinder);
-                    sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationFailed, sml_waitForPressureAfterSlowExhuast);
+                    sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationSuccess, &sml_stageFinder);
+                    sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationFailed, &sml_waitForPressureAfterSlowExhuast);
 
 
         // Open the output valve
@@ -288,8 +296,13 @@ namespace App { namespace Experiment { namespace Machines
                 // Wait for pressure reading?
                 sml_waitForPressureAfterOutput.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterOutput);
                     // Are we at atmopheric
-                    sml_validatePressureAfterOutput.addTransition(this, &Vent::emit_validationSuccess, sml_stageFinder);
-                    sml_validatePressureAfterOutput.addTransition(this, &Vent::emit_validationFailed, sml_waitForPressureAfterOutput);
+                    sml_validatePressureAfterOutput.addTransition(this, &Vent::emit_validationFailed, &sml_waitForPressureAfterOutput);
+                    sml_validatePressureAfterOutput.addTransition(this, &Vent::emit_validationSuccess, &sml_closeOutput);
+                        // Close valve
+                        sml_closeOutput.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateCloseOutput);
+                            // Validate close
+                            sml_validateCloseOutput.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+                            sml_validateCloseOutput.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_stageFinder);
     }
 
 
@@ -362,7 +375,7 @@ namespace App { namespace Experiment { namespace Machines
             data.insert("pressure", pressureIn);
 
             // Emit safe to proceed
-            emit emit_validationSuccess(data);
+            emit emit_validationSuccess();
 
             return;
         }
@@ -374,7 +387,7 @@ namespace App { namespace Experiment { namespace Machines
         error.insert("system_pressure_max", maxPressure);
 
         // Emit not safe to proceed
-        emit emit_validationFailed(error);
+        emit emit_validationFailed();
     }
 
 }}}

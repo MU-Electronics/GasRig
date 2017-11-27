@@ -13,6 +13,9 @@
 #include "../../Hardware/Access.h"
 #include "../../Safety/Monitor.h"
 
+// Include valiator
+#include "Functions/CommandValidatorState.h"
+
 // Include possable machine states
 #include "Functions/MachineStates.h"
 
@@ -37,38 +40,6 @@ namespace App { namespace Experiment { namespace Machines
             void stopAsFailed();
 
             void buildMachine();
-
-        signals:
-            void emit_ventFinished(QVariantMap params);
-            void emit_ventFailed(QVariantMap params);
-
-            void emit_openExhuast();
-            void emit_openSlowExhuast();
-            void emit_ventOuput();
-            void emit_ventVacuumOutput();
-            void emit_ventFlowCavity();
-            void emit_ventNitrogenPipes();
-            void emit_ventMultiPipes();
-            void emit_ventFlowOnePipes();
-            void emit_ventFlowTwoPipes();
-            void emit_finished();
-
-        public slots:
-            void stageFinder();
-            void validatePressureForAtmospheric();
-
-        private:
-            // Referance to QObject
-            QObject *parent;
-
-            // Holds the application settings
-            Settings::Container m_settings;
-
-            // Holds the current stage
-            int stage = 0;
-
-            // Timers
-            // QTimer
 
             // Create the states for the machine
             QState
@@ -111,14 +82,14 @@ namespace App { namespace Experiment { namespace Machines
             // Create command validator states
             Functions::CommandValidatorState
                 // Wait for pressure
-                sml_validatePressureAfterSlowExhuast(&machine)
-            ,   sml_validatePressureAfterOutput(&machine)
-            ,   sml_validatePressureAfterVacOutput(&machine)
-            ,   sml_validatePressureAfterFlowCavity(&machine)
-            ,   sml_validatePressureAfterNitrogenPipe(&machine)
-            ,   sml_validatePressureAfterMultiPipe(&machine)
-            ,   sml_validatePressureAfterFlowOnePipe(&machine)
-            ,   sml_validatePressureAfterFlowTwoPipe(&machine)
+                sml_validatePressureAfterSlowExhuast
+            ,   sml_validatePressureAfterOutput
+            ,   sml_validatePressureAfterVacOutput
+            ,   sml_validatePressureAfterFlowCavity
+            ,   sml_validatePressureAfterNitrogenPipe
+            ,   sml_validatePressureAfterMultiPipe
+            ,   sml_validatePressureAfterFlowOnePipe
+            ,   sml_validatePressureAfterFlowTwoPipe
 
                 // Validate close valves
             ,   sml_validateCloseHighPressureInput
@@ -141,6 +112,43 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_validateOpenFastExhuastPath
             ,   sml_validateOpenVacuumIn
             ,   sml_validateOpenVacuumOut;
+
+        signals:
+            void emit_ventFinished(QVariantMap params);
+            void emit_ventFailed(QVariantMap params);
+
+            void emit_validationSuccess();
+            void emit_validationFailed();
+
+            void emit_openExhuast();
+            void emit_openSlowExhuast();
+            void emit_ventOuput();
+            void emit_ventVacuumOutput();
+            void emit_ventFlowCavity();
+            void emit_ventNitrogenPipes();
+            void emit_ventMultiPipes();
+            void emit_ventFlowOnePipes();
+            void emit_ventFlowTwoPipes();
+            void emit_finished();
+
+        public slots:
+            void stageFinder();
+            void validatePressureForAtmospheric();
+
+        private:
+            // Referance to QObject
+            QObject *parent;
+
+            // Holds the application settings
+            Settings::Container m_settings;
+
+            // Holds the current stage
+            int stage = 0;
+
+            // Timers
+            // QTimer
+
+
 
     };
 }}}
