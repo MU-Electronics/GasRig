@@ -16,6 +16,7 @@
 // Include possable machine states
 #include "Functions/MachineStates.h"
 
+
 namespace App { namespace Experiment { namespace Machines
 {
     class Vent    :   public Functions::MachineStates
@@ -41,7 +42,20 @@ namespace App { namespace Experiment { namespace Machines
             void emit_ventFinished(QVariantMap params);
             void emit_ventFailed(QVariantMap params);
 
+            void emit_openExhuast();
+            void emit_openSlowExhuast();
+            void emit_ventOuput();
+            void emit_ventVacuumOutput();
+            void emit_ventFlowCavity();
+            void emit_ventNitrogenPipes();
+            void emit_ventMultiPipes();
+            void emit_ventFlowOnePipes();
+            void emit_ventFlowTwoPipes();
+            void emit_finished();
+
         public slots:
+            void stageFinder();
+            void validatePressureForAtmospheric();
 
         private:
             // Referance to QObject
@@ -50,11 +64,83 @@ namespace App { namespace Experiment { namespace Machines
             // Holds the application settings
             Settings::Container m_settings;
 
+            // Holds the current stage
+            int stage = 0;
+
             // Timers
             // QTimer
 
-            // States
-            // QState
+            // Create the states for the machine
+            QState
+                // Stage finder
+                sml_stageFinder
+
+                // Pressure waiting
+            ,   sml_waitForPressureAfterSlowExhuast
+            ,   sml_waitForPressureAfterOutput
+            ,   sml_waitForPressureAfterVacOutput
+            ,   sml_waitForPressureAfterFlowCavity
+            ,   sml_waitForPressureAfterNitrogenPipe
+            ,   sml_waitForPressureAfterMultiPipe
+            ,   sml_waitForPressureAfterFlowOnePipe
+            ,   sml_waitForPressureAfterFlowTwoPipe
+
+                // Close valves
+            ,   sml_closeHighPressureInput
+            ,   sml_closeHighPressureNitrogen
+            ,   sml_closeFlowController
+            ,   sml_closeExhuast
+            ,   sml_closeOutput
+            ,   sml_closeSlowExhuastPath
+            ,   sml_closeFastExhuastPath
+            ,   sml_closeVacuumIn
+            ,   sml_closeVacuumOut
+
+                // Open valve related states
+            ,   sml_openHighPressureInput
+            ,   sml_openHighPressureNitrogen
+            ,   sml_openFlowController
+            ,   sml_openExhuast
+            ,   sml_openOutput
+            ,   sml_openSlowExhuastPath
+            ,   sml_openFastExhuastPath
+            ,   sml_openVacuumIn
+            ,   sml_openVacuumOut;
+
+
+            // Create command validator states
+            Functions::CommandValidatorState
+                // Wait for pressure
+                sml_validatePressureAfterSlowExhuast(&machine)
+            ,   sml_validatePressureAfterOutput(&machine)
+            ,   sml_validatePressureAfterVacOutput(&machine)
+            ,   sml_validatePressureAfterFlowCavity(&machine)
+            ,   sml_validatePressureAfterNitrogenPipe(&machine)
+            ,   sml_validatePressureAfterMultiPipe(&machine)
+            ,   sml_validatePressureAfterFlowOnePipe(&machine)
+            ,   sml_validatePressureAfterFlowTwoPipe(&machine)
+
+                // Validate close valves
+            ,   sml_validateCloseHighPressureInput
+            ,   sml_validateCloseHighPressureNitrogen
+            ,   sml_validateCloseFlowController
+            ,   sml_validateCloseExhuast
+            ,   sml_validateCloseOutput
+            ,   sml_validateCloseSlowExhuastPath
+            ,   sml_validateCloseFastExhuastPath
+            ,   sml_validateCloseVacuumIn
+            ,   sml_validateCloseVacuumOut
+
+                // Validate open valve
+            ,   sml_validateOpenHighPressureInput
+            ,   sml_validateOpenHighPressureNitrogen
+            ,   sml_validateOpenFlowController
+            ,   sml_validateOpenExhuast
+            ,   sml_validateOpenOutput
+            ,   sml_validateOpenSlowExhuastPath
+            ,   sml_validateOpenFastExhuastPath
+            ,   sml_validateOpenVacuumIn
+            ,   sml_validateOpenVacuumOut;
 
     };
 }}}

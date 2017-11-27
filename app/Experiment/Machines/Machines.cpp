@@ -329,8 +329,14 @@ namespace App { namespace Experiment { namespace Machines
      * Start a new vent state machine running
      *
      * @brief Machines::vent
-     * @param frequency
-     * @param speed
+     * @param output
+     * @param vacuumOutput
+     * @param flowCavity
+     * @param nitrogenPipes
+     * @param multiPipes
+     * @param flowOnePipes
+     * @param flowTwoPipes
+     * @return
      */
     int Machines::vent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes)
     {
