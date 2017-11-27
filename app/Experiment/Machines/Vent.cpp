@@ -311,8 +311,24 @@ namespace App { namespace Experiment { namespace Machines
                     sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationFailed, &sml_waitForPressureAfterSlowExhuast);
 
 
-        // Open the output valve and wait for pressure drop
+        // Open the output valve, wait for pressure drop and then close
         openPressureClose(sml_openOutput, sml_validateOpenOutput, sml_closeOutput, sml_validateCloseOutput, sml_waitForPressureAfterOutput, sml_validatePressureAfterOutput);
+
+        // Open the  valve, wait for pressure drop and then close
+        openPressureClose(sml_openVacuumOut, sml_validateOpenVacuumOut, sml_closeVacuumOut, sml_validateCloseVacuumOut, sml_waitForPressureAfterVacOutput, sml_validatePressureAfterVacOutput);
+
+        // Open the  valve, wait for pressure drop and then close
+        openPressureClose(sml_openFlowController, sml_validateOpenFlowController, sml_closeFlowController, sml_validateCloseFlowController, sml_waitForPressureAfterFlowCavity, sml_validatePressureAfterFlowCavity);
+
+        // Open the  valve, wait for pressure drop and then close
+        openPressureClose(sml_openHighPressureNitrogen, sml_validateOpenHighPressureNitrogen, sml_closeHighPressureNitrogen, sml_validateCloseHighPressureNitrogen, sml_waitForPressureAfterNitrogenPipe, sml_validatePressureAfterNitrogenPipe);
+
+        // Open the  valve, wait for pressure drop and then close
+        openPressureClose(sml_openHighPressureInput, sml_validateOpenHighPressureInput, sml_closeHighPressureInput, sml_validateCloseHighPressureInput, sml_waitForPressureAfterMultiPipe, sml_validatePressureAfterMultiPipe);
+
+        // Open the flow controller valve, wait for pressure drop, open intenral flow controller valve, and then close
+
+        // Open the  valve, wait for pressure drop, open intenral flow controller valve, and then close
     }
 
 
