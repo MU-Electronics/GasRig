@@ -329,12 +329,13 @@ namespace App { namespace Experiment { namespace Machines
         // Stage is 2 then we need to vent the output
         if(stage == 2)
         {
-            if(params.value("output").Bool == true)
+            stage = 3;
+            if(params.value("output").toBool() == true)
             {
                 emit emit_ventOuput();
                 return;
             }
-            stage = 3;
+
         }
 
         // Finished stage << Temp while test
@@ -362,10 +363,10 @@ namespace App { namespace Experiment { namespace Machines
         QVariantMap package = state->package;
 
         // Get the pressure
-        float pressureIn = package.value("pressure").toFloat();
+        double pressureIn = package.value("pressure").toDouble() * 1000;
 
         // Get the max pressure allowed
-        float maxPressure = 1250;
+        double maxPressure = 1250;
 
         // Check the pressure is safe to vac down
         if(pressureIn < maxPressure)
