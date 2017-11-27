@@ -47,6 +47,7 @@ namespace App { namespace Experiment { namespace Machines
                 sml_stageFinder
 
                 // Pressure waiting
+            ,   sml_waitForPressureAfterExhuast
             ,   sml_waitForPressureAfterSlowExhuast
             ,   sml_waitForPressureAfterOutput
             ,   sml_waitForPressureAfterVacOutput
@@ -60,6 +61,8 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_closeHighPressureInput
             ,   sml_closeHighPressureNitrogen
             ,   sml_closeFlowController
+            ,   sml_closeFlowController_2
+            ,   sml_closeFlowController_3
             ,   sml_closeExhuast
             ,   sml_closeOutput
             ,   sml_closeSlowExhuastPath
@@ -71,6 +74,8 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_openHighPressureInput
             ,   sml_openHighPressureNitrogen
             ,   sml_openFlowController
+            ,   sml_openFlowController_2
+            ,   sml_openFlowController_3
             ,   sml_openExhuast
             ,   sml_openOutput
             ,   sml_openSlowExhuastPath
@@ -83,6 +88,7 @@ namespace App { namespace Experiment { namespace Machines
             Functions::CommandValidatorState
                 // Wait for pressure
                 sml_validatePressureAfterSlowExhuast
+            ,   sml_validatePressureAfterExhuast
             ,   sml_validatePressureAfterOutput
             ,   sml_validatePressureAfterVacOutput
             ,   sml_validatePressureAfterFlowCavity
@@ -95,6 +101,8 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_validateCloseHighPressureInput
             ,   sml_validateCloseHighPressureNitrogen
             ,   sml_validateCloseFlowController
+            ,   sml_validateCloseFlowController_2
+            ,   sml_validateCloseFlowController_3
             ,   sml_validateCloseExhuast
             ,   sml_validateCloseOutput
             ,   sml_validateCloseSlowExhuastPath
@@ -106,6 +114,8 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_validateOpenHighPressureInput
             ,   sml_validateOpenHighPressureNitrogen
             ,   sml_validateOpenFlowController
+            ,   sml_validateOpenFlowController_2
+            ,   sml_validateOpenFlowController_3
             ,   sml_validateOpenExhuast
             ,   sml_validateOpenOutput
             ,   sml_validateOpenSlowExhuastPath
@@ -148,7 +158,13 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
             // QTimer
 
-
+            // Helpers
+            void openPressureClose( QState& open,
+                                     Functions::CommandValidatorState& openValidate,
+                                     QState& close,
+                                     Functions::CommandValidatorState& closeValidate,
+                                     QState& pressureWait,
+                                     Functions::CommandValidatorState& pressureValidate);
 
     };
 }}}
