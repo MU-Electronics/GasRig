@@ -64,11 +64,10 @@ namespace App { namespace View { namespace Managers
 
             // Request experiment methods
             void requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve);
-            void requestExhuast(int filterType, int frequency);
+            void requestVent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
             void requestPurgeSystemMethodOne(bool outputValve, int cycles, QString pressure);
             void requestPurgeSystemMethodTwo(int minutes, QString pressure);
             void requestValveStateSafe(int port, bool state);
-            void requestOutputPressure(int frequency);
             void requestVacDown(int mintues, bool turbo, int gasMode, int mode);
             void requestPulseValve(int valve, int cycles, int timeOpen, int timeClosed);
 

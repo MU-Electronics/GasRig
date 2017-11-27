@@ -29,53 +29,68 @@ FluidControls.Card
         {
             width: exhuastSystem.width - 10
             type: "Warning"
-            textContent: qsTr("This function will exhuast high pressures safely to the exhuast port. Ensure the exhuast port is conneted to the correct and safe location.")
-        }
-        Row{
-            RadioButton {
-                checked: false
-                id: exhuastSystem_valveSlow
-                text: qsTr("Slow filter")
-            }
-            RadioButton {
-                checked: false
-                id: exhuastSystem_valveFast
-                text: qsTr("Fast filter")
-            }
-            RadioButton {
-                checked: true
-                id: exhuastSystem_valveCombo
-                text: qsTr("Combination of fast + slow filter")
-            }
+            textContent: qsTr("This function will vent pressures safely to the exhuast port. Ensure the exhuast port is conneted to the correct and safe location first.")
         }
         Row
         {
             anchors.left: parent.left
             spacing: 10
             width: parent.width
-            height: 50
             Text {
-                text: qsTr("Frequency: ")
+                text: qsTr("Location to vent: ")
                 color: "#777777"
                 visible: parent.opacity
                 font.pixelSize: 16
                 verticalAlignment : Text.AlignVCenter
-                height: parent.height
+                height: 40
             }
-            TextField
-            {
-                id: exhuastSystem_frequency
-                validator: IntValidator { bottom:-1; top: 5 }
-                inputMethodHints: Qt.ImhDigitsOnly
-                height: parent.height
-                width: parent.width - 170
-                placeholderText: "2"
+            Column{
+                CheckBox {
+                    id: exhuastSystem_ventLocation_rig
+                    checked: true
+                    enabled: false
+                    text: qsTr("Inner rig and exhuast cavity")
+                }
+                CheckBox {
+                    id: exhuastSystem_ventLocation_output
+                    checked: false
+                    text: qsTr("Output")
+                }
+                CheckBox {
+                    id: exhuastSystem_ventLocation_vacuumOutput
+                    checked: false
+                    text: qsTr("Vacuum Output")
+                }
+                CheckBox {
+                    id: exhuastSystem_ventLocation_flow
+                    checked: false
+                    text: qsTr("Flow cavity")
+                }
+                CheckBox {
+                    id: exhuastSystem_ventLocation_nitrogenPipes
+                    checked: false
+                    text: qsTr("Nitrogen flex pipes")
+                }
+                CheckBox {
+                    id: exhuastSystem_ventLocation_multiPipes
+                    checked: false
+                    text: qsTr("Multi gas flex pipe")
+                }
+                CheckBox {
+                    id: exhuastSystem_ventLocation_flowOnePipes
+                    checked: false
+                    text: qsTr("Flow controller one's flex pipe")
+                }
+                CheckBox {
+                    id: exhuastSystem_ventLocation_flowTwoPipes
+                    checked: false
+                    text: qsTr("Flow controller two's flex pipe")
+                }
             }
         }
         Row{
             spacing: 20
-            opacity: (!exhuastSystem_frequency.text) ? 0 : 1;
-            height: (!exhuastSystem_frequency.text) ? 0 : 50;
+            height: 50;
             width: parent.width
             Behavior on opacity {
                 NumberAnimation {
@@ -90,19 +105,27 @@ FluidControls.Card
             }
             Button
             {
-                text: qsTr("Begin Exhuast")
+                text: qsTr("Begin Vent")
                 enabled: (exhuastSystem_confirm.checked) ? true : false;
+                visible: (MachineStatusManager.ventMachine["status"] === false) ? 1 : 0;
                 onClicked:
                 {
-                    var filterType;
-                    if(exhuastSystem_valveSlow.checked)
-                        filterType = 1;
-                    if(exhuastSystem_valveFast.checked)
-                        filterType = 2;
-                    if(exhuastSystem_valveCombo.checked)
-                        filterType = 3;
-
-                    TestingManager.requestExhuast(filterType, exhuastSystem_frequency.text);
+                    TestingManager.requestVent(exhuastSystem_ventLocation_output.checked,
+                                                  exhuastSystem_ventLocation_vacuumOutput.checked,
+                                                  exhuastSystem_ventLocation_flow.checked,
+                                                  exhuastSystem_ventLocation_nitrogenPipes.checked,
+                                                  exhuastSystem_ventLocation_multiPipes.checked,
+                                                  exhuastSystem_ventLocation_flowOnePipes.checked,
+                                                  exhuastSystem_ventLocation_flowTwoPipes.checked);
+                }
+            }
+            Button
+            {
+                text: qsTr("Stop")
+                visible: (MachineStatusManager.ventMachine["status"] === true) ? 1 : 0;
+                onClicked:
+                {
+                    TestingManager.requestVentStop();
                 }
             }
         }

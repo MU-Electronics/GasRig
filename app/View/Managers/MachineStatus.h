@@ -31,6 +31,7 @@ namespace App { namespace View { namespace Managers
         Q_PROPERTY(QVariantMap vacDownMachine READ vacDownMachine NOTIFY emit_vacDownMachineChanged)
         Q_PROPERTY(QVariantMap pulseValveMachine READ pulseValveMachine NOTIFY emit_pulseValveMachineChanged)
         Q_PROPERTY(QVariantMap pressuriseMachine READ pressuriseMachine NOTIFY emit_pressuriseMachineChanged)
+        Q_PROPERTY(QVariantMap ventMachine READ ventMachine NOTIFY emit_ventMachineChanged)
 
         public:
             MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
@@ -42,6 +43,7 @@ namespace App { namespace View { namespace Managers
             QVariantMap vacDownMachine() const { return m_vacDownMachine; }
             QVariantMap pulseValveMachine() const { return m_pulseValveMachine; }
             QVariantMap pressuriseMachine() const { return m_pressuriseMachine; }
+            QVariantMap ventMachine() const { return m_ventMachine; }
 
         signals:
             void emit_hardwareAccess(QVariantMap command);
@@ -50,8 +52,12 @@ namespace App { namespace View { namespace Managers
             void emit_vacDownMachineChanged(QVariantMap);
             void emit_pulseValveMachineChanged(QVariantMap);
             void emit_pressuriseMachineChanged(QVariantMap);
+            void emit_ventMachineChanged(QVariantMap);
 
         public slots:
+            void ventStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
+            void ventStopped();
+
             void vacDownStarted(int mintues, bool turbo, int gasMode, int mode);
             void vacDownStopped();
 
@@ -79,6 +85,9 @@ namespace App { namespace View { namespace Managers
 
             // Holds the pressurise machine statuses
             QVariantMap m_pressuriseMachine;
+
+            // Holds the vent machine statuses
+            QVariantMap m_ventMachine;
 
     };
 }}}

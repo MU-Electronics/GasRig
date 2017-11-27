@@ -18,7 +18,12 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_readVacStationTemperatures(*new ReadVacStationTemperatures(parent, settings, hardware, safety))
         ,   m_pulseValve(*new PulseValve(parent, settings, hardware, safety))
         ,   m_pressurise(*new Pressurise(parent, settings, hardware, safety))
+        ,   m_vent(*new Vent(parent, settings, hardware, safety))
     {
+        // Connect the finished signals for the vent
+        connect(&m_vent, &Vent::emit_ventFinished, this, &Machines::ventFinished);
+        connect(&m_vent, &Vent::emit_ventFailed, this, &Machines::ventFailed);
+
         // Connect the finished signals for the machine vac down
         connect(&m_vacDown, &VacDown::emit_vacDownFinished, this, &Machines::vacDownFinished);
         connect(&m_vacDown, &VacDown::emit_vacDownFailed, this, &Machines::vacDownFailed);
@@ -47,11 +52,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Connect the finished signals for the machine purge system
 
-        // Connect the finished signals for the machine exhuast system
-
         // Connect the finished signals for the machine set flow rate
-
-        // Connect the finished signals for the machine output pressure
 
         // Connect the finished signals for the machine set pressure emit_pressuriseStopped
         connect(&m_pressurise, &Pressurise::emit_pressuriseFinished, this, &Machines::pressuriseFinished);
@@ -325,32 +326,58 @@ namespace App { namespace Experiment { namespace Machines
 
 
     /**
-     * Start a new exhuast state machine running
+     * Start a new vent state machine running
      *
-     * @brief Machines::exhuast
+     * @brief Machines::vent
      * @param frequency
      * @param speed
      */
-    int Machines::exhuast(double pressure, int frequency, int speed)
+    int Machines::vent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
-        // @todo Load machine here
+        // Set the params
+        m_vent.setParams(output, vacuumOutput, flowCavity, nitrogenPipes, multiPipes, flowOnePipes, flowTwoPipes);
+
+        // Build the machine
+        m_vent.buildMachine();
+
+        // Start the machine
+        m_vent.start();
+
+        // Emit machine started
+        emit emit_ventMachineStarted(output, vacuumOutput, flowCavity, nitrogenPipes, multiPipes, flowOnePipes, flowTwoPipes);
 
         // Return success
         return 1;
     }
 
     /**
-     * Stops a running instance of stop exhaust state machine
+     * Stops a running instance of vent state machine
      *
-     * @brief Machines::stopExhuast
+     * @brief Machines::stopVent
      */
-    void Machines::stopExhuast()
+    void Machines::stopVent()
     {
+        // Stop the machine
+        m_vent.stop();
 
+        // Emit machine stopped
+        emit emit_ventMachineStopped();
+    }
+
+    void Machines::ventFinished(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_ventMachineStopped();
+    }
+
+    void Machines::ventFailed(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_ventMachineStopped();
     }
 
 

@@ -44,6 +44,16 @@ namespace App { namespace View { namespace Managers
         m_pressuriseMachine.insert("initVacDown", -1);
         m_pressuriseMachine.insert("stepSize", -1);
         m_pressuriseMachine.insert("inputValve", -1);
+
+        // Default valves for vent state machine
+        m_ventMachine.insert("status", false);
+        m_ventMachine.insert("output", false);
+        m_ventMachine.insert("vacuumOutput", false);
+        m_ventMachine.insert("flowCavity", false);
+        m_ventMachine.insert("nitrogenPipes", false);
+        m_ventMachine.insert("multiPipes", false);
+        m_ventMachine.insert("flowOnePipes", false);
+        m_ventMachine.insert("flowTwoPipes", false);
     }
 
 
@@ -61,6 +71,10 @@ namespace App { namespace View { namespace Managers
         connect(this, &MachineStatus::emit_hardwareAccess, &hardware, &Hardware::Access::hardwareAccess);
 
         // Connect signals to and from experiment engine
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_ventMachineStarted, this, &MachineStatus::ventStarted);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_ventMachineStopped, this, &MachineStatus::ventStopped);
+
+        // Connect signals to and from experiment engine
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_vacDownMachineStarted, this, &MachineStatus::vacDownStarted);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_vacDownMachineStopped, this, &MachineStatus::vacDownStopped);
 
@@ -76,8 +90,44 @@ namespace App { namespace View { namespace Managers
 
 
 
+    void MachineStatus::ventStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes)
+    {
+        // Update array
+        m_ventMachine.insert("status", true);
+        m_ventMachine.insert("output", output);
+        m_ventMachine.insert("vacuumOutput", vacuumOutput);
+        m_ventMachine.insert("flowCavity", flowCavity);
+        m_ventMachine.insert("nitrogenPipes", nitrogenPipes);
+        m_ventMachine.insert("multiPipes", multiPipes);
+        m_ventMachine.insert("flowOnePipes", flowOnePipes);
+        m_ventMachine.insert("flowTwoPipes", flowTwoPipes);
+
+        // Tell everyone
+        emit emit_ventMachineChanged(m_ventMachine);
+    }
+
+    void MachineStatus::ventStopped()
+    {
+        // Update array
+        m_ventMachine.insert("status", false);
+
+        // Tell everyone
+        emit emit_ventMachineChanged(m_ventMachine);
+    }
 
 
+
+
+
+    /**
+     * Triggered when pressurise state machine is started
+     *
+     * @brief MachineStatus::pressuriseStarted
+     * @param pressure
+     * @param initVacDown
+     * @param stepSize
+     * @param inputValve
+     */
     void MachineStatus::pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve)
     {
         m_pressuriseMachine.insert("status", true);
@@ -101,6 +151,15 @@ namespace App { namespace View { namespace Managers
 
 
 
+    /**
+     * Triggered when pulse valve state machine is started
+     *
+     * @brief MachineStatus::pulseValveStarted
+     * @param valve
+     * @param cycles
+     * @param timeOpen
+     * @param timeClosed
+     */
     void MachineStatus::pulseValveStarted(int valve, int cycles, int timeOpen, int timeClosed)
     {
         m_pulseValveMachine.insert("status", true);

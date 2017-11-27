@@ -733,31 +733,9 @@ namespace App { namespace View { namespace Managers
 
 
 
-    void Testing::requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve)
-    {
-        qDebug() << "Running high pressure";
 
-        m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve);
-    }
 
-    void Testing::requestHighPressureStop()
-    {
-        m_experimentEngine.machines().stopSetPressure();
-    }
 
-    void Testing::requestExhuast(int filterType, int frequency)
-    {
-        qDebug() << "Running exhuast";
-
-        m_experimentEngine.machines().exhuast(1, frequency, filterType);
-    }
-
-    void Testing::requestOutputPressure(int frequency)
-    {
-        qDebug() << "Running output pressure";
-
-        m_experimentEngine.machines().outputPressure(frequency);
-    }
 
     void Testing::requestPurgeSystemMethodOne(bool outputValve, int cycles, QString pressure)
     {
@@ -773,6 +751,52 @@ namespace App { namespace View { namespace Managers
         m_experimentEngine.machines().purgeSystemMethodTwo(minutes, pressure);
     }
 
+
+
+
+
+    void Testing::requestVent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes)
+    {
+        qDebug() << "Running vent";
+
+        m_experimentEngine.machines().vent(output, vacuumOutput, flowCavity, nitrogenPipes, multiPipes, flowOnePipes, flowTwoPipes);
+    }
+
+
+
+
+
+    /**
+     * Starts the pressurise state machine
+     *
+     * @brief Testing::requestHighPressure
+     * @param pressure
+     * @param initVacDown
+     * @param stepSize
+     * @param inputValve
+     */
+    void Testing::requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve)
+    {
+        qDebug() << "Running high pressure";
+
+        m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve);
+    }
+
+    void Testing::requestHighPressureStop()
+    {
+        m_experimentEngine.machines().stopSetPressure();
+    }
+
+
+
+
+    /**
+     * Starts the valve safe state machine
+     *
+     * @brief Testing::requestValveStateSafe
+     * @param port
+     * @param state
+     */
     void Testing::requestValveStateSafe(int port, bool state)
     {
         if(state)
@@ -785,6 +809,17 @@ namespace App { namespace View { namespace Managers
         }
     }
 
+
+
+    /**
+     * Starts the vac down state machine
+     *
+     * @brief Testing::requestVacDown
+     * @param mintues
+     * @param turbo
+     * @param gasMode
+     * @param mode
+     */
     void Testing::requestVacDown(int mintues, bool turbo,int gasMode, int mode)
     {
         m_experimentEngine.machines().vacDown(mintues, turbo, gasMode, mode);
@@ -795,6 +830,17 @@ namespace App { namespace View { namespace Managers
         m_experimentEngine.machines().stopVacDown();
     }
 
+
+
+    /**
+     * Starts the pulse valve state machine
+     *
+     * @brief Testing::requestPulseValve
+     * @param valve
+     * @param cycles
+     * @param timeOpen
+     * @param timeClosed
+     */
     void Testing::requestPulseValve(int valve, int cycles, int timeOpen, int timeClosed)
     {
         m_experimentEngine.machines().pulseValve(valve, cycles, timeOpen, timeClosed);

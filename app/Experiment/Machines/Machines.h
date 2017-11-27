@@ -15,6 +15,7 @@
 #include "ReadVacStationTemperatures.h"
 #include "PulseValve.h"
 #include "Pressurise.h"
+#include "Vent.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -38,8 +39,8 @@ namespace App { namespace Experiment { namespace Machines
             int purgeSystemMethodTwo(int minutes, QString pressure);
             void stopPurgeSystem();
 
-            int exhuast(double pressure, int frequency, int speed);
-            void stopExhuast();
+            int vent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
+            void stopVent();
 
             int pulseValve(int valve, int cycles, int timeOpen, int timeClosed);
             void stopPulseValve();
@@ -74,6 +75,9 @@ namespace App { namespace Experiment { namespace Machines
             void emit_pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve);
             void emit_pressuriseStopped();
 
+            void emit_ventMachineStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
+            void emit_ventMachineStopped();
+
         public slots:
             void vacDownFinished(QVariantMap params);
             void vacDownFailed(QVariantMap params);
@@ -90,6 +94,9 @@ namespace App { namespace Experiment { namespace Machines
             void pressuriseFinished(QVariantMap params);
             void pressuriseFailed(QVariantMap params);
 
+            void ventFinished(QVariantMap params);
+            void ventFailed(QVariantMap params);
+
         private:
             // Are the sensors being monitored?
             bool sensorMonitors = false;
@@ -105,6 +112,7 @@ namespace App { namespace Experiment { namespace Machines
             ReadVacStationTemperatures& m_readVacStationTemperatures;
             PulseValve& m_pulseValve;
             Pressurise& m_pressurise;
+            Vent& m_vent;
 
             // Sensor reading thread
             QThread thread_sensorReadings;
