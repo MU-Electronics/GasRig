@@ -20,6 +20,9 @@ FluidControls.Card
     height: purgingColumConatiner.height + 30
     padding: 5
 
+    property var elementHight: 50
+    property var labelWidth: 300
+
     Column
     {
         width: parent.width
@@ -47,43 +50,38 @@ FluidControls.Card
                 NumberAnimation { properties: "x,y"; duration: 400 }
             }
 
-
-            RadioButton {
-                checked: false
-                id: purgeMethodOne
-                text: qsTr("1: Pressurise with nitrogren, then exhuast, then vac down and repeat")
-                ButtonGroup.group: purgingMethodGroup
-                onClicked: {
-                    purgeMethod_confirm.checked = false
-                }
-            }
             Column
             {
                 spacing: 10
-                opacity: (!purgeMethodOne.checked) ? 0 : 1;
                 width: parent.width
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: 1000
-                        easing.type: Easing.InOutQuad
+
+
+
+                Row
+                {
+                    spacing: 10
+                    width: parent.width
+                    height: purgeSystemFunction.elementHight
+                    Text {
+                        text: qsTr("Open output valve during purge: ")
+                        color: "#777777"
+                        visible: parent.opacity
+                        font.pixelSize: 16
+                        verticalAlignment : Text.AlignVCenter
+                        height: parent.height
+                        width: purgeSystemFunction.labelWidth
                     }
-                }
-                CheckBox {
-                    id:purgeMethodOne_outputValve
-                    height: (!purgeMethodOne.checked) ? 0 : 30;
-                    checked: false
-                    text: qsTr("Should the output valve be open during the purge?")
-                    anchors.leftMargin: 100
-                    anchors.left: parent.left
+                    CheckBox {
+                        id:purgeMethodOne_outputValve
+                        checked: false
+                    }
                 }
 
                 Row
                 {
-                    anchors.leftMargin: 100
-                    anchors.left: parent.left
-                    height: (!purgeMethodOne.checked) ? 0 : 50;
                     spacing: 10
-                    width: parent.width - 110
+                    width: parent.width
+                    height: purgeSystemFunction.elementHight
                     Text {
                         text: qsTr("Number of cycles to run before finishing: ")
                         color: "#777777"
@@ -91,6 +89,7 @@ FluidControls.Card
                         font.pixelSize: 16
                         verticalAlignment : Text.AlignVCenter
                         height: parent.height
+                        width: purgeSystemFunction.labelWidth
                     }
                     TextField
                     {
@@ -98,17 +97,15 @@ FluidControls.Card
                         validator: IntValidator { bottom:0; top: 2000 }
                         inputMethodHints: Qt.ImhDigitsOnly
                         height: parent.height
-                        width: parent.width - 315
+                        width: parent.width - purgeSystemFunction.labelWidth - 20
                     }
                 }
 
                 Row
                 {
-                    anchors.leftMargin: 100
-                    anchors.left: parent.left
-                    height: (!purgeMethodOne.checked) ? 0 : 50;
                     spacing: 10
-                    width: parent.width - 110
+                    width: parent.width
+                    height: purgeSystemFunction.elementHight
                     Text {
                         text: qsTr("Maximum nitrogen pressure in bar: ")
                         color: "#777777"
@@ -116,107 +113,41 @@ FluidControls.Card
                         font.pixelSize: 16
                         verticalAlignment : Text.AlignVCenter
                         height: parent.height
+                        width: purgeSystemFunction.labelWidth
                     }
                     TextField
                     {
                         id:purgeMethodOne_nitrogenPressure
-                        validator: IntValidator { bottom:0; top: 90}
+                        validator: IntValidator { bottom:200; top: 10000}
                         inputMethodHints: Qt.ImhDigitsOnly
                         height: parent.height
-                        width: parent.width - 270
+                        width: parent.width - purgeSystemFunction.labelWidth - 20
+                        text: "2000"
                     }
-                }
-            }
-
-
-
-            RadioButton {
-                id: purgeMethodTwo
-                checked: false
-                text: qsTr("2: Continuous nitrogen flow")
-                ButtonGroup.group:purgingMethodGroup
-                onClicked: {
-                    purgeMethod_confirm.checked = false
-                }
-            }
-            Column
-            {
-                spacing: 10
-                opacity: (!purgeMethodTwo.checked) ? 0 : 1;
-                width: parent.width
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: 1000
-                        easing.type: Easing.InOutQuad
-                    }
-                }
-                AlertBox
-                {
-                    id: purgeMethodTwo_warningOne
-                    width: purgeSystemFunction.width - 110
-                    height: (!purgeMethodTwo.checked) ? 0 : 30;
-                    type: "Danger"
-                    textContent: qsTr("Output valve and exhuast valve will be open!")
-                    anchors.leftMargin: 100
-                    anchors.left: parent.left
-                }
-                AlertBox
-                {
-                    id: purgeMethodTwo_warningTwo
-                    width: purgeSystemFunction.width - 110
-                    height: (!purgeMethodTwo.checked) ? 0 : 30;
-                    type: "Warning"
-                    textContent: qsTr("Remember to set the pressure on the pressure regulator")
-                    anchors.leftMargin: 100
-                    anchors.left: parent.left
                 }
 
                 Row
                 {
-                    anchors.leftMargin: 100
-                    anchors.left: parent.left
-                    height: (!purgeMethodTwo.checked) ? 0 : 50;
                     spacing: 10
-                    width: parent.width - 110
+                    width: parent.width
+                    height: purgeSystemFunction.elementHight
                     Text {
-                        text: qsTr("How long to purge for in minutes: ")
+                        text: qsTr("Vac below: ")
                         color: "#777777"
                         visible: parent.opacity
                         font.pixelSize: 16
                         verticalAlignment : Text.AlignVCenter
                         height: parent.height
+                        width: purgeSystemFunction.labelWidth
                     }
                     TextField
                     {
-                        id:purgeMethodTwo_time
-                        validator: IntValidator { bottom:0; top: 200}
+                        id:purgeMethodOne_vacBelow
+                        validator: IntValidator { bottom:5; top: 200}
                         inputMethodHints: Qt.ImhDigitsOnly
                         height: parent.height
-                        width: parent.width - 270
-                    }
-                }
-                Row
-                {
-                    anchors.leftMargin: 100
-                    anchors.left: parent.left
-                    height: (!purgeMethodTwo.checked) ? 0 : 50;
-                    spacing: 10
-                    width: parent.width - 110
-                    Text {
-                        text: qsTr("Maximum nitrogen pressure in bar: ")
-                        color: "#777777"
-                        visible: parent.opacity
-                        font.pixelSize: 16
-                        verticalAlignment : Text.AlignVCenter
-                        height: parent.height
-                    }
-                    TextField
-                    {
-                        id:purgeMethodTwo_nitrogenPressure
-                        validator: IntValidator { bottom:0; top: 90}
-                        inputMethodHints: Qt.ImhDigitsOnly
-                        height: parent.height
-                        width: parent.width - 270
+                        width: parent.width - purgeSystemFunction.labelWidth - 20
+                        text: "50"
                     }
                 }
             }
@@ -227,11 +158,7 @@ FluidControls.Card
             {
                 id: purgeSubmittion
                 property int methodSelected: {
-                    if(purgeMethodTwo.checked && purgeMethodTwo_time.text && purgeMethodTwo_nitrogenPressure.text)
-                    {
-                        return 2;
-                    }
-                    if(purgeMethodOne.checked && purgeMethodOne_numberCycles.text && purgeMethodOne_nitrogenPressure.text)
+                    if(purgeMethodOne_numberCycles.text && purgeMethodOne_nitrogenPressure.text && purgeMethodOne_vacBelow.text)
                     {
                         return 1;
                     }
@@ -262,11 +189,7 @@ FluidControls.Card
                     {
                         if(purgeSubmittion.methodSelected == 1)
                         {
-                            TestingManager.requestPurgeSystemMethodOne(purgeMethodOne_outputValve.text, purgeMethodOne_numberCycles.text, purgeMethodOne_nitrogenPressure.text);
-                        }
-                        else if (purgeSubmittion.methodSelected == 2)
-                        {
-                            TestingManager.requestPurgeSystemMethodTwo(purgeMethodTwo_time.text, purgeMethodTwo_nitrogenPressure.text);
+                            TestingManager.requestPurge(purgeMethodOne_outputValve.checked, purgeMethodOne_numberCycles.text, purgeMethodOne_nitrogenPressure.text, purgeMethodOne_vacBelow.text);
                         }
                     }
                 }

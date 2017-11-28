@@ -16,6 +16,7 @@
 #include "PulseValve.h"
 #include "Pressurise.h"
 #include "Vent.h"
+#include "Purge.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -35,9 +36,8 @@ namespace App { namespace Experiment { namespace Machines
             int sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter, int turboSpeedTimeInter, int vacStationTemperTimeInter, int flowControlTempTimeInter);
             void stopSensorReadings();
 
-            int purgeSystemMethodOne(bool outputValve, int cycles, QString pressure);
-            int purgeSystemMethodTwo(int minutes, QString pressure);
-            void stopPurgeSystem();
+            int purge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
+            void stopPurge();
 
             int vent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
             void stopVent();
@@ -47,9 +47,6 @@ namespace App { namespace Experiment { namespace Machines
 
             int setPressure(double pressure, bool initVacDown, int stepSize, bool inputValve);
             void stopSetPressure();
-
-            int outputPressure(int frequency);
-            void stopOutputPressure();
 
             int valveOpen(int id);
             int valveClose(int id);
@@ -70,13 +67,14 @@ namespace App { namespace Experiment { namespace Machines
             void emit_sensorReadingsMachineStopped();
             void emit_sensorsNotBeingMonitored();
 
-            void emit_purgeSystemMachineState(bool state);
-
             void emit_pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve);
             void emit_pressuriseStopped();
 
             void emit_ventMachineStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
             void emit_ventMachineStopped();
+
+            void emit_purgeStarted(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
+            void emit_purgeMachineStopped();
 
         public slots:
             void vacDownFinished(QVariantMap params);
@@ -97,6 +95,9 @@ namespace App { namespace Experiment { namespace Machines
             void ventFinished(QVariantMap params);
             void ventFailed(QVariantMap params);
 
+            void purgeFinished(QVariantMap params);
+            void purgeFailed(QVariantMap params);
+
         private:
             // Are the sensors being monitored?
             bool sensorMonitors = false;
@@ -113,6 +114,7 @@ namespace App { namespace Experiment { namespace Machines
             PulseValve& m_pulseValve;
             Pressurise& m_pressurise;
             Vent& m_vent;
+            Purge& m_purge;
 
             // Sensor reading thread
             QThread thread_sensorReadings;

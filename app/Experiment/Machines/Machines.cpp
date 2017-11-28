@@ -19,7 +19,12 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_pulseValve(*new PulseValve(parent, settings, hardware, safety))
         ,   m_pressurise(*new Pressurise(parent, settings, hardware, safety))
         ,   m_vent(*new Vent(parent, settings, hardware, safety))
+        ,   m_purge(*new Purge(parent, settings, hardware, safety))
     {
+        // Connect the finished signals for the pruge
+        connect(&m_purge, &Purge::emit_purgeFinished, this, &Machines::purgeFinished);
+        connect(&m_purge, &Purge::emit_purgeFailed, this, &Machines::purgeFailed);
+
         // Connect the finished signals for the vent
         connect(&m_vent, &Vent::emit_ventFinished, this, &Machines::ventFinished);
         connect(&m_vent, &Vent::emit_ventFailed, this, &Machines::ventFailed);
@@ -50,13 +55,12 @@ namespace App { namespace Experiment { namespace Machines
         connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_readVacStationTemperaturesStopped, this, &Machines::sensorReadingsFinished);
         connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_readVacStationTemperaturesFailed, this, &Machines::sensorReadingsFailed);
 
-        // Connect the finished signals for the machine purge system
-
-        // Connect the finished signals for the machine set flow rate
-
         // Connect the finished signals for the machine set pressure emit_pressuriseStopped
         connect(&m_pressurise, &Pressurise::emit_pressuriseFinished, this, &Machines::pressuriseFinished);
         connect(&m_pressurise, &Pressurise::emit_pressuriseFailed, this, &Machines::pressuriseFailed);
+
+        // Connect the finished signals for the machine set flow rate
+
     }
 
 
@@ -269,53 +273,71 @@ namespace App { namespace Experiment { namespace Machines
 
 
     /**
-     * Start a new purge system state machine running using method one
+     * Starts the purge state machine
      *
-     * @brief Machines::purgeSystem
-     * @param method
+     * @brief Machines::purge
      * @param outputValve
+     * @param numberCycles
+     * @param nitrogenPressure
+     * @param vacTo
+     * @return
      */
-    int Machines::purgeSystemMethodOne(bool outputValve, int cycles, QString pressure)
+    int Machines::purge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
-        // @todo Load machine here
+        // Set the params
+        m_purge.setParams(outputValve, numberCycles, nitrogenPressure, vacTo);
+
+        // Build the machine
+        m_purge.buildMachine();
+
+        // Start the machine
+        m_purge.start();
+
+        // Tell everyone
+        emit emit_purgeStarted(outputValve, numberCycles, nitrogenPressure, vacTo);
 
         // Return success
         return 1;
     }
 
-
     /**
-     * Start a new purge system state machine running with method two
+     * Stops a running instance of purge state machine
      *
-     * @brief Machines::purgeSystem
-     * @param method
-     * @param outputValve
+     * @brief Machines::stopPurge
      */
-    int Machines::purgeSystemMethodTwo(int minutes, QString pressure)
+    void Machines::stopPurge()
     {
-        // This state machine requires to sensors to be monitored
-        if(!sensorMonitors)
-            return machineFailedToStart(-1);
+        // Stop the machine
+        m_purge.stop();
 
-        // @todo Load machine here
-
-        // Return success
-        return 1;
+        // Emit machine stopped
+        emit emit_vacDownMachineStopped();
     }
 
+    /**
+     * This method is trigged if the state machine finished
+     *
+     * @brief Machine::purgeFinished
+     */
+    void Machines::purgeFinished(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_purgeMachineStopped();
+    }
 
     /**
-     * Stops a running instance of purge system state machine
+     * This method is trigged if the state machine failed
      *
-     * @brief Machines::stopPurgeSystem
+     * @brief Machine::purgeFailed
      */
-    void Machines::stopPurgeSystem()
+    void Machines::purgeFailed(QVariantMap params)
     {
-
+        // Emit machine stopped
+        emit emit_purgeMachineStopped();
     }
 
 
@@ -525,37 +547,6 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::pressuriseFailed(QVariantMap params)
     {
         emit emit_pressuriseStopped();
-    }
-
-
-
-
-    /**
-     * Start a new output pressure state machine running
-     *
-     * @brief Machines::outputPressure
-     * @param frequency
-     */
-    int Machines::outputPressure(int frequency)
-    {
-        // This state machine requires to sensors to be monitored
-        if(!sensorMonitors)
-            return machineFailedToStart(-1);
-
-        // @todo Load machine here
-
-        // Return success
-        return 1;
-    }
-
-    /**
-     * Stops a running instance of  state machine
-     *
-     * @brief Machines::stopOutputPressure
-     */
-    void Machines::stopOutputPressure()
-    {
-
     }
 
 

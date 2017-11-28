@@ -737,18 +737,16 @@ namespace App { namespace View { namespace Managers
 
 
 
-    void Testing::requestPurgeSystemMethodOne(bool outputValve, int cycles, QString pressure)
+    void Testing::requestPurge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo)
     {
-        qDebug() << "Running purging with method one";
+        qDebug() << "Running purge";
 
-        m_experimentEngine.machines().purgeSystemMethodOne(outputValve, cycles, pressure);
+        m_experimentEngine.machines().purge(outputValve, numberCycles, nitrogenPressure, vacTo);
     }
 
-    void Testing::requestPurgeSystemMethodTwo(int minutes, QString pressure)
+    void Testing::requestPurgeStop()
     {
-        qDebug() << "Running purging with method two";
-
-        m_experimentEngine.machines().purgeSystemMethodTwo(minutes, pressure);
+        m_experimentEngine.machines().stopPurge();
     }
 
 
