@@ -523,7 +523,7 @@ namespace App { namespace Experiment { namespace Machines
                 // Wait for pressure reading?
                 pressureWait.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &pressureValidate);
                     // Are we at atmopheric
-                    pressureValidate.addTransition(this, &Vent::emit_validationFailed, &sml_waitForPressureAfterOutput);
+                    pressureValidate.addTransition(this, &Vent::emit_validationFailed, &pressureWait);
                     pressureValidate.addTransition(this, &Vent::emit_validationSuccess, &close);
                         // Close valve
                         close.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &closeValidate);
