@@ -47,7 +47,6 @@ namespace App { namespace Experiment { namespace Machines
                 sml_stageFinder
 
                 // Pressure waiting
-            ,   sml_waitForPressureAfterExhuast
             ,   sml_waitForPressureAfterSlowExhuast
             ,   sml_waitForPressureAfterOutput
             ,   sml_waitForPressureAfterVacOutput
@@ -96,7 +95,6 @@ namespace App { namespace Experiment { namespace Machines
             Functions::CommandValidatorState
                 // Wait for pressure
                 sml_validatePressureAfterSlowExhuast
-            ,   sml_validatePressureAfterExhuast
             ,   sml_validatePressureAfterOutput
             ,   sml_validatePressureAfterVacOutput
             ,   sml_validatePressureAfterFlowCavity
