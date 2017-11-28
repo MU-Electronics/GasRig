@@ -1209,7 +1209,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Account for larger pressure changes
-        if(currentPressure > (pressureAverage * 2))
+        /*if(currentPressure > (pressureAverage * 2))
         {
             // Reset pressure cache
             previousPressures.pop_front();
@@ -1217,11 +1217,12 @@ namespace App { namespace Experiment { namespace Machines
 
             // Reset valve timing
             return 15;
-        }
+        }*/
 
 
         // Find pressure difference for most recent pressure change
         double lastPressureChange = abs(previousPressures.at(previousPressures.size() - 1) - currentPressure);
+        qDebug() << "Tunning valve, average pressure change: " << pressureChangeAverage << " target step size: " << desiredStepSize << " Last pressure change: " << lastPressureChange;
 
         // If its 30% of the desired step size then do not tune valve speed
         if( lastPressureChange < (desiredStepSize + (desiredStepSize * 0.3)) && lastPressureChange > (desiredStepSize - (desiredStepSize * 0.3)) )
@@ -1234,7 +1235,6 @@ namespace App { namespace Experiment { namespace Machines
         }
 
 
-        qDebug() << "Tunning valve, average pressure change: " << pressureChangeAverage << " target step size: " << desiredStepSize << " Last pressure change: " << lastPressureChange;
 
 
         // Should the valve speed be incremented by a corse value?
