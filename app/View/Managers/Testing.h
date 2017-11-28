@@ -75,6 +75,7 @@ namespace App { namespace View { namespace Managers
             void requestVacDownStop();
             void requestPulseValveStop();
             void requestHighPressureStop();
+            void requestVentStop();
 
 
 

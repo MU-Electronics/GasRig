@@ -29,9 +29,13 @@ namespace App { namespace Hardware
 
 
     /**
-     *
+     * Sets an override on the flow controllers internal valve
      *
      * @brief CommandConstructor::setFlowControllerValveOverride
+     * @param controller Program referance to flow controller
+     * @param state 0 = override off (default)
+     *              1 = override open
+     *              2 = override closed
      */
     QVariantMap CommandConstructor::setFlowControllerValveOverride(QString controller, int state)
     {
@@ -50,7 +54,7 @@ namespace App { namespace Hardware
 
 
     /**
-     *
+     * Sets a flow rate for the flow controller
      *
      * @brief CommandConstructor::setFlowControllerFlowRate
      */

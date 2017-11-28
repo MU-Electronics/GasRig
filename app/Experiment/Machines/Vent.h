@@ -57,6 +57,14 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_waitForPressureAfterFlowOnePipe
             ,   sml_waitForPressureAfterFlowTwoPipe
 
+                // Control flow controller override valves
+            ,   sml_flowControllerOneValveOverrideOpen
+            ,   sml_flowControllerTwoValveOverrideOpen
+            ,   sml_flowControllerOneValveOverrideOff
+            ,   sml_flowControllerTwoValveOverrideOff
+            ,   sml_flowControllerOneValveOverrideClose
+            ,   sml_flowControllerTwoValveOverrideClose
+
                 // Close valves
             ,   sml_closeHighPressureInput
             ,   sml_closeHighPressureNitrogen
@@ -96,6 +104,14 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_validatePressureAfterMultiPipe
             ,   sml_validatePressureAfterFlowOnePipe
             ,   sml_validatePressureAfterFlowTwoPipe
+
+                // Control flow controller override valves
+            ,   sml_validateFlowControllerOneValveOverrideOpen
+            ,   sml_validateFlowControllerTwoValveOverrideOpen
+            ,   sml_validateFlowControllerOneValveOverrideClose
+            ,   sml_validateFlowControllerTwoValveOverrideClose
+            ,   sml_validateFlowControllerOneValveOverrideOff
+            ,   sml_validateFlowControllerTwoValveOverrideOff
 
                 // Validate close valves
             ,   sml_validateCloseHighPressureInput
@@ -160,11 +176,13 @@ namespace App { namespace Experiment { namespace Machines
 
             // Helpers
             void openPressureClose( QState& open,
-                                     Functions::CommandValidatorState& openValidate,
-                                     QState& close,
-                                     Functions::CommandValidatorState& closeValidate,
-                                     QState& pressureWait,
-                                     Functions::CommandValidatorState& pressureValidate);
+                                    Functions::CommandValidatorState& openValidate,
+                                    QState& close,
+                                    Functions::CommandValidatorState& closeValidate,
+                                    QState& pressureWait,
+                                    Functions::CommandValidatorState& pressureValidate,
+                                    QState& finished,
+                                    QState& failed);
 
     };
 }}}

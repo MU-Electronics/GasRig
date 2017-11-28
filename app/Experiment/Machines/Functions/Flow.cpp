@@ -62,6 +62,179 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     }
 
 
+
+
+    void Flow::flowControllerOneValveOverrideOpen()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerOne", 1));
+    }
+
+
+    void Flow::validateFlowControllerOneValveOverrideOpen()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Check the returned valve override state
+        if(package.value("override").toInt() == 1 && package.value("controller").toString() == "FlowControllerOne")
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+        }
+
+        QVariantMap error;
+        emit emit_validationFailed(error);
+    }
+
+
+
+
+    void Flow::flowControllerTwoValveOverrideOpen()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerTwo", 1));
+    }
+
+    void Flow::validateFlowControllerTwoValveOverrideOpen()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Check the returned valve override state
+        if(package.value("override").toInt() == 1 && package.value("controller").toString() == "FlowControllerTwo")
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+        }
+
+        QVariantMap error;
+        emit emit_validationFailed(error);
+    }
+
+
+
+
+    void Flow::flowControllerOneValveOverrideClose()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerOne", 2));
+    }
+
+    void Flow::validateFlowControllerOneValveOverrideClose()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Check the returned valve override state
+        if(package.value("override").toInt() == 2 && package.value("controller").toString() == "FlowControllerOne")
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+        }
+
+        QVariantMap error;
+        emit emit_validationFailed(error);
+    }
+
+
+
+
+    void Flow::flowControllerTwoValveOverrideClose()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerTwo", 2));
+    }
+
+    void Flow::validateFlowControllerTwoValveOverrideClose()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Check the returned valve override state
+        if(package.value("override").toInt() == 2 && package.value("controller").toString() == "FlowControllerTwo")
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+        }
+
+        QVariantMap error;
+        emit emit_validationFailed(error);
+    }
+
+
+
+
+    void Flow::flowControllerOneValveOverrideOff()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerOne", 0));
+    }
+
+    void Flow::validateFlowControllerOneValveOverrideOff()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Check the returned valve override state
+        if(package.value("override").toInt() == 0 && package.value("controller").toString() == "FlowControllerOne")
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+        }
+
+        QVariantMap error;
+        emit emit_validationFailed(error);
+    }
+
+
+
+
+
+    void Flow::flowControllerTwoValveOverrideOff()
+    {
+        // Emit siganl to HAL
+        emit hardwareRequest(m_commandConstructor.setFlowControllerValveOverride("FlowControllerTwo", 0));
+    }
+
+    void Flow::validateFlowControllerTwoValveOverrideOff()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Check the returned valve override state
+        if(package.value("override").toInt() == 0 && package.value("controller").toString() == "FlowControllerTwo")
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+        }
+
+        QVariantMap error;
+        emit emit_validationFailed(error);
+    }
+
+
+
+
+
     void Flow::flowControllerOneTemperature()
     {
         // Emit siganl to HAL

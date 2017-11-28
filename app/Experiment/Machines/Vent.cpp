@@ -24,6 +24,22 @@ namespace App { namespace Experiment { namespace Machines
             // Stage finder
         ,   sml_stageFinder(&machine)
 
+
+            // Control flow controller override valves
+        ,   sml_flowControllerOneValveOverrideOpen(&machine)
+        ,   sml_flowControllerTwoValveOverrideOpen(&machine)
+        ,   sml_flowControllerOneValveOverrideOff(&machine)
+        ,   sml_flowControllerTwoValveOverrideOff(&machine)
+        ,   sml_flowControllerOneValveOverrideClose(&machine)
+        ,   sml_flowControllerTwoValveOverrideClose(&machine)
+        ,   sml_validateFlowControllerOneValveOverrideOpen(&machine)
+        ,   sml_validateFlowControllerTwoValveOverrideOpen(&machine)
+        ,   sml_validateFlowControllerOneValveOverrideClose(&machine)
+        ,   sml_validateFlowControllerTwoValveOverrideClose(&machine)
+        ,   sml_validateFlowControllerOneValveOverrideOff(&machine)
+        ,   sml_validateFlowControllerTwoValveOverrideOff(&machine)
+
+
             // Wait for pressure reading
         ,   sml_waitForPressureAfterSlowExhuast(&machine)
         ,   sml_waitForPressureAfterOutput(&machine)
@@ -114,6 +130,21 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validatePressureAfterMultiPipe, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
         connect(&sml_validatePressureAfterFlowOnePipe, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
         connect(&sml_validatePressureAfterFlowTwoPipe, &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+
+
+        // Control flow cotnrollers override valve
+        connect(&sml_flowControllerOneValveOverrideOpen, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideOpen);
+        connect(&sml_flowControllerTwoValveOverrideOpen, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideOpen);
+        connect(&sml_flowControllerOneValveOverrideOff, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideOff);
+        connect(&sml_flowControllerTwoValveOverrideOff, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideOff);
+        connect(&sml_flowControllerOneValveOverrideClose, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideClose);
+        connect(&sml_flowControllerTwoValveOverrideClose, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideClose);
+        connect(&sml_validateFlowControllerOneValveOverrideOpen, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideOpen);
+        connect(&sml_validateFlowControllerTwoValveOverrideOpen, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideOpen);
+        connect(&sml_validateFlowControllerOneValveOverrideClose, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideClose);
+        connect(&sml_validateFlowControllerTwoValveOverrideClose, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideClose);
+        connect(&sml_validateFlowControllerOneValveOverrideOff, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideOff);
+        connect(&sml_validateFlowControllerTwoValveOverrideOff, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideOff);
 
 
         // Link close valve states
@@ -279,8 +310,8 @@ namespace App { namespace Experiment { namespace Machines
         sml_stageFinder.addTransition(this, &Vent::emit_ventFlowCavity, &sml_openFlowController);
         sml_stageFinder.addTransition(this, &Vent::emit_ventNitrogenPipes, &sml_openHighPressureNitrogen);
         sml_stageFinder.addTransition(this, &Vent::emit_ventMultiPipes, &sml_openHighPressureInput);
-        sml_stageFinder.addTransition(this, &Vent::emit_ventFlowOnePipes, &sml_openFlowController_2);
-        sml_stageFinder.addTransition(this, &Vent::emit_ventFlowTwoPipes, &sml_openFlowController_3);
+        sml_stageFinder.addTransition(this, &Vent::emit_ventFlowOnePipes, &sml_flowControllerOneValveOverrideOpen);
+        sml_stageFinder.addTransition(this, &Vent::emit_ventFlowTwoPipes, &sml_flowControllerTwoValveOverrideOpen);
         sml_stageFinder.addTransition(this, &Vent::emit_finished, &sm_stop);
 
 
@@ -312,23 +343,46 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Open the output valve, wait for pressure drop and then close
-        openPressureClose(sml_openOutput, sml_validateOpenOutput, sml_closeOutput, sml_validateCloseOutput, sml_waitForPressureAfterOutput, sml_validatePressureAfterOutput);
+        openPressureClose(sml_openOutput, sml_validateOpenOutput, sml_closeOutput, sml_validateCloseOutput, sml_waitForPressureAfterOutput, sml_validatePressureAfterOutput, sml_stageFinder, sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(sml_openVacuumOut, sml_validateOpenVacuumOut, sml_closeVacuumOut, sml_validateCloseVacuumOut, sml_waitForPressureAfterVacOutput, sml_validatePressureAfterVacOutput);
+        openPressureClose(sml_openVacuumOut, sml_validateOpenVacuumOut, sml_closeVacuumOut, sml_validateCloseVacuumOut, sml_waitForPressureAfterVacOutput, sml_validatePressureAfterVacOutput, sml_stageFinder, sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(sml_openFlowController, sml_validateOpenFlowController, sml_closeFlowController, sml_validateCloseFlowController, sml_waitForPressureAfterFlowCavity, sml_validatePressureAfterFlowCavity);
+        openPressureClose(sml_openFlowController, sml_validateOpenFlowController, sml_closeFlowController, sml_validateCloseFlowController, sml_waitForPressureAfterFlowCavity, sml_validatePressureAfterFlowCavity, sml_stageFinder, sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(sml_openHighPressureNitrogen, sml_validateOpenHighPressureNitrogen, sml_closeHighPressureNitrogen, sml_validateCloseHighPressureNitrogen, sml_waitForPressureAfterNitrogenPipe, sml_validatePressureAfterNitrogenPipe);
+        openPressureClose(sml_openHighPressureNitrogen, sml_validateOpenHighPressureNitrogen, sml_closeHighPressureNitrogen, sml_validateCloseHighPressureNitrogen, sml_waitForPressureAfterNitrogenPipe, sml_validatePressureAfterNitrogenPipe, sml_stageFinder, sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(sml_openHighPressureInput, sml_validateOpenHighPressureInput, sml_closeHighPressureInput, sml_validateCloseHighPressureInput, sml_waitForPressureAfterMultiPipe, sml_validatePressureAfterMultiPipe);
+        openPressureClose(sml_openHighPressureInput, sml_validateOpenHighPressureInput, sml_closeHighPressureInput, sml_validateCloseHighPressureInput, sml_waitForPressureAfterMultiPipe, sml_validatePressureAfterMultiPipe, sml_stageFinder, sm_stopAsFailed);
 
-        // Open the flow controller valve, wait for pressure drop, open intenral flow controller valve, and then close
+        // Open the flow controller internal valve
+        sml_flowControllerOneValveOverrideOpen.addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, &sml_validateFlowControllerOneValveOverrideOpen);
+            // Check valve open
+            sml_validateFlowControllerOneValveOverrideOpen.addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateFlowControllerOneValveOverrideOpen.addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, &sml_openFlowController_2);
+                // Open flow controller cavity valve, wait for pressure drop, open intenral flow controller valve, and then close
+                openPressureClose(sml_openFlowController_2, sml_validateOpenFlowController_2, sml_closeFlowController_2, sml_validateCloseFlowController_2, sml_waitForPressureAfterFlowOnePipe, sml_validatePressureAfterFlowOnePipe, sml_flowControllerOneValveOverrideOff, sm_stopAsFailed);
+                    // Turn off valve override
+                    sml_flowControllerOneValveOverrideOff.addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, &sml_validateFlowControllerOneValveOverrideOff);
+                        // Check valve override off
+                        sml_validateFlowControllerOneValveOverrideOff.addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
+                        sml_validateFlowControllerOneValveOverrideOff.addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, &sml_stageFinder);
 
-        // Open the  valve, wait for pressure drop, open intenral flow controller valve, and then close
+
+        // Open the flow controller internal valve
+        sml_flowControllerTwoValveOverrideOpen.addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, &sml_validateFlowControllerTwoValveOverrideOpen);
+            // Check valve open
+            sml_validateFlowControllerTwoValveOverrideOpen.addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
+            sml_validateFlowControllerTwoValveOverrideOpen.addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, &sml_openFlowController_3);
+                // Open the  valve, wait for pressure drop, open intenral flow controller valve, and then close
+                openPressureClose(sml_openFlowController_3, sml_validateOpenFlowController_3, sml_closeFlowController_3, sml_validateCloseFlowController_3, sml_waitForPressureAfterFlowTwoPipe, sml_validatePressureAfterFlowTwoPipe, sml_flowControllerTwoValveOverrideOff, sm_stopAsFailed);
+                    // Turn off valve override
+                    sml_flowControllerTwoValveOverrideOff.addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, &sml_validateFlowControllerTwoValveOverrideOff);
+                        // Check valve override off
+                        sml_validateFlowControllerTwoValveOverrideOff.addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
+                        sml_validateFlowControllerTwoValveOverrideOff.addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, &sml_stageFinder);
     }
 
 
@@ -466,12 +520,14 @@ namespace App { namespace Experiment { namespace Machines
                                  QState& close,
                                  Functions::CommandValidatorState& closeValidate,
                                  QState& pressureWait,
-                                 Functions::CommandValidatorState& pressureValidate)
+                                 Functions::CommandValidatorState& pressureValidate,
+                                 QState& finished,
+                                 QState& failed)
     {
         // Open the output valve
         open.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &openValidate);
             // Failed close all valves
-            openValidate.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+            openValidate.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &failed);
             // Success finish here
             openValidate.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &pressureWait);
                 // Wait for pressure reading?
@@ -482,8 +538,8 @@ namespace App { namespace Experiment { namespace Machines
                         // Close valve
                         close.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &closeValidate);
                             // Validate close
-                            closeValidate.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
-                            closeValidate.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_stageFinder);
+                            closeValidate.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &failed);
+                            closeValidate.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &finished);
     }
 
 

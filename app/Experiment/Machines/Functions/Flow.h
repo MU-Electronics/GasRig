@@ -76,13 +76,25 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             void flowControllerTwoFlow();
             void flowControllerOneTemperature();
             void flowControllerTwoTemperature();
+            void flowControllerOneValveOverrideOpen();
+            void flowControllerTwoValveOverrideOpen();
+            void flowControllerOneValveOverrideOff();
+            void flowControllerTwoValveOverrideOff();
+            void flowControllerOneValveOverrideClose();
+            void flowControllerTwoValveOverrideClose();
+
 
             // States relating to validating the flow controller
             void validateFlowControllerOneFlow();
             void validateFlowControllerTwoFlow();
             void validateFlowControllerOneTemperature();
             void validateFlowControllerTwoTemperature();
-
+            void validateFlowControllerOneValveOverrideOpen();
+            void validateFlowControllerTwoValveOverrideOpen();
+            void validateFlowControllerOneValveOverrideClose();
+            void validateFlowControllerTwoValveOverrideClose();
+            void validateFlowControllerOneValveOverrideOff();
+            void validateFlowControllerTwoValveOverrideOff();
 
         private:
 

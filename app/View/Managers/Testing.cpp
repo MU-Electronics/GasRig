@@ -762,6 +762,13 @@ namespace App { namespace View { namespace Managers
         m_experimentEngine.machines().vent(output, vacuumOutput, flowCavity, nitrogenPipes, multiPipes, flowOnePipes, flowTwoPipes);
     }
 
+    void Testing::requestVentStop()
+    {
+        qDebug() << "Running vent";
+
+        m_experimentEngine.machines().stopVent();
+    }
+
 
 
 
