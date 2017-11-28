@@ -176,6 +176,19 @@ namespace App { namespace Experiment { namespace Machines
         // Set params
         m_pressurise.setParams(params.value("nitrogen_pressure").toBool(), true, 2000, false, params.value("open_output_valve").toBool());
 
+        // Override deep params within the pressurise state machine setup
+        QVariantMap override;
+        override.insert("valve_2_pulse", 200);
+        override.insert("tolerance_final", 500);
+        override.insert("tolerance_valve_two", 500);
+        override.insert("tolerance_valve_two_step", 500);
+        override.insert("tolerance_valve_two_final", 500);
+        override.insert("tolerance_valve_seven", 500);
+        override.insert("tolerance_valve_seven_step", 500);
+        override.insert("tolerance_valve_seven_final", 500);
+        override.insert("vac_down_to", params.value("vac_pressure").toBool());
+        m_pressurise.paramsOverride(override);
+
         // Build the machine
         m_pressurise.buildMachine();
 
@@ -198,6 +211,19 @@ namespace App { namespace Experiment { namespace Machines
         // Set params
         m_pressurise.setParams(params.value("vac_pressure").toBool(), diableInitVacDown, 2000, false, params.value("open_output_valve").toBool());
 
+        // Override deep params within the pressurise state machine setup
+        QVariantMap override;
+        override.insert("valve_2_pulse", 200);
+        override.insert("tolerance_final", 500);
+        override.insert("tolerance_valve_two", 500);
+        override.insert("tolerance_valve_two_step", 500);
+        override.insert("tolerance_valve_two_final", 500);
+        override.insert("tolerance_valve_seven", 500);
+        override.insert("tolerance_valve_seven_step", 500);
+        override.insert("tolerance_valve_seven_final", 500);
+        override.insert("vac_down_to", params.value("vac_pressure").toBool());
+        m_pressurise.paramsOverride(override);
+
         // Build the machine
         m_pressurise.buildMachine();
 
@@ -215,6 +241,11 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Set params
         m_pressurise.setParams(1000, true, 2000, false, params.value("open_output_valve").toBool());
+
+        // Override deep params within the pressurise state machine setup
+        QVariantMap override;
+        override.insert("valve_2_pulse", 200);
+        m_pressurise.paramsOverride(override);
 
         // Build the machine
         m_pressurise.buildMachine();

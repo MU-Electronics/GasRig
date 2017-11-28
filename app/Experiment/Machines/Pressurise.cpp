@@ -422,7 +422,6 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
-
         /*#######################################
          # Timer Settings
          ######################################*/

@@ -7,6 +7,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QTimer>
+#include <QVariantMap>
 
 // Include settings container
 #include "../../../Settings/Container.h"
@@ -75,12 +76,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             // Helper methods
             void removeAllTransitions();
+            void paramsOverride(QVariantMap override);
 
             // Contract methods that must be implimented
             virtual void start() = 0;
             virtual void buildMachine() = 0;
 
-        signals:
+    signals:
             void hardwareRequest(QVariantMap command);
 
             void emit_validationFailed(QVariantMap error);

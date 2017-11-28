@@ -5,6 +5,7 @@
 // Include extenral deps
 #include <QObject>
 #include <QDebug>
+#include <QVariantMap>
 
 // Include settings container
 #include "../../../Settings/Container.h"
@@ -144,5 +145,22 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         }
     }
 
+
+    /**
+     * Allows override of params in state machine
+     *
+     * @brief MachineStates::paramsOverride
+     */
+    void MachineStates::paramsOverride(QVariantMap override)
+    {
+        qDebug() << params;
+
+        for (auto i = override.constBegin(); i != override.constEnd(); ++i)
+        {
+             params.insert(i.key(), i.value());
+        }
+
+        qDebug() << params;
+    }
 
 }}}}
