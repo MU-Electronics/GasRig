@@ -19,6 +19,8 @@
 // Include possable machine states
 #include "Functions/MachineStates.h"
 
+// Required state machines
+#include "Pressurise.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -41,8 +43,15 @@ namespace App { namespace Experiment { namespace Machines
 
             void buildMachine();
 
+            // Pressurise state machine
+            Pressurise& m_pressurise;
+
             // Create the states for the machine
-            // QState ;
+            QState
+                sml_setLowPressure
+            ,   sml_setHighPressure
+            ,   sml_setAtmospheric
+            ,   sml_checkCycles;
 
 
             // Create command validator states
@@ -55,8 +64,14 @@ namespace App { namespace Experiment { namespace Machines
             void emit_validationSuccess();
             void emit_validationFailed();
 
-        public slots:
+            void emit_continueCycling();
+            void emit_stopCycling();
 
+        public slots:
+            void setHighPressure();
+            void setLowPressure();
+            void setAtmospheric();
+            void checkCycles();
 
         private:
             // Referance to QObject
@@ -66,7 +81,7 @@ namespace App { namespace Experiment { namespace Machines
             Settings::Container m_settings;
 
             // Holds the current stage
-            int cycle = 0;
+            int cycles = 0;
 
             // Timers
             // QTimer

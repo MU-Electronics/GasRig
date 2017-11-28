@@ -45,7 +45,7 @@ namespace App { namespace Experiment { namespace Machines
             int pulseValve(int valve, int cycles, int timeOpen, int timeClosed);
             void stopPulseValve();
 
-            int setPressure(double pressure, bool initVacDown, int stepSize, bool inputValve);
+            int setPressure(double pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve);
             void stopSetPressure();
 
             int valveOpen(int id);
@@ -67,7 +67,7 @@ namespace App { namespace Experiment { namespace Machines
             void emit_sensorReadingsMachineStopped();
             void emit_sensorsNotBeingMonitored();
 
-            void emit_pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve);
+            void emit_pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve);
             void emit_pressuriseStopped();
 
             void emit_ventMachineStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);

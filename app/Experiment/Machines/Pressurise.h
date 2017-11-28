@@ -32,7 +32,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ~Pressurise();
 
-            void setParams(double pressure, bool initVacDown, int stepSize, bool inputValve);
+            void setParams(double pressure, bool initVacDown, int stepSize, bool inputValve, bool outputValve);
 
             void start();
 
@@ -94,6 +94,10 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_shouldEnableBackingPump
             ,       sml_shouldDisablingBackingPump
           //,       sml_waitForInitalVacDown
+
+
+                    // Var checkers
+            ,       sml_shouldOpenValveOne
 
 
 
@@ -217,6 +221,9 @@ namespace App { namespace Experiment { namespace Machines
             void emit_initialSystemVacuumTooHigh();
             void emit_initialSystemVacuumWithinTolerance();
 
+            void emit_shouldOpenValveOneTrue();
+            void emit_shouldOpenValveOneFalse();
+
             void emit_shouldOpenValveFiveTrue();
             void emit_shouldOpenValveFiveFalse();
 
@@ -243,6 +250,7 @@ namespace App { namespace Experiment { namespace Machines
             void shouldCloseValveFive();
             void shouldEnableBackingPump();
             void shouldDisablingBackingPump();
+            void shouldOpenValveOne();
 
             // Timers
             void startValveOnePulseTimer();

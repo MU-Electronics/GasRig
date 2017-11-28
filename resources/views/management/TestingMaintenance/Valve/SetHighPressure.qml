@@ -150,6 +150,27 @@ FluidControls.Card
                 text: (!setUseVac_pressure.checked) ? "Init pressure must be atmospheric" : ""
             }
         }
+        Row
+        {
+            spacing: 10
+            width: parent.width
+            height: 50
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
+            Text {
+                text: qsTr("Should open output valve: ")
+                color: "#595959"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth
+            }
+            CheckBox {
+                id: setUseVac_openOutputValve
+                checked: true
+                text: (setUseVac_openOutputValve.checked) ? "Opens at step intervals" : "Never opens"
+            }
+        }
         Row{
             spacing: 20
             opacity: (setHighPressure_pressure.text < 20 || setStepSize_pressure.text < 100) ? 0 : 1;
@@ -174,7 +195,7 @@ FluidControls.Card
                 visible: (MachineStatusManager.pressuriseMachine["status"] === false) ? 1 : 0;
                 onClicked:
                 {
-                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text, setInputValve_pressure.model.get(setInputValve_pressure.currentIndex).value);
+                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text, setInputValve_pressure.model.get(setInputValve_pressure.currentIndex).value, setUseVac_openOutputValve.checked);
                 }
             }
             Button

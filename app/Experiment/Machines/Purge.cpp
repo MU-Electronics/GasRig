@@ -16,20 +16,31 @@
 // Include possable machine states
 #include "Functions/MachineStates.h"
 
+// Required state machines
+#include "Pressurise.h"
+
 namespace App { namespace Experiment { namespace Machines
 {
     Purge::Purge(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
+            // Pressurise state machine
+        ,   m_pressurise(*new Pressurise(parent, settings, hardware, safety))
 
-            // Timers
+            // States
+        ,   sml_setLowPressure(&machine)
+        ,   sml_setHighPressure(&machine)
+        ,   sml_setAtmospheric(&machine)
+        ,   sml_checkCycles(&machine)
     {
-
+        connect(&sml_setLowPressure, &QState::entered, this, &Purge::setLowPressure);
+        connect(&sml_setHighPressure, &QState::entered, this, &Purge::setHighPressure);
+        connect(&sml_setAtmospheric, &QState::entered, this, &Purge::setAtmospheric);
+        connect(&sml_checkCycles, &QState::entered, this, &Purge::checkCycles);
     }
 
     Purge::~Purge()
     {
-
     }
 
 
@@ -47,10 +58,13 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::setParams(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo)
     {       
         // Copnfiguration settings
-        // params.insert("output", output);
+        params.insert("open_output_valve", outputValve);
+        params.insert("number_cycles", numberCycles);
+        params.insert("nitrogen_pressure", nitrogenPressure);
+        params.insert("vac_pressure", vacTo);
 
-        // Setup timers
-
+        // Local count
+        cycles = numberCycles;
     }
 
 
@@ -109,8 +123,104 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::buildMachine()
     {
         // Where to start the machine
-        //machine.setInitialState(&sml_stageFinder);
+        machine.setInitialState(&sml_setLowPressure);
 
+
+
+        // Set low pressure
+        sml_setLowPressure.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFailed, &sm_stopAsFailed);
+        sml_setLowPressure.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFinished, &sml_setHighPressure);
+
+
+
+        // Set high pressure
+        sml_setHighPressure.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFailed, &sm_stopAsFailed);
+        sml_setHighPressure.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFinished, &sml_checkCycles);
+
+
+
+        // Check cycles
+        sml_checkCycles.addTransition(this, &Purge::emit_continueCycling, &sml_setHighPressure);
+        sml_checkCycles.addTransition(this, &Purge::emit_stopCycling, &sml_setAtmospheric);
+
+            // Set atmopheric peressure
+            sml_setAtmospheric.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFailed, &sm_stopAsFailed);
+            sml_setAtmospheric.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFinished, &sm_stop);
+
+    }
+
+    void Purge::checkCycles()
+    {
+        // Once cycle just completed
+        cycles--;
+
+        // Continue or stop?
+        if(cycles == 0)
+        {
+            emit emit_stopCycling();
+        }
+        else
+        {
+            emit emit_stopCycling();
+        }
+    }
+
+
+    /**
+     * Set the purge high pressure
+     *
+     * @brief Purge::setHighPressure
+     */
+    void Purge::setHighPressure()
+    {
+        // Set params
+        m_pressurise.setParams(params.value("nitrogen_pressure").toBool(), true, 2000, false, params.value("open_output_valve").toBool());
+
+        // Build the machine
+        m_pressurise.buildMachine();
+
+        // Start the machine
+        m_pressurise.start();
+    }
+
+
+    /**
+     * Set the purge low pressure
+     *
+     * @brief Purge::setLowPressure
+     */
+    void Purge::setLowPressure()
+    {
+        bool diableInitVacDown = true;
+        if(cycles == params.value("number_cycles").toInt())
+            diableInitVacDown = false;
+
+        // Set params
+        m_pressurise.setParams(params.value("vac_pressure").toBool(), diableInitVacDown, 2000, false, params.value("open_output_valve").toBool());
+
+        // Build the machine
+        m_pressurise.buildMachine();
+
+        // Start the machine
+        m_pressurise.start();
+    }
+
+
+    /**
+     * Check if the system has exhusted low enough to be vaced down
+     *
+     * @brief Purge::setAtmospheric
+     */
+    void Purge::setAtmospheric()
+    {
+        // Set params
+        m_pressurise.setParams(1000, true, 2000, false, params.value("open_output_valve").toBool());
+
+        // Build the machine
+        m_pressurise.buildMachine();
+
+        // Start the machine
+        m_pressurise.start();
     }
 
 }}}

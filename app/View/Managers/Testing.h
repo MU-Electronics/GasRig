@@ -63,7 +63,7 @@ namespace App { namespace View { namespace Managers
             void requestFlowControllerTemperature(QString controller);
 
             // Request experiment methods
-            void requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve);
+            void requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve);
             void requestVent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
             void requestPurge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
             void requestValveStateSafe(int port, bool state);

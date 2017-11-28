@@ -125,6 +125,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validatePressureAfterValveOne(&machine)
         ,   sml_validateInitialSystemVacuum(&machine)
         ,   sml_validatePressureBeforeSelectValve(&machine)
+        ,   sml_shouldOpenValveOne(&machine)
 
 
 
@@ -188,6 +189,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_shouldEnableBackingPump, &QState::entered, this, &Pressurise::shouldEnableBackingPump);
         connect(&sml_shouldDisablingBackingPump, &QState::entered, this, &Pressurise::shouldDisablingBackingPump);
 
+        connect(&sml_shouldOpenValveOne, &Functions::CommandValidatorState::entered, this, &Pressurise::shouldOpenValveOne);
 
 
         // States relating to valve functions
@@ -291,7 +293,7 @@ namespace App { namespace Experiment { namespace Machines
     // Below show the to be implimented function vars
     // Valve 7 init step size, Valve 7 final step size, Valve 2 init step size, Valve 2 final step size
     // Valve 1 tolerance, Valve 2 tolerance, Valve 7 tolerance
-    void Pressurise::setParams(double pressure, bool initVacDown, int stepSize = 2000, bool inputValve = true)
+    void Pressurise::setParams(double pressure, bool initVacDown, int stepSize = 2000, bool inputValve = true, bool outputValve = true)
     {
         /*#######################################
          # Configuration Settings
@@ -305,6 +307,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // What is the step size in pressure
         params.insert("step_size", stepSize);
+
+        // Should open the output valve?
+        params.insert("open_output_valve", outputValve);
 
         // What input valve should we use?
         if(inputValve)
@@ -726,7 +731,7 @@ namespace App { namespace Experiment { namespace Machines
             // Too high go to pulse valve 2
             sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureToHigh, &sml_waitForPressureBeforeValveFive);
             // Within tolerence go to open valve 1
-            sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_openOutput_2);
+            sml_validatePressureBeforeSelectValve.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_shouldOpenValveOne);
 
 
 
@@ -759,7 +764,7 @@ namespace App { namespace Experiment { namespace Machines
             // Too high go to pulse valve 2
             sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureToHigh, &sml_waitForPressureBeforeValveFive);
             // Within tolerence go to open valve 1
-            sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_openOutput_2);
+            sml_validatePressureAfterValveSeven.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_shouldOpenValveOne);
 
 
 
@@ -862,7 +867,7 @@ namespace App { namespace Experiment { namespace Machines
             // Too high go to pulse valve 2
             sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureToHigh, &sml_waitForPressureBeforeValveFive);
             // Within tolerence go to open valve 1
-            sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_openOutput_2);
+            sml_validatePressureAfterValveTwo.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sml_shouldOpenValveOne);
 
 
 
@@ -870,6 +875,10 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
+
+        // Should the output be open?
+        sml_shouldOpenValveOne.addTransition(this, &Pressurise::emit_shouldOpenValveOneFalse, &sml_waitForPressureAfterValveOne);
+        sml_shouldOpenValveOne.addTransition(this, &Pressurise::emit_shouldOpenValveOneTrue, &sml_openOutput_2);
 
         // Open valve 1
         sml_openOutput_2.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_validateOpenOutput_2);
@@ -897,6 +906,14 @@ namespace App { namespace Experiment { namespace Machines
             // Calculated new step size is it less than the tolerence then finish
             sml_validatePressureAfterValveOne.addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sm_stop);
 
+    }
+
+    void Pressurise::shouldOpenValveOne()
+    {
+        if(params.value("open_output_valve").toBool() == true)
+            emit emit_shouldOpenValveOneTrue();
+
+        emit emit_shouldOpenValveOneFalse();
     }
 
     void Pressurise::validatePressureBeforeSelectValve()
