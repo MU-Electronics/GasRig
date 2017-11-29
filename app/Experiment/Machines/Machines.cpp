@@ -315,7 +315,7 @@ namespace App { namespace Experiment { namespace Machines
         m_purge.stopMachineWithoutError();
 
         // Emit machine stopped
-        emit emit_vacDownMachineStopped();
+        emit emit_purgeStopped();
     }
 
     /**
@@ -326,7 +326,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::purgeFinished(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_purgeMachineStopped();
+        emit emit_purgeStopped();
     }
 
     /**
@@ -337,7 +337,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::purgeFailed(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_purgeMachineStopped();
+        emit emit_purgeStopped();
     }
 
 

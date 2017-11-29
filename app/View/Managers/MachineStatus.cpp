@@ -54,6 +54,9 @@ namespace App { namespace View { namespace Managers
         m_ventMachine.insert("multiPipes", false);
         m_ventMachine.insert("flowOnePipes", false);
         m_ventMachine.insert("flowTwoPipes", false);
+
+        // Default values for purge state machine
+        m_purgeMachine.insert("status", false);
     }
 
 
@@ -85,7 +88,36 @@ namespace App { namespace View { namespace Managers
         // Connect signals to and from experiment engine
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseStarted, this, &MachineStatus::pressuriseStarted);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseStopped, this, &MachineStatus::pressuriseStopped);
+
+        // Connect signals to and from experiment engine
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStarted, this, &MachineStatus::purgeStarted);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStopped, this, &MachineStatus::purgeStopped);
     }
+
+
+
+    void MachineStatus::purgeStarted(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo)
+    {
+        // Update array
+        m_purgeMachine.insert("status", true);
+        m_purgeMachine.insert("outputValve", outputValve);
+        m_purgeMachine.insert("numberCycles", numberCycles);
+        m_purgeMachine.insert("nitrogenPressure", nitrogenPressure);
+        m_purgeMachine.insert("vacTo", vacTo);
+
+        // Tell everyone
+        emit emit_purgeMachineChanged(m_purgeMachine);
+    }
+
+    void MachineStatus::purgeStopped()
+    {
+        // Update array
+        m_purgeMachine.insert("status", false);
+
+        // Tell everyone
+        emit emit_purgeMachineChanged(m_purgeMachine);
+    }
+
 
 
 

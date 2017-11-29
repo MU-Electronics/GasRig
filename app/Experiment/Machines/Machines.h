@@ -74,7 +74,7 @@ namespace App { namespace Experiment { namespace Machines
             void emit_ventMachineStopped();
 
             void emit_purgeStarted(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
-            void emit_purgeMachineStopped();
+            void emit_purgeStopped();
 
         public slots:
             void vacDownFinished(QVariantMap params);

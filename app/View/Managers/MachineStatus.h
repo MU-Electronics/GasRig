@@ -32,6 +32,7 @@ namespace App { namespace View { namespace Managers
         Q_PROPERTY(QVariantMap pulseValveMachine READ pulseValveMachine NOTIFY emit_pulseValveMachineChanged)
         Q_PROPERTY(QVariantMap pressuriseMachine READ pressuriseMachine NOTIFY emit_pressuriseMachineChanged)
         Q_PROPERTY(QVariantMap ventMachine READ ventMachine NOTIFY emit_ventMachineChanged)
+        Q_PROPERTY(QVariantMap purgeMachine READ purgeMachine NOTIFY emit_purgeMachineChanged)
 
         public:
             MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
@@ -44,6 +45,7 @@ namespace App { namespace View { namespace Managers
             QVariantMap pulseValveMachine() const { return m_pulseValveMachine; }
             QVariantMap pressuriseMachine() const { return m_pressuriseMachine; }
             QVariantMap ventMachine() const { return m_ventMachine; }
+            QVariantMap purgeMachine() const { return m_purgeMachine; }
 
         signals:
             void emit_hardwareAccess(QVariantMap command);
@@ -53,6 +55,7 @@ namespace App { namespace View { namespace Managers
             void emit_pulseValveMachineChanged(QVariantMap);
             void emit_pressuriseMachineChanged(QVariantMap);
             void emit_ventMachineChanged(QVariantMap);
+            void emit_purgeMachineChanged(QVariantMap);
 
         public slots:
             void ventStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
@@ -66,6 +69,9 @@ namespace App { namespace View { namespace Managers
 
             void pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve);
             void pressuriseStopped();
+
+            void purgeStarted(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
+            void purgeStopped();
 
 
         private:
@@ -88,6 +94,9 @@ namespace App { namespace View { namespace Managers
 
             // Holds the vent machine statuses
             QVariantMap m_ventMachine;
+
+            // Holds the purge machine status
+            QVariantMap m_purgeMachine;
 
     };
 }}}

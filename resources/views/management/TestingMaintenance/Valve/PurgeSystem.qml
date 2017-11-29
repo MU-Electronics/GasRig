@@ -62,6 +62,7 @@ FluidControls.Card
                     spacing: 10
                     width: parent.width
                     height: purgeSystemFunction.elementHight
+                    enabled: (MachineStatusManager.purgeMachine["status"] === true) ? 0 : 1;
                     Text {
                         text: qsTr("Open output valve during purge: ")
                         color: "#777777"
@@ -82,6 +83,7 @@ FluidControls.Card
                     spacing: 10
                     width: parent.width
                     height: purgeSystemFunction.elementHight
+                    enabled: (MachineStatusManager.purgeMachine["status"] === true) ? 0 : 1;
                     Text {
                         text: qsTr("Number of cycles to run before finishing: ")
                         color: "#777777"
@@ -106,6 +108,7 @@ FluidControls.Card
                     spacing: 10
                     width: parent.width
                     height: purgeSystemFunction.elementHight
+                    enabled: (MachineStatusManager.purgeMachine["status"] === true) ? 0 : 1;
                     Text {
                         text: qsTr("Maximum nitrogen pressure in bar: ")
                         color: "#777777"
@@ -131,6 +134,7 @@ FluidControls.Card
                     spacing: 10
                     width: parent.width
                     height: purgeSystemFunction.elementHight
+                    enabled: (MachineStatusManager.purgeMachine["status"] === true) ? 0 : 1;
                     Text {
                         text: qsTr("Vac below: ")
                         color: "#777777"
@@ -180,17 +184,29 @@ FluidControls.Card
                     id: purgeMethod_confirm
                     checked: false
                     text: qsTr("Confirm rig setup")
+                    enabled: (MachineStatusManager.purgeMachine["status"] === true) ? 0 : 1;
                 }
                 Button
                 {
                     text: qsTr("Start Purging System")
                     enabled: (purgeMethod_confirm.checked) ? true : false;
+                    visible: (MachineStatusManager.purgeMachine["status"] === true) ? 0 : 1;
                     onClicked:
                     {
                         if(purgeSubmittion.methodSelected == 1)
                         {
                             TestingManager.requestPurge(purgeMethodOne_outputValve.checked, purgeMethodOne_numberCycles.text, purgeMethodOne_nitrogenPressure.text, purgeMethodOne_vacBelow.text);
                         }
+                    }
+                }
+
+                Button
+                {
+                    text: qsTr("Stop")
+                    visible: (MachineStatusManager.purgeMachine["status"] === true) ? 1 : 0;
+                    onClicked:
+                    {
+                        TestingManager.requestPurgeStop();
                     }
                 }
             }
