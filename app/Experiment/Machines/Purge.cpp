@@ -173,10 +173,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::setHighPressure()
     {
-        // Stop previous state
-        m_pressurise.machine.stop();
-        m_pressurise.removeAllTransitions();
-
         // Set params
         m_pressurise.setParams(params.value("nitrogen_pressure").toBool(), true, 2000, false, params.value("open_output_valve").toBool());
 
@@ -195,9 +191,10 @@ namespace App { namespace Experiment { namespace Machines
 
         // Build the machine
         m_pressurise.buildMachine();
-
+        qDebug() << 2;
         // Start the machine
         m_pressurise.start();
+        qDebug() << 3;
     }
 
 
@@ -211,10 +208,6 @@ namespace App { namespace Experiment { namespace Machines
         bool diableInitVacDown = true;
         if(cycles == params.value("number_cycles").toInt())
             diableInitVacDown = false;
-
-        // Stop previous state
-        m_pressurise.machine.stop();
-        m_pressurise.removeAllTransitions();
 
         // Set params
         m_pressurise.setParams(params.value("vac_pressure").toBool(), diableInitVacDown, 2000, false, params.value("open_output_valve").toBool());
@@ -247,10 +240,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::setAtmospheric()
     {
-        // Stop previous state
-        m_pressurise.machine.stop();
-        m_pressurise.removeAllTransitions();
-
         // Set params
         m_pressurise.setParams(1000, true, 2000, false, params.value("open_output_valve").toBool());
 
