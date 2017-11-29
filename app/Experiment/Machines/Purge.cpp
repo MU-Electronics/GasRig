@@ -125,17 +125,23 @@ namespace App { namespace Experiment { namespace Machines
 
     void Purge::checkCycles()
     {
-        // Once cycle just completed
-        cycles--;
+        qDebug() << "Checking cycles";
+
 
         // Continue or stop?
         if(cycles == 0)
         {
+            qDebug() << "Stop cycling";
             emit emit_stopCycling();
         }
         else
         {
-            emit emit_stopCycling();
+            // Once cycle just completed
+            cycles--;
+
+            qDebug() << "Continue cycling: " << cycles;
+
+            emit emit_continueCycling();
         }
     }
 
@@ -148,7 +154,7 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::setHighPressure()
     {
         // Set params
-        m_pressurise.setParams(params.value("nitrogen_pressure").toBool(), true, 2000, false, params.value("open_output_valve").toBool());
+        m_pressurise.setParams(params.value("nitrogen_pressure").toDouble(), true, 2000, false, params.value("open_output_valve").toBool());
 
         // Override deep params within the pressurise state machine setup
         QVariantMap override;
@@ -160,15 +166,15 @@ namespace App { namespace Experiment { namespace Machines
         override.insert("tolerance_valve_seven", 500);
         override.insert("tolerance_valve_seven_step", 500);
         override.insert("tolerance_valve_seven_final", 500);
-        override.insert("vac_down_to", params.value("vac_pressure").toBool());
+        override.insert("vac_down_to", params.value("vac_pressure").toDouble());
         m_pressurise.paramsOverride(override);
 
         // Build the machine
         m_pressurise.buildMachine();
-        qDebug() << 2;
+
         // Start the machine
         m_pressurise.start();
-        qDebug() << 3;
+        qDebug() << "High presure" << params.value("nitrogen_pressure").toDouble();
     }
 
 
@@ -184,11 +190,11 @@ namespace App { namespace Experiment { namespace Machines
             diableInitVacDown = false;
 
         // Set params
-        m_pressurise.setParams(params.value("vac_pressure").toBool(), diableInitVacDown, 2000, false, params.value("open_output_valve").toBool());
+        m_pressurise.setParams(params.value("vac_pressure").toDouble(), diableInitVacDown, 2000, false, params.value("open_output_valve").toBool());
 
         // Override deep params within the pressurise state machine setup
         QVariantMap override;
-        override.insert("valve_2_pulse", 200);
+        override.insert("valve_2_pulse", 100);
         override.insert("tolerance_final", 500);
         override.insert("tolerance_valve_two", 500);
         override.insert("tolerance_valve_two_step", 500);
@@ -196,7 +202,7 @@ namespace App { namespace Experiment { namespace Machines
         override.insert("tolerance_valve_seven", 500);
         override.insert("tolerance_valve_seven_step", 500);
         override.insert("tolerance_valve_seven_final", 500);
-        override.insert("vac_down_to", params.value("vac_pressure").toBool());
+        override.insert("vac_down_to", params.value("vac_pressure").toDouble());
         m_pressurise.paramsOverride(override);
 
         // Build the machine
@@ -204,6 +210,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_pressurise.start();
+        qDebug() << "Low presure";
     }
 
 
@@ -227,6 +234,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_pressurise.start();
+        qDebug() << "Atmospheric presure";
     }
 
 }}}

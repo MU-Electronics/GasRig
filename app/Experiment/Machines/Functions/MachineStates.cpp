@@ -152,7 +152,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     void MachineStates::stopMachineWithoutError()
     {
         // There was no error
-        error = true;
+        error = false;
 
         // Stop the machine
         machine.stop();

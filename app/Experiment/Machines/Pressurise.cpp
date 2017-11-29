@@ -456,6 +456,10 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Reset vars
         pressureReading = 1;
+        backingPumpEnabled = false;
+        pressureReading = 1;
+        exhuastValvePressureChange.clear();
+        inputValvePressureChange.clear();
 
         // Start machine
         machine.start();
@@ -487,12 +491,6 @@ namespace App { namespace Experiment { namespace Machines
         stopValveSevenPulseTimer();
         stopExhuastVoidVacDownTimer();
         stopVacuumValveTimer();
-
-        // Reset vars
-        backingPumpEnabled = false;
-        pressureReading = 1;
-        exhuastValvePressureChange.clear();
-        inputValvePressureChange.clear();
     }
 
 
