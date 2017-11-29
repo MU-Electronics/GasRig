@@ -450,10 +450,12 @@ namespace App { namespace Experiment { namespace Machines
         QVariantMap package = state->package;
 
         // Get the pressure
-        double pressureIn = package.value("pressure").toDouble();
+        double pressureIn = package.value("pressure").toDouble() * 1000;
 
         // Get the max pressure allowed
         double stopPressure = params.value("vac_down_to").toDouble();
+
+        qDebug() << pressureIn << stopPressure;
 
         // Check the pressure is safe to vac down
         if( (pressureIn - 0.1) < stopPressure)
