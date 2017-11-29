@@ -21,6 +21,8 @@
 
 // Required state machines
 #include "Pressurise.h"
+#include "Vent.h"
+#include "VacDown.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -44,12 +46,21 @@ namespace App { namespace Experiment { namespace Machines
             // Pressurise state machine
             Pressurise& m_pressurise;
 
+            // Pressurise state machine
+            Vent& m_vent;
+
+            // Pressurise state machine
+            VacDown& m_vacDown;
+
             // Create the states for the machine
             QState
                 sml_setLowPressure
             ,   sml_setHighPressure
             ,   sml_setAtmospheric
-            ,   sml_checkCycles;
+            ,   sml_checkCycles
+            ,   sml_vent
+            ,   sml_finishingVent
+            ,   sml_vacDown;
 
 
             // Create command validator states
@@ -64,8 +75,8 @@ namespace App { namespace Experiment { namespace Machines
 
         public slots:
             void setHighPressure();
-            void setLowPressure();
-            void setAtmospheric();
+            void ventOutput();
+            void setVacuum();
             void checkCycles();
 
         private:

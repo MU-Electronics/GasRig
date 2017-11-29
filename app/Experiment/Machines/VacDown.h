@@ -27,7 +27,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ~VacDown();
 
-            void setParams(int mintues, bool turbo, int gasMode, int mode);
+            void setParams(double value, int valueType, bool turbo, int gasMode, int mode);
 
             void start();
 
@@ -37,10 +37,13 @@ namespace App { namespace Experiment { namespace Machines
 
         signals:
             void emit_timerActive();
+            void emit_pressureReached();
+            void emit_pressureToLow();
 
         public slots:
             // States
             void startVacuumTimer();
+            void validatePressureForStop();
 
         private:
             // Referance to QObject
@@ -117,6 +120,7 @@ namespace App { namespace Experiment { namespace Machines
                 // States pressure
             ,   sml_validateVacPressureForTurbo
             ,   sml_validatePressureForVacuum
+            ,   sml_validatePressureForStop
 
                 // States vacuum
             ,   sml_validateEnableBackingPump

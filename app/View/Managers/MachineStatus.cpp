@@ -191,11 +191,12 @@ namespace App { namespace View { namespace Managers
      * @param gasMode
      * @param mode
      */
-    void MachineStatus::vacDownStarted(int mintues, bool turbo, int gasMode, int mode)
+    void MachineStatus::vacDownStarted(double value, int valueType, bool turbo, int gasMode, int mode)
     {
         // Update the vac machine status
         m_vacDownMachine.insert("status", true);
-        m_vacDownMachine.insert("mintues", mintues);
+        m_vacDownMachine.insert("value", value);
+        m_vacDownMachine.insert("valueType", valueType);
         m_vacDownMachine.insert("turbo", turbo);
         m_vacDownMachine.insert("gasMode", gasMode);
         m_vacDownMachine.insert("mode", mode);

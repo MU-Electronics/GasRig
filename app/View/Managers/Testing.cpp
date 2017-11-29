@@ -825,9 +825,15 @@ namespace App { namespace View { namespace Managers
      * @param gasMode
      * @param mode
      */
-    void Testing::requestVacDown(int mintues, bool turbo,int gasMode, int mode)
+    void Testing::requestVacDown(double value, int valueType, bool turbo,int gasMode, int mode)
     {
-        m_experimentEngine.machines().vacDown(mintues, turbo, gasMode, mode);
+        if(valueType == 1)
+        {
+            // How long the vac should run
+            value = (value * 60) * 1000;
+        }
+
+        m_experimentEngine.machines().vacDown(value, valueType, turbo, gasMode, mode);
     }
 
     void Testing::requestVacDownStop()

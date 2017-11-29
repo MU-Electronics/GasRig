@@ -207,14 +207,14 @@ namespace App { namespace Experiment { namespace Machines
      * @param gasMode
      * @param mode
      */
-    int Machines::vacDown(int mintues, bool turbo, int gasMode, int mode)
+    int Machines::vacDown(double value, int valueType, bool turbo, int gasMode, int mode)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
         // Set the params
-        m_vacDown.setParams(mintues, turbo, gasMode, mode);
+        m_vacDown.setParams(value, valueType, turbo, gasMode, mode);
 
         // Build the machine
         m_vacDown.buildMachine();
@@ -223,7 +223,7 @@ namespace App { namespace Experiment { namespace Machines
         m_vacDown.start();
 
         // Emit machine started
-        emit emit_vacDownMachineStarted(mintues, turbo, gasMode, mode);
+        emit emit_vacDownMachineStarted(value, valueType, turbo, gasMode, mode);
 
         // Return success
         return 1;

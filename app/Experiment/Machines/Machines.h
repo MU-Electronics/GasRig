@@ -30,7 +30,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void stateMachinesToThread();
 
-            int vacDown(int mintues, bool turbo, int gasMode, int mode);
+            int vacDown(double value, int valueType, bool turbo, int gasMode, int mode);
             void stopVacDown();
 
             int sensorReadings(int vacSensorTimeInter, int pressureSensorTimeInter, int flowControllerTimeInter, int turboSpeedTimeInter, int vacStationTemperTimeInter, int flowControlTempTimeInter);
@@ -55,7 +55,7 @@ namespace App { namespace Experiment { namespace Machines
             void stopFlowRate();
 
         signals:
-            void emit_vacDownMachineStarted(int mintues, bool turbo, int gasMode, int mode);
+            void emit_vacDownMachineStarted(double value, int valueType, bool turbo, int gasMode, int mode);
             void emit_vacDownMachineStopped();
 
             void emit_safeValveMachineStarted(int id, bool state);

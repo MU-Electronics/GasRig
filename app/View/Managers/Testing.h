@@ -67,7 +67,7 @@ namespace App { namespace View { namespace Managers
             void requestVent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
             void requestPurge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
             void requestValveStateSafe(int port, bool state);
-            void requestVacDown(int mintues, bool turbo, int gasMode, int mode);
+            void requestVacDown(double value, int valueType, bool turbo, int gasMode, int mode);
             void requestPulseValve(int valve, int cycles, int timeOpen, int timeClosed);
 
             // Request experiment methods to be stopped

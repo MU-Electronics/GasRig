@@ -58,7 +58,7 @@ namespace App { namespace View { namespace Managers
             void ventStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
             void ventStopped();
 
-            void vacDownStarted(int mintues, bool turbo, int gasMode, int mode);
+            void vacDownStarted(double value, int valueType, bool turbo, int gasMode, int mode);
             void vacDownStopped();
 
             void pulseValveStarted(int valve, int cycles, int timeOpen, int timeClosed);

@@ -76,6 +76,8 @@ namespace App { namespace Experiment { namespace Machines
             // Validator states
         ,   sml_validateEnableBackingPump(&machine)
 
+        ,   sml_validatePressureForStop(&machine)
+
         ,   sml_validateEnableTurboPump(&machine)
         ,   sml_validateDisableTurboPump(&machine)
 
@@ -91,6 +93,7 @@ namespace App { namespace Experiment { namespace Machines
         // Pressure validator states
         connect(&sml_validateVacPressureForTurbo, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validateVacPressureForTurbo);
         connect(&sml_validatePressureForVacuum, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validatePressureForVacuum);
+        connect(&sml_validatePressureForStop, &Functions::CommandValidatorState::entered, this, &VacDown::validatePressureForStop);
 
         // Vacuum states
         connect(&sml_enableBackingPump, &QState::entered, this->vacuum(), &Functions::Vacuum::enableBackingPump);
@@ -166,10 +169,24 @@ namespace App { namespace Experiment { namespace Machines
      * @param turbo
      * @param gasMode
      */
-    void VacDown::setParams(int mintues, bool turbo, int gasMode, int mode)
+    void VacDown::setParams(double value, int valueType, bool turbo, int gasMode, int mode)
     {
-        // How long the vac should run
-        params.insert("mintues", mintues);
+        if(valueType == 1)
+        {
+            // How long the vac should run
+            params.insert("milliseconds", value);
+
+            // Setup timers
+            t_vacDown.setInterval(value * 60);
+        }
+        else if(valueType == 2)
+        {
+            // How long the vac should run
+            params.insert("vac_down_to", value);
+        }
+
+        // Time or value based vac down
+        params.insert("type", valueType);
 
         // Should the turbo ever be enabled
         params.insert("turbo", turbo);
@@ -180,8 +197,7 @@ namespace App { namespace Experiment { namespace Machines
         // Where the vacuum should go
         params.insert("mode", mode);
 
-        // Setup timers
-        t_vacDown.setInterval( (mintues * 60) * 1000 );
+
     }
 
 
@@ -382,23 +398,73 @@ namespace App { namespace Experiment { namespace Machines
             // Backing pump failed
             sml_validateEnableBackingPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sm_stopAsFailed);
 
-        // Read vac pressure
-        sml_timerWait.addTransition(&m_hardware, &Hardware::Access::emit_readVacuumPressure, &sml_validateVacPressureForTurbo);
-            // Pressure low enough for turbo so enable it
-            sml_validateVacPressureForTurbo.addTransition(this->pressure(), &Functions::Pressure::emit_validationSuccess, &sml_enableTurboPump);
-            // Pressure too high for turbo, wait for next time out untill we check again
-            sml_validateVacPressureForTurbo.addTransition(this->pressure(), &Functions::Pressure::emit_validationFailed, &sml_timerWait);
+        // If turbo is allowed
+        if(params.value("turbo").toBool() == true)
+        {
+            // Read vac pressure
+            sml_timerWait.addTransition(&m_hardware, &Hardware::Access::emit_readVacuumPressure, &sml_validateVacPressureForTurbo);
+                // Pressure low enough for turbo so enable it
+                sml_validateVacPressureForTurbo.addTransition(this->pressure(), &Functions::Pressure::emit_validationSuccess, &sml_enableTurboPump);
+                // Pressure too high for turbo, wait for next time out untill we check again
+                sml_validateVacPressureForTurbo.addTransition(this->pressure(), &Functions::Pressure::emit_validationFailed, &sml_timerWait);
 
-        // Enable turbo pump
-        sml_enableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_turboPumpAlreadyEnabled, &sml_timerWait);
-        sml_enableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &sml_validateEnableTurboPump);
-            // Successfully enabled
-            sml_validateEnableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sml_timerWait);
-            // Could not enable
-            sml_validateEnableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+
+            // Enable turbo pump
+            sml_enableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_turboPumpAlreadyEnabled, &sml_timerWait);
+            sml_enableTurboPump.addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, &sml_validateEnableTurboPump);
+                // Successfully enabled
+                sml_validateEnableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sml_timerWait);
+                // Could not enable
+                sml_validateEnableTurboPump.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+        }
 
         // End vac session when timer limit ends t_vacTime
-        sml_timerWait.addTransition(&t_vacDown, &QTimer::timeout, &sm_stop);
+        if(params.value("type").toInt() == 1)
+        {
+            // Time based vac down
+            sml_timerWait.addTransition(&t_vacDown, &QTimer::timeout, &sm_stop);
+        }
+        else if(params.value("type").toInt() == 2)
+        {
+            // Value based
+            sml_timerWait.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureForStop);
+                // Pressure is too low carry on vac'ing
+                sml_validatePressureForStop.addTransition(this, &VacDown::emit_pressureToLow, &sml_timerWait);
+                // Pressure is perfect so stop
+                sml_validatePressureForStop.addTransition(this, &VacDown::emit_pressureReached, &sm_stop);
+        }
+    }
+
+
+    /**
+     * Validate a reading of the system pressure
+     *
+     * @brief Pressure::validatePressureForStop
+     */
+    void VacDown::validatePressureForStop()
+    {
+        // Get the validator state instance
+        Functions::CommandValidatorState* state = (Functions::CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Get the pressure
+        double pressureIn = package.value("pressure").toDouble();
+
+        // Get the max pressure allowed
+        double stopPressure = params.value("vac_down_to").toDouble();
+
+        // Check the pressure is safe to vac down
+        if( (pressureIn - 0.1) < stopPressure)
+        {
+            emit emit_pressureReached();
+
+            return;
+        }
+
+        // Pressure too low
+        emit emit_pressureToLow();
     }
 
 

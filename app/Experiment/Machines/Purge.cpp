@@ -18,6 +18,8 @@
 
 // Required state machines
 #include "Pressurise.h"
+#include "Vent.h"
+#include "VacDown.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -25,17 +27,30 @@ namespace App { namespace Experiment { namespace Machines
         :   MachineStates(parent, settings, hardware, safety)
 
             // Pressurise state machine
+        ,   m_vent(*new Vent(parent, settings, hardware, safety))
         ,   m_pressurise(*new Pressurise(parent, settings, hardware, safety))
+        ,   m_vacDown(*new VacDown(parent, settings, hardware, safety))
 
             // States
+        ,   sml_vent(&machine)
+        ,   sml_finishingVent(&machine)
         ,   sml_setLowPressure(&machine)
         ,   sml_setHighPressure(&machine)
         ,   sml_setAtmospheric(&machine)
         ,   sml_checkCycles(&machine)
+        ,   sml_vacDown(&machine)
     {
-        connect(&sml_setLowPressure, &QState::entered, this, &Purge::setLowPressure);
+        // Vent state machine
+        connect(&sml_vent, &QState::entered, this, &Purge::ventOutput);
+        connect(&sml_finishingVent, &QState::entered, this, &Purge::ventOutput);
+
+        // Vac down state machine
+        connect(&sml_vacDown, &QState::entered, this, &Purge::setVacuum);
+
+        // Set pressure state machine
         connect(&sml_setHighPressure, &QState::entered, this, &Purge::setHighPressure);
-        connect(&sml_setAtmospheric, &QState::entered, this, &Purge::setAtmospheric);
+
+        // Check how many cycles left state
         connect(&sml_checkCycles, &QState::entered, this, &Purge::checkCycles);
     }
 
@@ -97,13 +112,17 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sml_setLowPressure);
+        machine.setInitialState(&sml_vent);
+
+        // Vent
+        sml_vent.addTransition(&m_vent, &Vent::emit_machineFailed, &sm_stopAsFailed);
+        sml_vent.addTransition(&m_vent, &Vent::emit_machineFinished, &sml_vacDown);
 
 
 
-        // Set low pressure
-        sml_setLowPressure.addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
-        sml_setLowPressure.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &sml_setHighPressure);
+        // Vac down to X
+        sml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFailed, &sm_stopAsFailed);
+        sml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFinished, &sml_setHighPressure);
 
 
 
@@ -114,12 +133,12 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Check cycles
-        sml_checkCycles.addTransition(this, &Purge::emit_continueCycling, &sml_setHighPressure);
-        sml_checkCycles.addTransition(this, &Purge::emit_stopCycling, &sml_setAtmospheric);
+        sml_checkCycles.addTransition(this, &Purge::emit_continueCycling, &sml_vent);
+        sml_checkCycles.addTransition(this, &Purge::emit_stopCycling, &sml_finishingVent);
 
-            // Set atmopheric peressure
-            sml_setAtmospheric.addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
-            sml_setAtmospheric.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &sm_stop);
+            // Vent pressure
+            sml_finishingVent.addTransition(&m_vent, &Vent::emit_machineFailed, &sm_stopAsFailed);
+            sml_finishingVent.addTransition(&m_vent, &Vent::emit_machineFinished, &sm_stop);
 
     }
 
@@ -166,6 +185,7 @@ namespace App { namespace Experiment { namespace Machines
         override.insert("tolerance_valve_seven", 500);
         override.insert("tolerance_valve_seven_step", 500);
         override.insert("tolerance_valve_seven_final", 500);
+        override.insert("tolerance_final", 500);
         override.insert("vac_down_to", params.value("vac_pressure").toDouble());
         m_pressurise.paramsOverride(override);
 
@@ -179,62 +199,38 @@ namespace App { namespace Experiment { namespace Machines
 
 
     /**
-     * Set the purge low pressure
+     * Vents pressure
      *
-     * @brief Purge::setLowPressure
+     * @brief Purge::ventOutput
      */
-    void Purge::setLowPressure()
+    void Purge::ventOutput()
     {
-        bool diableInitVacDown = true;
-        if(cycles == params.value("number_cycles").toInt())
-            diableInitVacDown = false;
-
-        // Set params
-        m_pressurise.setParams(params.value("vac_pressure").toDouble(), diableInitVacDown, 2000, false, params.value("open_output_valve").toBool());
-
-        // Override deep params within the pressurise state machine setup
-        QVariantMap override;
-        override.insert("valve_2_pulse", 100);
-        override.insert("tolerance_final", 500);
-        override.insert("tolerance_valve_two", 500);
-        override.insert("tolerance_valve_two_step", 500);
-        override.insert("tolerance_valve_two_final", 500);
-        override.insert("tolerance_valve_seven", 500);
-        override.insert("tolerance_valve_seven_step", 500);
-        override.insert("tolerance_valve_seven_final", 500);
-        override.insert("vac_down_to", params.value("vac_pressure").toDouble());
-        m_pressurise.paramsOverride(override);
+        // Set the params
+        m_vent.setParams(true, false, false, false, false, false, false);
 
         // Build the machine
-        m_pressurise.buildMachine();
+        m_vent.buildMachine();
 
         // Start the machine
-        m_pressurise.start();
-        qDebug() << "Low presure";
+        m_vent.start();
     }
 
 
     /**
      * Check if the system has exhusted low enough to be vaced down
      *
-     * @brief Purge::setAtmospheric
+     * @brief Purge::setVacuum
      */
-    void Purge::setAtmospheric()
+    void Purge::setVacuum()
     {
-        // Set params
-        m_pressurise.setParams(1000, true, 2000, false, params.value("open_output_valve").toBool());
-
-        // Override deep params within the pressurise state machine setup
-        QVariantMap override;
-        override.insert("valve_2_pulse", 200);
-        m_pressurise.paramsOverride(override);
+        // Set the params
+        m_vacDown.setParams(params.value("vac_pressure").toDouble(), false, false, 2, 1);
 
         // Build the machine
-        m_pressurise.buildMachine();
+        m_vacDown.buildMachine();
 
         // Start the machine
-        m_pressurise.start();
-        qDebug() << "Atmospheric presure";
+        m_vacDown.start();
     }
 
 }}}
