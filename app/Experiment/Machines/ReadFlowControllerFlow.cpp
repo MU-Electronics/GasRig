@@ -74,42 +74,12 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief ReadFlowControllerFlow::start
+     * @brief ReadFlowControllerFlow::stopped
      */
-    void ReadFlowControllerFlow::stop()
+    void ReadFlowControllerFlow::stopped()
     {
         // Stop all the timers
         stopFlowControllerFlowMonitor();
-
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readFlowControllerFlowStopped(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief ReadFlowControllerFlow::stopAsFailed
-     */
-    void ReadFlowControllerFlow::stopAsFailed()
-    {
-        // Stop all the timers
-        stopFlowControllerFlowMonitor();
-
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readFlowControllerFlowFailed(params);
     }
 
 

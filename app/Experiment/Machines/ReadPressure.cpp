@@ -67,36 +67,10 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief ReadPressure::start
+     * @brief ReadPressure::stopped
      */
-    void ReadPressure::stop()
+    void ReadPressure::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readPressureStopped(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief ReadPressure::stopAsFailed
-     */
-    void ReadPressure::stopAsFailed()
-    {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readPressureFailed(params);
     }
 
 

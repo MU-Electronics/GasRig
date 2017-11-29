@@ -55,6 +55,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Hold instance of command constructor
             Hardware::CommandConstructor& m_commandConstructor;
 
+            // Did an error occure which caused the machine to stop
+            bool error = false;
+
+            // Error cache for details on any error
+            QVariantMap errorDetails;
+
             // External states
             Valves* m_valves;
             Vacuum* m_vacuum;
@@ -75,6 +81,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             ,   sm_stopAsFailed;
 
             // Helper methods
+            void stopMachineWithoutError();
+            void stopMachineWithError();
             void removeAllTransitions();
             void paramsOverride(QVariantMap override);
 
@@ -82,16 +90,21 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             virtual void start() = 0;
             virtual void buildMachine() = 0;
 
-    signals:
+        signals:
             void hardwareRequest(QVariantMap command);
 
             void emit_validationFailed(QVariantMap error);
             void emit_validationSuccess(QVariantMap data);
 
+            void emit_machineFinished(QVariantMap details);
+            void emit_machineFailed(QVariantMap errorDetails);
+
         public slots:
-            // Re-implimention of stop for each machine
-            virtual void stop() = 0;
-            virtual void stopAsFailed() = 0;
+            // Re-implimention of stopped for each machine
+            virtual void stopped() = 0;
+
+            // Allow re-implentation of machine finished signal emitter
+            virtual void emitStopped();
 
         private:
             // Connect states to their function

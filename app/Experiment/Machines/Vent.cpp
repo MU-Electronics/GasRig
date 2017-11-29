@@ -247,44 +247,13 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief Vent::start
+     * @brief Vent::stopped
      */
-    void Vent::stop()
+    void Vent::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
         // Close valves
         valves()->closeSlowExhuastPath();
         valves()->closeExhuast();
-
-        // Emit the machine is finished
-        emit emit_ventFinished(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief Vent::stopAsFailed
-     */
-    void Vent::stopAsFailed()
-    {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Close valves
-        valves()->closeSlowExhuastPath();
-        valves()->closeExhuast();
-
-        // Emit the machine is finished
-        emit emit_ventFailed(params);
     }
 
 

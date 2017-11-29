@@ -68,9 +68,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::connectStatesToMethods()
     {
-        // Re-implimention of stop for each machine
-        connect(&sm_stop, &QState::entered, this, &MachineStates::stop);
-        connect(&sm_stopAsFailed, &QState::entered, this, &MachineStates::stopAsFailed);
+        // Tell the machine to stop becuase of success or error
+        connect(&sm_stop, &QState::entered, this, &MachineStates::stopMachineWithoutError);
+        connect(&sm_stopAsFailed, &QState::entered, this, &MachineStates::stopMachineWithError);
+
+        // When machine has stopped running the stopped method in each machine
+        connect(&machine, &QStateMachine::stopped, this, &MachineStates::stopped);
+        connect(&machine, &QStateMachine::stopped, this, &MachineStates::emitStopped);
     }
 
 
@@ -119,6 +123,60 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     Flow* MachineStates::flow()
     {
         return m_flow;
+    }
+
+
+    /**
+     * Emits a signal when the machine is stopped
+     *
+     * @brief MachineStates::emitStopped
+     */
+    void MachineStates::emitStopped()
+    {
+        if(error)
+        {
+            emit emit_machineFailed(errorDetails);
+        }
+        else
+        {
+            emit emit_machineFinished(errorDetails);
+        }
+    }
+
+
+    /**
+     * Stops and resets the machine with no errors flagged
+     *
+     * @brief MachineStates::stopMachineWithoutError
+     */
+    void MachineStates::stopMachineWithoutError()
+    {
+        // There was no error
+        error = true;
+
+        // Stop the machine
+        machine.stop();
+
+        // Get all states from machine and loop through them
+        removeAllTransitions();
+    }
+
+
+    /**
+     * Stop and resets the machine with errors flagged
+     *
+     * @brief MachineStates::stopMachineWithError
+     */
+    void MachineStates::stopMachineWithError()
+    {
+        // There was an error
+        error = true;
+
+        // Stop the machine
+        machine.stop();
+
+        // Get all states from machine and loop through them
+        removeAllTransitions();
     }
 
 

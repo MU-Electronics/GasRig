@@ -132,45 +132,13 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief ReadFlowControllerTemperatures::start
+     * @brief PulseValve::stopped
      */
-    void PulseValve::stop()
+    void PulseValve::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
         // Make sure valve closed
         closeValve(params.value("valve").toInt());
-
-        // Emit the machine is finished
-        emit emit_pulseValveFinished(params);
     }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief PulseValve::stopAsFailed
-     */
-    void PulseValve::stopAsFailed()
-    {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Make sure valve closed
-        closeValve(params.value("valve").toInt());
-
-        // Emit the machine is finished
-        emit emit_pulseValveFailed(params);
-    }
-
-
 
 
     /**

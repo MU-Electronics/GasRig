@@ -82,36 +82,10 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief Purge::start
+     * @brief Purge::stopped
      */
-    void Purge::stop()
+    void Purge::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_purgeFinished(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief Purge::stopAsFailed
-     */
-    void Purge::stopAsFailed()
-    {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_purgeFailed(params);
     }
 
 
@@ -128,14 +102,14 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Set low pressure
-        sml_setLowPressure.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFailed, &sm_stopAsFailed);
-        sml_setLowPressure.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFinished, &sml_setHighPressure);
+        sml_setLowPressure.addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
+        sml_setLowPressure.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &sml_setHighPressure);
 
 
 
         // Set high pressure
-        sml_setHighPressure.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFailed, &sm_stopAsFailed);
-        sml_setHighPressure.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFinished, &sml_checkCycles);
+        sml_setHighPressure.addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
+        sml_setHighPressure.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &sml_checkCycles);
 
 
 
@@ -144,8 +118,8 @@ namespace App { namespace Experiment { namespace Machines
         sml_checkCycles.addTransition(this, &Purge::emit_stopCycling, &sml_setAtmospheric);
 
             // Set atmopheric peressure
-            sml_setAtmospheric.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFailed, &sm_stopAsFailed);
-            sml_setAtmospheric.addTransition(&m_pressurise, &Pressurise::emit_pressuriseFinished, &sm_stop);
+            sml_setAtmospheric.addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
+            sml_setAtmospheric.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &sm_stop);
 
     }
 

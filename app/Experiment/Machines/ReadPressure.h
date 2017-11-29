@@ -31,15 +31,11 @@ namespace App { namespace Experiment { namespace Machines
 
             void start();
 
-            void stop();
-
-            void stopAsFailed();
+            void stopped();
 
             void buildMachine();
 
         signals:
-            void emit_readPressureStopped(QVariantMap params);
-            void emit_readPressureFailed(QVariantMap params);
 
         public slots:
             void startPressureMonitor();

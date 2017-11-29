@@ -35,9 +35,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void start();
 
-            void stop();
-
-            void stopAsFailed();
+            void stopped();
 
             void buildMachine();
 
@@ -138,9 +136,6 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_validateOpenVacuumOut;
 
         signals:
-            void emit_ventFinished(QVariantMap params);
-            void emit_ventFailed(QVariantMap params);
-
             void emit_validationSuccess();
             void emit_validationFailed();
 

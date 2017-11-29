@@ -69,34 +69,8 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief ReadVacuum::start
      */
-    void ReadVacuum::stop()
+    void ReadVacuum::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readVacuumStopped(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief ReadVacuum::stopAsFailed
-     */
-    void ReadVacuum::stopAsFailed()
-    {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readVacuumFailed(params);
     }
 
 

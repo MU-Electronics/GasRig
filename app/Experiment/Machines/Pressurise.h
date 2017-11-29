@@ -36,9 +36,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void start();
 
-            void stop();
-
-            void stopAsFailed();
+            void stopped();
 
             void buildMachine();
 
@@ -210,9 +208,6 @@ namespace App { namespace Experiment { namespace Machines
             ,       sml_validateDisableBackingPump_2;
 
         signals:
-            void emit_pressuriseFinished(QVariantMap params);
-            void emit_pressuriseFailed(QVariantMap params);
-
             // State signals
             void emit_pressureToLow();
             void emit_pressureToHigh();

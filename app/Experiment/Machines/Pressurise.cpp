@@ -465,16 +465,10 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief Pressurise::start
+     * @brief Pressurise::stopped
      */
-    void Pressurise::stop()
+    void Pressurise::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
         // Close valves
         valves()->closeOutput();
         valves()->closeExhuast();
@@ -499,56 +493,6 @@ namespace App { namespace Experiment { namespace Machines
         pressureReading = 1;
         exhuastValvePressureChange.clear();
         inputValvePressureChange.clear();
-
-        qDebug() << "Stopped";
-
-        // Emit the machine is finished
-        emit emit_pressuriseFinished(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief Pressurise::stopAsFailed
-     */
-    void Pressurise::stopAsFailed()
-    {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Close valves
-        valves()->closeOutput();
-        valves()->closeExhuast();
-        valves()->closeFastExhuastPath();
-        valves()->closeSlowExhuastPath();
-        valves()->closeHighPressureInput();
-        valves()->closeVacuumIn();
-
-        // Turn off vacuum pum
-        vacuum()->disableBackingPump();
-        vacuum()->disableTurboPump();
-
-        // Stop timers
-        stopValveOnePulseTimer();
-        stopValveTwoPulseTimer();
-        stopValveSevenPulseTimer();
-        stopExhuastVoidVacDownTimer();
-        stopVacuumValveTimer();
-
-        // Reset vars
-        backingPumpEnabled = false;
-        pressureReading = 1;
-        exhuastValvePressureChange.clear();
-        inputValvePressureChange.clear();
-
-        qDebug() << "Stopped as failed";
-
-        // Emit the machine is finished
-        emit emit_pressuriseFailed(params);
     }
 
 

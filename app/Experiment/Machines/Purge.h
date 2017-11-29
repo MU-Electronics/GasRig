@@ -37,9 +37,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void start();
 
-            void stop();
-
-            void stopAsFailed();
+            void stopped();
 
             void buildMachine();
 
@@ -58,9 +56,6 @@ namespace App { namespace Experiment { namespace Machines
             // Functions::CommandValidatorState ;
 
         signals:
-            void emit_purgeFinished(QVariantMap params);
-            void emit_purgeFailed(QVariantMap params);
-
             void emit_validationSuccess();
             void emit_validationFailed();
 

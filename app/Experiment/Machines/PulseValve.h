@@ -34,9 +34,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void start();
 
-            void stop();
-
-            void stopAsFailed();
+            void stopped();
 
             void buildMachine();
 
@@ -47,9 +45,6 @@ namespace App { namespace Experiment { namespace Machines
             QTimer t_pulseValveClose;
 
         signals:
-            void emit_pulseValveFinished(QVariantMap params);
-            void emit_pulseValveFailed(QVariantMap params);
-
             void emit_continueCycling();
             void emit_stopCycling();
 

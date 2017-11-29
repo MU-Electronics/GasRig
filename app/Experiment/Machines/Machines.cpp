@@ -22,42 +22,42 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_purge(*new Purge(parent, settings, hardware, safety))
     {
         // Connect the finished signals for the pruge
-        connect(&m_purge, &Purge::emit_purgeFinished, this, &Machines::purgeFinished);
-        connect(&m_purge, &Purge::emit_purgeFailed, this, &Machines::purgeFailed);
+        connect(&m_purge, &Purge::emit_machineFinished, this, &Machines::purgeFinished);
+        connect(&m_purge, &Purge::emit_machineFailed, this, &Machines::purgeFailed);
 
         // Connect the finished signals for the vent
-        connect(&m_vent, &Vent::emit_ventFinished, this, &Machines::ventFinished);
-        connect(&m_vent, &Vent::emit_ventFailed, this, &Machines::ventFailed);
+        connect(&m_vent, &Vent::emit_machineFinished, this, &Machines::ventFinished);
+        connect(&m_vent, &Vent::emit_machineFailed, this, &Machines::ventFailed);
 
         // Connect the finished signals for the machine vac down
-        connect(&m_vacDown, &VacDown::emit_vacDownFinished, this, &Machines::vacDownFinished);
-        connect(&m_vacDown, &VacDown::emit_vacDownFailed, this, &Machines::vacDownFailed);
+        connect(&m_vacDown, &VacDown::emit_machineFinished, this, &Machines::vacDownFinished);
+        connect(&m_vacDown, &VacDown::emit_machineFailed, this, &Machines::vacDownFailed);
 
         // Connect the finished signals for the machine safe valve
-        connect(&m_safeValve, &SafeValve::emit_safeValveFinished, this, &Machines::valveStateFinished);
-        connect(&m_safeValve, &SafeValve::emit_safeValveFailed, this, &Machines::valveStateFailed);
+        connect(&m_safeValve, &SafeValve::emit_machineFinished, this, &Machines::valveStateFinished);
+        connect(&m_safeValve, &SafeValve::emit_machineFailed, this, &Machines::valveStateFailed);
 
         // Connect the finished signals for the pulse valve
-        connect(&m_pulseValve, &PulseValve::emit_pulseValveFinished, this, &Machines::pulseValveFinished);
-        connect(&m_pulseValve, &PulseValve::emit_pulseValveFinished, this, &Machines::pulseValveFailed);
+        connect(&m_pulseValve, &PulseValve::emit_machineFinished, this, &Machines::pulseValveFinished);
+        connect(&m_pulseValve, &PulseValve::emit_machineFailed, this, &Machines::pulseValveFailed);
 
         // Connect the finished signals for the machine sensor readings
-        connect(&m_readFlowControllerFlow, &ReadFlowControllerFlow::emit_readFlowControllerFlowStopped, this, &Machines::sensorReadingsFinished);
-        connect(&m_readFlowControllerFlow, &ReadFlowControllerFlow::emit_readFlowControllerFlowFailed, this, &Machines::sensorReadingsFailed);
-        connect(&m_readPressure, &ReadPressure::emit_readPressureStopped, this, &Machines::sensorReadingsFinished);
-        connect(&m_readPressure, &ReadPressure::emit_readPressureFailed, this, &Machines::sensorReadingsFailed);
-        connect(&m_readVacuum, &ReadVacuum::emit_readVacuumStopped, this, &Machines::sensorReadingsFinished);
-        connect(&m_readVacuum, &ReadVacuum::emit_readVacuumStopped, this, &Machines::sensorReadingsFailed);
-        connect(&m_readFlowControllerTemperatures, &ReadFlowControllerTemperatures::emit_readFlowControllerTemperaturesStopped, this, &Machines::sensorReadingsFinished);
-        connect(&m_readFlowControllerTemperatures, &ReadFlowControllerTemperatures::emit_readFlowControllerTemperaturesFailed, this, &Machines::sensorReadingsFailed);
-        connect(&m_readTurboSpeed, &ReadTurboSpeed::emit_readTurboSpeedStopped, this, &Machines::sensorReadingsFinished);
-        connect(&m_readTurboSpeed, &ReadTurboSpeed::emit_readTurboSpeedFailed, this, &Machines::sensorReadingsFailed);
-        connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_readVacStationTemperaturesStopped, this, &Machines::sensorReadingsFinished);
-        connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_readVacStationTemperaturesFailed, this, &Machines::sensorReadingsFailed);
+        connect(&m_readFlowControllerFlow, &ReadFlowControllerFlow::emit_machineFinished, this, &Machines::sensorReadingsFinished);
+        connect(&m_readFlowControllerFlow, &ReadFlowControllerFlow::emit_machineFailed, this, &Machines::sensorReadingsFailed);
+        connect(&m_readPressure, &ReadPressure::emit_machineFinished, this, &Machines::sensorReadingsFinished);
+        connect(&m_readPressure, &ReadPressure::emit_machineFailed, this, &Machines::sensorReadingsFailed);
+        connect(&m_readVacuum, &ReadVacuum::emit_machineFinished, this, &Machines::sensorReadingsFinished);
+        connect(&m_readVacuum, &ReadVacuum::emit_machineFailed, this, &Machines::sensorReadingsFailed);
+        connect(&m_readFlowControllerTemperatures, &ReadFlowControllerTemperatures::emit_machineFinished, this, &Machines::sensorReadingsFinished);
+        connect(&m_readFlowControllerTemperatures, &ReadFlowControllerTemperatures::emit_machineFailed, this, &Machines::sensorReadingsFailed);
+        connect(&m_readTurboSpeed, &ReadTurboSpeed::emit_machineFinished, this, &Machines::sensorReadingsFinished);
+        connect(&m_readTurboSpeed, &ReadTurboSpeed::emit_machineFailed, this, &Machines::sensorReadingsFailed);
+        connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_machineFinished, this, &Machines::sensorReadingsFinished);
+        connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_machineFailed, this, &Machines::sensorReadingsFailed);
 
         // Connect the finished signals for the machine set pressure emit_pressuriseStopped
-        connect(&m_pressurise, &Pressurise::emit_pressuriseFinished, this, &Machines::pressuriseFinished);
-        connect(&m_pressurise, &Pressurise::emit_pressuriseFailed, this, &Machines::pressuriseFailed);
+        connect(&m_pressurise, &Pressurise::emit_machineFinished, this, &Machines::pressuriseFinished);
+        connect(&m_pressurise, &Pressurise::emit_machineFailed, this, &Machines::pressuriseFailed);
 
         // Connect the finished signals for the machine set flow rate
 
@@ -156,12 +156,12 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopSensorReadings()
     {
         // Stop the machine
-        m_readFlowControllerFlow.stop();
-        m_readPressure.stop();
-        m_readVacuum.stop();
-        m_readFlowControllerTemperatures.stop();
-        m_readTurboSpeed.stop();
-        m_readVacStationTemperatures.stop();
+        m_readFlowControllerFlow.stopMachineWithoutError();
+        m_readPressure.stopMachineWithoutError();
+        m_readVacuum.stopMachineWithoutError();
+        m_readFlowControllerTemperatures.stopMachineWithoutError();
+        m_readTurboSpeed.stopMachineWithoutError();
+        m_readVacStationTemperatures.stopMachineWithoutError();
 
         // Set the sensors to being monitored
         sensorMonitors = false;
@@ -237,7 +237,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopVacDown()
     {
         // Stop the machine
-        m_vacDown.stop();
+        m_vacDown.stopMachineWithoutError();
 
         // Emit machine stopped
         emit emit_vacDownMachineStopped();
@@ -312,7 +312,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopPurge()
     {
         // Stop the machine
-        m_purge.stop();
+        m_purge.stopMachineWithoutError();
 
         // Emit machine stopped
         emit emit_vacDownMachineStopped();
@@ -390,7 +390,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopVent()
     {
         // Stop the machine
-        m_vent.stop();
+        m_vent.stopMachineWithoutError();
 
         // Emit machine stopped
         emit emit_ventMachineStopped();
@@ -447,7 +447,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopPulseValve()
     {
         // Stop the pulse valve machine
-        m_pulseValve.stop();
+        m_pulseValve.stopMachineWithoutError();
 
         // Tell everyone we've stopped the machine
         emit emit_pulseValveStopped();
@@ -521,7 +521,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopSetPressure()
     {
         // Stop the pulse valve machine
-        m_pressurise.stop();
+        m_pressurise.stopMachineWithoutError();
 
         emit emit_pressuriseStopped();
     }

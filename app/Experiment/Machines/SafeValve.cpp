@@ -145,39 +145,10 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief VacDown::start
+     * @brief VacDown::stopped
      */
-    void SafeValve::stop()
+    void SafeValve::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_safeValveFinished(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief VacDown::start
-     */
-    void SafeValve::stopAsFailed()
-    {
-        // Close all valves as we had a failure somewhere
-
-
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_safeValveFailed(params);
     }
 
 

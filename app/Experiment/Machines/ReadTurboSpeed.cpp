@@ -67,36 +67,10 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief ReadTurboSpeed::start
+     * @brief ReadTurboSpeed::stopped
      */
-    void ReadTurboSpeed::stop()
+    void ReadTurboSpeed::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readTurboSpeedStopped(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief ReadTurboSpeed::stopAsFailed
-     */
-    void ReadTurboSpeed::stopAsFailed()
-    {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readTurboSpeedFailed(params);
     }
 
 

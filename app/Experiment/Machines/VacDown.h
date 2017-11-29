@@ -31,23 +31,16 @@ namespace App { namespace Experiment { namespace Machines
 
             void start();
 
-            void stop();
-
-            void stopAsFailed();
+            void stopped();
 
             void buildMachine();
 
         signals:
-            void emit_vacDownFinished(QVariantMap params);
-            void emit_vacDownFailed(QVariantMap params);
             void emit_timerActive();
 
         public slots:
             // States
             void startVacuumTimer();
-
-            // Finishing sequence
-            void finish();
 
         private:
             // Referance to QObject

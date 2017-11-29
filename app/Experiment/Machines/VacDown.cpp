@@ -150,10 +150,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Timer states
         connect(&sml_startVacuumTimer, &QState::entered, this, &VacDown::startVacuumTimer);
-
-
-        // Finishing sequence
-        //connect(&sm_finishVacSession, &QState::entered, this, &VacDown::finish);
     }
 
     VacDown::~VacDown()
@@ -204,51 +200,9 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief VacDown::start
+     * @brief VacDown::stopped
      */
-    void VacDown::stop()
-    {
-        // Run the finish sequence again
-        finish();
-
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_vacDownFinished(params);
-    }
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief VacDown::stopAsFailed
-     */
-    void VacDown::stopAsFailed()
-    {
-        // Run the finish sequence again
-        finish();
-
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_vacDownFailed(params);
-    }
-
-
-
-    /**
-     * Runs on finishing session
-     *
-     * @brief VacDown::finishVacSession
-     */
-    void VacDown::finish()
+    void VacDown::stopped()
     {
         // Turn off vacuum
        vacuum()->disableTurboPump();

@@ -76,36 +76,10 @@ namespace App { namespace Experiment { namespace Machines
     /**
      * Start the state machine
      *
-     * @brief ReadVacStationTemperatures::start
+     * @brief ReadVacStationTemperatures::stopped
      */
-    void ReadVacStationTemperatures::stop()
+    void ReadVacStationTemperatures::stopped()
     {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readVacStationTemperaturesStopped(params);
-    }
-
-
-    /**
-     * Stop the state machine as it failed somewhere
-     *
-     * @brief ReadVacStationTemperatures::stopAsFailed
-     */
-    void ReadVacStationTemperatures::stopAsFailed()
-    {
-        // Stop the machine
-        machine.stop();
-
-        // Get all states from machine and loop through them
-        removeAllTransitions();
-
-        // Emit the machine is finished
-        emit emit_readVacStationTemperaturesFailed(params);
     }
 
 
