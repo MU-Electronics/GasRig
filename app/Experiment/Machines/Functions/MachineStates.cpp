@@ -73,7 +73,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         connect(&sm_stopAsFailed, &QState::entered, this, &MachineStates::stopMachineWithError);
 
         // When machine has stopped running the stopped method in each machine
-        connect(&machine, &QStateMachine::stopped, this, &MachineStates::stopped);
         connect(&machine, &QStateMachine::stopped, this, &MachineStates::emitStopped);
     }
 
@@ -135,10 +134,18 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     {
         if(error)
         {
+            // Run the stopped function in the state machine
+            stopped();
+
+            // Tell every we have stopped becuase of an error
             emit emit_machineFailed(errorDetails);
         }
         else
         {
+            // Run the stopped function in the state machine
+            stopped();
+
+            // Tell every we have stopped becuase the machine finished it's task
             emit emit_machineFinished(errorDetails);
         }
     }
