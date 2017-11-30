@@ -13,7 +13,7 @@ import "../../../parts"
 Item {
     id: valveTab
 
-    width: parent.width - 10
+    width: parent.width
 
 
 

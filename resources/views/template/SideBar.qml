@@ -50,7 +50,7 @@ Pane {
             connectionTab.highlighted = true
 
             // Push the view update
-            stackView.push("qrc:/views/management/ConnectionStatus.qml")
+            stackView.replace("qrc:/views/management/ConnectionStatus.qml")
 
             // Update current nav
             GlobalManager.currentNavigation = 2;
@@ -88,7 +88,7 @@ Pane {
                 modeNavigation.currentIndex = index
 
                 // Push the view update
-                stackView.push(model.source)
+                stackView.replace(model.source)
 
                 // Update current nav
                 GlobalManager.currentNavigation = 2;

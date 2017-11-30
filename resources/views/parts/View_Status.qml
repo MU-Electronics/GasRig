@@ -39,6 +39,18 @@ Item
             }
         }
 
+        BusyIndicator {
+            id: rigStatusLoading
+            running: ((systemStatus.status == Loader.Loading)||(vacuumGraph.status == Loader.Loading)||(pressureGraph.status == Loader.Loading)||(extraTab.status == Loader.Loading)) ? true : false
+            width: 100
+            height: 100
+            anchors.top: statusTabBar.bottom
+            anchors.topMargin: ((window.height-150) / 2) - 50
+            anchors.left: statusTabBar.left
+            anchors.leftMargin: (parent.width / 2) - 50
+            visible: ((systemStatus.status == Loader.Loading)||(vacuumGraph.status == Loader.Loading)||(pressureGraph.status == Loader.Loading)||(extraTab.status == Loader.Loading)) ? true : false
+        }
+
         StackLayout {
             id: stackViewSystem
             width: parent.width - 10
@@ -48,33 +60,58 @@ Item
             anchors.topMargin: 10
             anchors.left: statusTabBar.left
             anchors.leftMargin: 10
-            Item {
+
+            Loader {
                 id: systemStatus
-                width: (parent.width)
+                width: parent.width
                 height: parent.height
-                SystemDiagram
-                {
-                    height: parent.height
-                    width: (parent.width)
-                    anchors.top: parent.top
-                    anchors.topMargin: 20
+                source: "system_status/SystemDiagram.qml"
+                active: (statusTabBar.currentIndex === 0) ? true : false
+                asynchronous: true
+                visible: (status == Loader.Ready && statusTabBar.currentIndex == 0) ? true : false
+                onLoaded: {
+                    item.width = stackViewSystem.width
+                    item.height = stackViewSystem.height
                 }
             }
-            Item {
+            Loader {
                 id: vacuumGraph
-                VacuumDiagram
-                {
-                    height: parent.height
-                    width: (parent.width)
-                    anchors.top: parent.top
-                    anchors.topMargin: 20
+                width: parent.width
+                height: parent.height
+                source: "system_status/VacuumDiagram.qml"
+                active: (statusTabBar.currentIndex === 1) ? true : false
+                asynchronous: true
+                visible: (status == Loader.Ready && statusTabBar.currentIndex == 1) ? true : false
+                onLoaded: {
+                    item.width = stackViewSystem.width
+                    item.height = stackViewSystem.height
                 }
             }
-            Item {
+            Loader {
                 id: pressureGraph
+                width: parent.width
+                height: parent.height
+                active: (statusTabBar.currentIndex === 2) ? true : false
+                //source: "system_status/VacuumDiagram.qml"
+                asynchronous: true
+                visible: (status == Loader.Ready && statusTabBar.currentIndex == 2) ? true : false
+                onLoaded: {
+                    item.width = stackViewSystem.width
+                    item.height = stackViewSystem.height
+                }
             }
-            Item {
+            Loader {
                 id: extraTab
+                width: parent.width
+                height: parent.height
+                active: (statusTabBar.currentIndex === 3) ? true : false
+                //source: "system_status/VacuumDiagram.qml"
+                asynchronous: true
+                visible: (status == Loader.Ready && statusTabBar.currentIndex == 3) ? true : false
+                onLoaded: {
+                    item.width = stackViewSystem.width
+                    item.height = stackViewSystem.height
+                }
             }
         }
     }

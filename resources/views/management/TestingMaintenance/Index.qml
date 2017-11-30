@@ -51,6 +51,18 @@ Item
             }
         }
 
+        BusyIndicator {
+            id: rigStatusLoading
+            running: ((valveTab.status == Loader.Loading)||(vacuumTab.status == Loader.Loading)||(flowTab.status == Loader.Loading)||(expansionTab.status == Loader.Loading)) ? true : false
+            width: 100
+            height: 100
+            anchors.top: testingModeTabBar.bottom
+            anchors.topMargin: ((window.height-150) / 2) - 50
+            anchors.left: testingModeTabBar.left
+            anchors.leftMargin: (parent.width / 2) - 50
+            visible: ((valveTab.status == Loader.Loading)||(vacuumTab.status == Loader.Loading)||(flowTab.status == Loader.Loading)||(expansionTab.status == Loader.Loading)) ? true : false
+        }
+
         StackLayout {
             id: stackViewTesting
             width: parent.width
@@ -59,25 +71,50 @@ Item
             anchors.topMargin: 20
             anchors.left: testingModeTabBar.left
             anchors.leftMargin: 10
-            Item {
+
+            Loader {
                 id: valveTab
                 width: parent.width
-                Valve.Index{}
+                source: "Valve/Index.qml"
+                active: (testingModeTabBar.currentIndex === 0) ? true : false
+                asynchronous: true
+                visible: (status == Loader.Ready && testingModeTabBar.currentIndex == 0) ? true : false
+                onLoaded: {
+                    item.width = stackViewTesting.width - 10
+                }
             }
-            Item {
+            Loader {
                 id: vacuumTab
                 width: parent.width
-                Vacuum{}
+                source: "Vacuum.qml"
+                active: (testingModeTabBar.currentIndex === 1) ? true : false
+                asynchronous: true
+                visible: (status == Loader.Ready && testingModeTabBar.currentIndex == 1) ? true : false
+                onLoaded: {
+                    item.width = stackViewTesting.width - 10
+                }
             }
-            Item {
+            Loader {
                 id: flowTab
                 width: parent.width
-                FlowController{}
+                source: "FlowController.qml"
+                active: (testingModeTabBar.currentIndex === 2) ? true : false
+                asynchronous: true
+                visible: (status == Loader.Ready && testingModeTabBar.currentIndex == 2) ? true : false
+                onLoaded: {
+                    item.width = stackViewTesting.width - 10
+                }
             }
-            Item {
+            Loader {
                 id: expansionTab
                 width: parent.width
-                Expansion{}
+                source: "Expansion.qml"
+                active: (testingModeTabBar.currentIndex === 3) ? true : false
+                asynchronous: true
+                visible: (status == Loader.Ready && testingModeTabBar.currentIndex == 3) ? true : false
+                onLoaded: {
+                    item.width = stackViewTesting.width - 10
+                }
             }
         }
     }
