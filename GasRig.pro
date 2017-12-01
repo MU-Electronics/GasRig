@@ -16,14 +16,14 @@ win32 {
     PWD_WIN ~= s,/,\\,g
     DESTDIR_WIN ~= s,/,\\,g
 
-    configfiles.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\debug\\config)
-    configfiles_release.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\release\\config)
+    #configfiles.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\debug\\config)
+    #configfiles_release.commands = $$quote(cmd /c xcopy /S /I /Y $${PWD_WIN}\\resources\\config $${DESTDIR_WIN}\\release\\config)
 
 
     #LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LJUDDotNet.dll"
 
     # Supplier labjack driver is for windows 7
-    LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LabJackUD.lib"
+    LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LabJackUD_64.lib"
 
 }
 
