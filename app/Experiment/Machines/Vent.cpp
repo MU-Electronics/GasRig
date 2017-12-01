@@ -519,10 +519,13 @@ namespace App { namespace Experiment { namespace Machines
         double pressureIn = package.value("pressure").toDouble() * 1000;
 
         // Get the max pressure allowed
-        double maxPressure = 1250;
+        double maxPressure = 1100;
+
+        // Get the min pressure allowed
+        double minPressure = 950;
 
         // Check the pressure is safe to vac down
-        if(pressureIn < maxPressure)
+        if(pressureIn < maxPressure && pressureIn > minPressure)
         {
             // Store the stage info
             QVariantMap data;
