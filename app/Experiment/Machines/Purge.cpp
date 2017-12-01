@@ -176,18 +176,18 @@ namespace App { namespace Experiment { namespace Machines
         m_pressurise.setParams(params.value("nitrogen_pressure").toDouble(), true, 2000, false, params.value("open_output_valve").toBool());
 
         // Override deep params within the pressurise state machine setup
-//        QVariantMap override;
+        QVariantMap override;
 //        override.insert("valve_2_pulse", 200);
-//        override.insert("tolerance_final", 500);
-//        override.insert("tolerance_valve_two", 500);
-//        override.insert("tolerance_valve_two_step", 500);
-//        override.insert("tolerance_valve_two_final", 500);
-//        override.insert("tolerance_valve_seven", 500);
-//        override.insert("tolerance_valve_seven_step", 500);
-//        override.insert("tolerance_valve_seven_final", 500);
-//        override.insert("tolerance_final", 500);
-//        override.insert("vac_down_to", params.value("vac_pressure").toDouble());
-//        m_pressurise.paramsOverride(override);
+        override.insert("tolerance_final", 500);
+        override.insert("tolerance_valve_two", 500);
+        override.insert("tolerance_valve_two_step", 500);
+        override.insert("tolerance_valve_two_final", 500);
+        override.insert("tolerance_valve_seven", 500);
+        override.insert("tolerance_valve_seven_step", 500);
+        override.insert("tolerance_valve_seven_final", 500);
+        override.insert("tolerance_final", 500);
+        override.insert("vac_down_to", params.value("vac_pressure").toDouble());
+        m_pressurise.paramsOverride(override);
 
         // Build the machine
         m_pressurise.buildMachine();
