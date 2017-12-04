@@ -116,12 +116,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopped()
     {
-        qDebug() << "machine stoppedf";
-        // Build the shutdown machine
-        buildSubMachineShutDown();
 
-        // Run the sub machine shutdown state machine
-        subMachineShutdown.start();
     }
 
 
@@ -132,7 +127,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::buildSubMachineShutDown()
     {
-        qDebug() << "built sub machine stop machine";
         // Where to start the machine
         subMachineShutdown.setInitialState(&ssml_vent);
 
@@ -190,21 +184,15 @@ namespace App { namespace Experiment { namespace Machines
 
     void Purge::checkCycles()
     {
-        qDebug() << "Checking cycles";
-
-
         // Continue or stop?
         if(cycles == 1)
         {
-            qDebug() << "Stop cycling";
             emit emit_stopCycling();
         }
         else
         {
             // Once cycle just completed
             cycles--;
-
-            qDebug() << "Continue cycling: " << cycles;
 
             emit emit_continueCycling();
         }
@@ -223,15 +211,34 @@ namespace App { namespace Experiment { namespace Machines
 
         // Override deep params within the pressurise state machine setup
         QVariantMap override;
-//        override.insert("valve_2_pulse", 200);
-        override.insert("tolerance_valve_two", 200);
-        override.insert("tolerance_valve_two_step", 200);
-        override.insert("tolerance_valve_two_final", 200);
-        override.insert("tolerance_valve_seven", 200);
-        override.insert("tolerance_valve_seven_step", 200);
-        override.insert("tolerance_valve_seven_final", 200);
+
+        // Set valve two tolerance to be larger
+        override.insert("tolerance_valve_two", 500);
+        override.insert("tolerance_valve_two_step", 500);
+        override.insert("tolerance_valve_two_final", 500);
+
+        // Set input valve tolerance to be larger
+        override.insert("tolerance_valve_seven", 500);
+        override.insert("tolerance_valve_seven_step", 500);
+        override.insert("tolerance_valve_seven_final", 500);
+
+        // Set final tolerance to be larger
         override.insert("tolerance_final", 500);
+
+        // Set input valve step size to be larger
+        override.insert("valve_7_normal_step_size", 200);
+        override.insert("valve_7_final_step_size", 200);
+        override.insert("valve_7_step_size", params.value("valve_7_normal_step_size").toInt());
+
+        // Set valve 2 step size to be larger
+        override.insert("valve_2_normal_step_size", 200);
+        override.insert("valve_2_final_step_size", 200);
+        override.insert("valve_2_step_size", params.value("valve_2_normal_step_size").toInt());
+
+        // Set level to vac down to
         override.insert("vac_down_to", params.value("vac_pressure").toDouble());
+
+        // Override the core params with above
         m_pressurise.paramsOverride(override);
 
         // Build the machine
@@ -239,7 +246,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_pressurise.start();
-        qDebug() << "High presure" << params.value("nitrogen_pressure").toDouble();
     }
 
     /**
@@ -278,7 +284,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVent()
     {
-        qDebug() << "stopping vent";
         // Start the machine
         m_vent.stopMachineWithoutError();
     }

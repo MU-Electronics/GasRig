@@ -76,8 +76,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         // When machine has stopped running the stopped method in each machine
         connect(&machine, &QStateMachine::stopped, this, &MachineStates::emitStopped);
-        //connect(this, &MachineStates::emit_machineAlreadyStopped, this, &MachineStates::emitStopped);
-
 
         // Shut down sub state machines
         connect(&ssm_stop, &QState::entered, this, &MachineStates::stopShutDownSubMachine);
@@ -141,6 +139,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::afterSubMachinesStopped()
     {
+        removeAllTransitions(subMachineShutdown);
+
         if(error)
         {
             emit emit_machineFailed(errorDetails);
@@ -159,7 +159,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopShutDownSubMachine()
     {
-        qDebug() << "sub state machine machine stopped";
         subMachineShutdown.stop();
     }
 
@@ -171,10 +170,14 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::emitStopped()
     {
-        // Trigger shutdown sub machines
+        // Stop sub manchines if there present
         if(subMachines)
         {
-            removeAllTransitions(subMachineShutdown);
+            // Build the shutdown machine
+            buildSubMachineShutDown();
+
+            // Run the sub machine shutdown state machine
+            subMachineShutdown.start();
         }
 
         // Stop main machine
