@@ -352,7 +352,9 @@ namespace App { namespace Experiment { namespace Machines
                 // Wait for pressure reading?
                 sml_waitForPressureAfterSlowExhuast.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_validatePressureAfterSlowExhuast);
                     // Are we at atmopheric
-                    sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationSuccess, &sml_stageFinder);
+                    sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationSuccess, &sml_closeFastExhuastPathWaitingInternal);
+                        // Close fast exhuast
+                        sml_closeFastExhuastPathWaitingInternal.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_stageFinder);
                     sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationFailed, &sml_waitForPressureAfterSlowExhuast);
                     sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_openValveFour, &sml_openFastExhuastPathWaitingInternal);
                         // Open fast exhuast
@@ -559,7 +561,7 @@ namespace App { namespace Experiment { namespace Machines
                     pressureValidate.addTransition(this, &Vent::emit_openValveFour, &openFastExhuast);
                         // Open valve four
                         openFastExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &pressureWait);
-                    pressureValidate.addTransition(this, &Vent::emit_validationSuccess, &close);
+                    pressureValidate.addTransition(this, &Vent::emit_validationSuccess, &closeFastExhuast);
                         // Close fast exhuast
                         closeFastExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &close);
                             // Close valve
