@@ -90,6 +90,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             void validateSetGasModeHeavy();
             void validateSetGasModeMedium();
             void validateSetGasModeHelium();
+            void validateTurboSpeedZero();
 
         private:
 
