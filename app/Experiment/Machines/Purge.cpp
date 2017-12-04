@@ -104,6 +104,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::start()
     {
+        subMachineShutdown.stop();
         machine.start();
     }
 
@@ -115,7 +116,12 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopped()
     {
+        qDebug() << "machine stoppedf";
+        // Build the shutdown machine
+        buildSubMachineShutDown();
 
+        // Run the sub machine shutdown state machine
+        subMachineShutdown.start();
     }
 
 

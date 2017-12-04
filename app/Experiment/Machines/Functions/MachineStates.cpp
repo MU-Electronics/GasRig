@@ -176,11 +176,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Trigger shutdown sub machines
         if(subMachines)
         {
-            // Build the shutdown machine
-            buildSubMachineShutDown();
 
-            // Run the sub machine shutdown state machine
-            subMachineShutdown.start();
         }
 
         // Stop main machine
