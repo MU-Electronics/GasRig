@@ -116,7 +116,11 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopped()
     {
+        // Build the shutdown machine
+        buildSubMachineShutDown();
 
+        // Run the sub machine shutdown state machine
+        subMachineShutdown.start();
     }
 
 
