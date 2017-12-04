@@ -135,6 +135,42 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     }
 
 
+    void Vacuum::validateTurboSpeedZero()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Turbo speed
+        double turboSpeed = package.value("speed").toDouble();
+
+        // Is the turbo still spinning?
+        if(turboSpeed < 1)
+        {
+            // Store the success
+            QVariantMap success;
+            success.insert("message", "the turbo pump is not spinning");
+            success.insert("current_stated", turboSpeed);
+
+            // Emit safe to proceed
+            emit emit_validationSuccess(success);
+
+            return;
+        }
+
+
+        // Store the error
+        QVariantMap error;
+        error.insert("message", "the turbo pump is still spinner");
+        error.insert("current_speed", turboSpeed);
+
+        // Emit not safe to proceed
+        emit emit_validationFailed(error);
+    }
+
+
     void Vacuum::validateDisableTurboPump()
     {
         // Get the validator state instance

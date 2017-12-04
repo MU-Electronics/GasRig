@@ -377,8 +377,8 @@ namespace App { namespace View { namespace Managers
     void SystemStatus::receiveVacGetTurboSpeed(QVariantMap command)
     {
         // Update the mode
-        m_vacuumState["turbo_pump_speed"] = command.value("speed").toInt();
-        m_vacuumState["turbo_pump_speed_unit"] = command.value("location_verbal").toInt();
+        m_vacuumState["turbo_pump_speed"] = command.value("speed").toDouble();
+        m_vacuumState["turbo_pump_speed_unit"] = command.value("location_verbal").toString();
 
         // Update the display
         emit_vacuumStateChanged(m_vacuumState);

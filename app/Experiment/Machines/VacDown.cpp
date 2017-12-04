@@ -27,6 +27,9 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validateVacPressureForTurbo(&machine)
         ,   sml_validatePressureForVacuum(&machine)
 
+        ,   sml_waitForTurboSpeed(&machine)
+        ,   sml_validateTurboSpeedZero(&machine)
+
 
             // Close valve related states
         ,   sml_closeHighPressureInput(&machine)
@@ -104,6 +107,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validateEnableBackingPump, &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateEnableBackingPump);
         connect(&sml_validateEnableTurboPump, &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateEnableTurboPump);
         connect(&sml_validateDisableTurboPump, &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateDisableTurboPump);
+        connect(&sml_validateTurboSpeedZero, &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateTurboSpeedZero);
 
 
         // Link close valve states
@@ -422,7 +426,7 @@ namespace App { namespace Experiment { namespace Machines
         if(params.value("type").toInt() == 1)
         {
             // Time based vac down
-            sml_timerWait.addTransition(&t_vacDown, &QTimer::timeout, &sm_stop);
+            sml_timerWait.addTransition(&t_vacDown, &QTimer::timeout, &sml_waitForTurboSpeed);
         }
         else if(params.value("type").toInt() == 2)
         {
@@ -431,8 +435,16 @@ namespace App { namespace Experiment { namespace Machines
                 // Pressure is too low carry on vac'ing
                 sml_validatePressureForStop.addTransition(this, &VacDown::emit_pressureToLow, &sml_timerWait);
                 // Pressure is perfect so stop
-                sml_validatePressureForStop.addTransition(this, &VacDown::emit_pressureReached, &sm_stop);
+                sml_validatePressureForStop.addTransition(this, &VacDown::emit_pressureReached, &sml_waitForTurboSpeed);
         }
+
+
+        // Check that turbo is not spinner before we stop
+        sml_waitForTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, &sml_validateTurboSpeedZero);
+            // Is the turbo spinning
+            sml_validateTurboSpeedZero.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sml_waitForTurboSpeed);
+            sml_validateTurboSpeedZero.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sm_stop);
+
     }
 
 

@@ -86,6 +86,7 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_enableBackingPump
             ,   sml_enableTurboPump
             ,   sml_disableTurboPump
+            ,   sml_waitForTurboSpeed
 
                 // Timer states
             ,   sml_startVacuumTimer
@@ -123,6 +124,7 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_validatePressureForStop
 
                 // States vacuum
+            ,   sml_validateTurboSpeedZero
             ,   sml_validateEnableBackingPump
             ,   sml_validateEnableTurboPump
             ,   sml_validateDisableTurboPump;
