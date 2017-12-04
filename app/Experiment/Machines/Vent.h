@@ -39,6 +39,8 @@ namespace App { namespace Experiment { namespace Machines
 
             void buildMachine();
 
+            bool fastExhuastOpen = false;
+
             // Create the states for the machine
             QState
                 // Stage finder
@@ -61,6 +63,25 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_flowControllerTwoValveOverrideOff
             ,   sml_flowControllerOneValveOverrideClose
             ,   sml_flowControllerTwoValveOverrideClose
+
+
+            ,   sml_openFastExhuastPathWaitingInternal
+            ,   sml_openFastExhuastPathWaitingOutput
+            ,   sml_openFastExhuastPathWaitingVacCavity
+            ,   sml_openFastExhuastPathWaitingFlowCavity
+            ,   sml_openFastExhuastPathWaitingNitrogenPipe
+            ,   sml_openFastExhuastPathWaitingMultiFlow
+            ,   sml_openFastExhuastPathWaitingFlowOnePipe
+            ,   sml_openFastExhuastPathWaitingFlowTwoPipe
+
+            ,   sml_closeFastExhuastPathWaitingInternal
+            ,   sml_closeFastExhuastPathWaitingOutput
+            ,   sml_closeFastExhuastPathWaitingVacCavity
+            ,   sml_closeFastExhuastPathWaitingFlowCavity
+            ,   sml_closeFastExhuastPathWaitingNitrogenPipe
+            ,   sml_closeFastExhuastPathWaitingMultiFlow
+            ,   sml_closeFastExhuastPathWaitingFlowOnePipe
+            ,   sml_closeFastExhuastPathWaitingFlowTwoPipe
 
                 // Close valves
             ,   sml_closeHighPressureInput
@@ -139,6 +160,8 @@ namespace App { namespace Experiment { namespace Machines
             void emit_validationSuccess();
             void emit_validationFailed();
 
+            void emit_openValveFour();
+
             void emit_openExhuast();
             void emit_openSlowExhuast();
             void emit_ventOuput();
@@ -172,6 +195,8 @@ namespace App { namespace Experiment { namespace Machines
                                     Functions::CommandValidatorState& openValidate,
                                     QState& close,
                                     Functions::CommandValidatorState& closeValidate,
+                                    QState& openFastExhuast,
+                                    QState& closeFastExhuast,
                                     QState& pressureWait,
                                     Functions::CommandValidatorState& pressureValidate,
                                     QState& finished,

@@ -60,6 +60,27 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_validatePressureAfterFlowTwoPipe(&machine)
 
 
+            // Valve four states
+        ,   sml_openFastExhuastPathWaitingInternal(&machine)
+        ,   sml_openFastExhuastPathWaitingOutput(&machine)
+        ,   sml_openFastExhuastPathWaitingVacCavity(&machine)
+        ,   sml_openFastExhuastPathWaitingFlowCavity(&machine)
+        ,   sml_openFastExhuastPathWaitingNitrogenPipe(&machine)
+        ,   sml_openFastExhuastPathWaitingMultiFlow(&machine)
+        ,   sml_openFastExhuastPathWaitingFlowOnePipe(&machine)
+        ,   sml_openFastExhuastPathWaitingFlowTwoPipe(&machine)
+
+        ,   sml_closeFastExhuastPathWaitingInternal(&machine)
+        ,   sml_closeFastExhuastPathWaitingOutput(&machine)
+        ,   sml_closeFastExhuastPathWaitingVacCavity(&machine)
+        ,   sml_closeFastExhuastPathWaitingFlowCavity(&machine)
+        ,   sml_closeFastExhuastPathWaitingNitrogenPipe(&machine)
+        ,   sml_closeFastExhuastPathWaitingMultiFlow(&machine)
+        ,   sml_closeFastExhuastPathWaitingFlowOnePipe(&machine)
+        ,   sml_closeFastExhuastPathWaitingFlowTwoPipe(&machine)
+
+
+
             // Close valve related states
         ,   sml_closeHighPressureInput(&machine)
         ,   sml_closeHighPressureNitrogen(&machine)
@@ -142,6 +163,30 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validateFlowControllerTwoValveOverrideClose, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideClose);
         connect(&sml_validateFlowControllerOneValveOverrideOff, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideOff);
         connect(&sml_validateFlowControllerTwoValveOverrideOff, &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideOff);
+
+
+
+        // Fast exhuast
+        connect(&sml_openFastExhuastPathWaitingInternal, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_openFastExhuastPathWaitingOutput, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_openFastExhuastPathWaitingVacCavity, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_openFastExhuastPathWaitingFlowCavity, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_openFastExhuastPathWaitingNitrogenPipe, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_openFastExhuastPathWaitingMultiFlow, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_openFastExhuastPathWaitingFlowOnePipe, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(&sml_openFastExhuastPathWaitingFlowTwoPipe, &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+
+        connect(&sml_closeFastExhuastPathWaitingInternal, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_closeFastExhuastPathWaitingOutput, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_closeFastExhuastPathWaitingVacCavity, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_closeFastExhuastPathWaitingFlowCavity, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_closeFastExhuastPathWaitingNitrogenPipe, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_closeFastExhuastPathWaitingMultiFlow, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_closeFastExhuastPathWaitingFlowOnePipe, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(&sml_closeFastExhuastPathWaitingFlowTwoPipe, &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+
+
+
 
 
         // Link close valve states
@@ -309,22 +354,25 @@ namespace App { namespace Experiment { namespace Machines
                     // Are we at atmopheric
                     sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationSuccess, &sml_stageFinder);
                     sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_validationFailed, &sml_waitForPressureAfterSlowExhuast);
+                    sml_validatePressureAfterSlowExhuast.addTransition(this, &Vent::emit_openValveFour, &sml_openFastExhuastPathWaitingInternal);
+                        // Open fast exhuast
+                        sml_openFastExhuastPathWaitingInternal.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_waitForPressureAfterSlowExhuast);
 
 
         // Open the output valve, wait for pressure drop and then close
-        openPressureClose(sml_openOutput, sml_validateOpenOutput, sml_closeOutput, sml_validateCloseOutput, sml_waitForPressureAfterOutput, sml_validatePressureAfterOutput, sml_stageFinder, sm_stopAsFailed);
+        openPressureClose(sml_openOutput, sml_validateOpenOutput, sml_closeOutput, sml_validateCloseOutput, sml_openFastExhuastPathWaitingOutput, sml_closeFastExhuastPathWaitingOutput, sml_waitForPressureAfterOutput, sml_validatePressureAfterOutput, sml_stageFinder, sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(sml_openVacuumOut, sml_validateOpenVacuumOut, sml_closeVacuumOut, sml_validateCloseVacuumOut, sml_waitForPressureAfterVacOutput, sml_validatePressureAfterVacOutput, sml_stageFinder, sm_stopAsFailed);
+        openPressureClose(sml_openVacuumOut, sml_validateOpenVacuumOut, sml_closeVacuumOut, sml_validateCloseVacuumOut, sml_openFastExhuastPathWaitingVacCavity, sml_closeFastExhuastPathWaitingVacCavity, sml_waitForPressureAfterVacOutput, sml_validatePressureAfterVacOutput, sml_stageFinder, sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(sml_openFlowController, sml_validateOpenFlowController, sml_closeFlowController, sml_validateCloseFlowController, sml_waitForPressureAfterFlowCavity, sml_validatePressureAfterFlowCavity, sml_stageFinder, sm_stopAsFailed);
+        openPressureClose(sml_openFlowController, sml_validateOpenFlowController, sml_closeFlowController, sml_validateCloseFlowController, sml_openFastExhuastPathWaitingFlowCavity, sml_closeFastExhuastPathWaitingFlowCavity, sml_waitForPressureAfterFlowCavity, sml_validatePressureAfterFlowCavity, sml_stageFinder, sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(sml_openHighPressureNitrogen, sml_validateOpenHighPressureNitrogen, sml_closeHighPressureNitrogen, sml_validateCloseHighPressureNitrogen, sml_waitForPressureAfterNitrogenPipe, sml_validatePressureAfterNitrogenPipe, sml_stageFinder, sm_stopAsFailed);
+        openPressureClose(sml_openHighPressureNitrogen, sml_validateOpenHighPressureNitrogen, sml_closeHighPressureNitrogen, sml_validateCloseHighPressureNitrogen, sml_openFastExhuastPathWaitingNitrogenPipe, sml_closeFastExhuastPathWaitingNitrogenPipe, sml_waitForPressureAfterNitrogenPipe, sml_validatePressureAfterNitrogenPipe, sml_stageFinder, sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(sml_openHighPressureInput, sml_validateOpenHighPressureInput, sml_closeHighPressureInput, sml_validateCloseHighPressureInput, sml_waitForPressureAfterMultiPipe, sml_validatePressureAfterMultiPipe, sml_stageFinder, sm_stopAsFailed);
+        openPressureClose(sml_openHighPressureInput, sml_validateOpenHighPressureInput, sml_closeHighPressureInput, sml_validateCloseHighPressureInput, sml_openFastExhuastPathWaitingMultiFlow, sml_closeFastExhuastPathWaitingMultiFlow, sml_waitForPressureAfterMultiPipe, sml_validatePressureAfterMultiPipe, sml_stageFinder, sm_stopAsFailed);
 
         // Open the flow controller internal valve
         sml_flowControllerOneValveOverrideOpen.addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, &sml_validateFlowControllerOneValveOverrideOpen);
@@ -332,7 +380,7 @@ namespace App { namespace Experiment { namespace Machines
             sml_validateFlowControllerOneValveOverrideOpen.addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
             sml_validateFlowControllerOneValveOverrideOpen.addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, &sml_openFlowController_2);
                 // Open flow controller cavity valve, wait for pressure drop, open intenral flow controller valve, and then close
-                openPressureClose(sml_openFlowController_2, sml_validateOpenFlowController_2, sml_closeFlowController_2, sml_validateCloseFlowController_2, sml_waitForPressureAfterFlowOnePipe, sml_validatePressureAfterFlowOnePipe, sml_flowControllerOneValveOverrideOff, sm_stopAsFailed);
+                openPressureClose(sml_openFlowController_2, sml_validateOpenFlowController_2, sml_closeFlowController_2, sml_validateCloseFlowController_2, sml_openFastExhuastPathWaitingFlowOnePipe, sml_closeFastExhuastPathWaitingFlowOnePipe, sml_waitForPressureAfterFlowOnePipe, sml_validatePressureAfterFlowOnePipe, sml_flowControllerOneValveOverrideOff, sm_stopAsFailed);
                     // Turn off valve override
                     sml_flowControllerOneValveOverrideOff.addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, &sml_validateFlowControllerOneValveOverrideOff);
                         // Check valve override off
@@ -346,7 +394,7 @@ namespace App { namespace Experiment { namespace Machines
             sml_validateFlowControllerTwoValveOverrideOpen.addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
             sml_validateFlowControllerTwoValveOverrideOpen.addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, &sml_openFlowController_3);
                 // Open the  valve, wait for pressure drop, open intenral flow controller valve, and then close
-                openPressureClose(sml_openFlowController_3, sml_validateOpenFlowController_3, sml_closeFlowController_3, sml_validateCloseFlowController_3, sml_waitForPressureAfterFlowTwoPipe, sml_validatePressureAfterFlowTwoPipe, sml_flowControllerTwoValveOverrideOff, sm_stopAsFailed);
+                openPressureClose(sml_openFlowController_3, sml_validateOpenFlowController_3, sml_closeFlowController_3, sml_validateCloseFlowController_3, sml_openFastExhuastPathWaitingFlowTwoPipe, sml_closeFastExhuastPathWaitingFlowTwoPipe, sml_waitForPressureAfterFlowTwoPipe, sml_validatePressureAfterFlowTwoPipe, sml_flowControllerTwoValveOverrideOff, sm_stopAsFailed);
                     // Turn off valve override
                     sml_flowControllerTwoValveOverrideOff.addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, &sml_validateFlowControllerTwoValveOverrideOff);
                         // Check valve override off
@@ -363,6 +411,9 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Vent::stageFinder()
     {
+        // Reset valve four
+        fastExhuastOpen = false;
+
         // Stage is 0 then we need to open exhuast
         if(stage == 0)
         {
@@ -488,6 +539,8 @@ namespace App { namespace Experiment { namespace Machines
                                  Functions::CommandValidatorState& openValidate,
                                  QState& close,
                                  Functions::CommandValidatorState& closeValidate,
+                                 QState& openFastExhuast,
+                                 QState& closeFastExhuast,
                                  QState& pressureWait,
                                  Functions::CommandValidatorState& pressureValidate,
                                  QState& finished,
@@ -503,12 +556,17 @@ namespace App { namespace Experiment { namespace Machines
                 pressureWait.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &pressureValidate);
                     // Are we at atmopheric
                     pressureValidate.addTransition(this, &Vent::emit_validationFailed, &pressureWait);
+                    pressureValidate.addTransition(this, &Vent::emit_openValveFour, &openFastExhuast);
+                        // Open valve four
+                        openFastExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &pressureWait);
                     pressureValidate.addTransition(this, &Vent::emit_validationSuccess, &close);
-                        // Close valve
-                        close.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &closeValidate);
-                            // Validate close
-                            closeValidate.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &failed);
-                            closeValidate.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &finished);
+                        // Close fast exhuast
+                        closeFastExhuast.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &close);
+                            // Close valve
+                            close.addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &closeValidate);
+                                // Validate close
+                                closeValidate.addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &failed);
+                                closeValidate.addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &finished);
     }
 
 
@@ -534,6 +592,12 @@ namespace App { namespace Experiment { namespace Machines
         // Get the min pressure allowed
         double minPressure = 950;
 
+        // Get the max pressure allowed valve 4
+        double maxPressureValveFour = 1500;
+
+        // Get the min pressure allowed valv 4
+        double minPressureValveFour = 500;
+
         // Check the pressure is safe to vac down
         if(pressureIn < maxPressure && pressureIn > minPressure)
         {
@@ -543,6 +607,13 @@ namespace App { namespace Experiment { namespace Machines
 
             // Emit safe to proceed
             emit emit_validationSuccess();
+
+            return;
+        }
+        else if( (pressureIn < maxPressureValveFour && pressureIn > minPressureValveFour) && !fastExhuastOpen)
+        {
+            // Emit safe to proceed
+            emit emit_openValveFour();
 
             return;
         }
