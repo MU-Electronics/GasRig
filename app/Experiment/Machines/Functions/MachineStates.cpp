@@ -30,6 +30,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         ,   m_hardware(hardware)
         ,   m_safety(safety)
         ,   machine(parent)
+        ,   subMachineShutdown(parent)
         ,   m_commandConstructor(*new Hardware::CommandConstructor)
 
             // Valve states
@@ -76,7 +77,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         // When machine has stopped running the stopped method in each machine
         connect(&machine, &QStateMachine::stopped, this, &MachineStates::emitStopped);
-        //connect(this, &MachineStates::emit_machineAlreadyStopped, this, &MachineStates::emitStopped);
+        connect(this, &MachineStates::emit_machineAlreadyStopped, this, &MachineStates::emitStopped);
 
 
         // Shut down sub state machines
@@ -141,6 +142,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::afterSubMachinesStopped()
     {
+        removeAllTransitions(subMachineShutdown);
+
         if(error)
         {
             emit emit_machineFailed(errorDetails);
@@ -171,30 +174,22 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::emitStopped()
     {
-        // Trigger shutdown sub machines
-        if(subMachines)
-        {
-            removeAllTransitions(subMachineShutdown);
-        }
+        // Get all states from machine and loop through them
+        removeAllTransitions(machine);
+
+        // Run the stopped function in the state machine
+        stopped();
 
         // Stop main machine
-        if(error)
+        if(error && !subMachines)
         {
-            // Run the stopped function in the state machine
-            stopped();
-
             // Tell every we have stopped becuase of an error
-            if(!subMachines)
-                emit emit_machineFailed(errorDetails);
+            emit emit_machineFailed(errorDetails);
         }
-        else
+        else if(!error && !subMachines)
         {
-            // Run the stopped function in the state machine
-            stopped();
-
-            // Tell every we have stopped becuase the machine finished it's task
-            if(!subMachines)
-                emit emit_machineFinished(errorDetails);
+            // Tell every we have stopped becuase machine finished
+            emit emit_machineFinished(errorDetails);
         }
     }
 
@@ -218,9 +213,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             emit emit_machineAlreadyStopped();
         }
-
-        // Get all states from machine and loop through them
-        removeAllTransitions(machine);
     }
 
 
@@ -243,9 +235,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             emit emit_machineAlreadyStopped();
         }
-
-        // Get all states from machine and loop through them
-        removeAllTransitions(machine);
     }
 
 
