@@ -227,9 +227,9 @@ namespace App { namespace Experiment { namespace Machines
        // Close valves
        valves()->closeOutput();
        valves()->closeVacuumOut();
-       valves()->closeFastExhuastPath();
        valves()->closeSlowExhuastPath();
        valves()->closeVacuumIn();
+       valves()->closeFastExhuastPath();
 
        // Stop timers
        t_vacDown.stop();

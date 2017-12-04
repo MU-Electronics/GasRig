@@ -383,18 +383,19 @@ namespace App { namespace Hardware
     {
         if(command.contains("hardware") && command.contains("method"))
         {
-            // Dont requeue exsisting commands, allowing a min queue size of five before action is taken << Need sorting very inefficent
-            if(m_queue.size() > 5)
-            {
-                for (int i = 4; i < m_queue.size(); ++i) {
-                    if (m_queue.at(i).value("hardware").toString() == command.value("hardware").toString() &&
-                        m_queue.at(i).value("method").toString() == command.value("method").toString())
-                    {
-                        // Remove the previous command
-                        m_queue.removeAt(i);
-                    }
-                }
-            }
+            qDebug() << (command);
+//            // Dont requeue exsisting commands, allowing a min queue size of five before action is taken << Need sorting very inefficent
+//            if(m_queue.size() > 5)
+//            {
+//                for (int i = 4; i < m_queue.size(); ++i) {
+//                    if (m_queue.at(i).value("hardware").toString() == command.value("hardware").toString() &&
+//                        m_queue.at(i).value("method").toString() == command.value("method").toString())
+//                    {
+//                        // Remove the previous command
+//                        m_queue.removeAt(i);
+//                    }
+//                }
+//            }
 
             // Add to the queue
             m_queue.enqueue(command);
