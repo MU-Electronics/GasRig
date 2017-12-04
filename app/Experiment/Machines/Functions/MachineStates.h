@@ -108,6 +108,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             void emit_machineFinished(QVariantMap details);
             void emit_machineFailed(QVariantMap errorDetails);
 
+            void emit_machineAlreadyStopped();
+
         public slots:
             // Re-implimention of stopped for each machine
             virtual void stopped() = 0;

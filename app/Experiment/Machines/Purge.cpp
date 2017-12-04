@@ -126,6 +126,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::buildSubMachineShutDown()
     {
+        qDebug() << "built sub machine stop machine";
         // Where to start the machine
         subMachineShutdown.setInitialState(&ssml_vent);
 
@@ -271,6 +272,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVent()
     {
+        qDebug() << "stopping vent";
         // Start the machine
         m_vent.stopMachineWithoutError();
     }
