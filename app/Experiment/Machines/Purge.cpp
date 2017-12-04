@@ -137,15 +137,15 @@ namespace App { namespace Experiment { namespace Machines
         subMachineShutdown.setInitialState(&ssml_vent);
 
         // Vent
-        ssml_vent.addTransition(&m_vent, &Vent::emit_machineFailed, &ssml_vacDown);
+        ssml_vent.addTransition(&m_vent, &Vent::emit_machineAlreadyStopped, &ssml_vacDown);
         ssml_vent.addTransition(&m_vent, &Vent::emit_machineFinished, &ssml_vacDown);
 
         // Vac down to X
-        ssml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFailed, &ssml_pressurise);
+        ssml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineAlreadyStopped, &ssml_pressurise);
         ssml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFinished, &ssml_pressurise);
 
         // Set high pressure
-        ssml_pressurise.addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &ssm_stop);
+        ssml_pressurise.addTransition(&m_pressurise, &Pressurise::emit_machineAlreadyStopped, &ssm_stop);
         ssml_pressurise.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &ssm_stop);
     }
 
