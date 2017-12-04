@@ -383,7 +383,6 @@ namespace App { namespace Hardware
     {
         if(command.contains("hardware") && command.contains("method"))
         {
-            qDebug() << (command);
 //            // Dont requeue exsisting commands, allowing a min queue size of five before action is taken << Need sorting very inefficent
 //            if(m_queue.size() > 5)
 //            {
