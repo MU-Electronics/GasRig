@@ -15,6 +15,7 @@
 #include "View/Managers/SystemStatus.h"
 #include "View/Managers/MachineStatus.h"
 #include "View/Managers/Global.h"
+#include "View/Managers/Modes/PressuriseCell.h"
 
 // Objects to the threaded
 #include "Safety/Monitor.h"
@@ -58,6 +59,7 @@ namespace App
             View::Managers::ConnectionStatus& manager_connection;
             View::Managers::SystemStatus& manager_systemStatus;
             View::Managers::MachineStatus& manager_machineStatus;
+            View::Managers::Modes::PressuriseCell& manager_mode_pressuriseCell;
 
             void registerManagers();
             void registerQmlTypes();

@@ -14,6 +14,7 @@
 #include "View/Managers/ConnectionStatus.h"
 #include "View/Managers/SystemStatus.h"
 #include "View/Managers/MachineStatus.h"
+#include "View/Managers/Modes/PressuriseCell.h"
 
 // Include objects for threading
 #include "Safety/Monitor.h"
@@ -65,6 +66,7 @@ namespace App
         ,   manager_connection(*new View::Managers::ConnectionStatus(parent, engine, settings_container, experiment_engine))
         ,   manager_systemStatus(*new View::Managers::SystemStatus(parent, engine, settings_container, experiment_engine))
         ,   manager_machineStatus(*new View::Managers::MachineStatus(parent, engine, settings_container, experiment_engine))
+        ,   manager_mode_pressuriseCell(*new View::Managers::Modes::PressuriseCell(parent, engine, settings_container, experiment_engine))
     {
         // Register qml types with qml
         registerQmlTypes();
@@ -133,6 +135,10 @@ namespace App
 
         // Set machine status manger
         m_engine->rootContext()->setContextProperty("MachineStatusManager", &manager_machineStatus);
+
+        // Set mode pressurise cell manager
+        m_engine->rootContext()->setContextProperty("PressuriseCellManager", &manager_mode_pressuriseCell);
+
     }
 
 
@@ -208,6 +214,8 @@ namespace App
         // Make connections for machine status view manager
         manager_machineStatus.makeConnections(hardware, monitor);
 
+        // Make connections for machine status view manager
+        manager_mode_pressuriseCell.makeConnections(hardware, monitor);
     }
 
 
