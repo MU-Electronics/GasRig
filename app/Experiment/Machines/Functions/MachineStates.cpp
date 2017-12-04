@@ -141,6 +141,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::afterSubMachinesStopped()
     {
+        removeAllTransitions(subMachineShutdown);
+
         if(error)
         {
             emit emit_machineFailed(errorDetails);
@@ -159,6 +161,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopShutDownSubMachine()
     {
+        qDebug() << "sub state machine machine stopped";
         subMachineShutdown.stop();
     }
 
@@ -179,7 +182,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Run the sub machine shutdown state machine
             subMachineShutdown.start();
         }
-        qDebug() << "stopping" << subMachines;
+
         // Stop main machine
         if(error)
         {
@@ -223,7 +226,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         }
 
         // Get all states from machine and loop through them
-        removeAllTransitions();
+        removeAllTransitions(machine);
     }
 
 
@@ -238,10 +241,17 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         error = true;
 
         // Stop the machine
-        machine.stop();
+        if(machine.isRunning())
+        {
+            machine.stop();
+        }
+        else
+        {
+            emit emit_machineAlreadyStopped();
+        }
 
         // Get all states from machine and loop through them
-        removeAllTransitions();
+        removeAllTransitions(machine);
     }
 
 
@@ -250,10 +260,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      *
      * @brief MachineStates::removeAllTransitions
      */
-    void MachineStates::removeAllTransitions()
+    void MachineStates::removeAllTransitions(QStateMachine &stateMachine)
     {
         // Get all states from machine and loop through them
-        QList<QState *> allStates = machine.findChildren<QState *>();
+        QList<QState *> allStates = stateMachine.findChildren<QState *>();
         while(!allStates.isEmpty())
         {
             // Get the current state

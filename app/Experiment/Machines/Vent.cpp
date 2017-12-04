@@ -219,6 +219,9 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Vent::setParams(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes)
     {       
+        // reset vars
+        stage = 0;
+
         // Copnfiguration settings
         params.insert("output", output);
         params.insert("vacuum_output", vacuumOutput);
@@ -254,6 +257,13 @@ namespace App { namespace Experiment { namespace Machines
         // Close valves
         valves()->closeSlowExhuastPath();
         valves()->closeExhuast();
+        valves()->closeOutput();
+        valves()->closeVacuumOut();
+        valves()->closeFastExhuastPath();
+        valves()->closeVacuumIn();
+        valves()->closeFlowController();
+        valves()->closeHighPressureInput();
+        valves()->closeHighPressureNitrogen();
     }
 
 

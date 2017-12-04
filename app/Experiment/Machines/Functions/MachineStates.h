@@ -91,7 +91,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Helper methods
             void stopMachineWithoutError();
             void stopMachineWithError();
-            void removeAllTransitions();
+            void removeAllTransitions(QStateMachine &stateMachine);
             void paramsOverride(QVariantMap override);
 
             // Contract methods that must be implimented

@@ -188,7 +188,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Continue or stop?
-        if(cycles == 0)
+        if(cycles == 1)
         {
             qDebug() << "Stop cycling";
             emit emit_stopCycling();
