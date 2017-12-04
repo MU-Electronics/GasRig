@@ -61,6 +61,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Error cache for details on any error
             QVariantMap errorDetails;
 
+            // Are there any sub state machines that requirer stopping
+            bool subMachines = false;
+
+            // Hold the sub state machine shut down
+            QStateMachine subMachineShutdown;
+
             // External states
             Valves* m_valves;
             Vacuum* m_vacuum;
@@ -78,7 +84,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             QState
                // Re-implimention of stop for each machine
                 sm_stop
-            ,   sm_stopAsFailed;
+            ,   sm_stopAsFailed
+
+            ,   ssm_stop;
 
             // Helper methods
             void stopMachineWithoutError();
@@ -89,6 +97,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Contract methods that must be implimented
             virtual void start() = 0;
             virtual void buildMachine() = 0;
+            virtual void buildSubMachineShutDown(){}
 
         signals:
             void hardwareRequest(QVariantMap command);
@@ -105,6 +114,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             // Allow re-implentation of machine finished signal emitter
             virtual void emitStopped();
+
+            // Allow re-implentation of sub machine finished signal emitter
+            virtual void afterSubMachinesStopped();
+
+            // Stops sub state machine shutdown machine
+            void stopShutDownSubMachine();
 
         private:
             // Connect states to their function

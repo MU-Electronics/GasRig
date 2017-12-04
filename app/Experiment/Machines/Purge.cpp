@@ -39,7 +39,15 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_setAtmospheric(&machine)
         ,   sml_checkCycles(&machine)
         ,   sml_vacDown(&machine)
+
+            // Sub machine shit down states
+        ,   ssml_vent(&subMachineShutdown)
+        ,   ssml_pressurise(&subMachineShutdown)
+        ,   ssml_vacDown(&subMachineShutdown)
     {
+        // We have sub state machines
+        subMachines = true;
+
         // Vent state machine
         connect(&sml_vent, &QState::entered, this, &Purge::ventOutput);
         connect(&sml_finishingVent, &QState::entered, this, &Purge::ventOutput);
@@ -52,6 +60,12 @@ namespace App { namespace Experiment { namespace Machines
 
         // Check how many cycles left state
         connect(&sml_checkCycles, &QState::entered, this, &Purge::checkCycles);
+
+        // Shutdown states
+        connect(&ssml_vent, &QState::entered, this, &Purge::stopVent);
+        connect(&ssml_pressurise, &QState::entered, this, &Purge::stopPressurise);
+        connect(&ssml_vacDown, &QState::entered, this, &Purge::stopVacuum);
+
     }
 
     Purge::~Purge()
@@ -101,6 +115,31 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopped()
     {
+
+    }
+
+
+    /**
+     * Builds the shutdown state machine
+     *
+     * @brief Purge::buildSubMachineShutDown
+     */
+    void Purge::buildSubMachineShutDown()
+    {
+        // Where to start the machine
+        subMachineShutdown.setInitialState(&ssml_vent);
+
+        // Vent
+        ssml_vent.addTransition(&m_vent, &Vent::emit_machineFailed, &ssml_vacDown);
+        ssml_vent.addTransition(&m_vent, &Vent::emit_machineFinished, &ssml_vacDown);
+
+        // Vac down to X
+        ssml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFailed, &ssml_pressurise);
+        ssml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFinished, &ssml_pressurise);
+
+        // Set high pressure
+        ssml_pressurise.addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &ssm_stop);
+        ssml_pressurise.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &ssm_stop);
     }
 
 
@@ -178,13 +217,12 @@ namespace App { namespace Experiment { namespace Machines
         // Override deep params within the pressurise state machine setup
         QVariantMap override;
 //        override.insert("valve_2_pulse", 200);
-        override.insert("tolerance_final", 500);
-        override.insert("tolerance_valve_two", 500);
-        override.insert("tolerance_valve_two_step", 500);
-        override.insert("tolerance_valve_two_final", 500);
-        override.insert("tolerance_valve_seven", 500);
-        override.insert("tolerance_valve_seven_step", 500);
-        override.insert("tolerance_valve_seven_final", 500);
+        override.insert("tolerance_valve_two", 200);
+        override.insert("tolerance_valve_two_step", 200);
+        override.insert("tolerance_valve_two_final", 200);
+        override.insert("tolerance_valve_seven", 200);
+        override.insert("tolerance_valve_seven_step", 200);
+        override.insert("tolerance_valve_seven_final", 200);
         override.insert("tolerance_final", 500);
         override.insert("vac_down_to", params.value("vac_pressure").toDouble());
         m_pressurise.paramsOverride(override);
@@ -195,6 +233,17 @@ namespace App { namespace Experiment { namespace Machines
         // Start the machine
         m_pressurise.start();
         qDebug() << "High presure" << params.value("nitrogen_pressure").toDouble();
+    }
+
+    /**
+     * Stop the pressurise machine
+     *
+     * @brief m_pressurise::stopPressurise
+     */
+    void Purge::stopPressurise()
+    {
+        // Start the machine
+        m_pressurise.stopMachineWithoutError();
     }
 
 
@@ -215,6 +264,17 @@ namespace App { namespace Experiment { namespace Machines
         m_vent.start();
     }
 
+    /**
+     * Stop the vent machine
+     *
+     * @brief m_vent::stopVent
+     */
+    void Purge::stopVent()
+    {
+        // Start the machine
+        m_vent.stopMachineWithoutError();
+    }
+
 
     /**
      * Check if the system has exhusted low enough to be vaced down
@@ -231,6 +291,18 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_vacDown.start();
+    }
+
+
+    /**
+     * Stop the vac machine
+     *
+     * @brief Purge::stopVacuum
+     */
+    void Purge::stopVacuum()
+    {
+        // Start the machine
+        m_vacDown.stopMachineWithoutError();
     }
 
 }}}

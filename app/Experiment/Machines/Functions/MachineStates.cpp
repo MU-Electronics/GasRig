@@ -41,6 +41,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Re-implimention of stop for each machine
         ,   sm_stop(&machine)
         ,   sm_stopAsFailed(&machine)
+
+        ,   ssm_stop(&subMachineShutdown)
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &MachineStates::hardwareRequest, &m_hardware, &Hardware::Access::hardwareAccess);
@@ -74,6 +76,11 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         // When machine has stopped running the stopped method in each machine
         connect(&machine, &QStateMachine::stopped, this, &MachineStates::emitStopped);
+
+        // Shut down sub state machines
+        connect(&ssm_stop, &QState::entered, this, &MachineStates::stopShutDownSubMachine);
+        connect(&subMachineShutdown, &QStateMachine::stopped, this, &MachineStates::afterSubMachinesStopped);
+
     }
 
 
@@ -126,19 +133,60 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
     /**
+     * Runs after sub machines have been stopped if there are any
+     *
+     * @brief MachineStates::afterSubMachinesStopped
+     */
+    void MachineStates::afterSubMachinesStopped()
+    {
+        if(error)
+        {
+            emit emit_machineFailed(errorDetails);
+        }
+        else
+        {
+            emit emit_machineFinished(errorDetails);
+        }
+    }
+
+
+    /**
+     * Shuts down the sub state machines shutdown machine
+     *
+     * @brief MachineStates::stopShutDownSubMachine
+     */
+    void MachineStates::stopShutDownSubMachine()
+    {
+        subMachineShutdown.stop();
+    }
+
+
+    /**
      * Emits a signal when the machine is stopped
      *
      * @brief MachineStates::emitStopped
      */
     void MachineStates::emitStopped()
     {
+        // Trigger shutdown sub machines
+        if(subMachines)
+        {
+            // Build the shutdown machine
+            buildSubMachineShutDown();
+
+            // Run the sub machine shutdown state machine
+            subMachineShutdown.start();
+        }
+
+        // Stop main machine
         if(error)
         {
             // Run the stopped function in the state machine
             stopped();
 
             // Tell every we have stopped becuase of an error
-            emit emit_machineFailed(errorDetails);
+            if(!subMachines)
+                emit emit_machineFailed(errorDetails);
         }
         else
         {
@@ -146,7 +194,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             stopped();
 
             // Tell every we have stopped becuase the machine finished it's task
-            emit emit_machineFinished(errorDetails);
+            if(!subMachines)
+                emit emit_machineFinished(errorDetails);
         }
     }
 
@@ -218,14 +267,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::paramsOverride(QVariantMap override)
     {
-        qDebug() << params;
-
         for (auto i = override.constBegin(); i != override.constEnd(); ++i)
         {
              params.insert(i.key(), i.value());
         }
-
-        qDebug() << params;
     }
 
 }}}}

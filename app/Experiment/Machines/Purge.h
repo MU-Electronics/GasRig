@@ -43,6 +43,9 @@ namespace App { namespace Experiment { namespace Machines
 
             void buildMachine();
 
+            // Override build sub state machine
+            void buildSubMachineShutDown();
+
             // Pressurise state machine
             Pressurise& m_pressurise;
 
@@ -60,7 +63,11 @@ namespace App { namespace Experiment { namespace Machines
             ,   sml_checkCycles
             ,   sml_vent
             ,   sml_finishingVent
-            ,   sml_vacDown;
+            ,   sml_vacDown
+
+            ,   ssml_vent
+            ,   ssml_pressurise
+            ,   ssml_vacDown;
 
 
             // Create command validator states
@@ -78,6 +85,10 @@ namespace App { namespace Experiment { namespace Machines
             void ventOutput();
             void setVacuum();
             void checkCycles();
+
+            void stopVacuum();
+            void stopVent();
+            void stopPressurise();
 
         private:
             // Referance to QObject
