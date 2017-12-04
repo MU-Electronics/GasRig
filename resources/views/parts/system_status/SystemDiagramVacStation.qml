@@ -38,7 +38,7 @@ Rectangle
     border.color: whichColorBorder(SystemStatusManager.vacuumState["backing_pump"], SystemStatusManager.vacuumState["turbo_pump"])
     border.width: 5
     width: 145
-    height: 105
+    height: 115
 
     Text{
         text: "Vac Station"
@@ -54,6 +54,7 @@ Rectangle
 
     Text{
         text:   "Turbo: " + SystemStatusManager.vacuumState["turbo_pump_verbal"] + "\n" +
+                "Turbo rpm: " + SystemStatusManager.vacuumState["turbo_pump_speed"] + "\n" +
                 "Gas Mode: " + SystemStatusManager.vacuumState["gas_type_mode_verbal"] + "\n" +
                 "Vacuum: " + SystemStatusManager.vacuumState["vacuum_round_3"];
         horizontalAlignment: Text.AlignHCenter

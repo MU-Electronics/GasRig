@@ -47,6 +47,8 @@ namespace App { namespace View { namespace Managers
         // Default vacuum states
         m_vacuumState.insert("backing_pump", 0);
         m_vacuumState.insert("turbo_pump", 0);
+        m_vacuumState.insert("turbo_pump_speed", 0);
+        m_vacuumState.insert("turbo_pump_speed_unit", 0);
         m_vacuumState.insert("backing_pump_mode", 0);
         m_vacuumState.insert("gas_type_mode", 1);
         m_vacuumState.insert("vacuum", 0);
@@ -103,6 +105,7 @@ namespace App { namespace View { namespace Managers
 
         connect(&hardware, &Hardware::Access::emit_getGasMode, this, &SystemStatus::receiveVacSetGasMode);
         connect(&hardware, &Hardware::Access::emit_getBackingPumpMode, this, &SystemStatus::receiveVacSetPumpMode);
+        connect(&hardware, &Hardware::Access::emit_getTurboSpeed, this, &SystemStatus::receiveVacGetTurboSpeed);
 
 
 
@@ -359,6 +362,23 @@ namespace App { namespace View { namespace Managers
         {
             m_vacuumState["turbo_pump_verbal"] = "disabled";
         }
+
+        // Update the display
+        emit_vacuumStateChanged(m_vacuumState);
+    }
+
+
+    /**
+     * Sets the turbo state variable and informs views
+     *
+     * @brief SystemStatus::receiveVacGetTurboSpeed
+     * @param command
+     */
+    void SystemStatus::receiveVacGetTurboSpeed(QVariantMap command)
+    {
+        // Update the mode
+        m_vacuumState["turbo_pump_speed"] = command.value("speed").toInt();
+        m_vacuumState["turbo_pump_speed_unit"] = command.value("location_verbal").toInt();
 
         // Update the display
         emit_vacuumStateChanged(m_vacuumState);

@@ -31,7 +31,7 @@ namespace App { namespace View { namespace Managers
         m_vacDownMachine.insert("gasMode", 0);
         m_vacDownMachine.insert("mode", 0);
 
-        // Default values for vac state machine
+        // Default values for pulse state machine
         m_pulseValveMachine.insert("status", false);
         m_pulseValveMachine.insert("valve", -1);
         m_pulseValveMachine.insert("cycles", -1);

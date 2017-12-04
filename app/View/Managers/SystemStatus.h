@@ -95,6 +95,7 @@ namespace App { namespace View { namespace Managers
             void receiveVacSetGasMode(QVariantMap command);
             void receiveVacSetPumpMode(QVariantMap command);
             void receiveVacuumPressure(QVariantMap command);
+            void receiveVacGetTurboSpeed(QVariantMap command);
 
         private:
             QQmlApplicationEngine* m_root;
