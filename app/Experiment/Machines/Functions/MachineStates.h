@@ -67,6 +67,17 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Hold the sub state machine shut down
             QStateMachine shutDownMachine;
 
+            // Holds the dynamically created states
+            QMap<QString, QState*> m_states;
+            QMap<QString, CommandValidatorState*> m_validators;
+
+            // Creates (if not exists) and returns the states
+            QState *state(QString id, bool type);
+            CommandValidatorState *validator(QString id, bool type);
+
+            // Connection helpers
+            // void connectValve(QString name, bool machine, const QMetaMethod &method);
+
             // External states
             Valves* m_valves;
             Vacuum* m_vacuum;
@@ -98,15 +109,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             virtual void start() = 0;
             virtual void buildMachine() = 0;
             virtual void buildShutDownMachine(){}
-
-
-
-            // Testing dynamic states
-            QMap<QString, QState*> m_states;
-            QMap<QString, CommandValidatorState*> m_validators;
-
-            QState *state(QString id);
-            QState *validator(QString id);
 
         signals:
             void hardwareRequest(QVariantMap command);

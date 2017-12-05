@@ -275,34 +275,41 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     }
 
 
-
-
-
-
-
-
-
-
-
-    // Testing dynamic sates
-    QState* MachineStates::state(QString id)
+    /**
+     * Returns dynamically create states and creates them if they dont exists
+     *
+     * @brief MachineStates::state
+     * @param id
+     * @param machine
+     * @return
+     */
+    QState* MachineStates::state(QString id, bool type)
     {
         // If does not exist then make it
         if(!m_states.contains(id))
         {
-            m_states.insert(id, (new QState(&machine)));
+            m_states.insert(id, ( new QState( (type) ? &machine : &shutDownMachine ) ));
         }
 
         // return the state
         return m_states.value(id);
     }
 
-    QState* MachineStates::validator(QString id)
+
+    /**
+     * Returns dynamically create validators and creates them if they dont exists
+     *
+     * @brief MachineStates::validator
+     * @param id
+     * @param machine
+     * @return
+     */
+    CommandValidatorState* MachineStates::validator(QString id, bool type)
     {
         // If does not exist then make it
         if(!m_validators.contains(id))
         {
-            m_validators.insert(id, (new CommandValidatorState(&machine)));
+            m_validators.insert(id, ( new CommandValidatorState( (type) ? &machine : &shutDownMachine ) ));
         }
 
         // return the state

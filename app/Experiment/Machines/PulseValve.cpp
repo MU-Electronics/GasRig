@@ -23,41 +23,41 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_pulseValveClose(parent)
     {
         //connect(&sml_cycle, &QState::entered, this, &PulseValve::cycle);
-        connect(state("cycle"), &QState::entered, this, &PulseValve::cycle);
+        connect(state("cycle", true), &QState::entered, this, &PulseValve::cycle);
 
 
         // Valves
-        connect(state("closeOutput_1"), &QState::entered, this->valves(), &Functions::Valves::closeOutput);
-        connect(state("openOutput_1"), &QState::entered, this->valves(), &Functions::Valves::openOutput);
+        connect(state("closeOutput_1", true), &QState::entered, this->valves(), &Functions::Valves::closeOutput);
+        connect(state("openOutput_1", true), &QState::entered, this->valves(), &Functions::Valves::openOutput);
 
-        connect(state("closeSlowExhuastPath_1"), &QState::entered, this->valves(), &Functions::Valves::closeSlowExhuastPath);
-        connect(state("openSlowExhuastPath_1"), &QState::entered, this->valves(), &Functions::Valves::openSlowExhuastPath);
+        connect(state("closeSlowExhuastPath_1", true), &QState::entered, this->valves(), &Functions::Valves::closeSlowExhuastPath);
+        connect(state("openSlowExhuastPath_1", true), &QState::entered, this->valves(), &Functions::Valves::openSlowExhuastPath);
 
-        connect(state("closeExhuast_1"), &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
-        connect(state("openExhuast_1"), &QState::entered, this->valves(), &Functions::Valves::openExhuast);
+        connect(state("closeExhuast_1", true), &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
+        connect(state("openExhuast_1", true), &QState::entered, this->valves(), &Functions::Valves::openExhuast);
 
-        connect(state("closeFastExhuastPath_1"), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("openFastExhuastPath_1"), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("closeFastExhuastPath_1", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("openFastExhuastPath_1", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
 
-        connect(state("closeVacuumIn_1"), &QState::entered, this->valves(), &Functions::Valves::closeVacuumIn);
-        connect(state("openVacuumIn_1"), &QState::entered, this->valves(), &Functions::Valves::openVacuumIn);
+        connect(state("closeVacuumIn_1", true), &QState::entered, this->valves(), &Functions::Valves::closeVacuumIn);
+        connect(state("openVacuumIn_1", true), &QState::entered, this->valves(), &Functions::Valves::openVacuumIn);
 
-        connect(state("closeVacuumOut_1"), &QState::entered, this->valves(), &Functions::Valves::closeVacuumOut);
-        connect(state("openVacuumOut_1"), &QState::entered, this->valves(), &Functions::Valves::openVacuumOut);
+        connect(state("closeVacuumOut_1", true), &QState::entered, this->valves(), &Functions::Valves::closeVacuumOut);
+        connect(state("openVacuumOut_1", true), &QState::entered, this->valves(), &Functions::Valves::openVacuumOut);
 
-        connect(state("openHighPressureInput_1"), &QState::entered, this->valves(), &Functions::Valves::openHighPressureInput);
-        connect(state("closeHighPressureInput_1"), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
+        connect(state("openHighPressureInput_1", true), &QState::entered, this->valves(), &Functions::Valves::openHighPressureInput);
+        connect(state("closeHighPressureInput_1", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
 
-        connect(state("closeFlowController_1"), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
-        connect(state("openFlowController_1"), &QState::entered, this->valves(), &Functions::Valves::openFlowController);
+        connect(state("closeFlowController_1", true), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
+        connect(state("openFlowController_1", true), &QState::entered, this->valves(), &Functions::Valves::openFlowController);
 
-        connect(state("openHighPressureNitrogen_1"), &QState::entered, this->valves(), &Functions::Valves::openHighPressureNitrogen);
-        connect(state("closeHighPressureNitrogen_1"), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
+        connect(state("openHighPressureNitrogen_1", true), &QState::entered, this->valves(), &Functions::Valves::openHighPressureNitrogen);
+        connect(state("closeHighPressureNitrogen_1", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
 
 
         // Valve timers
-        connect(state("startPulseValveOpenTimer"), &QState::entered, this, &PulseValve::startPulseValveOpenTimer);
-        connect(state("startPulseValveCloseTimer"), &QState::entered, this, &PulseValve::startPulseValveCloseTimer);
+        connect(state("startPulseValveOpenTimer", true), &QState::entered, this, &PulseValve::startPulseValveOpenTimer);
+        connect(state("startPulseValveCloseTimer", true), &QState::entered, this, &PulseValve::startPulseValveCloseTimer);
 
     }
 
@@ -130,22 +130,22 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Open the valve
-        valvePointerOpen->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("startPulseValveOpenTimer"));
+        valvePointerOpen->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("startPulseValveOpenTimer", true));
 
         // Start the valve close timer
-        state("startPulseValveOpenTimer")->addTransition(&t_pulseValveOpen, &QTimer::timeout, valvePointerClose);
+        state("startPulseValveOpenTimer", true)->addTransition(&t_pulseValveOpen, &QTimer::timeout, valvePointerClose);
 
 
         // Close the valve
-        valvePointerClose->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("startPulseValveCloseTimer"));
+        valvePointerClose->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("startPulseValveCloseTimer", true));
 
         // Start the valve open timer
-        state("startPulseValveCloseTimer")->addTransition(&t_pulseValveClose, &QTimer::timeout, state("cycle"));
+        state("startPulseValveCloseTimer", true)->addTransition(&t_pulseValveClose, &QTimer::timeout, state("cycle", true));
 
 
         // Do more cycles need to be ran
-        state("cycle")->addTransition(this, &PulseValve::emit_continueCycling, valvePointerOpen);
-        state("cycle")->addTransition(this, &PulseValve::emit_stopCycling, &sm_stop);
+        state("cycle", true)->addTransition(this, &PulseValve::emit_continueCycling, valvePointerOpen);
+        state("cycle", true)->addTransition(this, &PulseValve::emit_stopCycling, &sm_stop);
     }
 
 
@@ -231,48 +231,48 @@ namespace App { namespace Experiment { namespace Machines
     {
         if(valve == 1)
         {
-            valvePointerClose = state("closeOutput_1");
-            valvePointerOpen = state("openOutput_1");
+            valvePointerClose = state("closeOutput_1", true);
+            valvePointerOpen = state("openOutput_1", true);
         }
         else if(valve == 2)
         {
-            valvePointerClose = state("closeSlowExhuastPath_1");
-            valvePointerOpen = state("openSlowExhuastPath_1");
+            valvePointerClose = state("closeSlowExhuastPath_1", true);
+            valvePointerOpen = state("openSlowExhuastPath_1", true);
         }
         else if(valve == 3)
         {
-            valvePointerClose = state("closeExhuast_1");
-            valvePointerOpen = state("openExhuast_1");
+            valvePointerClose = state("closeExhuast_1", true);
+            valvePointerOpen = state("openExhuast_1", true);
         }
         else if(valve == 4)
         {
-            valvePointerClose = state("closeFastExhuastPath_1");
-            valvePointerOpen = state("openFastExhuastPath_1");
+            valvePointerClose = state("closeFastExhuastPath_1", true);
+            valvePointerOpen = state("openFastExhuastPath_1", true);
         }
         else if(valve == 5)
         {
-            valvePointerClose = state("closeVacuumIn_1");
-            valvePointerOpen = state("openVacuumIn_1");
+            valvePointerClose = state("closeVacuumIn_1", true);
+            valvePointerOpen = state("openVacuumIn_1", true);
         }
         else if(valve == 6)
         {
-            valvePointerClose = state("closeVacuumOut_1");
-            valvePointerOpen = state("openVacuumOut_1");
+            valvePointerClose = state("closeVacuumOut_1", true);
+            valvePointerOpen = state("openVacuumOut_1", true);
         }
         else if(valve == 7)
         {
-            valvePointerClose = state("closeHighPressureInput_1");
-            valvePointerOpen = state("openHighPressureInput_1");
+            valvePointerClose = state("closeHighPressureInput_1", true);
+            valvePointerOpen = state("openHighPressureInput_1", true);
         }
         else if(valve == 8)
         {
-            valvePointerClose = state("closeFlowController_1");
-            valvePointerOpen = state("openFlowController_1");
+            valvePointerClose = state("closeFlowController_1", true);
+            valvePointerOpen = state("openFlowController_1", true);
         }
         else if(valve == 9)
         {
-            valvePointerClose = state("closeHighPressureNitrogen_1");
-            valvePointerOpen = state("openHighPressureNitrogen_1");
+            valvePointerClose = state("closeHighPressureNitrogen_1", true);
+            valvePointerOpen = state("openHighPressureNitrogen_1", true);
         }
     }
 
