@@ -22,7 +22,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_pulseValveOpen(parent)
         ,   t_pulseValveClose(parent)
     {
-        //connect(&sml_cycle, &QState::entered, this, &PulseValve::cycle);
+        // Count cylces
         connect(state("cycle", true), &QState::entered, this, &PulseValve::cycle);
 
 
