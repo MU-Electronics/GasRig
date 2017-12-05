@@ -108,7 +108,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             QState *state(QString id);
             QState *validator(QString id);
 
-
         signals:
             void hardwareRequest(QVariantMap command);
 

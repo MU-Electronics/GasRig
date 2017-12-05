@@ -164,7 +164,7 @@ namespace App { namespace Experiment { namespace Machines
         valvePointerClose->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, &sml_startPulseValveCloseTimer);
 
         // Start the valve open timer
-        sml_startPulseValveCloseTimer.addTransition(&t_pulseValveClose, &QTimer::timeout, &sml_cycle);
+        sml_startPulseValveCloseTimer.addTransition(&t_pulseValveClose, &QTimer::timeout, state("cycle"));
 
 
 
