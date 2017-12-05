@@ -184,7 +184,7 @@ namespace App { namespace Experiment { namespace Machines
             params.insert("milliseconds", value);
 
             // Setup timers
-            t_vacDown.setInterval(value * 60);
+            t_vacDown.setInterval(value);
         }
         else if(valueType == 2)
         {
