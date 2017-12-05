@@ -30,7 +30,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         ,   m_hardware(hardware)
         ,   m_safety(safety)
         ,   machine(parent)
-        ,   subMachineShutdown(parent)
+        ,   shutDownMachine(parent)
         ,   m_commandConstructor(*new Hardware::CommandConstructor)
 
             // Valve states
@@ -43,7 +43,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         ,   sm_stop(&machine)
         ,   sm_stopAsFailed(&machine)
 
-        ,   ssm_stop(&subMachineShutdown)
+        ,   ssm_stop(&shutDownMachine)
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &MachineStates::hardwareRequest, &m_hardware, &Hardware::Access::hardwareAccess);
@@ -82,7 +82,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         // Shut down sub state machines
         connect(&ssm_stop, &QState::entered, this, &MachineStates::stopShutDownSubMachine);
-        connect(&subMachineShutdown, &QStateMachine::stopped, this, &MachineStates::afterSubMachinesStopped);
+        connect(&shutDownMachine, &QStateMachine::stopped, this, &MachineStates::afterSubMachinesStopped);
 
     }
 
@@ -142,7 +142,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::afterSubMachinesStopped()
     {
-        removeAllTransitions(subMachineShutdown);
+        removeAllTransitions(shutDownMachine);
 
         if(error)
         {
@@ -162,8 +162,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopShutDownSubMachine()
     {
-        qDebug() << "sub state machine machine stopped";
-        subMachineShutdown.stop();
+        shutDownMachine.stop();
     }
 
 
@@ -181,12 +180,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         stopped();
 
         // Stop main machine
-        if(error && !subMachines)
+        if(error && !shutDownMachines)
         {
             // Tell every we have stopped becuase of an error
             emit emit_machineFailed(errorDetails);
         }
-        else if(!error && !subMachines)
+        else if(!error && !shutDownMachines)
         {
             // Tell every we have stopped becuase machine finished
             emit emit_machineFinished(errorDetails);

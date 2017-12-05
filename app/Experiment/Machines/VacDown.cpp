@@ -93,6 +93,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_vacDown(parent)
     {
+        // We have stop state machines
+        shutDownMachines = true;
+
         // Pressure validator states
         connect(&sml_validateVacPressureForTurbo, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validateVacPressureForTurbo);
         connect(&sml_validatePressureForVacuum, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validatePressureForVacuum);
@@ -238,6 +241,38 @@ namespace App { namespace Experiment { namespace Machines
        // Stop timers
        t_vacDown.stop();
     }
+
+
+    /**
+     * Builds the shutdown state machine
+     *
+     * @brief VacDown::buildShutDownMachine
+     */
+    void VacDown::buildShutDownMachine()
+    {
+        // Close output valve valve
+
+        // Close vacuum output valve
+
+        // Close fast exhuast valve
+
+        // Close slow exhuast valve
+
+        // Close vacuum in valve
+
+        // Disable turbo pump
+
+        // Disable backing pump
+
+        // Check that turbo is not spinner before we stop
+//        sml_waitForTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, &sml_validateTurboSpeedZero);
+//            // Is the turbo spinning
+//            sml_validateTurboSpeedZero.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sml_waitForTurboSpeed);
+//            sml_validateTurboSpeedZero.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sm_stop);
+    }
+
+
+
 
 
     /**
@@ -426,7 +461,7 @@ namespace App { namespace Experiment { namespace Machines
         if(params.value("type").toInt() == 1)
         {
             // Time based vac down
-            sml_timerWait.addTransition(&t_vacDown, &QTimer::timeout, &sml_waitForTurboSpeed);
+            sml_timerWait.addTransition(&t_vacDown, &QTimer::timeout, &sm_stop);
         }
         else if(params.value("type").toInt() == 2)
         {
@@ -435,15 +470,8 @@ namespace App { namespace Experiment { namespace Machines
                 // Pressure is too low carry on vac'ing
                 sml_validatePressureForStop.addTransition(this, &VacDown::emit_pressureToLow, &sml_timerWait);
                 // Pressure is perfect so stop
-                sml_validatePressureForStop.addTransition(this, &VacDown::emit_pressureReached, &sml_waitForTurboSpeed);
+                sml_validatePressureForStop.addTransition(this, &VacDown::emit_pressureReached, &sm_stop);
         }
-
-
-        // Check that turbo is not spinner before we stop
-        sml_waitForTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, &sml_validateTurboSpeedZero);
-            // Is the turbo spinning
-            sml_validateTurboSpeedZero.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sml_waitForTurboSpeed);
-            sml_validateTurboSpeedZero.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sm_stop);
 
     }
 
@@ -466,8 +494,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Get the max pressure allowed
         double stopPressure = params.value("vac_down_to").toDouble();
-
-        qDebug() << pressureIn << stopPressure;
 
         // Check the pressure is safe to vac down
         if( (pressureIn - 0.1) < stopPressure)

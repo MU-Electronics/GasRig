@@ -62,10 +62,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             QVariantMap errorDetails;
 
             // Are there any sub state machines that requirer stopping
-            bool subMachines = false;
+            bool shutDownMachines = false;
 
             // Hold the sub state machine shut down
-            QStateMachine subMachineShutdown;
+            QStateMachine shutDownMachine;
 
             // External states
             Valves* m_valves;
@@ -97,7 +97,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Contract methods that must be implimented
             virtual void start() = 0;
             virtual void buildMachine() = 0;
-            virtual void buildSubMachineShutDown(){}
+            virtual void buildShutDownMachine(){}
 
         signals:
             void hardwareRequest(QVariantMap command);

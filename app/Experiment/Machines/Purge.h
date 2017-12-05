@@ -44,7 +44,7 @@ namespace App { namespace Experiment { namespace Machines
             void buildMachine();
 
             // Override build sub state machine
-            void buildSubMachineShutDown();
+            void buildShutDownMachine();
 
             // Pressurise state machine
             Pressurise& m_pressurise;

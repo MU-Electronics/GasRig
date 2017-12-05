@@ -41,12 +41,12 @@ namespace App { namespace Experiment { namespace Machines
         ,   sml_vacDown(&machine)
 
             // Sub machine shit down states
-        ,   ssml_vent(&subMachineShutdown)
-        ,   ssml_pressurise(&subMachineShutdown)
-        ,   ssml_vacDown(&subMachineShutdown)
+        ,   ssml_vent(&shutDownMachine)
+        ,   ssml_pressurise(&shutDownMachine)
+        ,   ssml_vacDown(&shutDownMachine)
     {
-        // We have sub state machines
-        subMachines = true;
+        // We have stop state machines
+        shutDownMachines = true;
 
         // Vent state machine
         connect(&sml_vent, &QState::entered, this, &Purge::ventOutput);
@@ -104,7 +104,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::start()
     {
-        subMachineShutdown.stop();
+        shutDownMachine.stop();
         machine.start();
     }
 
@@ -117,22 +117,22 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::stopped()
     {
         // Build the shutdown machine
-        buildSubMachineShutDown();
+        buildShutDownMachine();
 
         // Run the sub machine shutdown state machine
-        subMachineShutdown.start();
+        shutDownMachine.start();
     }
 
 
     /**
      * Builds the shutdown state machine
      *
-     * @brief Purge::buildSubMachineShutDown
+     * @brief Purge::buildShutDownMachine
      */
-    void Purge::buildSubMachineShutDown()
+    void Purge::buildShutDownMachine()
     {
         // Where to start the machine
-        subMachineShutdown.setInitialState(&ssml_vent);
+        shutDownMachine.setInitialState(&ssml_vent);
 
         // Vent
         ssml_vent.addTransition(&m_vent, &Vent::emit_machineAlreadyStopped, &ssml_vacDown);
