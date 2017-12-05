@@ -55,7 +55,8 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_pulseValveOpen(parent)
         ,   t_pulseValveClose(parent)
     {
-        connect(&sml_cycle, &QState::entered, this, &PulseValve::cycle);
+        //connect(&sml_cycle, &QState::entered, this, &PulseValve::cycle);
+        connect(state("cycle"), &QState::entered, this, &PulseValve::cycle);
 
         // Valves
         connect(&sml_closeOutput_1, &QState::entered, this->valves(), &Functions::Valves::closeOutput);
@@ -168,8 +169,10 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Do more cycles need to be ran
-        sml_cycle.addTransition(this, &PulseValve::emit_continueCycling, valvePointerOpen);
-        sml_cycle.addTransition(this, &PulseValve::emit_stopCycling, &sm_stop);
+        state("cycle")->addTransition(this, &PulseValve::emit_continueCycling, valvePointerOpen);
+        state("cycle")->addTransition(this, &PulseValve::emit_stopCycling, &sm_stop);
+        //sml_cycle.addTransition(this, &PulseValve::emit_continueCycling, valvePointerOpen);
+        //sml_cycle.addTransition(this, &PulseValve::emit_stopCycling, &sm_stop);
     }
 
 

@@ -17,7 +17,7 @@ Item
 
 
     // Validation
-    property var validatorBottom: (vacDown_valueType.model.get(vacDown_valueType.currentIndex).value === 1) ? 1 : 0.01
+    property var validatorBottom: (vacDown_valueType.model.get(vacDown_valueType.currentIndex).value === 1) ? 0 : 0.00001
     property var validatorTop: (vacDown_valueType.model.get(vacDown_valueType.currentIndex).value === 1) ? 99999 : 1000
     property var validatorDecimals: (vacDown_valueType.model.get(vacDown_valueType.currentIndex).value === 1) ? 0 : 2
 

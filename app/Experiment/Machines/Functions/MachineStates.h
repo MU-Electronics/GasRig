@@ -99,6 +99,16 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             virtual void buildMachine() = 0;
             virtual void buildShutDownMachine(){}
 
+
+
+            // Testing dynamic states
+            QMap<QString, QState*> m_states;
+            QMap<QString, CommandValidatorState*> m_validators;
+
+            QState *state(QString id);
+            QState *validator(QString id);
+
+
         signals:
             void hardwareRequest(QVariantMap command);
 

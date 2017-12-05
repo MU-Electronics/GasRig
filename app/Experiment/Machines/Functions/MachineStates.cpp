@@ -274,4 +274,40 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+    // Testing dynamic sates
+    QState* MachineStates::state(QString id)
+    {
+        // If does not exist then make it
+        if(!m_states.contains(id))
+        {
+            m_states.insert(id, (new QState(&machine)));
+        }
+
+        // return the state
+        return m_states.value(id);
+    }
+
+    QState* MachineStates::validator(QString id)
+    {
+        // If does not exist then make it
+        if(!m_validators.contains(id))
+        {
+            m_validators.insert(id, (new CommandValidatorState(&machine)));
+        }
+
+        // return the state
+        return m_validators.value(id);
+    }
+
+
 }}}}

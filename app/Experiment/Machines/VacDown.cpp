@@ -250,6 +250,9 @@ namespace App { namespace Experiment { namespace Machines
      */
     void VacDown::buildShutDownMachine()
     {
+        // Where to start the machine
+        shutDownMachine.setInitialState(&ssm_stop);
+
         // Close output valve valve
 
         // Close vacuum output valve
