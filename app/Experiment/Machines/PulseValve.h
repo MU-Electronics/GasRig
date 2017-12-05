@@ -67,31 +67,6 @@ namespace App { namespace Experiment { namespace Machines
             QState* valvePointerOpen;
             QState* valvePointerClose;
 
-            // Should be continue cycling
-            QState sml_cycle
-            ,   sml_startPulseValveOpenTimer
-            ,   sml_startPulseValveCloseTimer
-
-                // Valve states
-            ,   sml_closeOutput_1
-            ,   sml_openOutput_1
-            ,   sml_closeSlowExhuastPath_1
-            ,   sml_openSlowExhuastPath_1
-            ,   sml_closeExhuast_1
-            ,   sml_openExhuast_1
-            ,   sml_closeFastExhuastPath_1
-            ,   sml_openFastExhuastPath_1
-            ,   sml_closeVacuumIn_1
-            ,   sml_openVacuumIn_1
-            ,   sml_closeVacuumOut_1
-            ,   sml_openVacuumOut_1
-            ,   sml_closeHighPressureInput_1
-            ,   sml_openHighPressureInput_1
-            ,   sml_closeFlowController_1
-            ,   sml_openFlowController_1
-            ,   sml_closeHighPressureNitrogen_1
-            ,   sml_openHighPressureNitrogen_1;
-
             // Count number of pulses
             int cyclesCount;
 
