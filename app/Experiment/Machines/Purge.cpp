@@ -34,6 +34,8 @@ namespace App { namespace Experiment { namespace Machines
         // We have stop state machines
         shutDownMachines = true;
 
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // Vent state machine
         connect(state("vent", true), &QState::entered, this, &Purge::ventOutput);
         connect(state("finishingVent", true), &QState::entered, this, &Purge::ventOutput);

@@ -202,6 +202,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     {
         // There was no error
         error = false;
+        qDebug() << "Success: " << childClassName;
 
         // Stop the machine
         if(machine.isRunning())
@@ -224,7 +225,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     {
         // There was an error
         error = true;
-        qDebug() << "Error";
+        qDebug() << "Error: " << childClassName;
 
         // Stop the machine
         if(machine.isRunning())
@@ -324,6 +325,5 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // return the state
         return m_validators.value(id);
     }
-
 
 }}}}

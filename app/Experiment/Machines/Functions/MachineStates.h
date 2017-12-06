@@ -110,6 +110,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             virtual void buildMachine() = 0;
             virtual void buildShutDownMachine(){}
 
+
+            // Testing
+            QString childClassName = "";
+
         signals:
             void hardwareRequest(QVariantMap command);
 
