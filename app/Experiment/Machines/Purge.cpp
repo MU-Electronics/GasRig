@@ -30,41 +30,27 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_vent(*new Vent(parent, settings, hardware, safety))
         ,   m_pressurise(*new Pressurise(parent, settings, hardware, safety))
         ,   m_vacDown(*new VacDown(parent, settings, hardware, safety))
-
-            // States
-        ,   sml_vent(&machine)
-        ,   sml_finishingVent(&machine)
-        ,   sml_setLowPressure(&machine)
-        ,   sml_setHighPressure(&machine)
-        ,   sml_setAtmospheric(&machine)
-        ,   sml_checkCycles(&machine)
-        ,   sml_vacDown(&machine)
-
-            // Sub machine shit down states
-        ,   ssml_vent(&shutDownMachine)
-        ,   ssml_pressurise(&shutDownMachine)
-        ,   ssml_vacDown(&shutDownMachine)
     {
         // We have stop state machines
         shutDownMachines = true;
 
         // Vent state machine
-        connect(&sml_vent, &QState::entered, this, &Purge::ventOutput);
-        connect(&sml_finishingVent, &QState::entered, this, &Purge::ventOutput);
+        connect(state("vent", true), &QState::entered, this, &Purge::ventOutput);
+        connect(state("finishingVent", true), &QState::entered, this, &Purge::ventOutput);
 
         // Vac down state machine
-        connect(&sml_vacDown, &QState::entered, this, &Purge::setVacuum);
+        connect(state("vacDown", true), &QState::entered, this, &Purge::setVacuum);
 
         // Set pressure state machine
-        connect(&sml_setHighPressure, &QState::entered, this, &Purge::setHighPressure);
+        connect(state("setHighPressure", true), &QState::entered, this, &Purge::setHighPressure);
 
         // Check how many cycles left state
-        connect(&sml_checkCycles, &QState::entered, this, &Purge::checkCycles);
+        connect(state("checkCycles", true), &QState::entered, this, &Purge::checkCycles);
 
         // Shutdown states
-        connect(&ssml_vent, &QState::entered, this, &Purge::stopVent);
-        connect(&ssml_pressurise, &QState::entered, this, &Purge::stopPressurise);
-        connect(&ssml_vacDown, &QState::entered, this, &Purge::stopVacuum);
+        connect(state("vent", false), &QState::entered, this, &Purge::stopVent);
+        connect(state("pressurise", false), &QState::entered, this, &Purge::stopPressurise);
+        connect(state("vacDown", false), &QState::entered, this, &Purge::stopVacuum);
 
     }
 
@@ -132,19 +118,19 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::buildShutDownMachine()
     {
         // Where to start the machine
-        shutDownMachine.setInitialState(&ssml_vent);
+        shutDownMachine.setInitialState(state("vent", false));
 
         // Vent
-        ssml_vent.addTransition(&m_vent, &Vent::emit_machineAlreadyStopped, &ssml_vacDown);
-        ssml_vent.addTransition(&m_vent, &Vent::emit_machineFinished, &ssml_vacDown);
+        state("vent", false)->addTransition(&m_vent, &Vent::emit_machineAlreadyStopped, state("vacDown", false));
+        state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFinished, state("vacDown", false));
 
         // Vac down to X
-        ssml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineAlreadyStopped, &ssml_pressurise);
-        ssml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFinished, &ssml_pressurise);
+        state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineAlreadyStopped, state("pressurise", false));
+        state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFinished, state("pressurise", false));
 
         // Set high pressure
-        ssml_pressurise.addTransition(&m_pressurise, &Pressurise::emit_machineAlreadyStopped, &ssm_stop);
-        ssml_pressurise.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &ssm_stop);
+        state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineAlreadyStopped, &ssm_stop);
+        state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &ssm_stop);
     }
 
 
@@ -156,33 +142,33 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sml_vent);
+        machine.setInitialState(state("vent", true));
 
         // Vent
-        sml_vent.addTransition(&m_vent, &Vent::emit_machineFailed, &sm_stopAsFailed);
-        sml_vent.addTransition(&m_vent, &Vent::emit_machineFinished, &sml_vacDown);
+        state("vent", true)->addTransition(&m_vent, &Vent::emit_machineFailed, &sm_stopAsFailed);
+        state("vent", true)->addTransition(&m_vent, &Vent::emit_machineFinished, state("vacDown", true));
 
 
 
         // Vac down to X
-        sml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFailed, &sm_stopAsFailed);
-        sml_vacDown.addTransition(&m_vacDown, &VacDown::emit_machineFinished, &sml_setHighPressure);
+        state("vacDown", true)->addTransition(&m_vacDown, &VacDown::emit_machineFailed, &sm_stopAsFailed);
+        state("vacDown", true)->addTransition(&m_vacDown, &VacDown::emit_machineFinished, state("setHighPressure", true));
 
 
 
         // Set high pressure
-        sml_setHighPressure.addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
-        sml_setHighPressure.addTransition(&m_pressurise, &Pressurise::emit_machineFinished, &sml_checkCycles);
+        state("setHighPressure", true)->addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
+        state("setHighPressure", true)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, state("checkCycles", true));
 
 
 
         // Check cycles
-        sml_checkCycles.addTransition(this, &Purge::emit_continueCycling, &sml_vent);
-        sml_checkCycles.addTransition(this, &Purge::emit_stopCycling, &sml_finishingVent);
+        state("checkCycles", true)->addTransition(this, &Purge::emit_continueCycling, state("vent", true));
+        state("checkCycles", true)->addTransition(this, &Purge::emit_stopCycling, state("finishingVent", true));
 
             // Vent pressure
-            sml_finishingVent.addTransition(&m_vent, &Vent::emit_machineFailed, &sm_stopAsFailed);
-            sml_finishingVent.addTransition(&m_vent, &Vent::emit_machineFinished, &sm_stop);
+            state("finishingVent", true)->addTransition(&m_vent, &Vent::emit_machineFailed, &sm_stopAsFailed);
+            state("finishingVent", true)->addTransition(&m_vent, &Vent::emit_machineFinished, &sm_stop);
 
     }
 

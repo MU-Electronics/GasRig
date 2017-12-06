@@ -55,24 +55,6 @@ namespace App { namespace Experiment { namespace Machines
             // Pressurise state machine
             VacDown& m_vacDown;
 
-            // Create the states for the machine
-            QState
-                sml_setLowPressure
-            ,   sml_setHighPressure
-            ,   sml_setAtmospheric
-            ,   sml_checkCycles
-            ,   sml_vent
-            ,   sml_finishingVent
-            ,   sml_vacDown
-
-            ,   ssml_vent
-            ,   ssml_pressurise
-            ,   ssml_vacDown;
-
-
-            // Create command validator states
-            // Functions::CommandValidatorState ;
-
         signals:
             void emit_validationSuccess();
             void emit_validationFailed();
