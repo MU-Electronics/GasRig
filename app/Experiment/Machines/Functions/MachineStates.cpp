@@ -224,6 +224,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     {
         // There was an error
         error = true;
+        qDebug() << "Error";
 
         // Stop the machine
         if(machine.isRunning())
@@ -285,6 +286,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     QState* MachineStates::state(QString id, bool type)
     {
+        // Append stop to stop state machine
+        if(!type)
+            id = "stop_" + id;
+
         // If does not exist then make it
         if(!m_states.contains(id))
         {
@@ -306,6 +311,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     CommandValidatorState* MachineStates::validator(QString id, bool type)
     {
+        // Append stop to stop state machine
+        if(!type)
+            id = "stop_" + id;
+
         // If does not exist then make it
         if(!m_validators.contains(id))
         {

@@ -94,7 +94,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_vacDown(parent)
     {
         // We have stop state machines
-        shutDownMachines = true;
+        shutDownMachines = false;
 
         // Pressure validator states
         connect(&sml_validateVacPressureForTurbo, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validateVacPressureForTurbo);

@@ -42,7 +42,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(state("vacDown", true), &QState::entered, this, &Purge::setVacuum);
 
         // Set pressure state machine
-        connect(state("setHighPressure", true), &QState::entered, this, &Purge::setHighPressure);
+        connect(state("setPressure", true), &QState::entered, this, &Purge::setHighPressure);
 
         // Check how many cycles left state
         connect(state("checkCycles", true), &QState::entered, this, &Purge::checkCycles);
@@ -152,13 +152,13 @@ namespace App { namespace Experiment { namespace Machines
 
         // Vac down to X
         state("vacDown", true)->addTransition(&m_vacDown, &VacDown::emit_machineFailed, &sm_stopAsFailed);
-        state("vacDown", true)->addTransition(&m_vacDown, &VacDown::emit_machineFinished, state("setHighPressure", true));
+        state("vacDown", true)->addTransition(&m_vacDown, &VacDown::emit_machineFinished, state("setPressure", true));
 
 
 
         // Set high pressure
-        state("setHighPressure", true)->addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
-        state("setHighPressure", true)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, state("checkCycles", true));
+        state("setPressure", true)->addTransition(&m_pressurise, &Pressurise::emit_machineFailed, &sm_stopAsFailed);
+        state("setPressure", true)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, state("checkCycles", true));
 
 
 

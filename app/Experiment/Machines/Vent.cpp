@@ -253,7 +253,7 @@ namespace App { namespace Experiment { namespace Machines
                           validator("closeOutput", true),
                           state("openFastExhuastPathWaitingOutput", true),
                           state("closeFastExhuastPathWaitingOutput", true),
-                          state("sml_waitForPressureAfterOutput", true),
+                          state("waitForPressureAfterOutput", true),
                           validator("pressureAfterOutput", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
@@ -265,7 +265,7 @@ namespace App { namespace Experiment { namespace Machines
                           validator("closeVacuumOut", true),
                           state("openFastExhuastPathWaitingVacCavity", true),
                           state("closeFastExhuastPathWaitingVacCavity", true),
-                          state("sml_waitForPressureAfterVacOutput", true),
+                          state("waitForPressureAfterVacOutput", true),
                           validator("pressureAfterVacOutput", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
@@ -277,7 +277,7 @@ namespace App { namespace Experiment { namespace Machines
                           validator("closeFlowController", true),
                           state("openFastExhuastPathWaitingFlowCavity", true),
                           state("closeFastExhuastPathWaitingFlowCavity", true),
-                          state("sml_waitForPressureAfterFlowCavity", true),
+                          state("waitForPressureAfterFlowCavity", true),
                           validator("pressureAfterFlowCavity", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
@@ -289,7 +289,7 @@ namespace App { namespace Experiment { namespace Machines
                           validator("closeHighPressureNitrogen", true),
                           state("openFastExhuastPathWaitingNitrogenPipe", true),
                           state("closeFastExhuastPathWaitingNitrogenPipe", true),
-                          state("sml_waitForPressureAfterNitrogenPipe", true),
+                          state("waitForPressureAfterNitrogenPipe", true),
                           validator("pressureAfterNitrogenPipe", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
@@ -301,7 +301,7 @@ namespace App { namespace Experiment { namespace Machines
                           validator("closeHighPressureInput", true),
                           state("openFastExhuastPathWaitingMultiFlow", true),
                           state("closeFastExhuastPathWaitingMultiFlow", true),
-                          state("sml_waitForPressureAfterMultiPipe", true),
+                          state("waitForPressureAfterMultiPipe", true),
                           validator("pressureAfterMultiPipe", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
@@ -318,7 +318,7 @@ namespace App { namespace Experiment { namespace Machines
                                   validator("closeFlowController_2", true),
                                   state("openFastExhuastPathWaitingFlowOnePipe", true),
                                   state("closeFastExhuastPathWaitingFlowOnePipe", true),
-                                  state("sml_waitForPressureAfterFlowOnePipe", true),
+                                  state("waitForPressureAfterFlowOnePipe", true),
                                   validator("pressureAfterFlowOnePipe", true),
                                   state("flowControllerOneValveOverrideOff", true),
                                   &sm_stopAsFailed);
@@ -341,7 +341,7 @@ namespace App { namespace Experiment { namespace Machines
                                   validator("closeFlowController_3", true),
                                   state("openFastExhuastPathWaitingFlowTwoPipe", true),
                                   state("closeFastExhuastPathWaitingFlowTwoPipe", true),
-                                  state("sml_waitForPressureAfterFlowTwoPipe", true),
+                                  state("waitForPressureAfterFlowTwoPipe", true),
                                   validator("pressureAfterFlowTwoPipe", true),
                                   state("flowControllerTwoValveOverrideOff", true),
                                   &sm_stopAsFailed);
