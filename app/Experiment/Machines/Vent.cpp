@@ -25,106 +25,106 @@ namespace App { namespace Experiment { namespace Machines
         connect(state("sml_stageFinder", true), &QState::entered, this, &Vent::stageFinder);
 
         // Validate pressure for atmospheric
-        connect(validator("sml_validatePressureAfterSlowExhuast", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(validator("sml_validatePressureAfterOutput", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(validator("sml_validatePressureAfterVacOutput", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(validator("sml_validatePressureAfterFlowCavity", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(validator("sml_validatePressureAfterNitrogenPipe", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(validator("sml_validatePressureAfterMultiPipe", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(validator("sml_validatePressureAfterFlowOnePipe", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
-        connect(validator("sml_validatePressureAfterFlowTwoPipe", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(validator("pressureAfterSlowExhuast", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(validator("pressureAfterOutput", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(validator("pressureAfterVacOutput", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(validator("pressureAfterFlowCavity", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(validator("pressureAfterNitrogenPipe", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(validator("pressureAfterMultiPipe", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(validator("pressureAfterFlowOnePipe", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
+        connect(validator("pressureAfterFlowTwoPipe", true), &Functions::CommandValidatorState::entered, this, &Vent::validatePressureForAtmospheric);
 
 
         // Control flow cotnrollers override valve
-        connect(state("sml_flowControllerOneValveOverrideOpen", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideOpen);
-        connect(state("sml_flowControllerTwoValveOverrideOpen", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideOpen);
-        connect(state("sml_flowControllerOneValveOverrideOff", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideOff);
-        connect(state("sml_flowControllerTwoValveOverrideOff", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideOff);
-        connect(state("sml_flowControllerOneValveOverrideClose", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideClose);
-        connect(state("sml_flowControllerTwoValveOverrideClose", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideClose);
-        connect(validator("sml_validateFlowControllerOneValveOverrideOpen", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideOpen);
-        connect(validator("sml_validateFlowControllerTwoValveOverrideOpen", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideOpen);
-        connect(validator("sml_validateFlowControllerOneValveOverrideClose", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideClose);
-        connect(validator("sml_validateFlowControllerTwoValveOverrideClose", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideClose);
-        connect(validator("sml_validateFlowControllerOneValveOverrideOff", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideOff);
-        connect(validator("sml_validateFlowControllerTwoValveOverrideOff", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideOff);
+        connect(state("flowControllerOneValveOverrideOpen", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideOpen);
+        connect(state("flowControllerTwoValveOverrideOpen", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideOpen);
+        connect(state("flowControllerOneValveOverrideOff", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideOff);
+        connect(state("flowControllerTwoValveOverrideOff", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideOff);
+        connect(state("flowControllerOneValveOverrideClose", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneValveOverrideClose);
+        connect(state("flowControllerTwoValveOverrideClose", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoValveOverrideClose);
+        connect(validator("flowControllerOneValveOverrideOpen", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideOpen);
+        connect(validator("flowControllerTwoValveOverrideOpen", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideOpen);
+        connect(validator("flowControllerOneValveOverrideClose", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideClose);
+        connect(validator("flowControllerTwoValveOverrideClose", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideClose);
+        connect(validator("flowControllerOneValveOverrideOff", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneValveOverrideOff);
+        connect(validator("flowControllerTwoValveOverrideOff", true), &Functions::CommandValidatorState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoValveOverrideOff);
 
 
 
         // Fast exhuast
-        connect(state("sml_openFastExhuastPathWaitingInternal", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
-        connect(state("sml_openFastExhuastPathWaitingOutput", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
-        connect(state("sml_openFastExhuastPathWaitingVacCavity", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
-        connect(state("sml_openFastExhuastPathWaitingFlowCavity", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
-        connect(state("sml_openFastExhuastPathWaitingNitrogenPipe", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
-        connect(state("sml_openFastExhuastPathWaitingMultiFlow", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
-        connect(state("sml_openFastExhuastPathWaitingFlowOnePipe", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
-        connect(state("sml_openFastExhuastPathWaitingFlowTwoPipe", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openFastExhuastPathWaitingInternal", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openFastExhuastPathWaitingOutput", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openFastExhuastPathWaitingVacCavity", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openFastExhuastPathWaitingFlowCavity", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openFastExhuastPathWaitingNitrogenPipe", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openFastExhuastPathWaitingMultiFlow", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openFastExhuastPathWaitingFlowOnePipe", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openFastExhuastPathWaitingFlowTwoPipe", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
 
-        connect(state("sml_closeFastExhuastPathWaitingInternal", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("sml_closeFastExhuastPathWaitingOutput", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("sml_closeFastExhuastPathWaitingVacCavity", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("sml_closeFastExhuastPathWaitingFlowCavity", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("sml_closeFastExhuastPathWaitingNitrogenPipe", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("sml_closeFastExhuastPathWaitingMultiFlow", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("sml_closeFastExhuastPathWaitingFlowOnePipe", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("sml_closeFastExhuastPathWaitingFlowTwoPipe", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeFastExhuastPathWaitingInternal", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeFastExhuastPathWaitingOutput", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeFastExhuastPathWaitingVacCavity", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeFastExhuastPathWaitingFlowCavity", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeFastExhuastPathWaitingNitrogenPipe", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeFastExhuastPathWaitingMultiFlow", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeFastExhuastPathWaitingFlowOnePipe", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeFastExhuastPathWaitingFlowTwoPipe", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
 
 
 
 
 
         // Link close valve states
-        connect(state("sml_closeHighPressureInput", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
-        connect(state("sml_closeHighPressureNitrogen", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
-        connect(state("sml_closeFlowController", true), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
-        connect(state("sml_closeFlowController_2", true), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
-        connect(state("sml_closeFlowController_3", true), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
-        connect(state("sml_closeExhuast", true), &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
-        connect(state("sml_closeOutput", true), &QState::entered, this->valves(), &Functions::Valves::closeOutput);
-        connect(state("sml_closeSlowExhuastPath", true), &QState::entered, this->valves(), &Functions::Valves::closeSlowExhuastPath);
-        connect(state("sml_closeFastExhuastPath", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
-        connect(state("sml_closeVacuumIn", true), &QState::entered, this->valves(), &Functions::Valves::closeVacuumIn);
-        connect(state("sml_closeVacuumOut", true), &QState::entered, this->valves(), &Functions::Valves::closeVacuumOut);
+        connect(state("closeHighPressureInput", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
+        connect(state("closeHighPressureNitrogen", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
+        connect(state("closeFlowController", true), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
+        connect(state("closeFlowController_2", true), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
+        connect(state("closeFlowController_3", true), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
+        connect(state("closeExhuast", true), &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
+        connect(state("closeOutput", true), &QState::entered, this->valves(), &Functions::Valves::closeOutput);
+        connect(state("closeSlowExhuastPath", true), &QState::entered, this->valves(), &Functions::Valves::closeSlowExhuastPath);
+        connect(state("closeFastExhuastPath", true), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeVacuumIn", true), &QState::entered, this->valves(), &Functions::Valves::closeVacuumIn);
+        connect(state("closeVacuumOut", true), &QState::entered, this->valves(), &Functions::Valves::closeVacuumOut);
 
         // Link close valve validator states
-        connect(validator("sml_validateCloseHighPressureInput", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureInput);
-        connect(validator("sml_validateCloseHighPressureNitrogen", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureNitrogen);
-        connect(validator("sml_validateCloseFlowController", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
-        connect(validator("sml_validateCloseFlowController_2", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
-        connect(validator("sml_validateCloseFlowController_3", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
-        connect(validator("sml_validateCloseExhuast", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseExhuast);
-        connect(validator("sml_validateCloseOutput", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseOutput);
-        connect(validator("sml_validateCloseSlowExhuastPath", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseSlowExhuastPath);
-        connect(validator("sml_validateCloseFastExhuastPath", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFastExhuastPath);
-        connect(validator("sml_validateCloseVacuumIn", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumIn);
-        connect(validator("sml_validateCloseVacuumOut", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumOut);
+        connect(validator("closeHighPressureInput", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureInput);
+        connect(validator("closeHighPressureNitrogen", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureNitrogen);
+        connect(validator("closeFlowController", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
+        connect(validator("closeFlowController_2", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
+        connect(validator("closeFlowController_3", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
+        connect(validator("closeExhuast", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseExhuast);
+        connect(validator("closeOutput", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseOutput);
+        connect(validator("closeSlowExhuastPath", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseSlowExhuastPath);
+        connect(validator("closeFastExhuastPath", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFastExhuastPath);
+        connect(validator("closeVacuumIn", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumIn);
+        connect(validator("closeVacuumOut", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumOut);
 
         // Link open valve states
-        connect(state("sml_openHighPressureInput", true), &QState::entered, this->valves(), &Functions::Valves::openHighPressureInput);
-        connect(state("sml_openHighPressureNitrogen", true), &QState::entered, this->valves(), &Functions::Valves::openHighPressureNitrogen);
-        connect(state("sml_openFlowController", true), &QState::entered, this->valves(), &Functions::Valves::openFlowController);
-        connect(state("sml_openFlowController_2", true), &QState::entered, this->valves(), &Functions::Valves::openFlowController);
-        connect(state("sml_openFlowController_3", true), &QState::entered, this->valves(), &Functions::Valves::openFlowController);
-        connect(state("sml_openExhuast", true), &QState::entered, this->valves(), &Functions::Valves::openExhuast);
-        connect(state("sml_openOutput", true), &QState::entered, this->valves(), &Functions::Valves::openOutput);
-        connect(state("sml_openSlowExhuastPath", true), &QState::entered, this->valves(), &Functions::Valves::openSlowExhuastPath);
-        connect(state("sml_openFastExhuastPath", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
-        connect(state("sml_openVacuumIn", true), &QState::entered, this->valves(), &Functions::Valves::openVacuumIn);
-        connect(state("sml_openVacuumOut", true), &QState::entered, this->valves(), &Functions::Valves::openVacuumOut);
+        connect(state("openHighPressureInput", true), &QState::entered, this->valves(), &Functions::Valves::openHighPressureInput);
+        connect(state("openHighPressureNitrogen", true), &QState::entered, this->valves(), &Functions::Valves::openHighPressureNitrogen);
+        connect(state("openFlowController", true), &QState::entered, this->valves(), &Functions::Valves::openFlowController);
+        connect(state("openFlowController_2", true), &QState::entered, this->valves(), &Functions::Valves::openFlowController);
+        connect(state("openFlowController_3", true), &QState::entered, this->valves(), &Functions::Valves::openFlowController);
+        connect(state("openExhuast", true), &QState::entered, this->valves(), &Functions::Valves::openExhuast);
+        connect(state("openOutput", true), &QState::entered, this->valves(), &Functions::Valves::openOutput);
+        connect(state("openSlowExhuastPath", true), &QState::entered, this->valves(), &Functions::Valves::openSlowExhuastPath);
+        connect(state("openFastExhuastPath", true), &QState::entered, this->valves(), &Functions::Valves::openFastExhuastPath);
+        connect(state("openVacuumIn", true), &QState::entered, this->valves(), &Functions::Valves::openVacuumIn);
+        connect(state("openVacuumOut", true), &QState::entered, this->valves(), &Functions::Valves::openVacuumOut);
 
         // Link open valve validator states
-        connect(validator("sml_validateOpenHighPressureInput", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenHighPressureInput);
-        connect(validator("sml_validateOpenHighPressureNitrogen", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenHighPressureNitrogen);
-        connect(validator("sml_validateOpenFlowController", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFlowController);
-        connect(validator("sml_validateOpenFlowController_2", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFlowController);
-        connect(validator("sml_validateOpenFlowController_3", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFlowController);
-        connect(validator("sml_validateOpenExhuast", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenExhuast);
-        connect(validator("sml_validateOpenOutput", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenOutput);
-        connect(validator("sml_validateOpenSlowExhuastPath", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenSlowExhuastPath);
-        connect(validator("sml_validateOpenFastExhuastPath", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFastExhuastPath);
-        connect(validator("sml_validateOpenVacuumIn", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumIn);
-        connect(validator("sml_validateOpenVacuumOut", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumOut);
+        connect(validator("openHighPressureInput", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenHighPressureInput);
+        connect(validator("openHighPressureNitrogen", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenHighPressureNitrogen);
+        connect(validator("openFlowController", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFlowController);
+        connect(validator("openFlowController_2", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFlowController);
+        connect(validator("openFlowController_3", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFlowController);
+        connect(validator("openExhuast", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenExhuast);
+        connect(validator("openOutput", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenOutput);
+        connect(validator("openSlowExhuastPath", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenSlowExhuastPath);
+        connect(validator("openFastExhuastPath", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFastExhuastPath);
+        connect(validator("openVacuumIn", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumIn);
+        connect(validator("openVacuumOut", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumOut);
     }
 
     Vent::~Vent()
@@ -209,147 +209,147 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // What the next stage should be?
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_openExhuast, state("sml_openExhuast", true));
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_openSlowExhuast, state("sml_openSlowExhuastPath", true));
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventOuput, state("sml_openOutput", true));
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventVacuumOutput, state("sml_openVacuumOut", true));
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventFlowCavity, state("sml_openFlowController", true));
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventNitrogenPipes, state("sml_openHighPressureNitrogen", true));
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventMultiPipes, state("sml_openHighPressureInput", true));
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventFlowOnePipes, state("sml_flowControllerOneValveOverrideOpen", true));
-        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventFlowTwoPipes, state("sml_flowControllerTwoValveOverrideOpen", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_openExhuast, state("openExhuast", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_openSlowExhuast, state("openSlowExhuastPath", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventOuput, state("openOutput", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventVacuumOutput, state("openVacuumOut", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventFlowCavity, state("openFlowController", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventNitrogenPipes, state("openHighPressureNitrogen", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventMultiPipes, state("openHighPressureInput", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventFlowOnePipes, state("flowControllerOneValveOverrideOpen", true));
+        state("sml_stageFinder", true)->addTransition(this, &Vent::emit_ventFlowTwoPipes, state("flowControllerTwoValveOverrideOpen", true));
         state("sml_stageFinder", true)->addTransition(this, &Vent::emit_finished, &sm_stop);
 
 
         // Open exhuast wait for pressure drop
-        state("sml_openExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("sml_validateOpenExhuast", true));
+        state("openExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openExhuast", true));
             // Failed close all valves
-            validator("sml_validateOpenExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+            validator("openExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
             // Success finish here
-            validator("sml_validateOpenExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("sml_openSlowExhuastPath", true));
+            validator("openExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openSlowExhuastPath", true));
 
         // Open the slow exhuast valve and wait for pressure drop
-        state("sml_openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("sml_validateOpenSlowExhuastPath", true));
+        state("openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openSlowExhuastPath", true));
             // Failed close all valves
-            validator("sml_validateOpenSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+            validator("openSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
             // Success finish here
-            validator("sml_validateOpenSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("sml_waitForPressureAfterSlowExhuast", true));
+            validator("openSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("sml_waitForPressureAfterSlowExhuast", true));
                 // Wait for pressure reading?
-                state("sml_waitForPressureAfterSlowExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_validatePressureAfterSlowExhuast", true));
+                state("sml_waitForPressureAfterSlowExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("pressureAfterSlowExhuast", true));
                     // Are we at atmopheric
-                    validator("sml_validatePressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationSuccess, state("sml_closeFastExhuastPathWaitingInternal", true));
+                    validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationSuccess, state("closeFastExhuastPathWaitingInternal", true));
                         // Close fast exhuast
-                        state("sml_closeFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("sml_stageFinder", true));
-                            validator("sml_validatePressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationFailed, state("sml_waitForPressureAfterSlowExhuast", true));
-                            validator("sml_validatePressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_openValveFour, state("sml_openFastExhuastPathWaitingInternal", true));
+                        state("closeFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("sml_stageFinder", true));
+                            validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationFailed, state("sml_waitForPressureAfterSlowExhuast", true));
+                            validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_openValveFour, state("openFastExhuastPathWaitingInternal", true));
                         // Open fast exhuast
-                        state("sml_openFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("sml_waitForPressureAfterSlowExhuast", true));
+                        state("openFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("sml_waitForPressureAfterSlowExhuast", true));
 
 
         // Open the output valve, wait for pressure drop and then close
-        openPressureClose(state("sml_openOutput", true),
-                          validator("sml_validateOpenOutput", true),
-                          state("sml_closeOutput", true),
-                          validator("sml_validateCloseOutput", true),
-                          state("sml_openFastExhuastPathWaitingOutput", true),
-                          state("sml_closeFastExhuastPathWaitingOutput", true),
+        openPressureClose(state("openOutput", true),
+                          validator("openOutput", true),
+                          state("closeOutput", true),
+                          validator("closeOutput", true),
+                          state("openFastExhuastPathWaitingOutput", true),
+                          state("closeFastExhuastPathWaitingOutput", true),
                           state("sml_waitForPressureAfterOutput", true),
-                          validator("sml_validatePressureAfterOutput", true),
+                          validator("pressureAfterOutput", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(state("sml_openVacuumOut", true),
-                          validator("sml_validateOpenVacuumOut", true),
-                          state("sml_closeVacuumOut", true),
-                          validator("sml_validateCloseVacuumOut", true),
-                          state("sml_openFastExhuastPathWaitingVacCavity", true),
-                          state("sml_closeFastExhuastPathWaitingVacCavity", true),
+        openPressureClose(state("openVacuumOut", true),
+                          validator("openVacuumOut", true),
+                          state("closeVacuumOut", true),
+                          validator("closeVacuumOut", true),
+                          state("openFastExhuastPathWaitingVacCavity", true),
+                          state("closeFastExhuastPathWaitingVacCavity", true),
                           state("sml_waitForPressureAfterVacOutput", true),
-                          validator("sml_validatePressureAfterVacOutput", true),
+                          validator("pressureAfterVacOutput", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(state("sml_openFlowController", true),
-                          validator("sml_validateOpenFlowController", true),
-                          state("sml_closeFlowController", true),
-                          validator("sml_validateCloseFlowController", true),
-                          state("sml_openFastExhuastPathWaitingFlowCavity", true),
-                          state("sml_closeFastExhuastPathWaitingFlowCavity", true),
+        openPressureClose(state("openFlowController", true),
+                          validator("openFlowController", true),
+                          state("closeFlowController", true),
+                          validator("closeFlowController", true),
+                          state("openFastExhuastPathWaitingFlowCavity", true),
+                          state("closeFastExhuastPathWaitingFlowCavity", true),
                           state("sml_waitForPressureAfterFlowCavity", true),
-                          validator("sml_validatePressureAfterFlowCavity", true),
+                          validator("pressureAfterFlowCavity", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(state("sml_openHighPressureNitrogen", true),
-                          validator("sml_validateOpenHighPressureNitrogen", true),
-                          state("sml_closeHighPressureNitrogen", true),
-                          validator("sml_validateCloseHighPressureNitrogen", true),
-                          state("sml_openFastExhuastPathWaitingNitrogenPipe", true),
-                          state("sml_closeFastExhuastPathWaitingNitrogenPipe", true),
+        openPressureClose(state("openHighPressureNitrogen", true),
+                          validator("openHighPressureNitrogen", true),
+                          state("closeHighPressureNitrogen", true),
+                          validator("closeHighPressureNitrogen", true),
+                          state("openFastExhuastPathWaitingNitrogenPipe", true),
+                          state("closeFastExhuastPathWaitingNitrogenPipe", true),
                           state("sml_waitForPressureAfterNitrogenPipe", true),
-                          validator("sml_validatePressureAfterNitrogenPipe", true),
+                          validator("pressureAfterNitrogenPipe", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
 
         // Open the  valve, wait for pressure drop and then close
-        openPressureClose(state("sml_openHighPressureInput", true),
-                          validator("sml_validateOpenHighPressureInput", true),
-                          state("sml_closeHighPressureInput", true),
-                          validator("sml_validateCloseHighPressureInput", true),
-                          state("sml_openFastExhuastPathWaitingMultiFlow", true),
-                          state("sml_closeFastExhuastPathWaitingMultiFlow", true),
+        openPressureClose(state("openHighPressureInput", true),
+                          validator("openHighPressureInput", true),
+                          state("closeHighPressureInput", true),
+                          validator("closeHighPressureInput", true),
+                          state("openFastExhuastPathWaitingMultiFlow", true),
+                          state("closeFastExhuastPathWaitingMultiFlow", true),
                           state("sml_waitForPressureAfterMultiPipe", true),
-                          validator("sml_validatePressureAfterMultiPipe", true),
+                          validator("pressureAfterMultiPipe", true),
                           state("sml_stageFinder", true),
                           &sm_stopAsFailed);
 
         // Open the flow controller internal valve
-        state("sml_flowControllerOneValveOverrideOpen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("sml_validateFlowControllerOneValveOverrideOpen", true));
+        state("flowControllerOneValveOverrideOpen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("flowControllerOneValveOverrideOpen", true));
             // Check valve open
-            validator("sml_validateFlowControllerOneValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
-            validator("sml_validateFlowControllerOneValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("sml_openFlowController_2", true));
+            validator("flowControllerOneValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
+            validator("flowControllerOneValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("openFlowController_2", true));
                 // Open flow controller cavity valve, wait for pressure drop, open intenral flow controller valve, and then close
-                openPressureClose(state("sml_openFlowController_2", true),
-                                  validator("sml_validateOpenFlowController_2", true),
-                                  state("sml_closeFlowController_2", true),
-                                  validator("sml_validateCloseFlowController_2", true),
-                                  state("sml_openFastExhuastPathWaitingFlowOnePipe", true),
-                                  state("sml_closeFastExhuastPathWaitingFlowOnePipe", true),
+                openPressureClose(state("openFlowController_2", true),
+                                  validator("openFlowController_2", true),
+                                  state("closeFlowController_2", true),
+                                  validator("closeFlowController_2", true),
+                                  state("openFastExhuastPathWaitingFlowOnePipe", true),
+                                  state("closeFastExhuastPathWaitingFlowOnePipe", true),
                                   state("sml_waitForPressureAfterFlowOnePipe", true),
-                                  validator("sml_validatePressureAfterFlowOnePipe", true),
-                                  state("sml_flowControllerOneValveOverrideOff", true),
+                                  validator("pressureAfterFlowOnePipe", true),
+                                  state("flowControllerOneValveOverrideOff", true),
                                   &sm_stopAsFailed);
                     // Turn off valve override
-                    state("sml_flowControllerOneValveOverrideOff", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("sml_validateFlowControllerOneValveOverrideOff", true));
+                    state("flowControllerOneValveOverrideOff", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("flowControllerOneValveOverrideOff", true));
                         // Check valve override off
-                        validator("sml_validateFlowControllerOneValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
-                        validator("sml_validateFlowControllerOneValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("sml_stageFinder", true));
+                        validator("flowControllerOneValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
+                        validator("flowControllerOneValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("sml_stageFinder", true));
 
 
         // Open the flow controller internal valve
-        state("sml_flowControllerTwoValveOverrideOpen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("sml_validateFlowControllerTwoValveOverrideOpen", true));
+        state("flowControllerTwoValveOverrideOpen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("flowControllerTwoValveOverrideOpen", true));
             // Check valve open
-            validator("sml_validateFlowControllerTwoValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
-            validator("sml_validateFlowControllerTwoValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("sml_openFlowController_3", true));
+            validator("flowControllerTwoValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
+            validator("flowControllerTwoValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("openFlowController_3", true));
                 // Open the  valve, wait for pressure drop, open intenral flow controller valve, and then close
-                openPressureClose(state("sml_openFlowController_3", true),
-                                  validator("sml_validateOpenFlowController_3", true),
-                                  state("sml_closeFlowController_3", true),
-                                  validator("sml_validateCloseFlowController_3", true),
-                                  state("sml_openFastExhuastPathWaitingFlowTwoPipe", true),
-                                  state("sml_closeFastExhuastPathWaitingFlowTwoPipe", true),
+                openPressureClose(state("openFlowController_3", true),
+                                  validator("openFlowController_3", true),
+                                  state("closeFlowController_3", true),
+                                  validator("closeFlowController_3", true),
+                                  state("openFastExhuastPathWaitingFlowTwoPipe", true),
+                                  state("closeFastExhuastPathWaitingFlowTwoPipe", true),
                                   state("sml_waitForPressureAfterFlowTwoPipe", true),
-                                  validator("sml_validatePressureAfterFlowTwoPipe", true),
-                                  state("sml_flowControllerTwoValveOverrideOff", true),
+                                  validator("pressureAfterFlowTwoPipe", true),
+                                  state("flowControllerTwoValveOverrideOff", true),
                                   &sm_stopAsFailed);
                     // Turn off valve override
-                    state("sml_flowControllerTwoValveOverrideOff", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("sml_validateFlowControllerTwoValveOverrideOff", true));
+                    state("flowControllerTwoValveOverrideOff", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("flowControllerTwoValveOverrideOff", true));
                         // Check valve override off
-                        validator("sml_validateFlowControllerTwoValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
-                        validator("sml_validateFlowControllerTwoValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("sml_stageFinder", true));
+                        validator("flowControllerTwoValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
+                        validator("flowControllerTwoValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("sml_stageFinder", true));
     }
 
 
