@@ -21,6 +21,8 @@ namespace App { namespace Experiment { namespace Machines
     Vent::Vent(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
     {
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // General
         connect(state("sml_stageFinder", true), &QState::entered, this, &Vent::stageFinder);
 
@@ -185,15 +187,15 @@ namespace App { namespace Experiment { namespace Machines
     void Vent::stopped()
     {
         // Close valves
-        valves()->closeSlowExhuastPath();
-        valves()->closeExhuast();
-        valves()->closeOutput();
-        valves()->closeVacuumOut();
-        valves()->closeFastExhuastPath();
-        valves()->closeVacuumIn();
-        valves()->closeFlowController();
-        valves()->closeHighPressureInput();
-        valves()->closeHighPressureNitrogen();
+        //valves()->closeSlowExhuastPath();
+       // valves()->closeExhuast();
+       // valves()->closeOutput();
+      //  valves()->closeVacuumOut();
+      //  valves()->closeFastExhuastPath();
+     //   valves()->closeVacuumIn();
+      //  valves()->closeFlowController();
+     //   valves()->closeHighPressureInput();
+     //   valves()->closeHighPressureNitrogen();
     }
 
 

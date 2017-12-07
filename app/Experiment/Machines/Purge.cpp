@@ -32,7 +32,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_vacDown(*new VacDown(parent, settings, hardware, safety))
     {
         // We have stop state machines
-        shutDownMachines = true;
+        //shutDownMachines = true;
 
         childClassName = QString::fromStdString(typeid(this).name());
 
@@ -106,6 +106,8 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Build the shutdown machine
         buildShutDownMachine();
+
+        qDebug() << "staring shut down machine" << m_states << state("vent", false);
 
         // Run the sub machine shutdown state machine
         shutDownMachine.start();
@@ -276,6 +278,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVent()
     {
+        m_vent.buildMachine();
         // Start the machine
         m_vent.stopMachineWithoutError();
     }

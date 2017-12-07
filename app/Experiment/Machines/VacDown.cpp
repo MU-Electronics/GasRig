@@ -96,6 +96,8 @@ namespace App { namespace Experiment { namespace Machines
         // We have stop state machines
         shutDownMachines = false;
 
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // Pressure validator states
         connect(&sml_validateVacPressureForTurbo, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validateVacPressureForTurbo);
         connect(&sml_validatePressureForVacuum, &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validatePressureForVacuum);
@@ -228,15 +230,15 @@ namespace App { namespace Experiment { namespace Machines
     void VacDown::stopped()
     {
         // Turn off vacuum
-       vacuum()->disableTurboPump();
-       vacuum()->disableBackingPump();
+       //vacuum()->disableTurboPump();
+      // vacuum()->disableBackingPump();
 
        // Close valves
-       valves()->closeOutput();
-       valves()->closeVacuumOut();
-       valves()->closeSlowExhuastPath();
-       valves()->closeVacuumIn();
-       valves()->closeFastExhuastPath();
+       //valves()->closeOutput();
+      // valves()->closeVacuumOut();
+      // valves()->closeSlowExhuastPath();
+     //  valves()->closeVacuumIn();
+     //  valves()->closeFastExhuastPath();
 
        // Stop timers
        t_vacDown.stop();

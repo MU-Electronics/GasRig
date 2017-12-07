@@ -152,6 +152,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_exhuastVoidVacDownTimer(parent)
         ,   t_vacuumValveTimer(parent)
     {
+        childClassName = QString::fromStdString(typeid(this).name());
         // Connect signals and slots
         connectStatesToMethods();
     }
@@ -474,23 +475,23 @@ namespace App { namespace Experiment { namespace Machines
     void Pressurise::stopped()
     {
         // Close valves
-        valves()->closeOutput();
-        valves()->closeExhuast();
-        valves()->closeFastExhuastPath();
-        valves()->closeSlowExhuastPath();
-        valves()->closeHighPressureInput();
-        valves()->closeVacuumIn();
+        //valves()->closeOutput();
+       // valves()->closeExhuast();
+      //  valves()->closeFastExhuastPath();
+       // valves()->closeSlowExhuastPath();
+       // valves()->closeHighPressureInput();
+      //  valves()->closeVacuumIn();
 
         // Turn off vacuum pum
-        vacuum()->disableBackingPump();
-        vacuum()->disableTurboPump();
+      //  vacuum()->disableBackingPump();
+       // vacuum()->disableTurboPump();
 
         // Stop timers
-        stopValveOnePulseTimer();
-        stopValveTwoPulseTimer();
-        stopValveSevenPulseTimer();
-        stopExhuastVoidVacDownTimer();
-        stopVacuumValveTimer();
+      //  stopValveOnePulseTimer();
+      //  stopValveTwoPulseTimer();
+      //  stopValveSevenPulseTimer();
+     //   stopExhuastVoidVacDownTimer();
+     //   stopVacuumValveTimer();
     }
 
 

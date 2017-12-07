@@ -100,8 +100,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             ,   ssm_stop;
 
             // Helper methods
-            void stopMachineWithoutError();
-            void stopMachineWithError();
             void removeAllTransitions(QStateMachine &stateMachine);
             void paramsOverride(QVariantMap override);
 
@@ -126,6 +124,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             void emit_machineAlreadyStopped();
 
         public slots:
+            // Finishing state machine slots
+            void stopMachineWithoutError();
+            void stopMachineWithError();
+
             // Re-implimention of stopped for each machine
             virtual void stopped() = 0;
 

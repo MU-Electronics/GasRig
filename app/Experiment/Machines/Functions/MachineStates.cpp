@@ -176,17 +176,21 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get all states from machine and loop through them
         removeAllTransitions(machine);
 
+        qDebug() << "Stopping: " << childClassName;
+
         // Run the stopped function in the state machine
         stopped();
 
         // Stop main machine
         if(error && !shutDownMachines)
         {
+            qDebug()<< "Machine stopped but failed "<< childClassName;
             // Tell every we have stopped becuase of an error
             emit emit_machineFailed(errorDetails);
         }
         else if(!error && !shutDownMachines)
         {
+            qDebug()<< "Machine stopped with success "<< childClassName;
             // Tell every we have stopped becuase machine finished
             emit emit_machineFinished(errorDetails);
         }
@@ -288,9 +292,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     QState* MachineStates::state(QString id, bool type)
     {
         // Append stop to stop state machine
-        if(!type)
+        if(!type){
             id = "stop_" + id;
-
+            qDebug() << id;
+        }
         // If does not exist then make it
         if(!m_states.contains(id))
         {
