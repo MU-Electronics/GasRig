@@ -22,11 +22,14 @@
 // Include command validator states
 #include "CommandValidatorState.h"
 
-// Include states
+// Include functions
 #include "Valves.h"
 #include "Vacuum.h"
 #include "Pressure.h"
 #include "Flow.h"
+
+// Include transisiton builder
+#include "TransitionsBuilder.h"
 
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
@@ -55,6 +58,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Hold instance of command constructor
             Hardware::CommandConstructor& m_commandConstructor;
 
+
             // Did an error occure which caused the machine to stop
             bool error = false;
 
@@ -67,6 +71,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Hold the sub state machine shut down
             QStateMachine shutDownMachine;
 
+
             // Holds the dynamically created states
             QMap<QString, QState*> m_states;
             QMap<QString, CommandValidatorState*> m_validators;
@@ -75,10 +80,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             QState *state(QString id, bool type);
             CommandValidatorState *validator(QString id, bool type);
 
-            // Connection helpers
-            // void connectValve(QString name, bool machine, const QMetaMethod &method);
 
-            // External states
+            // External functions
             Valves* m_valves;
             Vacuum* m_vacuum;
             Pressure* m_pressure;
@@ -91,26 +94,39 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             Pressure* pressure();
             Flow* flow();
 
-            // Create the states for the machine
+
+            // Transition builder for common tasks
+            TransitionsBuilder* m_transitionsBuilder;
+
+            // Transnistion builder getter
+            TransitionsBuilder* transitionsBuilder();
+
+
+            // Create the stop and stopped as failed states
             QState
-               // Re-implimention of stop for each machine
                 sm_stop
             ,   sm_stopAsFailed
 
             ,   ssm_stop;
 
+
             // Helper methods
             void removeAllTransitions(QStateMachine &stateMachine);
             void paramsOverride(QVariantMap override);
 
+
             // Contract methods that must be implimented
             virtual void start() = 0;
             virtual void buildMachine() = 0;
+
+            // Not all machines will have a stop procedure
             virtual void buildShutDownMachine(){}
 
 
             // Testing
             QString childClassName = "";
+            // Connection helpers
+            // void connectValve(QString name, bool machine, const QMetaMethod &method);
 
         signals:
             void hardwareRequest(QVariantMap command);
@@ -145,13 +161,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             void connectStatesToMethods();
 
             // Turbo pump state
-            bool turboState = false;
+            // bool turboState = false;
 
             // Vacuum pressure
-            double vacuumPressure = 0;
+            // double vacuumPressure = 0;
 
             // Pressure
-            double pressureSensor = 0;
+            // double pressureSensor = 0;
 
     };
 }}}}

@@ -20,29 +20,39 @@
 // Include valaitor state
 #include "CommandValidatorState.h"
 
+
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
     MachineStates::MachineStates(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety)
         :   QObject(parent)
 
+            // Access the global referances
         ,   m_settings(settings)
         ,   m_hardware(hardware)
         ,   m_safety(safety)
-        ,   machine(parent)
-        ,   shutDownMachine(parent)
+
+            // Access the the hardware command builder
         ,   m_commandConstructor(*new Hardware::CommandConstructor)
 
-            // Valve states
+            // Init the two state machines (start and stop)
+        ,   machine(parent)
+        ,   shutDownMachine(parent)
+
+            // Function classes for the states to connect to
         ,   m_valves(new Valves(parent, settings, hardware, safety, machine, params, m_commandConstructor))
         ,   m_vacuum(new Vacuum(parent, settings, hardware, safety, machine, params, m_commandConstructor))
         ,   m_pressure(new Pressure(parent, settings, hardware, safety, machine, params, m_commandConstructor))
         ,   m_flow(new Flow(parent, settings, hardware, safety, machine, params, m_commandConstructor))
 
-            // Re-implimention of stop for each machine
+            // Builders to build transition blocks for common state machine logic
+        ,   m_transitionsBuilder(new TransitionsBuilder(settings, m_valves, m_vacuum, m_pressure, m_flow))
+
+            // States for stopping with success and failure for start state machine
         ,   sm_stop(&machine)
         ,   sm_stopAsFailed(&machine)
 
+            // States for stopping with success and failure for stop state machine
         ,   ssm_stop(&shutDownMachine)
     {
         // Connect object signals to hardware slots and visa versa
@@ -136,14 +146,28 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
     /**
+     * Returns the transistion builder instance
+     *
+     * @brief MachineStates::transitionsBuilder
+     * @return
+     */
+    TransitionsBuilder* MachineStates::transitionsBuilder()
+    {
+        return m_transitionsBuilder;
+    }
+
+
+    /**
      * Runs after sub machines have been stopped if there are any
      *
      * @brief MachineStates::afterSubMachinesStopped
      */
     void MachineStates::afterSubMachinesStopped()
     {
+        // Remove transistions from shutdown states machune
         removeAllTransitions(shutDownMachine);
 
+        // Tell the everyone the machine has finished
         if(error)
         {
             emit emit_machineFailed(errorDetails);
@@ -162,6 +186,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopShutDownSubMachine()
     {
+        // Stop the shutdown state machine
         shutDownMachine.stop();
     }
 
@@ -176,21 +201,27 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get all states from machine and loop through them
         removeAllTransitions(machine);
 
-        qDebug() << "Stopping: " << childClassName;
-
         // Run the stopped function in the state machine
         stopped();
+
+        // Start the shut down machine if one present
+        if(shutDownMachines)
+        {
+            // Build the shutdown machine
+            buildShutDownMachine();
+
+            // Run the sub machine shutdown state machine
+            shutDownMachine.start();
+        }
 
         // Stop main machine
         if(error && !shutDownMachines)
         {
-            qDebug()<< "Machine stopped but failed "<< childClassName;
             // Tell every we have stopped becuase of an error
             emit emit_machineFailed(errorDetails);
         }
         else if(!error && !shutDownMachines)
         {
-            qDebug()<< "Machine stopped with success "<< childClassName;
             // Tell every we have stopped becuase machine finished
             emit emit_machineFinished(errorDetails);
         }
@@ -206,7 +237,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     {
         // There was no error
         error = false;
-        qDebug() << "Success: " << childClassName;
 
         // Stop the machine
         if(machine.isRunning())
@@ -229,7 +259,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     {
         // There was an error
         error = true;
-        qDebug() << "Error: " << childClassName;
 
         // Stop the machine
         if(machine.isRunning())
@@ -292,10 +321,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     QState* MachineStates::state(QString id, bool type)
     {
         // Append stop to stop state machine
-        if(!type){
+        if(!type)
             id = "stop_" + id;
-            qDebug() << id;
-        }
+
         // If does not exist then make it
         if(!m_states.contains(id))
         {

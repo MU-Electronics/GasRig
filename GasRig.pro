@@ -111,7 +111,8 @@ SOURCES += \
     app/View/Managers/Global.cpp \
     app/Experiment/Machines/Vent.cpp \
     app/Experiment/Machines/Purge.cpp \
-    app/View/Managers/Modes/PressuriseCell.cpp
+    app/View/Managers/Modes/PressuriseCell.cpp \
+    app/Experiment/Machines/Functions/TransitionsBuilder.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -199,4 +200,5 @@ HEADERS += \
     app/View/Managers/Global.h \
     app/Experiment/Machines/Vent.h \
     app/Experiment/Machines/Purge.h \
-    app/View/Managers/Modes/PressuriseCell.h
+    app/View/Managers/Modes/PressuriseCell.h \
+    app/Experiment/Machines/Functions/TransitionsBuilder.h
