@@ -64,13 +64,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     /**
      * Disable the turbo pump and validates
      *
-     * @brief TransitionsBuilder::enableBackingPump
+     * @brief TransitionsBuilder::disableBackingPump
      * @param enable
      * @param enableValidate
      * @param finished
      * @param failed
      */
-    void TransitionsBuilder::diableBackingPump(QState* disable,
+    void TransitionsBuilder::disableBackingPump(QState* disable,
                                                CommandValidatorState* disableValidate,
                                                QState* finished,
                                                QState* failed)
@@ -81,6 +81,29 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationFailed, failed);
             // Validate backing pump on
             disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationSuccess, finished);
+    }
+
+    /**
+     * Disable the turbo pump and validates
+     *
+     * @brief TransitionsBuilder::disableTurboPump
+     * @param disable
+     * @param disableValidate
+     * @param finished
+     * @param failed
+     */
+    void TransitionsBuilder::disableTurboPump(QState* disable,
+                                               CommandValidatorState* disableValidate,
+                                               QState* finished,
+                                               QState* failed)
+    {
+        // Disable turbo pump
+        disable->addTransition(m_vacuum, &Functions::Vacuum::emit_turboPumpAlreadyDisabled, disableValidate);
+        disable->addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, disableValidate);
+            // Turbo pump was disabled
+            disableValidate->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, finished);
+            // Turbo pump could not be disabled
+            disableValidate->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, failed);
     }
 
 

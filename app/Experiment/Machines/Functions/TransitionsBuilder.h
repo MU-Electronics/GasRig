@@ -38,7 +38,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                                    CommandValidatorState* enableValidate,
                                    QState* finished,
                                    QState* failed);
-            void diableBackingPump(QState* disable,
+            void disableBackingPump(QState* disable,
                                    CommandValidatorState* disableValidate,
                                    QState* finished,
                                    QState* failed);

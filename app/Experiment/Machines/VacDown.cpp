@@ -186,6 +186,14 @@ namespace App { namespace Experiment { namespace Machines
         connect(validator("closeVacuumIn", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumIn);
         connect(validator("closeVacuumOut", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumOut);
 
+        // SHUTDOWN STATE MACHINE: links vac states
+        connect(state("disableTurboPump", false), &QState::entered, this->vacuum(), &Functions::Vacuum::disableTurboPump);
+        connect(state("disableBackingPump", false), &QState::entered, this->vacuum(), &Functions::Vacuum::disableBackingPump);
+
+        connect(validator("disableTurboPump", false), &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateDisableTurboPump);
+        connect(validator("disableBackingPump", false), &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateDisableBackingPump);
+        connect(validator("turboSpeedZero", false), &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateTurboSpeedZero);
+
 
 
 
@@ -297,19 +305,21 @@ namespace App { namespace Experiment { namespace Machines
                 validator("closeNitrogenIn", false),
                 state("closeFlowController", false),
                 validator("closeFlowController", false),
-                &ssm_stop,
+                state("disableTurboPump", false),
                 &ssm_stop
         );
 
         // Disable turbo pump
+        transitionsBuilder()->disableTurboPump(state("disableTurboPump", false), validator("disableTurboPump", false), state("disableBackingPump", false), &ssm_stop);
 
         // Disable backing pump
+        transitionsBuilder()->disableBackingPump(state("disableBackingPump", false), validator("disableBackingPump", false), state("waitForTurboSpeed", false), &ssm_stop);
 
         // Check that turbo is not spinner before we stop
-//        sml_waitForTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, &sml_validateTurboSpeedZero);
-//            // Is the turbo spinning
-//            sml_validateTurboSpeedZero.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sml_waitForTurboSpeed);
-//            sml_validateTurboSpeedZero.addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &sm_stop);
+        state("waitForTurboSpeed", false)->addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, validator("turboSpeedZero", false));
+            // Is the turbo spinning
+            validator("turboSpeedZero", false)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, state("waitForTurboSpeed", false));
+            validator("turboSpeedZero", false)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &ssm_stop);
     }
 
 
