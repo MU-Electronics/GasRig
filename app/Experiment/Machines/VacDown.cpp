@@ -18,78 +18,6 @@ namespace App { namespace Experiment { namespace Machines
     VacDown::VacDown(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
-            // States
-        ,   sml_enableBackingPump(&machine)
-
-        ,   sml_enableTurboPump(&machine)
-        ,   sml_disableTurboPump(&machine)
-
-        ,   sml_validateVacPressureForTurbo(&machine)
-        ,   sml_validatePressureForVacuum(&machine)
-
-        ,   sml_waitForTurboSpeed(&machine)
-        ,   sml_validateTurboSpeedZero(&machine)
-
-
-            // Close valve related states
-        ,   sml_closeHighPressureInput(&machine)
-        ,   sml_closeHighPressureNitrogen(&machine)
-        ,   sml_closeFlowController(&machine)
-        ,   sml_closeExhuast(&machine)
-        ,   sml_closeOutput(&machine)
-        ,   sml_closeSlowExhuastPath(&machine)
-        ,   sml_closeFastExhuastPath(&machine)
-        ,   sml_closeVacuumIn(&machine)
-        ,   sml_closeVacuumOut(&machine)
-
-            // Open valve related states
-        ,   sml_openHighPressureInput(&machine)
-        ,   sml_openHighPressureNitrogen(&machine)
-        ,   sml_openFlowController(&machine)
-        ,   sml_openExhuast(&machine)
-        ,   sml_openOutput(&machine)
-        ,   sml_openSlowExhuastPath(&machine)
-        ,   sml_openFastExhuastPath(&machine)
-        ,   sml_openVacuumIn(&machine)
-        ,   sml_openVacuumOut(&machine)
-
-            // Validate closed valve
-        ,   sml_validateCloseHighPressureInput(&machine)
-        ,   sml_validateCloseHighPressureNitrogen(&machine)
-        ,   sml_validateCloseFlowController(&machine)
-        ,   sml_validateCloseExhuast(&machine)
-        ,   sml_validateCloseOutput(&machine)
-        ,   sml_validateCloseSlowExhuastPath(&machine)
-        ,   sml_validateCloseFastExhuastPath(&machine)
-        ,   sml_validateCloseVacuumIn(&machine)
-        ,   sml_validateCloseVacuumOut(&machine)
-
-            // Validate open valve
-        ,   sml_validateOpenHighPressureInput(&machine)
-        ,   sml_validateOpenHighPressureNitrogen(&machine)
-        ,   sml_validateOpenFlowController(&machine)
-        ,   sml_validateOpenExhuast(&machine)
-        ,   sml_validateOpenOutput(&machine)
-        ,   sml_validateOpenSlowExhuastPath(&machine)
-        ,   sml_validateOpenFastExhuastPath(&machine)
-        ,   sml_validateOpenVacuumIn(&machine)
-        ,   sml_validateOpenVacuumOut(&machine)
-
-
-            // Validator states
-        ,   sml_validateEnableBackingPump(&machine)
-
-        ,   sml_validatePressureForStop(&machine)
-
-        ,   sml_validateEnableTurboPump(&machine)
-        ,   sml_validateDisableTurboPump(&machine)
-
-
-            // Timer states
-        ,   sml_checkPressureForVacuum(&machine)
-        ,   sml_startVacuumTimer(&machine)
-        ,   sml_timerWait(&machine)
-
             // Timers
         ,   t_vacDown(parent)
     {
@@ -159,6 +87,10 @@ namespace App { namespace Experiment { namespace Machines
         connect(validator("sml_validateOpenVacuumIn", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumIn);
         connect(validator("sml_validateOpenVacuumOut", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumOut);
 
+        // Timer states
+        connect(state("sml_startVacuumTimer", true), &QState::entered, this, &VacDown::startVacuumTimer);
+
+
 
 
 
@@ -193,13 +125,6 @@ namespace App { namespace Experiment { namespace Machines
         connect(validator("disableTurboPump", false), &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateDisableTurboPump);
         connect(validator("disableBackingPump", false), &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateDisableBackingPump);
         connect(validator("turboSpeedZero", false), &Functions::CommandValidatorState::entered, this->vacuum(), &Functions::Vacuum::validateTurboSpeedZero);
-
-
-
-
-
-        // Timer states
-        connect(&sml_startVacuumTimer, &QState::entered, this, &VacDown::startVacuumTimer);
     }
 
     VacDown::~VacDown()
