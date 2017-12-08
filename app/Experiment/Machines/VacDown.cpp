@@ -231,7 +231,7 @@ namespace App { namespace Experiment { namespace Machines
         );
 
         // Disable turbo pump
-        transitionsBuilder()->disableTurboPump(state("disableTurboPump", false), validator("disableTurboPump", false), state("disableBackingPump", false), &ssm_stop);
+        transitionsBuilder()->disableTurboPump(state("disableTurboPump", false), validator("disableTurboPump", false), state("disableBackingPump", false), state("disableBackingPump", false), &ssm_stop);
 
         // Disable backing pump
         transitionsBuilder()->disableBackingPump(state("disableBackingPump", false), validator("disableBackingPump", false), state("waitForTurboSpeed", false), &ssm_stop);
@@ -258,32 +258,16 @@ namespace App { namespace Experiment { namespace Machines
         machine.setInitialState(state("checkPressureForVacuum", true));
 
         // Check the system pressure
-        state("checkPressureForVacuum", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("pressureForVacuum", true));
-            // Pressure is low enough
-            validator("pressureForVacuum", true)->addTransition(this->pressure(), &Functions::Pressure::emit_validationSuccess, state("closeHighPressureInput", true));
-            // Pressure is too high
-            validator("pressureForVacuum", true)->addTransition(this->pressure(), &Functions::Pressure::emit_validationFailed, &sm_stopAsFailed);
+        transitionsBuilder()->validatePressure(state("checkPressureForVacuum", true), validator("pressureForVacuum", true), state("closeHighPressureInput", true), &sm_stopAsFailed);
 
         // Close the high pressure valve
-        state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureInput", true));
-            // Valve closed successfully
-            validator("closeHighPressureInput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeHighPressureNitrogen", true));
-            // Valve failed to close
-            validator("closeHighPressureInput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+        transitionsBuilder()->closeValve(state("closeHighPressureInput", true), validator("closeHighPressureInput", true), state("closeHighPressureNitrogen", true), &sm_stopAsFailed);
 
         // Close the nitrogen valve
-        state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureNitrogen", true));
-            // Valve closed successfully
-            validator("closeHighPressureNitrogen", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeFlowController", true));
-            // Valve failed to close
-            validator("closeHighPressureNitrogen", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+        transitionsBuilder()->closeValve(state("closeHighPressureNitrogen", true), validator("closeHighPressureNitrogen", true), state("closeFlowController", true), &sm_stopAsFailed);
 
         // Close the flow controller valve
-        state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeFlowController", true));
-            // Valve closed successfully
-            validator("closeFlowController", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeExhuast", true));
-            // Valve failed to close
-            validator("closeFlowController", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+        transitionsBuilder()->closeValve(state("closeFlowController", true), validator("closeFlowController", true), state("closeExhuast", true), &sm_stopAsFailed);
 
         // Close the exhuast valve
         state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeExhuast", true));
@@ -385,29 +369,16 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Set the vacuum in valve open
-        state("openVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openVacuumIn", true));
-            // Valve closed successfully
-            validator("openVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("disableTurboPump", true));
-            // Valve failed to close
-            validator("openVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
+        transitionsBuilder()->openValve(state("openVacuumIn", true), validator("openVacuumIn", true), state("disableTurboPump", true), &sm_stopAsFailed);
 
         // Disable the vac station turbo
-        state("disableTurboPump", true)->addTransition(this->vacuum(), &Functions::Vacuum::emit_turboPumpAlreadyDisabled, state("startVacuumTimer", true));
-        state("disableTurboPump", true)->addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, validator("disableTurboPump", true));
-            // Turbo pump was disabled
-            validator("disableTurboPump", true)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, state("startVacuumTimer", true));
-            // Turbo pump could not be disabled
-            validator("disableTurboPump", true)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+        transitionsBuilder()->disableTurboPump(state("disableTurboPump", true), validator("disableTurboPump", true), state("startVacuumTimer", true), state("startVacuumTimer", true), &sm_stopAsFailed);
 
         // Start vac time
         state("startVacuumTimer", true)->addTransition(this, &VacDown::emit_timerActive, state("enableBackingPump", true));
 
         // Turn on backing pump
-        state("enableBackingPump", true)->addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, validator("enableBackingPump", true));
-            // Validate backing pump on
-            validator("enableBackingPump", true)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, state("timerWait", true));
-            // Backing pump failed
-            validator("enableBackingPump", true)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, &sm_stopAsFailed);
+        transitionsBuilder()->enableBackingPump(state("enableBackingPump", true), validator("enableBackingPump", true), state("timerWait", true), &sm_stopAsFailed);
 
         // If turbo is allowed
         if(params.value("turbo").toBool() == true)
@@ -501,9 +472,3 @@ namespace App { namespace Experiment { namespace Machines
     }
 
 }}}
-
-
-
-
-
-

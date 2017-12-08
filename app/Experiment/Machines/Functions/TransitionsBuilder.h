@@ -44,6 +44,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                                    QState* failed);
             void disableTurboPump(QState* disable,
                                    CommandValidatorState* disableValidate,
+                                   QState* readySet,
                                    QState* finished,
                                    QState* failed);
 

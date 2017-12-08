@@ -40,6 +40,30 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     }
 
     /**
+     * Validate a pressure with success or fail signals
+     *
+     * @brief validatePressure
+     * @param waitForPressure
+     * @param validatePressureReading
+     * @param finished
+     * @param failed
+     */
+    void TransitionsBuilder::validatePressure(QState* waitForPressure,
+                          CommandValidatorState* validatePressureReading,
+                          QState* finished,
+                          QState* failed)
+    {
+        // Check the system pressure
+        waitForPressure->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validatePressureReading);
+            // Pressure is low enough
+            validatePressureReading->addTransition(m_pressure, &Functions::Pressure::emit_validationSuccess, finished);
+            // Pressure is too high
+            validatePressureReading->addTransition(m_pressure, &Functions::Pressure::emit_validationFailed, failed);
+    }
+
+
+
+    /**
      * Enabled the turbo pump and validates
      *
      * @brief TransitionsBuilder::enableBackingPump
@@ -94,11 +118,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void TransitionsBuilder::disableTurboPump(QState* disable,
                                                CommandValidatorState* disableValidate,
+                                               QState* readySet,
                                                QState* finished,
                                                QState* failed)
     {
         // Disable turbo pump
-        disable->addTransition(m_vacuum, &Functions::Vacuum::emit_turboPumpAlreadyDisabled, disableValidate);
+        disable->addTransition(m_vacuum, &Functions::Vacuum::emit_turboPumpAlreadyDisabled, readySet);
         disable->addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, disableValidate);
             // Turbo pump was disabled
             disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationSuccess, finished);
