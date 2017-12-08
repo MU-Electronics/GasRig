@@ -101,9 +101,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         disable->addTransition(m_vacuum, &Functions::Vacuum::emit_turboPumpAlreadyDisabled, disableValidate);
         disable->addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, disableValidate);
             // Turbo pump was disabled
-            disableValidate->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, finished);
+            disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationSuccess, finished);
             // Turbo pump could not be disabled
-            disableValidate->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, failed);
+            disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationFailed, failed);
     }
 
 

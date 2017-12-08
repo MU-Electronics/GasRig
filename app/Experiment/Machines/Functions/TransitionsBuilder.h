@@ -42,7 +42,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                                    CommandValidatorState* disableValidate,
                                    QState* finished,
                                    QState* failed);
-
+            void disableTurboPump(QState* disable,
+                                   CommandValidatorState* disableValidate,
+                                   QState* finished,
+                                   QState* failed);
 
 
             // Valve related transistions
