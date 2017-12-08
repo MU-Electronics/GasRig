@@ -535,7 +535,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Valve closed successfully
-            validator("sml_validateCloseFastExhuastPath_1", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sml_closeVacuumIn_1);
+            validator("sml_validateCloseFastExhuastPath_1", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("sml_closeVacuumIn_1", true));
 
                 // Close the vacuum input valve
                 transitionsBuilder()->closeValve(state("sml_closeVacuumIn_1", true), validator("sml_validateCloseVacuumIn_1", true), state("sml_disableBackingPump_1", true), &sm_stopAsFailed);
