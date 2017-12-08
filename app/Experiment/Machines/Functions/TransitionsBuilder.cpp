@@ -1,11 +1,15 @@
 #include "TransitionsBuilder.h"
 
 // Include external libs
+#include <QObject>
 #include <QDebug>
 #include <QState>
 
 // Include settings container
 #include "../../../Settings/Container.h"
+
+// Include threads
+#include "../../../Hardware/Access.h"
 
 // Include validator state type
 #include "CommandValidatorState.h"
@@ -19,15 +23,65 @@
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
-    TransitionsBuilder::TransitionsBuilder(Settings::Container settings, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef)
+    TransitionsBuilder::TransitionsBuilder(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef)
+        :   QObject(parent)
+
+            // Access the global referances
+        ,   m_settings(settings)
+        ,   m_hardware(hardware)
+
             // Functions
-        :   m_valves(valvesRef)
+        ,   m_valves(valvesRef)
         ,   m_vacuum(vacuumRef)
         ,   m_pressure(pressureRef)
         ,   m_flow(flowRef)
 
     {
 
+    }
+
+    /**
+     * Enabled the turbo pump and validates
+     *
+     * @brief TransitionsBuilder::enableBackingPump
+     * @param enable
+     * @param enableValidate
+     * @param finished
+     * @param failed
+     */
+    void TransitionsBuilder::enableBackingPump(QState* enable,
+                                               CommandValidatorState* enableValidate,
+                                               QState* finished,
+                                               QState* failed)
+    {
+        // Enable backing pump
+        enable->addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, enableValidate);
+            // Backing pump failed
+            enableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationFailed, failed);
+            // Validate backing pump on
+            enableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationSuccess, finished);
+    }
+
+    /**
+     * Disable the turbo pump and validates
+     *
+     * @brief TransitionsBuilder::enableBackingPump
+     * @param enable
+     * @param enableValidate
+     * @param finished
+     * @param failed
+     */
+    void TransitionsBuilder::diableBackingPump(QState* disable,
+                                               CommandValidatorState* disableValidate,
+                                               QState* finished,
+                                               QState* failed)
+    {
+        // Disable backing pump
+        disable->addTransition(&m_hardware, &Hardware::Access::emit_setPumpingState, disableValidate);
+            // Backing pump failed
+            disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationFailed, failed);
+            // Validate backing pump on
+            disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationSuccess, finished);
     }
 
 
@@ -45,7 +99,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                                        QState* finished,
                                        QState* failed)
     {
-
+        // Open valve 2
+        open->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, openValidate);
+            // Valve closed successfully
+            openValidate->addTransition(m_valves, &Functions::Valves::emit_validationSuccess, finished);
+            // Valve failed to close
+            openValidate->addTransition(m_valves, &Functions::Valves::emit_validationFailed, failed);
     }
 
     /**
@@ -62,7 +121,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                                        QState* finished,
                                        QState* failed)
     {
-
+        // Open valve 2
+        close->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, closeValidate);
+            // Valve closed successfully
+            closeValidate->addTransition(m_valves, &Functions::Valves::emit_validationSuccess, finished);
+            // Valve failed to close
+            closeValidate->addTransition(m_valves, &Functions::Valves::emit_validationFailed, failed);
     }
 
 
@@ -113,6 +177,32 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                         QState* finished,
                         QState* failed)
     {
+        // Close valve 1
+        closeValve(closeOutput, closeOutputValidate, closeSlowExhuast, failed);
+
+        // Close valve 2
+        closeValve(closeSlowExhuast, closeSlowExhuastValidate, closeFastExhuast, failed);
+
+        // Close valve 4
+        closeValve(closeFastExhuast, closeFastExhuastValidate, closeVacuumIn, failed);
+
+        // Close valve 5
+        closeValve(closeVacuumIn, closeVacuumInValidate, closeVacuumOut, failed);
+
+        // Close valve 6
+        closeValve(closeVacuumOut, closeVacuumOutValidate, closeExhuast, failed);
+
+        // Close valve 3
+        closeValve(closeExhuast, closeExhuastValidate, closeHighPressureIn, failed);
+
+        // Close valve 7
+        closeValve(closeHighPressureIn, closeHighPressureInValidate, closeNitrogenIn, failed);
+
+        // Close valve 9
+        closeValve(closeNitrogenIn, closeNitrogenInValidate, closeFlowController, failed);
+
+        // Close valve 8
+        closeValve(closeFlowController, closeFlowControllerValidate, finished, failed);
 
     }
 

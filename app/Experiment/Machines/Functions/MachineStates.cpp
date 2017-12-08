@@ -46,7 +46,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         ,   m_flow(new Flow(parent, settings, hardware, safety, machine, params, m_commandConstructor))
 
             // Builders to build transition blocks for common state machine logic
-        ,   m_transitionsBuilder(new TransitionsBuilder(settings, m_valves, m_vacuum, m_pressure, m_flow))
+        ,   m_transitionsBuilder(new TransitionsBuilder(parent, settings, hardware, m_valves, m_vacuum, m_pressure, m_flow))
 
             // States for stopping with success and failure for start state machine
         ,   sm_stop(&machine)

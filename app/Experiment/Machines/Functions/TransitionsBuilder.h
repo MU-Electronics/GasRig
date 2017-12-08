@@ -1,6 +1,7 @@
 #pragma once
 
 // Include external libs
+#include <QObject>
 #include <QDebug>
 #include <QThread>
 #include <QState>
@@ -17,16 +18,32 @@
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
-    class TransitionsBuilder
+    class TransitionsBuilder: public QObject
     {
+        Q_OBJECT
         public:
-            TransitionsBuilder(Settings::Container settings, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef);
+            TransitionsBuilder(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef);
 
             // Pressure related transistions
             void validatePressure(QState* waitForPressure,
                                   CommandValidatorState* validatePressureReading,
                                   QState* finished,
                                   QState* failed);
+
+
+
+
+            // Vacuum related transitions
+            void enableBackingPump(QState* enable,
+                                   CommandValidatorState* enableValidate,
+                                   QState* finished,
+                                   QState* failed);
+            void diableBackingPump(QState* disable,
+                                   CommandValidatorState* disableValidate,
+                                   QState* finished,
+                                   QState* failed);
+
+
 
             // Valve related transistions
             void openValve(QState* open,
@@ -65,6 +82,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
         private:
+            // Holds the application settings
+            Settings::Container m_settings;
+
+            // Hold the hardware gateway
+            Hardware::Access &m_hardware;
+
             // External states
             Valves* m_valves;
             Vacuum* m_vacuum;
