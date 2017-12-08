@@ -94,7 +94,7 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_vacDown(parent)
     {
         // We have stop state machines
-        shutDownMachines = false;
+        shutDownMachines = true;
 
         childClassName = QString::fromStdString(typeid(this).name());
 
@@ -158,6 +158,36 @@ namespace App { namespace Experiment { namespace Machines
         connect(&sml_validateOpenFastExhuastPath, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenFastExhuastPath);
         connect(&sml_validateOpenVacuumIn, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumIn);
         connect(&sml_validateOpenVacuumOut, &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenVacuumOut);
+
+
+
+
+
+
+        // SHUTDOWN STATE MACHINE: Link close valve states
+        connect(state("closeHighPressureIn", false), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
+        connect(state("closeNitrogenIn", false), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
+        connect(state("closeFlowController", false), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
+        connect(state("closeExhuast", false), &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
+        connect(state("closeOuput", false), &QState::entered, this->valves(), &Functions::Valves::closeOutput);
+        connect(state("closeSlowExhuast", false), &QState::entered, this->valves(), &Functions::Valves::closeSlowExhuastPath);
+        connect(state("closeFastExhuast", false), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeVacuumIn", false), &QState::entered, this->valves(), &Functions::Valves::closeVacuumIn);
+        connect(state("closeVacuumOut", false), &QState::entered, this->valves(), &Functions::Valves::closeVacuumOut);
+
+        // SHUTDOWN STATE MACHINE: Link close valve validator states
+        connect(validator("closeHighPressureIn", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureInput);
+        connect(validator("closeNitrogenIn", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureNitrogen);
+        connect(validator("closeFlowController", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
+        connect(validator("closeExhuast", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseExhuast);
+        connect(validator("closeOutput", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseOutput);
+        connect(validator("closeSlowExhuast", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseSlowExhuastPath);
+        connect(validator("closeFastExhuast", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFastExhuastPath);
+        connect(validator("closeVacuumIn", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumIn);
+        connect(validator("closeVacuumOut", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumOut);
+
+
+
 
 
         // Timer states
@@ -233,13 +263,6 @@ namespace App { namespace Experiment { namespace Machines
        //vacuum()->disableTurboPump();
       // vacuum()->disableBackingPump();
 
-       // Close valves
-       //valves()->closeOutput();
-      // valves()->closeVacuumOut();
-      // valves()->closeSlowExhuastPath();
-     //  valves()->closeVacuumIn();
-     //  valves()->closeFastExhuastPath();
-
        // Stop timers
        t_vacDown.stop();
     }
@@ -253,17 +276,30 @@ namespace App { namespace Experiment { namespace Machines
     void VacDown::buildShutDownMachine()
     {
         // Where to start the machine
-        shutDownMachine.setInitialState(&ssm_stop);
+        shutDownMachine.setInitialState(state("closeOuput", false));
 
-        // Close output valve valve
-
-        // Close vacuum output valve
-
-        // Close fast exhuast valve
-
-        // Close slow exhuast valve
-
-        // Close vacuum in valve
+        // Close all valves
+        transitionsBuilder()->closeAllValves(state("closeOuput", false),
+                validator("closeOutput", false),
+                state("closeSlowExhuast", false),
+                validator("closeSlowExhuast", false),
+                state("closeFastExhuast", false),
+                validator("closeFastExhuast", false),
+                state("closeVacuumIn", false),
+                validator("closeVacuumIn", false),
+                state("closeVacuumOut", false),
+                validator("closeVacuumOut", false),
+                state("closeExhuast", false),
+                validator("closeExhuast", false),
+                state("closeHighPressureIn", false),
+                validator("closeHighPressureIn", false),
+                state("closeNitrogenIn", false),
+                validator("closeNitrogenIn", false),
+                state("closeFlowController", false),
+                validator("closeFlowController", false),
+                &ssm_stop,
+                &ssm_stop
+        );
 
         // Disable turbo pump
 

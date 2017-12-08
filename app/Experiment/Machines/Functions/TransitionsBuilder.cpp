@@ -35,7 +35,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         ,   m_vacuum(vacuumRef)
         ,   m_pressure(pressureRef)
         ,   m_flow(flowRef)
-
     {
 
     }
