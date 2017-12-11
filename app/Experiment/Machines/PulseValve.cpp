@@ -194,14 +194,14 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Open the valve
-        valvePointerOpen->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("startPulseValveOpenTimer", true));
+        valvePointerOpen->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, state("startPulseValveOpenTimer", true));
 
         // Start the valve close timer
         state("startPulseValveOpenTimer", true)->addTransition(&t_pulseValveOpen, &QTimer::timeout, valvePointerClose);
 
 
         // Close the valve
-        valvePointerClose->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, state("startPulseValveCloseTimer", true));
+        valvePointerClose->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, state("startPulseValveCloseTimer", true));
 
         // Start the valve open timer
         state("startPulseValveCloseTimer", true)->addTransition(&t_pulseValveClose, &QTimer::timeout, state("cycle", true));

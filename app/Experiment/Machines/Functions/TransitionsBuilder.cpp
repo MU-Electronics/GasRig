@@ -147,7 +147,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                                        QState* failed)
     {
         // Open valve 2
-        open->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, openValidate);
+        open->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, openValidate);
             // Valve closed successfully
             openValidate->addTransition(m_valves, &Functions::Valves::emit_validationSuccess, finished);
             // Valve failed to close
@@ -169,7 +169,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                                        QState* failed)
     {
         // Open valve 2
-        close->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, closeValidate);
+        close->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, closeValidate);
             // Valve closed successfully
             closeValidate->addTransition(m_valves, &Functions::Valves::emit_validationSuccess, finished);
             // Valve failed to close

@@ -157,7 +157,7 @@ namespace App { namespace Experiment { namespace Machines
         {
             machine.setInitialState(state("openOutput", true));
             // Open the output valve
-            state("openOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openOutput", true));
+            state("openOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openOutput", true));
                 // Success finish here
                 validator("openOutput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -167,7 +167,7 @@ namespace App { namespace Experiment { namespace Machines
         {
             machine.setInitialState(state("closeOutput", true));
             // Close the output valve
-            state("closeOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeOutput", true));
+            state("closeOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeOutput", true));
                 // Success finish here
                 validator("closeOutput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -190,14 +190,14 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeVacuumOut", true));
 
             // Close the vacuum otuput
-            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumOut", true));
+            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
                 // Success open the slow exhuast valve
                 validator("closeVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openSlowExhuastPath", true));
                 // Failed close all valves
                 validator("closeVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
             // Open the slow exhuast path valve
-            state("openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openSlowExhuastPath", true));
+            state("openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openSlowExhuastPath", true));
                 // Success finish here
                 validator("openSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -209,7 +209,7 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeSlowExhuastPath", true));
 
             // Close the slow exhuast path valve
-            state("closeSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeSlowExhuastPath", true));
+            state("closeSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeSlowExhuastPath", true));
                 // Success finish here
                 validator("closeSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -233,14 +233,14 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeVacuumIn", true));
 
             // Close the vacuum input
-            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumIn", true));
+            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumIn", true));
                 // Success open the exhuast valve
                 validator("closeVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openExhuast", true));
                 // Failed close all valves
                 validator("closeVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
             // Open the exhuast valve
-            state("openExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openExhuast", true));
+            state("openExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openExhuast", true));
                 // Success finish here
                 validator("openExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -252,7 +252,7 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeExhuast", true));
 
             // Close the exhuast valve
-            state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeExhuast", true));
+            state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeExhuast", true));
                 // Success finish here
                 validator("closeExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -276,14 +276,14 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeVacuumOut", true));
 
             // Close the vacuum output
-            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumOut", true));
+            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
                 // Success open the fast exhuast valve next
                 validator("closeVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openFastExhuastPath", true));
                 // Failed close all valves
                 validator("closeVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
             // Open the fast exhuast value
-            state("openFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openFastExhuastPath", true));
+            state("openFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openFastExhuastPath", true));
                 // Success finish here
                 validator("openFastExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -295,7 +295,7 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeFastExhuastPath", true));
 
             // Close the fast exhuast value
-            state("closeFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeFastExhuastPath", true));
+            state("closeFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFastExhuastPath", true));
                 // Success finish here
                 validator("closeFastExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -320,7 +320,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close exhuaust
-            state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeExhuast", true));
+            state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeExhuast", true));
                 // Success close the high pressure input
                 validator("closeExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeHighPressureInput", true));
                 // Failed close all valves
@@ -328,7 +328,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close high pressure input
-            state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureInput", true));
+            state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeHighPressureInput", true));
                 // Success open close the nitrogen input
                 validator("closeHighPressureInput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeHighPressureNitrogen", true));
                 // Failed close all valves
@@ -336,7 +336,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close nitrogen input
-            state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureNitrogen", true));
+            state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeHighPressureNitrogen", true));
                 // Success close the flow controller input
                 validator("closeHighPressureNitrogen", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeFlowController", true));
                 // Failed close all valves
@@ -344,7 +344,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close flow controller input
-            state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeFlowController", true));
+            state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFlowController", true));
                 // Success open the vacuum in input
                 validator("closeFlowController", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openVacuumIn", true));
                 // Failed close all valves
@@ -352,7 +352,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Open the vacuum input
-            state("openVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openVacuumIn", true));
+            state("openVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openVacuumIn", true));
                 // Success finish here
                 validator("openVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -364,7 +364,7 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeVacuumIn", true));
 
             // Close the vacuum input
-            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumIn", true));
+            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumIn", true));
                 // Success finish here
                 validator("closeVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -388,21 +388,21 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeFastExhuastPath", true));
 
             // Close the fast exhuast path
-            state("closeFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeFastExhuastPath", true));
+            state("closeFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFastExhuastPath", true));
                 // Success close the slow exhuast path
                 validator("closeFastExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeSlowExhuastPath", true));
                 // Failed close all valves
                 validator("closeFastExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
             // Close the slow exhuast path
-            state("closeSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeSlowExhuastPath", true));
+            state("closeSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeSlowExhuastPath", true));
                 // Success open the vacuum output
                 validator("closeSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openVacuumOut", true));
                 // Failed close all valves
                 validator("closeSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
             // Open the slow exhuast path valve
-            state("openVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openVacuumOut", true));
+            state("openVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openVacuumOut", true));
                 // Success finish here
                 validator("openVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -414,7 +414,7 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeVacuumOut", true));
 
             // Close the slow exhuast path valve
-            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumOut", true));
+            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
                 // Success finish here
                 validator("closeVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -439,7 +439,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close vacuum input
-            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumIn", true));
+            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumIn", true));
                 // Success close the vacuum output
                 validator("closeVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeVacuumOut", true));
                 // Failed close all valves
@@ -447,7 +447,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close high pressure input
-            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumOut", true));
+            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
                 // Success close the nitrogen input
                 validator("closeVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeHighPressureNitrogen", true));
                 // Failed close all valves
@@ -455,7 +455,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close nitrogen input
-            state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureNitrogen", true));
+            state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeHighPressureNitrogen", true));
                 // Success close the flow controller input
                 validator("closeHighPressureNitrogen", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeFlowController", true));
                 // Failed close all valves
@@ -463,7 +463,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close flow controller input
-            state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeFlowController", true));
+            state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFlowController", true));
                 // Success open the vacuum in input
                 validator("closeFlowController", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openHighPressureInput", true));
                 // Failed close all valves
@@ -471,7 +471,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Open the high pressure input
-            state("openHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openHighPressureInput", true));
+            state("openHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openHighPressureInput", true));
                 // Success finish here
                 validator("openHighPressureInput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -483,7 +483,7 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeHighPressureInput", true));
 
             // Close the vacuum input
-            state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureInput", true));
+            state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeHighPressureInput", true));
                 // Success finish here
                 validator("closeHighPressureInput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -508,7 +508,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close vacuum input
-            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumIn", true));
+            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumIn", true));
                 // Success close the vacuum output
                 validator("closeVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeVacuumOut", true));
                 // Failed close all valves
@@ -516,7 +516,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close vacuum input
-            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumOut", true));
+            state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
                 // Success close the nitrogen input
                 validator("closeVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeHighPressureNitrogen", true));
                 // Failed close all valves
@@ -524,7 +524,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close nitrogen input
-            state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureNitrogen", true));
+            state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeHighPressureNitrogen", true));
                 // Success close the flow controller input
                 validator("closeHighPressureNitrogen", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeHighPressureInput", true));
                 // Failed close all valves
@@ -532,7 +532,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close high pressure input
-            state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureInput", true));
+            state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeHighPressureInput", true));
                 // Success open the flow controller
                 validator("closeHighPressureInput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openFlowController", true));
                 // Failed close all valves
@@ -540,7 +540,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Open the high pressure input
-            state("openFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openFlowController", true));
+            state("openFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openFlowController", true));
                 // Success finish here
                 validator("openFlowController", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -552,7 +552,7 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeFlowController", true));
 
             // Close the flow controller
-            state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeFlowController", true));
+            state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFlowController", true));
                 // Success finish here
                 validator("closeFlowController", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -577,7 +577,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close vacuum input
-            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumIn", true));
+            state("closeVacuumIn", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumIn", true));
                 // Success close the vacuum output
                 validator("closeVacuumIn", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeVacuumOut", true));
                 // Failed close all valves
@@ -585,7 +585,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close vacuum output
-           state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumOut", true));
+           state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
                 // Success close the nitrogen input
                 validator("closeVacuumOut", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeFlowController", true));
                 // Failed close all valves
@@ -593,7 +593,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close flow controller
-            state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeFlowController", true));
+            state("closeFlowController", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFlowController", true));
                 // Success close the flow controller input
                 validator("closeFlowController", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("closeHighPressureInput", true));
                 // Failed close all valves
@@ -601,7 +601,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Close high pressure input
-            state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureInput", true));
+            state("closeHighPressureInput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeHighPressureInput", true));
                 // Success open the flow controller
                 validator("closeHighPressureInput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openHighPressureNitrogen", true));
                 // Failed close all valves
@@ -609,7 +609,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Open the high pressure input
-            state("openHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openHighPressureNitrogen", true));
+            state("openHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openHighPressureNitrogen", true));
                 // Success finish here
                 validator("openHighPressureNitrogen", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves
@@ -621,7 +621,7 @@ namespace App { namespace Experiment { namespace Machines
             machine.setInitialState(state("closeHighPressureNitrogen", true));
 
             // Close the high pressure nitrogen
-            state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeHighPressureNitrogen", true));
+            state("closeHighPressureNitrogen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeHighPressureNitrogen", true));
                 // Success finish here
                 validator("closeHighPressureNitrogen", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, &sm_stop);
                 // Failed close all valves

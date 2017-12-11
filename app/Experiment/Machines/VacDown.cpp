@@ -270,7 +270,7 @@ namespace App { namespace Experiment { namespace Machines
         transitionsBuilder()->closeValve(state("closeFlowController", true), validator("closeFlowController", true), state("closeExhuast", true), &sm_stopAsFailed);
 
         // Close the exhuast valve
-        state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeExhuast", true));
+        state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeExhuast", true));
             // Valve closed successfully check to see what state the output valve should be in
             if(params.value("mode").toInt() == 2 || params.value("mode").toInt() == 3)
             {
@@ -286,8 +286,8 @@ namespace App { namespace Experiment { namespace Machines
             validator("closeExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the output valve
-        state("closeOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeOutput", true));
-        state("openOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openOutput", true));
+        state("closeOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeOutput", true));
+        state("openOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openOutput", true));
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
@@ -309,8 +309,8 @@ namespace App { namespace Experiment { namespace Machines
             validator("openOutput", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the exhuast path valve fast
-        state("closeFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeFastExhuastPath", true));
-        state("openFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openFastExhuastPath", true));
+        state("closeFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFastExhuastPath", true));
+        state("openFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openFastExhuastPath", true));
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
@@ -332,8 +332,8 @@ namespace App { namespace Experiment { namespace Machines
             validator("openFastExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set the exhuast path valve slow
-        state("closeSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeSlowExhuastPath", true));
-        state("openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openSlowExhuastPath", true));
+        state("closeSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeSlowExhuastPath", true));
+        state("openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openSlowExhuastPath", true));
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
@@ -350,8 +350,8 @@ namespace App { namespace Experiment { namespace Machines
             validator("openSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
 
         // Set vacuum out valve
-        state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("closeVacuumOut", true));
-        state("openVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("openVacuumOut", true));
+        state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
+        state("openVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openVacuumOut", true));
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {

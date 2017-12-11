@@ -85,6 +85,7 @@ namespace App { namespace Hardware
             void emit_readDigitalPort(QVariantMap commands);
             void emit_readAnaloguePort(QVariantMap commands);
             void emit_readVacuumPressure(QVariantMap commands);
+            void emit_setValveState(QVariantMap commands);
 
         public slots:
             void hardwareAccess(QVariantMap command);

@@ -628,6 +628,7 @@ namespace App { namespace Hardware
         QVariantMap command;
         command.insert("hardware", "LabJack");
         command.insert("method", "setDigitalPort");
+        command.insert("emit_override", "emit_setValveState");
         command.insert("port", valveName);
         command.insert("value", state);
 

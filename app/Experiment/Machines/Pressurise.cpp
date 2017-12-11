@@ -476,7 +476,7 @@ namespace App { namespace Experiment { namespace Machines
         transitionsBuilder()->closeValve(state("sml_closeExhuast_1", true), validator("sml_validateCloseExhuast_1", true), state("sml_closeSlowExhuastPath_1", true), &sm_stopAsFailed);
 
         // Close Slow Exhuast
-        state("sml_closeSlowExhuastPath_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("sml_validateCloseSlowExhuastPath_1", true));
+        state("sml_closeSlowExhuastPath_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("sml_validateCloseSlowExhuastPath_1", true));
             // Open the fast exhaust path valve
             if(!params.value("disable_init_vac_down").toBool()){
                 validator("sml_validateCloseSlowExhuastPath_1", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("sml_openOutput_1", true));
@@ -516,7 +516,7 @@ namespace App { namespace Experiment { namespace Machines
         }
 
         // Close Fast Exhuast
-        state("sml_closeFastExhuastPath_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_setDigitalPort, validator("sml_validateCloseFastExhuastPath_1", true));
+        state("sml_closeFastExhuastPath_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("sml_validateCloseFastExhuastPath_1", true));
             // Opened the fast exhaust path valve    @ see if statment below
             // Valve failed to close
             validator("sml_validateCloseFastExhuastPath_1", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
