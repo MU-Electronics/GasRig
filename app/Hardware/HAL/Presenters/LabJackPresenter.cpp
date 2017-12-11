@@ -28,27 +28,27 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Select the correct presenter
         if(method == "configureIO" && expectedPackage(commands, package, 12))
         {
-            return methodOverride(commands, configureIO(commands, package));
+            return extend(commands, configureIO(commands, package));
         }
         else if (method == "setDigitalPort" && expectedPackage(commands, package, 10))
         {
-            return methodOverride(commands, setDigitalPort(commands, package));
+            return extend(commands, setDigitalPort(commands, package));
         }
         else if (method == "setAnaloguePort" && expectedPackage(commands, package, 10))
         {
-            return methodOverride(commands, setAnaloguePort(commands, package));
+            return extend(commands, setAnaloguePort(commands, package));
         }
         else if (method == "readPortDirection" && expectedPackage(commands, package, 10))
         {
-            return methodOverride(commands, readPortDirection(commands, package));
+            return extend(commands, readPortDirection(commands, package));
         }
         else if (method == "readDigitalPort" && expectedPackage(commands, package, 10))
         {
-            return methodOverride(commands, readDigitalPort(commands, package));
+            return extend(commands, readDigitalPort(commands, package));
         }
         else if (method == "readAnaloguePort"  && expectedPackage(commands, package, 12))
         {
-            return methodOverride(commands, readAnaloguePort(commands, package));
+            return extend(commands, readAnaloguePort(commands, package));
         }
 
         // There was an error

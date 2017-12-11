@@ -28,15 +28,15 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Select the correct presenter
         if(method == "confirmInit" && expectedPackage(commands, package, "48", 10))
         {
-            return methodOverride(commands, confirmInit(commands, package));
+            return extend(commands, confirmInit(commands, package));
         }
         else if (method == "readSerialNumber" && expectedPackage(commands, package, "69", 8))
         {
-            return methodOverride(commands, readSerialNumber(commands, package));
+            return extend(commands, readSerialNumber(commands, package));
         }
         else if (method == "readPressure" && expectedPackage(commands, package, "73", 9))
         {
-            return methodOverride(commands, readPressure(commands, package));
+            return extend(commands, readPressure(commands, package));
         }
 
         // There was an error

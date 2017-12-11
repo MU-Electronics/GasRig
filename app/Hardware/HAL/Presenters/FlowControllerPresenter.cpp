@@ -36,63 +36,63 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Select the correct presenter
         if(method == "getIdentifier" && expectedPackage(commands, package, 11, 12 + addtionPackageBytes))
         {
-            return methodOverride(commands, getIdentifier(commands, package));
+            return extend(commands, getIdentifier(commands, package));
         }
         else if (method == "getSourceControl" && expectedPackage(commands, package, 215, 14 + addtionPackageBytes))
         {
-            return methodOverride(commands, getSourceControl(commands, package));
+            return extend(commands, getSourceControl(commands, package));
         }
         else if (method == "getSoftStart" && expectedPackage(commands, package, 215, 14 + addtionPackageBytes))
         {
-            return methodOverride(commands, getSoftStart(commands, package));
+            return extend(commands, getSoftStart(commands, package));
         }
         else if (method == "getSoftStartTime" && expectedPackage(commands, package, 215, 14 + addtionPackageBytes))
         {
-            return methodOverride(commands, getSoftStartTime(commands, package));
+            return extend(commands, getSoftStartTime(commands, package));
         }
         else if (method == "getFlowRate" && expectedPackage(commands, package, 1, 5 + addtionPackageBytes))
         {
-            return methodOverride(commands, getFlowRate(commands, package));
+            return extend(commands, getFlowRate(commands, package));
         }
         else if (method == "getSetFlowRate" && expectedPackage(commands, package, 235, 10 + addtionPackageBytes))
         {
-            return methodOverride(commands, getSetFlowRate(commands, package));
+            return extend(commands, getSetFlowRate(commands, package));
         }
         else if (method == "getValveOverride" && expectedPackage(commands, package, 230, 1 + addtionPackageBytes))
         {
-            return methodOverride(commands, getValveOverride(commands, package));
+            return extend(commands, getValveOverride(commands, package));
         }
         else if (method == "getControllerTemperature" && expectedPackage(commands, package, 3, 14 + addtionPackageBytes))
         {
-            return methodOverride(commands, getControllerTemperature(commands, package));
+            return extend(commands, getControllerTemperature(commands, package));
         }
         else if(method == "setSourceControll" && expectedPackage(commands, package, 216, 1 + addtionPackageBytes))
         {
-            return methodOverride(commands, setSourceControll(commands, package));
+            return extend(commands, setSourceControll(commands, package));
         }
         else if (method == "setFlowRate" && expectedPackage(commands, package, 236, 10 + addtionPackageBytes))
         {
-            return methodOverride(commands, setFlowRate(commands, package));
+            return extend(commands, setFlowRate(commands, package));
         }
         else if (method == "setValveOverride" && expectedPackage(commands, package, 231, 1 + addtionPackageBytes))
         {
-            return methodOverride(commands, setValveOverride(commands, package));
+            return extend(commands, setValveOverride(commands, package));
         }
         else if (method == "setSoftStart" && expectedPackage(commands, package, 218, 1 + addtionPackageBytes))
         {
-            return methodOverride(commands, setSoftStart(commands, package));
+            return extend(commands, setSoftStart(commands, package));
         }
         else if (method == "setSoftStartTime" && expectedPackage(commands, package, 219, 4 + addtionPackageBytes))
         {
-            return methodOverride(commands, setSoftStartTime(commands, package));
+            return extend(commands, setSoftStartTime(commands, package));
         }
         else if (method == "setFlowUnit" && expectedPackage(commands, package, 196, 2 + addtionPackageBytes))
         {
-            return methodOverride(commands, setFlowUnit(commands, package));
+            return extend(commands, setFlowUnit(commands, package));
         }
         else if (method == "setTemperatureUnit" && expectedPackage(commands, package, 197, 1 + addtionPackageBytes))
         {
-            return methodOverride(commands, setTemperatureUnit(commands, package));
+            return extend(commands, setTemperatureUnit(commands, package));
         }
 
         // There was an error
