@@ -131,6 +131,8 @@ namespace App { namespace View { namespace Managers
             // Set the current to the set level
             m_controllable.insert(id, level);
 
+            qDebug() << m_controllable;
+
            // Update everyone
            emit emit_controllableChanged(m_controllable);
        }

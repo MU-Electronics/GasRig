@@ -94,7 +94,7 @@ Item
                 Row
                 {
                     spacing: 20;
-                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0 || MachineStatusManager.controllable["vacDownMachine"] === 2) ? 0 : 1 ;
+                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0) ? 0 : 1 ;
                     TextField
                     {
                         id: vacDown_value
@@ -116,7 +116,7 @@ Item
                     }
                 }
                 Row{
-                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0 || MachineStatusManager.controllable["vacDownMachine"] === 2) ? 0 : 1 ;
+                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0) ? 0 : 1 ;
                     CheckBox {
                         id: vacDown_turbo
                         checked: false
@@ -126,7 +126,7 @@ Item
                 }
                 Row
                 {
-                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0 || MachineStatusManager.controllable["vacDownMachine"] === 2) ? 0 : 1 ;
+                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0) ? 0 : 1 ;
                     RadioButton {
                         checked: false
                         text: qsTr("To Output")
@@ -153,7 +153,7 @@ Item
                     spacing: 20
                     width: parent.width
 
-                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0 || MachineStatusManager.controllable["vacDownMachine"] === 2) ? 0 : 1 ;
+                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0) ? 0 : 1 ;
 
                     opacity: (vacDown_value.text > vacuumTab.validatorBottom && vacDown_value.text < vacuumTab.validatorTop) ? 1 : 0;
                     height: (vacDown_value.text > vacuumTab.validatorBottom && vacDown_value.text < vacuumTab.validatorTop) ? 50 : 0;

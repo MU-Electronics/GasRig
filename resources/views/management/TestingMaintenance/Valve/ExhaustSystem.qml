@@ -25,7 +25,7 @@ FluidControls.Card
         width: parent.width
         spacing: 20
         id: exhuastSystemContainer
-        enabled: (MachineStatusManager.controllable["ventMachine"] === 0 || MachineStatusManager.controllable["ventMachine"] === 2) ? 0 : 1 ;
+        enabled: (MachineStatusManager.controllable["ventMachine"] === 0) ? 0 : 1 ;
         AlertBox
         {
             width: exhuastSystem.width - 10

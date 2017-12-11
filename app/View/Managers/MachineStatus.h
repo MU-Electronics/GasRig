@@ -41,7 +41,7 @@ namespace App { namespace View { namespace Managers
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
-            Q_INVOKABLE void setControllable(QString id, int level);
+            void setControllable(QString id, int level);
 
             // Return the data for the state machines
             QVariantMap vacDownMachine() const { return m_vacDownMachine; }
@@ -49,7 +49,7 @@ namespace App { namespace View { namespace Managers
             QVariantMap pressuriseMachine() const { return m_pressuriseMachine; }
             QVariantMap ventMachine() const { return m_ventMachine; }
             QVariantMap purgeMachine() const { return m_purgeMachine; }
-            QVariantMap controllable() const { return m_purgeMachine; }
+            QVariantMap controllable() const { return m_controllable; }
 
         signals:
             void emit_hardwareAccess(QVariantMap command);
