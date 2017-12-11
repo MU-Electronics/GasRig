@@ -55,6 +55,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             void emit_validationFailed(QVariantMap error);
             void emit_validationSuccess(QVariantMap data);
+            void emit_validationWrongId(QVariantMap data);
 
             void emit_stateAlreadySet();
 
