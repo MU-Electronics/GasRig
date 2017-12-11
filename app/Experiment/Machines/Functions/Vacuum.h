@@ -6,6 +6,9 @@
 #include <QState>
 #include <QTimer>
 
+// Include functions helper
+#include "FunctionsHelper.h"
+
 // Include settings container
 #include "../../../Settings/Container.h"
 
@@ -21,7 +24,7 @@
 
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
-    class Vacuum : public QObject
+    class Vacuum : public QObject, public FunctionsHelper
     {
         Q_OBJECT
 

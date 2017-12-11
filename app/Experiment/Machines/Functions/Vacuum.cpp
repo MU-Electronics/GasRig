@@ -2,6 +2,9 @@
 
 #include <QString>
 
+// Include functions helper
+#include "FunctionsHelper.h"
+
 // Include settings container
 #include "../../../Settings/Container.h"
 

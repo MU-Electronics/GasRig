@@ -28,7 +28,7 @@ namespace App { namespace Hardware
 
 
     /**
-     * Gives each command an id from 1-9999
+     * Gives each command an id from 1-999999
      *
      * @brief CommandConstructor::generateCommandCount
      * @return
@@ -37,7 +37,7 @@ namespace App { namespace Hardware
     {
        m_commandCount++;
 
-       if(m_commandCount > 9999)
+       if(m_commandCount > 999999)
            m_commandCount = 1;
 
        return m_commandCount;
