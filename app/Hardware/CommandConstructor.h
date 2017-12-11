@@ -15,6 +15,9 @@ namespace App { namespace Hardware
 
             ~CommandConstructor();
 
+            int generateCommandCount();
+            int m_commandCount = 0;
+
             // Labjack command constructors
             QVariantMap setLabJackConfig(int FI07, int FI06, int FI05, int FI04, int EIO7, int EIO6, int EIO5, int EIO4, int EIO3, int EIO2, int EIO1, int EIO0);
             QVariantMap setValveState(QString valveName, bool state);
