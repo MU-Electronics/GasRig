@@ -73,8 +73,6 @@ namespace App { namespace Experiment { namespace Machines
             int cyclesCount;
 
             void setValvePointer(int valve);
-            void closeValve(int valve);
-
     };
 }}}
 

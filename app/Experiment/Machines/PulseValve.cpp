@@ -143,8 +143,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void PulseValve::stopped()
     {
-        // Make sure valve closed
-        closeValve(params.value("valve").toInt());
+
     }
 
 
@@ -234,56 +233,6 @@ namespace App { namespace Experiment { namespace Machines
         // No stop now
         emit emit_stopCycling();
     }
-
-
-
-    /**
-     * Close the pulse valve
-     *
-     * @brief PulseValve::setValvePointer
-     * @param valve
-     */
-    void PulseValve::closeValve(int valve)
-    {
-        if(valve == 1)
-        {
-            valves()->closeOutput();
-        }
-        else if(valve == 2)
-        {
-            valves()->closeSlowExhuastPath();
-        }
-        else if(valve == 3)
-        {
-            valves()->closeExhuast();
-        }
-        else if(valve == 4)
-        {
-           valves()->closeFastExhuastPath();
-        }
-        else if(valve == 5)
-        {
-            valves()->closeVacuumIn();
-        }
-        else if(valve == 6)
-        {
-            valves()->closeVacuumOut();
-        }
-        else if(valve == 7)
-        {
-            valves()->closeHighPressureInput();
-        }
-        else if(valve == 8)
-        {
-            valves()->closeHighPressureNitrogen();
-        }
-        else if(valve == 9)
-        {
-            valves()->closeHighPressureNitrogen();
-        }
-    }
-
-
 
 
     /**

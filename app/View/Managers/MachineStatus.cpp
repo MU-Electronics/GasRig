@@ -25,7 +25,7 @@ namespace App { namespace View { namespace Managers
         ,   m_experimentEngine(experimentEngine)
     {
         // Global if machine is running
-
+        stateMachineRunning(0);
 
         // Default values for vac state machine
         m_vacDownMachine.insert("status", 0);
@@ -121,17 +121,19 @@ namespace App { namespace View { namespace Managers
      */
     void MachineStatus::machinesStatues(QVariantMap info)
     {
+        qDebug() << info;
         // Is the state machine running?
         if(info.value("status").toInt() == 0 && stateMachineRunning() != 0)
         {
             // State that a machine is not running
-            stateMachineRunning(a_stateMachineRunning - 1);
+            stateMachineRunning(stateMachineRunning() - 1);
         }
-        else
+        else if(info.value("status").toInt() == 1)
         {
             // State that a machine is  running
-            stateMachineRunning(a_stateMachineRunning + 1);
+            stateMachineRunning(stateMachineRunning() + 1);
         }
+        qDebug() << stateMachineRunning();
     }
 
 
