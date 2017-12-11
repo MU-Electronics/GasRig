@@ -86,7 +86,7 @@ namespace App { namespace View { namespace Managers
 
 
         // Labjack statuses
-        connect(&hardware, &Hardware::Access::emit_setDigitalPort, this, &SystemStatus::receiveValveStatus);
+        connect(&hardware, &Hardware::Access::emit_setValveState, this, &SystemStatus::receiveValveStatus);
         connect(&hardware, &Hardware::Access::emit_readVacuumPressure, this, &SystemStatus::receiveVacuumPressure);
 
 
