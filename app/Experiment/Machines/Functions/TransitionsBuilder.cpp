@@ -173,7 +173,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Open valve 2
         close->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, closeValidate);
             // Wrong signal was picked up
-            openValidate->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, open);
+            closeValidate->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, close);
             // Valve closed successfully
             closeValidate->addTransition(m_valves, &Functions::Valves::emit_validationSuccess, finished);
             // Valve failed to close
