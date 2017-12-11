@@ -22,6 +22,11 @@ namespace App { namespace Experiment { namespace Machines
         ,   t_pulseValveOpen(parent)
         ,   t_pulseValveClose(parent)
     {
+        // We have stop state machines
+        shutDownMachines = true;
+
+
+
         // Count cylces
         connect(state("cycle", true), &QState::entered, this, &PulseValve::cycle);
 
@@ -58,6 +63,31 @@ namespace App { namespace Experiment { namespace Machines
         // Valve timers
         connect(state("startPulseValveOpenTimer", true), &QState::entered, this, &PulseValve::startPulseValveOpenTimer);
         connect(state("startPulseValveCloseTimer", true), &QState::entered, this, &PulseValve::startPulseValveCloseTimer);
+
+
+
+
+        // SHUTDOWN STATE MACHINE: Link close valve states
+        connect(state("closeHighPressureIn", false), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
+        connect(state("closeNitrogenIn", false), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
+        connect(state("closeFlowController", false), &QState::entered, this->valves(), &Functions::Valves::closeFlowController);
+        connect(state("closeExhuast", false), &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
+        connect(state("closeOuput", false), &QState::entered, this->valves(), &Functions::Valves::closeOutput);
+        connect(state("closeSlowExhuast", false), &QState::entered, this->valves(), &Functions::Valves::closeSlowExhuastPath);
+        connect(state("closeFastExhuast", false), &QState::entered, this->valves(), &Functions::Valves::closeFastExhuastPath);
+        connect(state("closeVacuumIn", false), &QState::entered, this->valves(), &Functions::Valves::closeVacuumIn);
+        connect(state("closeVacuumOut", false), &QState::entered, this->valves(), &Functions::Valves::closeVacuumOut);
+
+        // SHUTDOWN STATE MACHINE: Link close valve validator states
+        connect(validator("closeHighPressureIn", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureInput);
+        connect(validator("closeNitrogenIn", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseHighPressureNitrogen);
+        connect(validator("closeFlowController", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFlowController);
+        connect(validator("closeExhuast", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseExhuast);
+        connect(validator("closeOutput", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseOutput);
+        connect(validator("closeSlowExhuast", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseSlowExhuastPath);
+        connect(validator("closeFastExhuast", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseFastExhuastPath);
+        connect(validator("closeVacuumIn", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumIn);
+        connect(validator("closeVacuumOut", false), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseVacuumOut);
 
     }
 
@@ -115,6 +145,41 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Make sure valve closed
         closeValve(params.value("valve").toInt());
+    }
+
+
+    /**
+     * Builds the shutdown state machine
+     *
+     * @brief PulseValve::buildShutDownMachine
+     */
+    void PulseValve::buildShutDownMachine()
+    {
+        // Where to start the machine
+        shutDownMachine.setInitialState(state("closeOuput", false));
+
+        // Close all valves
+        transitionsBuilder()->closeAllValves(state("closeOuput", false),
+                validator("closeOutput", false),
+                state("closeSlowExhuast", false),
+                validator("closeSlowExhuast", false),
+                state("closeFastExhuast", false),
+                validator("closeFastExhuast", false),
+                state("closeVacuumIn", false),
+                validator("closeVacuumIn", false),
+                state("closeVacuumOut", false),
+                validator("closeVacuumOut", false),
+                state("closeExhuast", false),
+                validator("closeExhuast", false),
+                state("closeHighPressureIn", false),
+                validator("closeHighPressureIn", false),
+                state("closeNitrogenIn", false),
+                validator("closeNitrogenIn", false),
+                state("closeFlowController", false),
+                validator("closeFlowController", false),
+                &ssm_stop,
+                &ssm_stop
+        );
     }
 
 

@@ -134,6 +134,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             void emit_validationFailed(QVariantMap error);
             void emit_validationSuccess(QVariantMap data);
 
+            void emit_machineStopping(QVariantMap details);
             void emit_machineFinished(QVariantMap details);
             void emit_machineFailed(QVariantMap errorDetails);
 

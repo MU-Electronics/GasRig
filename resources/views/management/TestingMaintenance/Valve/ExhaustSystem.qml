@@ -25,6 +25,7 @@ FluidControls.Card
         width: parent.width
         spacing: 20
         id: exhuastSystemContainer
+        enabled: MachineStatusManager.shouldEnable("ventMachine")
         AlertBox
         {
             width: exhuastSystem.width - 10
@@ -107,7 +108,7 @@ FluidControls.Card
             {
                 text: qsTr("Begin Vent")
                 enabled: (exhuastSystem_confirm.checked) ? true : false;
-                visible: (MachineStatusManager.ventMachine["status"] === false) ? 1 : 0;
+                visible: (MachineStatusManager.ventMachine["status"] === 0) ? 1 : 0;
                 onClicked:
                 {
                     TestingManager.requestVent(exhuastSystem_ventLocation_output.checked,
@@ -122,11 +123,17 @@ FluidControls.Card
             Button
             {
                 text: qsTr("Stop")
-                visible: (MachineStatusManager.ventMachine["status"] === true) ? 1 : 0;
+                visible: (MachineStatusManager.ventMachine["status"] === 1) ? 1 : 0;
                 onClicked:
                 {
                     TestingManager.requestVentStop();
                 }
+            }
+            Button
+            {
+                text: qsTr("Stopping")
+                enabled: false
+                visible: (MachineStatusManager.ventMachine["status"] === 2) ? 1 : 0;
             }
         }
     }

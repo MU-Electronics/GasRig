@@ -27,7 +27,7 @@ namespace App { namespace View { namespace Managers
     {
         Q_OBJECT
 
-        // Vac down state machine status
+        AUTO_PROPERTY(int, stateMachineRunning)
         Q_PROPERTY(QVariantMap vacDownMachine READ vacDownMachine NOTIFY emit_vacDownMachineChanged)
         Q_PROPERTY(QVariantMap pulseValveMachine READ pulseValveMachine NOTIFY emit_pulseValveMachineChanged)
         Q_PROPERTY(QVariantMap pressuriseMachine READ pressuriseMachine NOTIFY emit_pressuriseMachineChanged)
@@ -39,6 +39,8 @@ namespace App { namespace View { namespace Managers
 
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
+
+            Q_INVOKABLE bool shouldEnable(QString id);
 
             // Return the data for the state machines
             QVariantMap vacDownMachine() const { return m_vacDownMachine; }
@@ -59,20 +61,26 @@ namespace App { namespace View { namespace Managers
 
         public slots:
             void ventStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
+            void ventStopping();
             void ventStopped();
 
             void vacDownStarted(double value, int valueType, bool turbo, int gasMode, int mode);
+            void vacDownStopping();
             void vacDownStopped();
 
             void pulseValveStarted(int valve, int cycles, int timeOpen, int timeClosed);
+            void pulseValveStopping();
             void pulseValveStopped();
 
             void pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve);
+            void pressuriseStopping();
             void pressuriseStopped();
 
             void purgeStarted(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
+            void purgeStopping();
             void purgeStopped();
 
+            void machinesStatues(QVariantMap info);
 
         private:
             QQmlApplicationEngine* m_root;

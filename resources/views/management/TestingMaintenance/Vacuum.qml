@@ -94,6 +94,7 @@ Item
                 Row
                 {
                     spacing: 20;
+                    enabled: MachineStatusManager.shouldEnable("vacDownMachine")
                     TextField
                     {
                         id: vacDown_value
@@ -115,6 +116,7 @@ Item
                     }
                 }
                 Row{
+                    enabled: MachineStatusManager.shouldEnable("vacDownMachine")
                     CheckBox {
                         id: vacDown_turbo
                         checked: false
@@ -124,6 +126,7 @@ Item
                 }
                 Row
                 {
+                    enabled: MachineStatusManager.shouldEnable("vacDownMachine")
                     RadioButton {
                         checked: false
                         text: qsTr("To Output")
@@ -150,6 +153,8 @@ Item
                     spacing: 20
                     width: parent.width
 
+                    enabled: MachineStatusManager.shouldEnable("vacDownMachine")
+
                     opacity: (vacDown_value.text > vacuumTab.validatorBottom && vacDown_value.text < vacuumTab.validatorTop) ? 1 : 0;
                     height: (vacDown_value.text > vacuumTab.validatorBottom && vacDown_value.text < vacuumTab.validatorTop) ? 50 : 0;
 
@@ -163,13 +168,13 @@ Item
                         id: vacDown_confirm
                         checked: false
                         text: qsTr("Comfirm rig setup")
-                        enabled: (MachineStatusManager.vacDownMachine["status"] === true) ? 0 : 1;
+                        enabled: (MachineStatusManager.vacDownMachine["status"] === 0) ? 1 : 0;
                     }
                     Button
                     {
                         text: qsTr("Vac down")
                         enabled: (vacDown_confirm.checked) ? true : false;
-                        visible: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
+                        visible: (MachineStatusManager.vacDownMachine["status"] === 0) ? 1 : 0;
                         onClicked:
                         {
                             var mode;
@@ -180,11 +185,17 @@ Item
                     Button
                     {
                         text: qsTr("Stop")
-                        visible: (MachineStatusManager.vacDownMachine["status"] === true) ? 1 : 0;
+                        visible: (MachineStatusManager.vacDownMachine["status"] === 1) ? 1 : 0;
                         onClicked:
                         {
                             TestingManager.requestVacDownStop();
                         }
+                    }
+                    Button
+                    {
+                        text: qsTr("Stopping")
+                        enabled: false
+                        visible: (MachineStatusManager.vacDownMachine["status"] === 2) ? 1 : 0;
                     }
                 }
             }

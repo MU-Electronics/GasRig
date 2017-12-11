@@ -45,6 +45,8 @@ FluidControls.Card
 
             width: purgeSystemFunction.width - 10
 
+            enabled: MachineStatusManager.shouldEnable("purgeMachine")
+
 
             move: Transition {
                 NumberAnimation { properties: "x,y"; duration: 400 }
@@ -184,13 +186,13 @@ FluidControls.Card
                     id: purgeMethod_confirm
                     checked: false
                     text: qsTr("Confirm rig setup")
-                    enabled: (MachineStatusManager.purgeMachine["status"] === true) ? 0 : 1;
+                    enabled: (MachineStatusManager.purgeMachine["status"] === 0) ? 1 : 0;
                 }
                 Button
                 {
                     text: qsTr("Start Purging System")
                     enabled: (purgeMethod_confirm.checked) ? true : false;
-                    visible: (MachineStatusManager.purgeMachine["status"] === true) ? 0 : 1;
+                    visible: (MachineStatusManager.purgeMachine["status"] === 0) ? 1 : 0;
                     onClicked:
                     {
                         if(purgeSubmittion.methodSelected == 1)
@@ -199,15 +201,20 @@ FluidControls.Card
                         }
                     }
                 }
-
                 Button
                 {
                     text: qsTr("Stop")
-                    visible: (MachineStatusManager.purgeMachine["status"] === true) ? 1 : 0;
+                    visible: (MachineStatusManager.purgeMachine["status"] === 1) ? 1 : 0;
                     onClicked:
                     {
                         TestingManager.requestPurgeStop();
                     }
+                }
+                Button
+                {
+                    text: qsTr("Stopping")
+                    enabled: false
+                    visible: (MachineStatusManager.purgeMachine["status"] === 2) ? 1 : 0;
                 }
             }
         }

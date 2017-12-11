@@ -22,14 +22,17 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_purge(*new Purge(parent, settings, hardware, safety))
     {
         // Connect the finished signals for the pruge
+        connect(&m_purge, &Purge::emit_machineStopping, this, &Machines::purgeStopping);
         connect(&m_purge, &Purge::emit_machineFinished, this, &Machines::purgeFinished);
         connect(&m_purge, &Purge::emit_machineFailed, this, &Machines::purgeFailed);
 
         // Connect the finished signals for the vent
+        connect(&m_vent, &Vent::emit_machineStopping, this, &Machines::ventStopping);
         connect(&m_vent, &Vent::emit_machineFinished, this, &Machines::ventFinished);
         connect(&m_vent, &Vent::emit_machineFailed, this, &Machines::ventFailed);
 
         // Connect the finished signals for the machine vac down
+        connect(&m_vacDown, &VacDown::emit_machineStopping, this, &Machines::vacDownStopping);
         connect(&m_vacDown, &VacDown::emit_machineFinished, this, &Machines::vacDownFinished);
         connect(&m_vacDown, &VacDown::emit_machineFailed, this, &Machines::vacDownFailed);
 
@@ -38,6 +41,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&m_safeValve, &SafeValve::emit_machineFailed, this, &Machines::valveStateFailed);
 
         // Connect the finished signals for the pulse valve
+        connect(&m_pulseValve, &PulseValve::emit_machineStopping, this, &Machines::pulseValveStopping);
         connect(&m_pulseValve, &PulseValve::emit_machineFinished, this, &Machines::pulseValveFinished);
         connect(&m_pulseValve, &PulseValve::emit_machineFailed, this, &Machines::pulseValveFailed);
 
@@ -56,6 +60,7 @@ namespace App { namespace Experiment { namespace Machines
         connect(&m_readVacStationTemperatures, &ReadVacStationTemperatures::emit_machineFailed, this, &Machines::sensorReadingsFailed);
 
         // Connect the finished signals for the machine set pressure emit_pressuriseStopped
+        connect(&m_pressurise, &Pressurise::emit_machineStopping, this, &Machines::pressuriseStopping);
         connect(&m_pressurise, &Pressurise::emit_machineFinished, this, &Machines::pressuriseFinished);
         connect(&m_pressurise, &Pressurise::emit_machineFailed, this, &Machines::pressuriseFailed);
 
@@ -255,6 +260,17 @@ namespace App { namespace Experiment { namespace Machines
     }
 
     /**
+     * This method is trigged if the state machine finished
+     *
+     * @brief Machine::vacDownStopping
+     */
+    void Machines::vacDownStopping(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_vacDownMachineStopping();
+    }
+
+    /**
      * This method is trigged if the state machine failed
      *
      * @brief Machine::vacDownFailed
@@ -330,6 +346,17 @@ namespace App { namespace Experiment { namespace Machines
     }
 
     /**
+     * This method is trigged if the state machine finished
+     *
+     * @brief Machine::purgeStopping
+     */
+    void Machines::purgeStopping(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_purgeStopping();
+    }
+
+    /**
      * This method is trigged if the state machine failed
      *
      * @brief Machine::purgeFailed
@@ -402,6 +429,12 @@ namespace App { namespace Experiment { namespace Machines
         emit emit_ventMachineStopped();
     }
 
+    void Machines::ventStopping(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_ventMachineStopping();
+    }
+
     void Machines::ventFailed(QVariantMap params)
     {
         // Emit machine stopped
@@ -462,6 +495,17 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Emit machine stopped
         emit emit_pulseValveStopped();
+    }
+
+    /**
+     * This method is trigged if the state machine finished
+     *
+     * @brief Machine::vacDownFinished
+     */
+    void Machines::pulseValveStopping(QVariantMap params)
+    {
+        // Emit machine stopped
+        emit emit_pulseValveStopping();
     }
 
     /**
@@ -536,6 +580,17 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::pressuriseFinished(QVariantMap params)
     {
         emit emit_pressuriseStopped();
+    }
+
+    /**
+     * Ran when the pressurise state machine has finished
+     *
+     * @brief Machines::pressuriseFinished
+     * @param params
+     */
+    void Machines::pressuriseStopping(QVariantMap params)
+    {
+        emit emit_pressuriseStopping();
     }
 
     /**

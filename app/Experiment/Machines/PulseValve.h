@@ -38,6 +38,8 @@ namespace App { namespace Experiment { namespace Machines
 
             void buildMachine();
 
+            void buildShutDownMachine();
+
             // How long to open pulse valve
             QTimer t_pulseValveOpen;
 

@@ -212,6 +212,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             // Run the sub machine shutdown state machine
             shutDownMachine.start();
+
+            // Tell every one were stopping wuth the stop state machine
+           emit emit_machineStopping(errorDetails);
         }
 
         // Stop main machine

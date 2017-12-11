@@ -38,6 +38,8 @@ FluidControls.Card
 
         id: setHighPressureContainer
 
+        enabled: MachineStatusManager.shouldEnable("pressuriseMachine")
+
         move: Transition {
             NumberAnimation { properties: "x,y"; duration: 500 }
         }
@@ -186,13 +188,13 @@ FluidControls.Card
                 id:setHighPressure_confirm
                 checked: false
                 text: qsTr("Comfirm rig setup")
-                enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
+                enabled: (MachineStatusManager.pressuriseMachine["status"] === 0) ? 1 : 0;
             }
             Button
             {
                 text: qsTr("Set high pressure")
                 enabled: (setHighPressure_confirm.checked) ? true : false;
-                visible: (MachineStatusManager.pressuriseMachine["status"] === false) ? 1 : 0;
+                visible: (MachineStatusManager.pressuriseMachine["status"] === 0) ? 1 : 0;
                 onClicked:
                 {
                     TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text, setInputValve_pressure.model.get(setInputValve_pressure.currentIndex).value, setUseVac_openOutputValve.checked);
@@ -201,11 +203,17 @@ FluidControls.Card
             Button
             {
                 text: qsTr("Stop")
-                visible: (MachineStatusManager.pressuriseMachine["status"] === true) ? 1 : 0;
+                visible: (MachineStatusManager.pressuriseMachine["status"] === 1) ? 1 : 0;
                 onClicked:
                 {
                     TestingManager.requestHighPressureStop();
                 }
+            }
+            Button
+            {
+                text: qsTr("Stopping")
+                enabled: false
+                visible: (MachineStatusManager.pressuriseMachine["status"] === 2) ? 1 : 0;
             }
         }
     }

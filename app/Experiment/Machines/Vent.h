@@ -39,6 +39,8 @@ namespace App { namespace Experiment { namespace Machines
 
             void buildMachine();
 
+            void buildShutDownMachine();
+
             bool fastExhuastOpen = false;
 
         signals:

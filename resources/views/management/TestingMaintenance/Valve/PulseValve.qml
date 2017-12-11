@@ -28,6 +28,8 @@ FluidControls.Card
 
         spacing: 20
 
+        enabled: MachineStatusManager.shouldEnable("pulseValveMachine")
+
         AlertBox
         {
             width: pulsingValveControl.width - 10
@@ -157,14 +159,14 @@ FluidControls.Card
             CheckBox {
                 id:setPulseValve_confirm
                 checked: false
-                enabled: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
+                enabled: (MachineStatusManager.pulseValveMachine["status"] === 0) ? 1 : 0;
                 text: qsTr("Comfirm rig setup")
             }
             Button
             {
                 text: qsTr("Pulse Valve")
                 enabled: (setPulseValve_confirm.checked) ? true : false;
-                visible: (MachineStatusManager.pulseValveMachine["status"] === true) ? 0 : 1;
+                visible: (MachineStatusManager.pulseValveMachine["status"] === 0) ? 1 : 0;
                 onClicked:
                 {
                     TestingManager.requestPulseValve(setPulseValve_valveId.model.get(setPulseValve_valveId.currentIndex).value, setPulseValve_numberCycles.text, setPulseValve_timeOpen.text, setPulseValve_timeClosed.text);
@@ -175,11 +177,17 @@ FluidControls.Card
             {
                 text: qsTr("Stop Pulse Valve")
                 enabled: (setPulseValve_confirm.checked) ? true : false;
-                visible: (MachineStatusManager.pulseValveMachine["status"] === true) ? 1 : 0;
+                visible: (MachineStatusManager.pulseValveMachine["status"] === 1) ? 1 : 0;
                 onClicked:
                 {
                     TestingManager.requestPulseValveStop();
                 }
+            }
+            Button
+            {
+                text: qsTr("Stopping")
+                enabled: false
+                visible: (MachineStatusManager.pulseValveMachine["status"] === 2) ? 1 : 0;
             }
         }
     }
