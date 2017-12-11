@@ -28,7 +28,7 @@ FluidControls.Card
 
         spacing: 20
 
-        enabled: MachineStatusManager.shouldEnable("pulseValveMachine")
+        enabled: (MachineStatusManager.controllable["pulseValveMachine"] === 0 || MachineStatusManager.controllable["pulseValveMachine"] === 2) ? 0 : 1 ;
 
         AlertBox
         {

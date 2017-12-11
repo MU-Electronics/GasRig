@@ -94,7 +94,7 @@ Item
                 Row
                 {
                     spacing: 20;
-                    enabled: MachineStatusManager.shouldEnable("vacDownMachine")
+                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0 || MachineStatusManager.controllable["vacDownMachine"] === 2) ? 0 : 1 ;
                     TextField
                     {
                         id: vacDown_value
@@ -102,7 +102,7 @@ Item
                         validator: DoubleValidator { bottom: vacuumTab.validatorBottom; top: vacuumTab.validatorTop; decimals: vacuumTab.validatorDecimals; notation: DoubleValidator.StandardNotation}
                         inputMethodHints: Qt.ImhDigitsOnly
                         width: vacuumStationSafeFunction.width - 210
-                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
+                        //enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
                     ComboBox {
                         id: vacDown_valueType
@@ -116,34 +116,34 @@ Item
                     }
                 }
                 Row{
-                    enabled: MachineStatusManager.shouldEnable("vacDownMachine")
+                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0 || MachineStatusManager.controllable["vacDownMachine"] === 2) ? 0 : 1 ;
                     CheckBox {
                         id: vacDown_turbo
                         checked: false
                         text: qsTr("Use turbo when pressure is below allowed limit?")
-                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
+                        //enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
                 }
                 Row
                 {
-                    enabled: MachineStatusManager.shouldEnable("vacDownMachine")
+                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0 || MachineStatusManager.controllable["vacDownMachine"] === 2) ? 0 : 1 ;
                     RadioButton {
                         checked: false
                         text: qsTr("To Output")
                         id: vacDown_toOuput
-                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
+                        //enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
                     RadioButton {
                         checked: false
                         text: qsTr("To Vacuum Output")
                         id: vacDown_toVacOutput
-                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
+                        //enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
                     RadioButton {
                         checked: true
                         text: qsTr("Internal system")
                         id: vacDown_toInternal
-                        enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
+                        //enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
 
 
@@ -153,7 +153,7 @@ Item
                     spacing: 20
                     width: parent.width
 
-                    enabled: MachineStatusManager.shouldEnable("vacDownMachine")
+                    enabled: (MachineStatusManager.controllable["vacDownMachine"] === 0 || MachineStatusManager.controllable["vacDownMachine"] === 2) ? 0 : 1 ;
 
                     opacity: (vacDown_value.text > vacuumTab.validatorBottom && vacDown_value.text < vacuumTab.validatorTop) ? 1 : 0;
                     height: (vacDown_value.text > vacuumTab.validatorBottom && vacDown_value.text < vacuumTab.validatorTop) ? 50 : 0;

@@ -26,7 +26,7 @@ FluidControls.Card
         id: valveStatusContainer
         spacing: 0
         width: parent.width
-        enabled: MachineStatusManager.shouldEnable("safeValveMachine")
+        enabled: (MachineStatusManager.controllable["safeValveMachine"] === 0 || MachineStatusManager.controllable["safeValveMachine"] === 2) ? 0 : 1 ;
 
         AlertBox
         {

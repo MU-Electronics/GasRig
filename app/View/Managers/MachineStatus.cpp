@@ -25,7 +25,12 @@ namespace App { namespace View { namespace Managers
         ,   m_experimentEngine(experimentEngine)
     {
         // Global if machine is running
-        stateMachineRunning(0);
+        m_controllable.insert("ventMachine", 1);
+        m_controllable.insert("pressuriseMachine", 1);
+        m_controllable.insert("vacDownMachine", 1);
+        m_controllable.insert("pulseValveMachine", 1);
+        m_controllable.insert("purgeMachine", 1);
+        m_controllable.insert("safeValveMachine", 1);
 
         // Default values for vac state machine
         m_vacDownMachine.insert("status", 0);
@@ -100,75 +105,36 @@ namespace App { namespace View { namespace Managers
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStarted, this, &MachineStatus::purgeStarted);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStopped, this, &MachineStatus::purgeStopped);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStopping, this, &MachineStatus::purgeStopping);
-
-
-        // Global register if any machines are running
-        connect(this, &MachineStatus::emit_purgeMachineChanged, this, &MachineStatus::machinesStatues);
-        connect(this, &MachineStatus::emit_vacDownMachineChanged, this, &MachineStatus::machinesStatues);
-        connect(this, &MachineStatus::emit_pulseValveMachineChanged, this, &MachineStatus::machinesStatues);
-        connect(this, &MachineStatus::emit_pressuriseMachineChanged, this, &MachineStatus::machinesStatues);
-        connect(this, &MachineStatus::emit_ventMachineChanged, this, &MachineStatus::machinesStatues);
     }
-
 
 
 
     /**
-     * Allows easy way for views to determin if any state machine is running
-     *
-     * @brief MachineStatus::machinesStatues
-     * @param info
-     */
-    void MachineStatus::machinesStatues(QVariantMap info)
-    {
-        qDebug() << info;
-        // Is the state machine running?
-        if(info.value("status").toInt() == 0 && stateMachineRunning() != 0)
-        {
-            // State that a machine is not running
-            stateMachineRunning(stateMachineRunning() - 1);
-        }
-        else if(info.value("status").toInt() == 1)
-        {
-            // State that a machine is  running
-            stateMachineRunning(stateMachineRunning() + 1);
-        }
-        qDebug() << stateMachineRunning();
-    }
+        * Set which state machine should be controllable on the gui
+        *
+        * @brief MachineStatus::setControllable
+        * @param id
+        * @return
+        */
+       void MachineStatus::setControllable(QString id, int level)
+       {
+            // If machine stopping or in progress then all other machines are diabled
+            int others = (level == 2 || level == 0) ? 0 : 1 ;
 
+            // Set others
+            m_controllable.insert("ventMachine", others);
+            m_controllable.insert("pressuriseMachine", others);
+            m_controllable.insert("vacDownMachine", others);
+            m_controllable.insert("pulseValveMachine", others);
+            m_controllable.insert("purgeMachine", others);
 
-    /**
-     * Should a block in the UI be diabled depending if state machines are running or
-     * if the current statte machine running is the current block
-     *
-     * @brief MachineStatus::shouldEnable
-     * @param id
-     * @return
-     */
-    bool MachineStatus::shouldEnable(QString id)
-    {
-        // Check if the id state machine is the one running?
-        bool status = false;
-        if(id == "ventMachine")
-            status = m_ventMachine.value("status").toBool();
-        if(id == "pressuriseMachine")
-            status = m_pressuriseMachine.value("status").toBool();
-        if(id == "vacDownMachine")
-            status = m_vacDownMachine.value("status").toBool();
-        if(id == "pulseValveMachine")
-            status = m_pulseValveMachine.value("status").toBool();
-        if(id == "purgeMachine")
-            status = m_purgeMachine.value("status").toBool();
+            // Set the current to the set level
+            m_controllable.insert(id, level);
 
+           // Update everyone
+           emit emit_controllableChanged(m_controllable);
+       }
 
-        // Should block be enabled?
-        if( (stateMachineRunning() != 0) && !status)
-        {
-            return false;
-        }
-
-        return true;
-    }
 
 
 
@@ -183,6 +149,9 @@ namespace App { namespace View { namespace Managers
         m_purgeMachine.insert("nitrogenPressure", nitrogenPressure);
         m_purgeMachine.insert("vacTo", vacTo);
 
+        // Set the controllable
+        setControllable("purgeMachine", 2);
+
         // Tell everyone
         emit emit_purgeMachineChanged(m_purgeMachine);
     }
@@ -192,6 +161,9 @@ namespace App { namespace View { namespace Managers
         // Update array
         m_purgeMachine.insert("status", 2);
 
+        // Set the controllable
+        setControllable("purgeMachine", 0);
+
         // Tell everyone
         emit emit_purgeMachineChanged(m_purgeMachine);
     }
@@ -200,6 +172,9 @@ namespace App { namespace View { namespace Managers
     {
         // Update array
         m_purgeMachine.insert("status", 0);
+
+        // Set the controllable
+        setControllable("purgeMachine", 1);
 
         // Tell everyone
         emit emit_purgeMachineChanged(m_purgeMachine);
@@ -221,6 +196,9 @@ namespace App { namespace View { namespace Managers
         m_ventMachine.insert("flowOnePipes", flowOnePipes);
         m_ventMachine.insert("flowTwoPipes", flowTwoPipes);
 
+        // Set the controllable
+        setControllable("ventMachine", 2);
+
         // Tell everyone
         emit emit_ventMachineChanged(m_ventMachine);
     }
@@ -230,6 +208,9 @@ namespace App { namespace View { namespace Managers
         // Update array
         m_ventMachine.insert("status", 2);
 
+        // Set the controllable
+        setControllable("ventMachine", 0);
+
         // Tell everyone
         emit emit_ventMachineChanged(m_ventMachine);
     }
@@ -238,6 +219,9 @@ namespace App { namespace View { namespace Managers
     {
         // Update array
         m_ventMachine.insert("status", 0);
+
+        // Set the controllable
+        setControllable("ventMachine", 1);
 
         // Tell everyone
         emit emit_ventMachineChanged(m_ventMachine);
@@ -264,6 +248,9 @@ namespace App { namespace View { namespace Managers
         m_pressuriseMachine.insert("stepSize", stepSize);
         m_pressuriseMachine.insert("inputValve", inputValve);
 
+        // Set the controllable
+        setControllable("pressuriseMachine", 2);
+
         emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }
 
@@ -271,12 +258,18 @@ namespace App { namespace View { namespace Managers
     {
         m_pressuriseMachine.insert("status", 2);
 
+        // Set the controllable
+        setControllable("pressuriseMachine", 0);
+
         emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }
 
     void MachineStatus::pressuriseStopped()
     {
         m_pressuriseMachine.insert("status", 0);
+
+        // Set the controllable
+        setControllable("pressuriseMachine", 1);
 
         emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }
@@ -303,6 +296,9 @@ namespace App { namespace View { namespace Managers
         m_pulseValveMachine.insert("timeOpen", timeOpen);
         m_pulseValveMachine.insert("timeClosed", timeClosed);
 
+        // Set the controllable
+        setControllable("pulseValveMachine", 2);
+
         // Emit that there was an update
         emit emit_pulseValveMachineChanged(m_pulseValveMachine);
     }
@@ -312,6 +308,9 @@ namespace App { namespace View { namespace Managers
         // Update the vac machine status
         m_pulseValveMachine.insert("status", 2);
 
+        // Set the controllable
+        setControllable("pulseValveMachine", 0);
+
         // Emit that there was an update
         emit emit_pulseValveMachineChanged(m_pulseValveMachine);
     }
@@ -320,6 +319,9 @@ namespace App { namespace View { namespace Managers
     {
         // Update the vac machine status
         m_pulseValveMachine.insert("status", 0);
+
+        // Set the controllable
+        setControllable("pulseValveMachine", 1);
 
         // Emit that there was an update
         emit emit_pulseValveMachineChanged(m_pulseValveMachine);
@@ -345,6 +347,9 @@ namespace App { namespace View { namespace Managers
         m_vacDownMachine.insert("gasMode", gasMode);
         m_vacDownMachine.insert("mode", mode);
 
+        // Set the controllable
+        setControllable("vacDownMachine", 2);
+
         // Emit that there was an update
         emit emit_vacDownMachineChanged(m_vacDownMachine);
     }
@@ -354,6 +359,9 @@ namespace App { namespace View { namespace Managers
     {
         // Update the vac machine status
         m_vacDownMachine.insert("status", 2);
+
+        // Set the controllable
+        setControllable("vacDownMachine", 0);
 
         // Emit that there was an update
         emit emit_vacDownMachineChanged(m_vacDownMachine);
@@ -369,6 +377,9 @@ namespace App { namespace View { namespace Managers
     {
         // Update the vac machine status
         m_vacDownMachine.insert("status", 0);
+
+        // Set the controllable
+        setControllable("vacDownMachine", 1);
 
         // Emit that there was an update
         emit emit_vacDownMachineChanged(m_vacDownMachine);

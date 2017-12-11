@@ -33,6 +33,7 @@ namespace App { namespace View { namespace Managers
         Q_PROPERTY(QVariantMap pressuriseMachine READ pressuriseMachine NOTIFY emit_pressuriseMachineChanged)
         Q_PROPERTY(QVariantMap ventMachine READ ventMachine NOTIFY emit_ventMachineChanged)
         Q_PROPERTY(QVariantMap purgeMachine READ purgeMachine NOTIFY emit_purgeMachineChanged)
+        Q_PROPERTY(QVariantMap controllable READ controllable NOTIFY emit_controllableChanged)
 
         public:
             MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
@@ -40,7 +41,7 @@ namespace App { namespace View { namespace Managers
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
-            Q_INVOKABLE bool shouldEnable(QString id);
+            Q_INVOKABLE void setControllable(QString id, int level);
 
             // Return the data for the state machines
             QVariantMap vacDownMachine() const { return m_vacDownMachine; }
@@ -48,6 +49,7 @@ namespace App { namespace View { namespace Managers
             QVariantMap pressuriseMachine() const { return m_pressuriseMachine; }
             QVariantMap ventMachine() const { return m_ventMachine; }
             QVariantMap purgeMachine() const { return m_purgeMachine; }
+            QVariantMap controllable() const { return m_purgeMachine; }
 
         signals:
             void emit_hardwareAccess(QVariantMap command);
@@ -58,6 +60,7 @@ namespace App { namespace View { namespace Managers
             void emit_pressuriseMachineChanged(QVariantMap);
             void emit_ventMachineChanged(QVariantMap);
             void emit_purgeMachineChanged(QVariantMap);
+            void emit_controllableChanged(QVariantMap);
 
         public slots:
             void ventStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
@@ -79,8 +82,6 @@ namespace App { namespace View { namespace Managers
             void purgeStarted(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
             void purgeStopping();
             void purgeStopped();
-
-            void machinesStatues(QVariantMap info);
 
         private:
             QQmlApplicationEngine* m_root;
@@ -105,6 +106,9 @@ namespace App { namespace View { namespace Managers
 
             // Holds the purge machine status
             QVariantMap m_purgeMachine;
+
+            // Holds the purge machine status
+            QVariantMap m_controllable;
 
     };
 }}}

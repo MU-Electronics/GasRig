@@ -45,7 +45,7 @@ FluidControls.Card
 
             width: purgeSystemFunction.width - 10
 
-            enabled: MachineStatusManager.shouldEnable("purgeMachine")
+            enabled: (MachineStatusManager.controllable["purgeMachine"] === 0 || MachineStatusManager.controllable["purgeMachine"] === 2) ? 0 : 1 ;
 
 
             move: Transition {

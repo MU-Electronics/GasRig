@@ -38,7 +38,7 @@ FluidControls.Card
 
         id: setHighPressureContainer
 
-        enabled: MachineStatusManager.shouldEnable("pressuriseMachine")
+        enabled: (MachineStatusManager.controllable["pressuriseMachine"] === 0 || MachineStatusManager.controllable["pressuriseMachine"] === 2) ? 0 : 1 ;
 
         move: Transition {
             NumberAnimation { properties: "x,y"; duration: 500 }
