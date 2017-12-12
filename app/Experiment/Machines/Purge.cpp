@@ -177,7 +177,7 @@ namespace App { namespace Experiment { namespace Machines
             state("closeFlowController", false),
             validator("closeFlowController", false),
             &ssm_stop,
-            &ssm_stop
+            &ssm_stopAsFailed
         );
     }
 

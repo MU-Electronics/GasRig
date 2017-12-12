@@ -95,7 +95,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         connect(&ssm_stop, &QState::entered, this, &MachineStates::stopShutDownSubMachineWithoutError);
         connect(&ssm_stopAsFailed, &QState::entered, this, &MachineStates::stopShutDownSubMachineWithError);
         connect(&shutDownMachine, &QStateMachine::stopped, this, &MachineStates::afterSubMachinesStopped);
-
     }
 
 

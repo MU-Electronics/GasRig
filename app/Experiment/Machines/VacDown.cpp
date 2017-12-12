@@ -227,14 +227,14 @@ namespace App { namespace Experiment { namespace Machines
                 state("closeFlowController", false),
                 validator("closeFlowController", false),
                 state("disableTurboPump", false),
-                &ssm_stop
+                &ssm_stopAsFailed
         );
 
         // Disable turbo pump
-        transitionsBuilder()->disableTurboPump(state("disableTurboPump", false), validator("disableTurboPump", false), state("disableBackingPump", false), state("disableBackingPump", false), &ssm_stop);
+        transitionsBuilder()->disableTurboPump(state("disableTurboPump", false), validator("disableTurboPump", false), state("disableBackingPump", false), state("disableBackingPump", false), &ssm_stopAsFailed);
 
         // Disable backing pump
-        transitionsBuilder()->disableBackingPump(state("disableBackingPump", false), validator("disableBackingPump", false), state("waitForTurboSpeed", false), &ssm_stop);
+        transitionsBuilder()->disableBackingPump(state("disableBackingPump", false), validator("disableBackingPump", false), state("waitForTurboSpeed", false), &ssm_stopAsFailed);
 
         // Check that turbo is not spinner before we stop
         state("waitForTurboSpeed", false)->addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, validator("turboSpeedZero", false));
