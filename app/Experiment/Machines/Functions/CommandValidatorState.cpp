@@ -36,6 +36,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Get the signal
             QStateMachine::SignalEvent* se = dynamic_cast<QStateMachine::SignalEvent*>(e);
 
+            qDebug() << "1: " <<se->arguments() << " 2:" << se;
+
+
             // Check cast
             if(se == NULL)
             {
@@ -48,6 +51,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             }
 
             // If there are arguments
+            //qDebug() << "Signal Object: " << se->sender() << "Signal index: " << se->signalIndex();
+
             if (se->arguments().size() > 0)
             {
                 // Get the value of the argument

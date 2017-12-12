@@ -52,9 +52,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
      */
     QVariantMap PresenterSupport::commandId(QVariantMap commands, QVariantMap package)
     {
-        int id = commands.value("command_identifier").toInt();
+        QString id = commands.value("command_identifier").toString();
 
-        if(id != 0)
+        if(id != "")
             package.insert("command_identifier", id);
 
         return package;

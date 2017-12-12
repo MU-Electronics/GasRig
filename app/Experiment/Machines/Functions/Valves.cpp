@@ -78,7 +78,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     void Valves::validateValveHelper(QString number, bool state)
     {
         // Get the validator state instance
-        CommandValidatorState* command = (CommandValidatorState*)sender();
+        CommandValidatorState* command = dynamic_cast<CommandValidatorState*>(sender());
+        if(command == NULL)
+        {
+            qDebug() << "ERRRRRORRRRR";
+            return;
+        }
 
         // Get the package data from the instance
         QVariantMap package = command->package;
@@ -89,6 +94,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // If id was not registered then the signal name was correct but the signal is not
         if(!isRegister(package.value("command_identifier").toString()))
         {
+            qDebug() << "Command validation failed";
             // Create a error package
             QVariantMap error;
             error.insert("message", "ID was wrong in the package, not an error but skipping signal");
