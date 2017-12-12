@@ -107,7 +107,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                 sm_stop
             ,   sm_stopAsFailed
 
-            ,   ssm_stop;
+            ,   ssm_stop
+            ,   ssm_stopAsFailed;
 
 
             // Helper methods
@@ -155,7 +156,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             virtual void afterSubMachinesStopped();
 
             // Stops sub state machine shutdown machine
-            void stopShutDownSubMachine();
+            void stopShutDownSubMachineWithoutError();
+            void stopShutDownSubMachineWithError();
 
         private:
             // Connect states to their function

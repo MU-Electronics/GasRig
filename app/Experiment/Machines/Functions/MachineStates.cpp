@@ -54,6 +54,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             // States for stopping with success and failure for stop state machine
         ,   ssm_stop(&shutDownMachine)
+        ,   ssm_stopAsFailed(&shutDownMachine)
     {
         // Connect object signals to hardware slots and visa versa
         connect(this, &MachineStates::hardwareRequest, &m_hardware, &Hardware::Access::hardwareAccess);
@@ -91,7 +92,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
         // Shut down sub state machines
-        connect(&ssm_stop, &QState::entered, this, &MachineStates::stopShutDownSubMachine);
+        connect(&ssm_stop, &QState::entered, this, &MachineStates::stopShutDownSubMachineWithoutError);
+        connect(&ssm_stopAsFailed, &QState::entered, this, &MachineStates::stopShutDownSubMachineWithError);
         connect(&shutDownMachine, &QStateMachine::stopped, this, &MachineStates::afterSubMachinesStopped);
 
     }
@@ -180,12 +182,26 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
     /**
-     * Shuts down the sub state machines shutdown machine
+     * Shuts down the sub state machines shutdown machine without error
      *
-     * @brief MachineStates::stopShutDownSubMachine
+     * @brief MachineStates::stopShutDownSubMachineWithoutError
      */
-    void MachineStates::stopShutDownSubMachine()
+    void MachineStates::stopShutDownSubMachineWithoutError()
+    {        
+        // Stop the shutdown state machine
+        shutDownMachine.stop();
+    }
+
+    /**
+     * Shuts down the sub state machines shutdown machine with error
+     *
+     * @brief MachineStates::stopShutDownSubMachineWithError
+     */
+    void MachineStates::stopShutDownSubMachineWithError()
     {
+        // Record there was an error
+        error = true;
+
         // Stop the shutdown state machine
         shutDownMachine.stop();
     }
