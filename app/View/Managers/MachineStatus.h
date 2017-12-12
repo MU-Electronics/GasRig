@@ -33,6 +33,7 @@ namespace App { namespace View { namespace Managers
         Q_PROPERTY(QVariantMap pressuriseMachine READ pressuriseMachine NOTIFY emit_pressuriseMachineChanged)
         Q_PROPERTY(QVariantMap ventMachine READ ventMachine NOTIFY emit_ventMachineChanged)
         Q_PROPERTY(QVariantMap purgeMachine READ purgeMachine NOTIFY emit_purgeMachineChanged)
+        Q_PROPERTY(QVariantMap safetyValveMachine READ safetyValveMachine NOTIFY emit_safetyValveMachineChanged)
         Q_PROPERTY(QVariantMap controllable READ controllable NOTIFY emit_controllableChanged)
 
         public:
@@ -49,6 +50,7 @@ namespace App { namespace View { namespace Managers
             QVariantMap pressuriseMachine() const { return m_pressuriseMachine; }
             QVariantMap ventMachine() const { return m_ventMachine; }
             QVariantMap purgeMachine() const { return m_purgeMachine; }
+            QVariantMap safetyValveMachine() const { return m_safetyValveMachine; }
             QVariantMap controllable() const { return m_controllable; }
 
         signals:
@@ -61,27 +63,32 @@ namespace App { namespace View { namespace Managers
             void emit_ventMachineChanged(QVariantMap);
             void emit_purgeMachineChanged(QVariantMap);
             void emit_controllableChanged(QVariantMap);
+            void emit_safetyValveMachineChanged(QVariantMap);
 
         public slots:
             void ventStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
-            void ventStopping();
-            void ventStopped();
+            void ventStopping(QVariantMap params);
+            void ventStopped(QVariantMap params);
 
             void vacDownStarted(double value, int valueType, bool turbo, int gasMode, int mode);
-            void vacDownStopping();
-            void vacDownStopped();
+            void vacDownStopping(QVariantMap params);
+            void vacDownStopped(QVariantMap params);
 
             void pulseValveStarted(int valve, int cycles, int timeOpen, int timeClosed);
-            void pulseValveStopping();
-            void pulseValveStopped();
+            void pulseValveStopping(QVariantMap params);
+            void pulseValveStopped(QVariantMap params);
 
             void pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve);
-            void pressuriseStopping();
-            void pressuriseStopped();
+            void pressuriseStopping(QVariantMap params);
+            void pressuriseStopped(QVariantMap params);
 
             void purgeStarted(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
-            void purgeStopping();
-            void purgeStopped();
+            void purgeStopping(QVariantMap params);
+            void purgeStopped(QVariantMap params);
+
+            void safetyValveStarted(int id, bool state);
+            void safetyValveStopping(QVariantMap params);
+            void safetyValveStopped(QVariantMap params);
 
         private:
             QQmlApplicationEngine* m_root;
@@ -106,6 +113,9 @@ namespace App { namespace View { namespace Managers
 
             // Holds the purge machine status
             QVariantMap m_purgeMachine;
+
+            // Holds the saftye valve state machine
+            QVariantMap m_safetyValveMachine;
 
             // Holds the purge machine status
             QVariantMap m_controllable;

@@ -37,8 +37,9 @@ namespace App { namespace Experiment { namespace Machines
         connect(&m_vacDown, &VacDown::emit_machineFailed, this, &Machines::vacDownFailed);
 
         // Connect the finished signals for the machine safe valve
-        connect(&m_safeValve, &SafeValve::emit_machineFinished, this, &Machines::valveStateFinished);
-        connect(&m_safeValve, &SafeValve::emit_machineFailed, this, &Machines::valveStateFailed);
+        connect(&m_safeValve, &SafeValve::emit_machineFinished, this, &Machines::safeValveFinished);
+        connect(&m_safeValve, &SafeValve::emit_machineFailed, this, &Machines::safeValveFailed);
+        connect(&m_safeValve, &SafeValve::emit_machineStopping, this, &Machines::safeValveStopping);
 
         // Connect the finished signals for the pulse valve
         connect(&m_pulseValve, &PulseValve::emit_machineStopping, this, &Machines::pulseValveStopping);
@@ -243,9 +244,6 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Stop the machine
         m_vacDown.stopMachineWithoutError();
-
-        // Emit machine stopped
-        emit emit_vacDownMachineStopped();
     }
 
     /**
@@ -256,7 +254,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::vacDownFinished(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_vacDownMachineStopped();
+        emit emit_vacDownMachineStopped(params);
     }
 
     /**
@@ -267,7 +265,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::vacDownStopping(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_vacDownMachineStopping();
+        emit emit_vacDownMachineStopping(params);
     }
 
     /**
@@ -278,7 +276,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::vacDownFailed(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_vacDownMachineStopped();
+        emit emit_vacDownMachineFailed(params);
     }
 
 
@@ -329,9 +327,6 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Stop the machine
         m_purge.stopMachineWithoutError();
-
-        // Emit machine stopped
-        emit emit_purgeStopped();
     }
 
     /**
@@ -342,7 +337,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::purgeFinished(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_purgeStopped();
+        emit emit_purgeStopped(params);
     }
 
     /**
@@ -353,7 +348,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::purgeStopping(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_purgeStopping();
+        emit emit_purgeStopping(params);
     }
 
     /**
@@ -364,7 +359,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::purgeFailed(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_purgeStopped();
+        emit emit_purgeFailed(params);
     }
 
 
@@ -418,27 +413,24 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Stop the machine
         m_vent.stopMachineWithoutError();
-
-        // Emit machine stopped
-        emit emit_ventMachineStopped();
     }
 
     void Machines::ventFinished(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_ventMachineStopped();
+        emit emit_ventMachineStopped(params);
     }
 
     void Machines::ventStopping(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_ventMachineStopping();
+        emit emit_ventMachineStopping(params);
     }
 
     void Machines::ventFailed(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_ventMachineStopped();
+        emit emit_ventMachineFailed(params);
     }
 
 
@@ -481,9 +473,6 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Stop the pulse valve machine
         m_pulseValve.stopMachineWithoutError();
-
-        // Tell everyone we've stopped the machine
-        emit emit_pulseValveStopped();
     }
 
     /**
@@ -494,7 +483,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::pulseValveFinished(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_pulseValveStopped();
+        emit emit_pulseValveStopped(params);
     }
 
     /**
@@ -505,7 +494,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::pulseValveStopping(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_pulseValveStopping();
+        emit emit_pulseValveStopping(params);
     }
 
     /**
@@ -516,7 +505,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::pulseValveFailed(QVariantMap params)
     {
         // Emit machine stopped
-        emit emit_pulseValveStopped();
+        emit emit_pulseValveFailed(params);
     }
 
 
@@ -566,8 +555,6 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Stop the pulse valve machine
         m_pressurise.stopMachineWithoutError();
-
-        emit emit_pressuriseStopped();
     }
 
 
@@ -579,7 +566,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::pressuriseFinished(QVariantMap params)
     {
-        emit emit_pressuriseStopped();
+        emit emit_pressuriseStopped(params);
     }
 
     /**
@@ -590,7 +577,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::pressuriseStopping(QVariantMap params)
     {
-        emit emit_pressuriseStopping();
+        emit emit_pressuriseStopping(params);
     }
 
     /**
@@ -601,7 +588,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::pressuriseFailed(QVariantMap params)
     {
-        emit emit_pressuriseStopped();
+        emit emit_pressuriseFailed(params);
     }
 
 
@@ -613,7 +600,7 @@ namespace App { namespace Experiment { namespace Machines
      * @brief Machines::valveOpen
      * @param id
      */
-    int Machines::valveOpen(int id)
+    int Machines::safeValveOpen(int id)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
@@ -641,7 +628,7 @@ namespace App { namespace Experiment { namespace Machines
      * @brief Machines::valveClose
      * @param id
      */
-    int Machines::valveClose(int id)
+    int Machines::safeValveClose(int id)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
@@ -657,31 +644,43 @@ namespace App { namespace Experiment { namespace Machines
         m_safeValve.start();
 
         // Emit machine started
-        emit emit_safeValveMachineStarted(id, true);
+        emit emit_safeValveMachineStarted(id, false);
 
         // Return success
         return 1;
     }
 
-
     /**
-     * This method is trigged if the state machine finished
+     * Ran when the pressurise state machine has finished
      *
-     * @brief Machine::valveStateFinished
+     * @brief Machines::valveStateFinished
+     * @param params
      */
-    void Machines::valveStateFinished(QVariantMap params)
+    void Machines::safeValveFinished(QVariantMap params)
     {
-
+        emit emit_safeValveMachineStopped(params);
     }
 
     /**
-     * This method is trigged if the state machine failed
+     * Ran when the pressurise state machine has finished
      *
-     * @brief Machine::valveStateFailed
+     * @brief Machines::pressuriseFinished
+     * @param params
      */
-    void Machines::valveStateFailed(QVariantMap params)
+    void Machines::safeValveStopping(QVariantMap params)
     {
+        emit emit_safeValveMachineStopping(params);
+    }
 
+    /**
+     * Ran when the pressurise state machine has failed
+     *
+     * @brief Machines::valveStateFailed
+     * @param params
+     */
+    void Machines::safeValveFailed(QVariantMap params)
+    {
+        emit emit_safeValveMachineFailed(params);
     }
 
 

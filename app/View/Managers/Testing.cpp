@@ -806,11 +806,11 @@ namespace App { namespace View { namespace Managers
     {
         if(state)
         {
-            m_experimentEngine.machines().valveOpen(port);
+            m_experimentEngine.machines().safeValveOpen(port);
         }
         else
         {
-            m_experimentEngine.machines().valveClose(port);
+            m_experimentEngine.machines().safeValveClose(port);
         }
     }
 

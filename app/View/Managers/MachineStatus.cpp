@@ -33,6 +33,11 @@ namespace App { namespace View { namespace Managers
         m_controllable.insert("safeValveMachine", 1);
 
         // Default values for vac state machine
+        m_safetyValveMachine.insert("status", 0);
+        m_safetyValveMachine.insert("valve", -1);
+        m_safetyValveMachine.insert("state", false);
+
+        // Default values for vac state machine
         m_vacDownMachine.insert("status", 0);
         m_vacDownMachine.insert("mintues", 0);
         m_vacDownMachine.insert("turbo", false);
@@ -105,36 +110,84 @@ namespace App { namespace View { namespace Managers
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStarted, this, &MachineStatus::purgeStarted);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStopped, this, &MachineStatus::purgeStopped);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStopping, this, &MachineStatus::purgeStopping);
+
+        // Connect signals to and from experiment engine
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineStarted, this, &MachineStatus::safetyValveStarted);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineStopped, this, &MachineStatus::safetyValveStopped);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineStopping, this, &MachineStatus::safetyValveStopping);
     }
 
 
 
     /**
-        * Set which state machine should be controllable on the gui
-        *
-        * @brief MachineStatus::setControllable
-        * @param id
-        * @return
-        */
-       void MachineStatus::setControllable(QString id, int level)
-       {
-            // If machine stopping or in progress then all other machines are diabled
-            int others = (level == 2 || level == 0) ? 0 : 1 ;
+     * Set which state machine should be controllable on the gui
+     *
+     * @brief MachineStatus::setControllable
+     * @param id
+     * @return
+     */
+    void MachineStatus::setControllable(QString id, int level)
+    {
+        // If machine stopping or in progress then all other machines are diabled
+        int others = (level == 2 || level == 0) ? 0 : 1 ;
 
-            // Set others
-            m_controllable.insert("ventMachine", others);
-            m_controllable.insert("pressuriseMachine", others);
-            m_controllable.insert("vacDownMachine", others);
-            m_controllable.insert("pulseValveMachine", others);
-            m_controllable.insert("purgeMachine", others);
+        // Set others
+        m_controllable.insert("ventMachine", others);
+        m_controllable.insert("pressuriseMachine", others);
+        m_controllable.insert("vacDownMachine", others);
+        m_controllable.insert("pulseValveMachine", others);
+        m_controllable.insert("purgeMachine", others);
+        m_controllable.insert("safeValveMachine", others);
 
-            // Set the current to the set level
-            m_controllable.insert(id, level);
+        // Set the current to the set level
+        m_controllable.insert(id, level);
 
-           // Update everyone
-           emit emit_controllableChanged(m_controllable);
-       }
+       // Update everyone
+       emit emit_controllableChanged(m_controllable);
+    }
 
+
+
+
+
+
+    void MachineStatus::safetyValveStarted(int id, bool state)
+    {
+        // Update array
+        m_safetyValveMachine.insert("status", 1);
+        m_safetyValveMachine.insert("valve", id);
+        m_safetyValveMachine.insert("state", state);
+
+        // Set the controllable
+        setControllable("safeValveMachine", 2);
+
+        // Tell everyone
+        emit emit_safetyValveMachineChanged(m_safetyValveMachine);
+    }
+
+    void MachineStatus::safetyValveStopping(QVariantMap params)
+    {
+        // Update array
+        m_safetyValveMachine.insert("status", 2);
+
+        // Set the controllable
+        setControllable("safeValveMachine", 0);
+
+        // Tell everyone
+        emit emit_safetyValveMachineChanged(m_safetyValveMachine);
+    }
+
+    void MachineStatus::safetyValveStopped(QVariantMap params)
+    {
+        // Update array
+        m_safetyValveMachine.insert("status", 0);
+
+        // Set the controllable
+        setControllable("safeValveMachine", 1);
+
+        // Tell everyone
+        emit emit_safetyValveMachineChanged(m_safetyValveMachine);
+    }
 
 
 
@@ -156,7 +209,7 @@ namespace App { namespace View { namespace Managers
         emit emit_purgeMachineChanged(m_purgeMachine);
     }
 
-    void MachineStatus::purgeStopping()
+    void MachineStatus::purgeStopping(QVariantMap params)
     {
         // Update array
         m_purgeMachine.insert("status", 2);
@@ -168,7 +221,7 @@ namespace App { namespace View { namespace Managers
         emit emit_purgeMachineChanged(m_purgeMachine);
     }
 
-    void MachineStatus::purgeStopped()
+    void MachineStatus::purgeStopped(QVariantMap params)
     {
         // Update array
         m_purgeMachine.insert("status", 0);
@@ -203,7 +256,7 @@ namespace App { namespace View { namespace Managers
         emit emit_ventMachineChanged(m_ventMachine);
     }
 
-    void MachineStatus::ventStopping()
+    void MachineStatus::ventStopping(QVariantMap params)
     {
         // Update array
         m_ventMachine.insert("status", 2);
@@ -215,7 +268,7 @@ namespace App { namespace View { namespace Managers
         emit emit_ventMachineChanged(m_ventMachine);
     }
 
-    void MachineStatus::ventStopped()
+    void MachineStatus::ventStopped(QVariantMap params)
     {
         // Update array
         m_ventMachine.insert("status", 0);
@@ -254,7 +307,7 @@ namespace App { namespace View { namespace Managers
         emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }
 
-    void MachineStatus::pressuriseStopping()
+    void MachineStatus::pressuriseStopping(QVariantMap params)
     {
         m_pressuriseMachine.insert("status", 2);
 
@@ -264,7 +317,7 @@ namespace App { namespace View { namespace Managers
         emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }
 
-    void MachineStatus::pressuriseStopped()
+    void MachineStatus::pressuriseStopped(QVariantMap params)
     {
         m_pressuriseMachine.insert("status", 0);
 
@@ -303,7 +356,7 @@ namespace App { namespace View { namespace Managers
         emit emit_pulseValveMachineChanged(m_pulseValveMachine);
     }
 
-    void MachineStatus::pulseValveStopping()
+    void MachineStatus::pulseValveStopping(QVariantMap params)
     {
         // Update the vac machine status
         m_pulseValveMachine.insert("status", 2);
@@ -315,7 +368,7 @@ namespace App { namespace View { namespace Managers
         emit emit_pulseValveMachineChanged(m_pulseValveMachine);
     }
 
-    void MachineStatus::pulseValveStopped()
+    void MachineStatus::pulseValveStopped(QVariantMap params)
     {
         // Update the vac machine status
         m_pulseValveMachine.insert("status", 0);
@@ -355,7 +408,7 @@ namespace App { namespace View { namespace Managers
     }
 
 
-    void MachineStatus::vacDownStopping()
+    void MachineStatus::vacDownStopping(QVariantMap params)
     {
         // Update the vac machine status
         m_vacDownMachine.insert("status", 2);
@@ -373,7 +426,7 @@ namespace App { namespace View { namespace Managers
      *
      * @brief MachineStatus::vacDownStopped
      */
-    void MachineStatus::vacDownStopped()
+    void MachineStatus::vacDownStopped(QVariantMap params)
     {
         // Update the vac machine status
         m_vacDownMachine.insert("status", 0);
