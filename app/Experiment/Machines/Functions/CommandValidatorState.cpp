@@ -36,22 +36,18 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Get the signal
             QStateMachine::SignalEvent* se = dynamic_cast<QStateMachine::SignalEvent*>(e);
 
-            qDebug() << "1: " <<se->arguments() << " 2:" << se;
-
-
             // Check cast
             if(se == NULL)
             {
-                qDebug() << "Cast failed!";
                 // Create error package
-                package.insert("cast_failed", "Cast failed as previous signal was probably not from within the state machine.");
+                package.insert("cast_status", false);
 
                 // Return no more action can be taken
                 return;
             }
 
-            // If there are arguments
-            //qDebug() << "Signal Object: " << se->sender() << "Signal index: " << se->signalIndex();
+            // Created package
+            package.insert("cast_status", true);
 
             if (se->arguments().size() > 0)
             {

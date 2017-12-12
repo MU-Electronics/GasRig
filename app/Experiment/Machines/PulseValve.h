@@ -68,6 +68,8 @@ namespace App { namespace Experiment { namespace Machines
             // Valve to open and close
             QState* valvePointerOpen;
             QState* valvePointerClose;
+            Functions::CommandValidatorState* valvePointerOpenValidator;
+            Functions::CommandValidatorState* valvePointerCloseValidator;
 
             // Count number of pulses
             int cyclesCount;
