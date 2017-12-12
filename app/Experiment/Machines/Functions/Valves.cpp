@@ -121,6 +121,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
                 return;
             }
+            qDebug() << "fail";
 
             // Failed data to passon
             returnPackage.insert("message", "The valve failed to update correctly");

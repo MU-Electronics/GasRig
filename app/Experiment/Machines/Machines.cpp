@@ -658,6 +658,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::safeValveFinished(QVariantMap params)
     {
+        qDebug() << "Finished";
         emit emit_safeValveMachineStopped(params);
     }
 

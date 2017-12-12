@@ -227,6 +227,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             // Tell every we have stopped becuase machine finished
             emit emit_machineFinished(errorDetails);
+            qDebug() << "finished";
         }
     }
 
@@ -244,10 +245,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Stop the machine
         if(machine.isRunning())
         {
+            qDebug() << "stoping";
             machine.stop();
         }
         else
         {
+            qDebug() << "stopped";
             emit emit_machineAlreadyStopped();
         }
     }
@@ -266,10 +269,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Stop the machine
         if(machine.isRunning())
         {
+            qDebug() << "Error stoping";
             machine.stop();
         }
         else
         {
+            qDebug() << "Error stoped";
             emit emit_machineAlreadyStopped();
         }
     }

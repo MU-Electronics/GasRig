@@ -39,15 +39,11 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Check cast
             if(se == NULL)
             {
-                // Create error package
+                // state cast failed
                 package.insert("cast_status", false);
 
-                // Return no more action can be taken
                 return;
             }
-
-            // Created package
-            package.insert("cast_status", true);
 
             if (se->arguments().size() > 0)
             {
@@ -59,6 +55,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                 {
                     // Save the data to a local container to be retrieved by the state
                     package = arg.toMap();
+
+                    // state cast was succesfull
+                    package.insert("cast_status", true);
                 }
             }
         }
