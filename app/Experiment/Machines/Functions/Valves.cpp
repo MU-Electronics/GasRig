@@ -63,7 +63,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         QVariantMap command = m_commandConstructor.setValveState(valveName, state);
 
         // Register id
-        registerId(command.value("command_identifier").toInt());
+        registerId(command.value("command_identifier").toString());
 
         // Emit siganl to HAL
         emit hardwareRequest(command);
@@ -87,16 +87,11 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         QString valveName = m_settings.hardware.valve_connections.value(number).toString();
 
         // If id was not registered then the signal name was correct but the signal is not
-        if(!isRegister(package.value("command_identifier").toInt()))
+        if(!isRegister(package.value("command_identifier").toString()))
         {
             // Create a error package
             QVariantMap error;
             error.insert("message", "ID was wrong in the package, not an error but skipping signal");
-            error.insert("requested_valve", valveName);
-            error.insert("requested_valve_id", number);
-            error.insert("valve_changed", package.value("port").toString());
-            error.insert("requested_state", state);
-            error.insert("state", package.value("value").toBool());
             error.insert("acutal_id", package.value("command_identifier").toInt());
             error.insert("ids", stringOfIds());
 

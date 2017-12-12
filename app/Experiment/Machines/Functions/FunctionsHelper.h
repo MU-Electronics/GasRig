@@ -11,13 +11,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         public:
             FunctionsHelper();
 
-            QList<int> getIds();
+            QList<QString> getIds();
             QString stringOfIds();
-            void registerId(int id);
-            bool isRegister(int id);
+            void registerId(QString id);
+            bool isRegister(QString id);
 
         private:
-            QList<int> m_registeredId;
+            QList<QString> m_registeredId;
 
     };
 

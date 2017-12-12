@@ -1,11 +1,13 @@
 #include "CommandConstructor.h"
 
+#include <QDateTime>
 
 namespace App { namespace Hardware
 {
     CommandConstructor::CommandConstructor(QObject *parent)
     {
-
+        // Seed Qrand
+        qsrand(QDateTime::currentMSecsSinceEpoch() / 1000);
     }
 
 
@@ -33,14 +35,32 @@ namespace App { namespace Hardware
      * @brief CommandConstructor::generateCommandCount
      * @return
      */
-    int CommandConstructor::generateCommandCount()
+    QString CommandConstructor::generateCommandCount()
     {
-       m_commandCount++;
+        // Allowed characters
+        const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 
-       if(m_commandCount > 999999)
-           m_commandCount = 1;
+        // Length of hash
+        const int randomStringLength = 12;
 
-       return m_commandCount;
+        // Container for hash
+        QString randomString;
+
+        // Generate hash
+        for(int i=0; i < randomStringLength; ++i)
+        {
+            // Get random index
+            int index = qrand() % possibleCharacters.length();
+
+            // Get correct character
+            QChar nextChar = possibleCharacters.at(index);
+
+            // Append character to hash container
+            randomString.append(nextChar);
+        }
+
+        // Return the hash
+        return randomString;
     }
 
 

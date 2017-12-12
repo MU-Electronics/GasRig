@@ -278,28 +278,22 @@ namespace App { namespace Experiment { namespace Machines
 
 
         // Open exhuast wait for pressure drop
-        state("openExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openExhuast", true));
-            // Failed close all valves
-            validator("openExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
-            // Success finish here
-            validator("openExhuast", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("openSlowExhuastPath", true));
+        transitionsBuilder()->openValve(state("openExhuast", true), validator("openExhuast", true), state("openSlowExhuastPath", true), &sm_stopAsFailed);
 
         // Open the slow exhuast valve and wait for pressure drop
-        state("openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openSlowExhuastPath", true));
-            // Failed close all valves
-            validator("openSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, &sm_stopAsFailed);
-            // Success finish here
-            validator("openSlowExhuastPath", true)->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, state("sml_waitForPressureAfterSlowExhuast", true));
-                // Wait for pressure reading?
-                state("sml_waitForPressureAfterSlowExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("pressureAfterSlowExhuast", true));
-                    // Are we at atmopheric
-                    validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationSuccess, state("closeFastExhuastPathWaitingInternal", true));
-                        // Close fast exhuast
-                        state("closeFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, state("sml_stageFinder", true));
-                            validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationFailed, state("sml_waitForPressureAfterSlowExhuast", true));
-                            validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_openValveFour, state("openFastExhuastPathWaitingInternal", true));
-                        // Open fast exhuast
-                        state("openFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, state("sml_waitForPressureAfterSlowExhuast", true));
+        transitionsBuilder()->openValve(state("openSlowExhuastPath", true), validator("openSlowExhuastPath", true), state("sml_waitForPressureAfterSlowExhuast", true), &sm_stopAsFailed);
+            // Wait for pressure reading?
+            state("sml_waitForPressureAfterSlowExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("pressureAfterSlowExhuast", true));
+                // Are we at atmopheric if so close the fast exhuast and move to next stage
+                validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationSuccess, state("closeFastExhuastPathWaitingInternal", true));
+                    // Close fast exhuast
+                    state("closeFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, state("sml_stageFinder", true));
+                // Pressure too high wait till lower to open valve 4
+                validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationFailed, state("sml_waitForPressureAfterSlowExhuast", true));
+                // Pressure low enough to open fast exhuast
+                validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_openValveFour, state("openFastExhuastPathWaitingInternal", true));
+                    // Open fast exhuast
+                    state("openFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, state("sml_waitForPressureAfterSlowExhuast", true));
 
 
         // Open the output valve, wait for pressure drop and then close

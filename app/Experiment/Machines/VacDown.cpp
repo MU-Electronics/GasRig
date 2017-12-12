@@ -271,6 +271,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Close the exhuast valve
         state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeExhuast", true));
+            // Wrong signal was picked up
+            validator("closeExhuast", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeExhuast", true));
             // Valve closed successfully check to see what state the output valve should be in
             if(params.value("mode").toInt() == 2 || params.value("mode").toInt() == 3)
             {
@@ -288,6 +290,9 @@ namespace App { namespace Experiment { namespace Machines
         // Set the output valve
         state("closeOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeOutput", true));
         state("openOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openOutput", true));
+            // Wrong signal was picked up
+            validator("openOutput", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("openOutput", true));
+            validator("closeOutput", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeOutput", true));
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
@@ -311,6 +316,9 @@ namespace App { namespace Experiment { namespace Machines
         // Set the exhuast path valve fast
         state("closeFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFastExhuastPath", true));
         state("openFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openFastExhuastPath", true));
+            // Wrong signal was picked up
+            validator("closeFastExhuastPath", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeFastExhuastPath", true));
+            validator("openFastExhuastPath", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("openFastExhuastPath", true));
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
@@ -334,6 +342,9 @@ namespace App { namespace Experiment { namespace Machines
         // Set the exhuast path valve slow
         state("closeSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeSlowExhuastPath", true));
         state("openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openSlowExhuastPath", true));
+            // Wrong signal was picked up
+            validator("closeSlowExhuastPath", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeSlowExhuastPath", true));
+            validator("openSlowExhuastPath", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("openSlowExhuastPath", true));
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {
@@ -352,6 +363,9 @@ namespace App { namespace Experiment { namespace Machines
         // Set vacuum out valve
         state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
         state("openVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openVacuumOut", true));
+            // Wrong signal was picked up
+            validator("closeVacuumOut", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeVacuumOut", true));
+            validator("openVacuumOut", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("openVacuumOut", true));
             // Valve closed successfully
             if(params.value("mode").toInt() == 2)
             {

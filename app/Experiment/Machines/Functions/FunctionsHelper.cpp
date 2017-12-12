@@ -12,7 +12,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     }
 
 
-    QList<int> FunctionsHelper::getIds()
+    QList<QString> FunctionsHelper::getIds()
     {
         return m_registeredId;
     }
@@ -26,7 +26,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Loop through list
         for (int i = 0; i < m_registeredId.size(); ++i) {
             // Append the id
-            string += QString::number(m_registeredId.at(i));
+            string += m_registeredId.at(i);
 
             // If not last value append a commor
             if(i < m_registeredId.size()-1)
@@ -38,12 +38,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     }
 
 
-    void FunctionsHelper::registerId(int id)
+    void FunctionsHelper::registerId(QString id)
     {
         m_registeredId.append(id);
     }
 
-    bool FunctionsHelper::isRegister(int id)
+    bool FunctionsHelper::isRegister(QString id)
     {
         // Loop through list
         for (int i = 0; i < m_registeredId.size(); ++i) {

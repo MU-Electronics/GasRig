@@ -39,6 +39,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Check cast
             if(se == NULL)
             {
+                qDebug() << "Cast failed!";
                 // Create error package
                 package.insert("cast_failed", "Cast failed as previous signal was probably not from within the state machine.");
 
