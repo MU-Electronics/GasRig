@@ -34,7 +34,17 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         if (e->type() == QEvent::StateMachineSignal)
         {
             // Get the signal
-            QStateMachine::SignalEvent* se = static_cast<QStateMachine::SignalEvent*>(e);
+            QStateMachine::SignalEvent* se = dynamic_cast<QStateMachine::SignalEvent*>(e);
+
+            // Check cast
+            if(se == NULL)
+            {
+                // Create error package
+                package.insert("cast_failed", "Cast failed as previous signal was probably not from within the state machine.");
+
+                // Return no more action can be taken
+                return;
+            }
 
             // If there are arguments
             if (se->arguments().size() > 0)
