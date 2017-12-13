@@ -25,8 +25,15 @@
     // Stream to text file
     QTextStream *out = 0;
 
-    // Message handler
-    void logOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+    /**
+     * debug message handler
+     *
+     * @brief logOutputHandler
+     * @param type
+     * @param context
+     * @param msg
+     */
+    void logOutputHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
     {
         // Get the current date and time
         QString debugdate = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss");
@@ -61,6 +68,45 @@
         }
     }
 
+
+    /**
+     * Setup and install the message handler
+     *
+     * @brief installMessageHandler
+     */
+    void installMessageHandler()
+    {
+        // Get the current date and time and but the log on the end
+        QString logFileName = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss") + ".log";
+
+        // Get the OS app data location
+        QString logLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+        // Create the app data location is it does not exist
+        if(!QDir(logLocation).exists())
+        {
+            QDir().mkdir(logLocation);
+        }
+
+        // Open the file
+        QFile *log = new QFile(logLocation + "/" + logFileName);
+
+        // Was the file able to be opened with write access?
+        if (log->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+        {
+            // Create the streaming instance
+            out = new QTextStream(log);
+
+            // Attach the custom message handler to Qt
+            qInstallMessageHandler(logOutputHandler);
+        }
+        else
+        {
+            // Log file could not be opened, log error to console if one open
+            qDebug() << "Error opening log file '" << logFileName << "'" << " In location '" << logLocation << "' .All debug outputs will be redirected to console.";
+        }
+    }
+
 #endif
 
 
@@ -83,38 +129,7 @@ int main(int argc, char *argv[])
 
     // Attach message handler
     #ifndef QT_NO_DEBUG_OUTPUT
-        // Get the current date and time and but the log on the end
-        QString logFileName = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss") + ".log";
-
-        // Get the OS app data location
-        QString logLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-
-        // Create the app data location is it does not exist
-        if(!QDir(logLocation).exists())
-        {
-            QDir().mkdir(logLocation);
-        }
-
-        qDebug() << logLocation << logFileName;
-
-        // Open the file
-        QFile *log = new QFile(logLocation + "/" + logFileName);
-
-        // Was the file able to be opened with write access?
-        if (log->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
-        {
-            // Create the streaming instance
-            out = new QTextStream(log);
-
-            // Attach the custom message handler to Qt
-            qInstallMessageHandler(logOutput);
-        }
-        else
-        {
-            // Log file could not be opened, log error to console if one open
-            qDebug() << "Error opening log file '" << logFileName << "'" << " In location '" << logLocation << "' .All debug outputs will be redirected to console.";
-        }
-
+        installMessageHandler();
     #endif
 
     // Boot the applcation

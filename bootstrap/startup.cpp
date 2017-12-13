@@ -15,12 +15,12 @@
 // Application includes
 #include "app/Application.h"
 
+
 namespace Bootstrap
 {
 
     // Location for the main application settings file
     static auto SETTINGS_FILE = QStringLiteral("settings.json");
-
 
     /**
      * Boot up the applcation
@@ -42,10 +42,6 @@ namespace Bootstrap
 
         // Load main view
         loadMainView();
-
-        // Load the view manager
-        loadApplication();
-
     }
 
 
@@ -104,18 +100,6 @@ namespace Bootstrap
 
         // Save a pointer to the root objects
         m_root = rootObjects[0];
-    }
-
-
-    /**
-     * Load the main view manager
-     *
-     * @brief Startup::loadViewManager
-     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     */
-    void Startup::loadApplication()
-    {
-
     }
 
 

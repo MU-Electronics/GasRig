@@ -4,6 +4,8 @@
 #include <QQmlApplicationEngine>
 #include "../app/Application.h"
 
+#include "MessageHandler.h"
+
 //class QQuickItem;
 class QQmlApplicationEngine;
 
@@ -28,7 +30,6 @@ namespace Bootstrap{
 
         void configTheme();
         void loadMainView();
-        void loadApplication();
         void loadSettings();
 
         explicit Startup(const Startup& rhs) = delete;
