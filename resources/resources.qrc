@@ -57,5 +57,6 @@
         <file>views/management/TestingMaintenance/Valve/PurgeSystem.qml</file>
         <file>views/management/TestingMaintenance/Valve/SafeValve.qml</file>
         <file>views/management/TestingMaintenance/Valve/SetHighPressure.qml</file>
+        <file>views/parts/system_status/DebugMessages.qml</file>
     </qresource>
 </RCC>

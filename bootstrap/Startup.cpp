@@ -14,6 +14,7 @@
 
 // Application includes
 #include "app/Application.h"
+#include "app/Services/Debugger.h"
 
 
 
@@ -36,6 +37,9 @@ namespace Bootstrap
           m_isValid(true),
           m_application(*new App::Application(this, &m_engine))
     {
+        // Set debugger QObject parent
+        App::Services::Debugger::getInstance().setParent(this);
+
         // Configure the theme being used
         configTheme();
 
@@ -52,7 +56,8 @@ namespace Bootstrap
      */
     Startup::~Startup()
     {
-
+        // Set debugger QObject parent
+        App::Services::Debugger::getInstance().setParent(nullptr);
     }
 
 

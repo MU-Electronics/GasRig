@@ -47,6 +47,9 @@ namespace App { namespace View { namespace Managers
         // Flow controller statuses
         Q_PROPERTY(QVariantMap pressureSensor READ pressureSensor NOTIFY emit_pressureSensorChanged)
 
+        // Debug messages
+        Q_PROPERTY(QString debugMessages READ debugMessages NOTIFY emit_debugMessagesChanged)
+
         public:
             // constructure and destructor
             SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
@@ -65,6 +68,9 @@ namespace App { namespace View { namespace Managers
             // Return the data for the pressure sensor statuses
             QVariantMap pressureSensor() const { return m_pressureSensor; }
 
+            // Return the data for the debug messages
+            QString debugMessages();
+
         signals:
             void emit_hardwareRequest(QVariantMap command);
 
@@ -72,8 +78,12 @@ namespace App { namespace View { namespace Managers
             void emit_vacuumStateChanged(QVariantMap);
             void emit_flowControllerStateChanged(QVariantMap);
             void emit_pressureSensorChanged(QVariantMap);
+            void emit_debugMessagesChanged(QList<QMap<QString, QString>>);
 
         public slots:
+            // Listen for debugger
+            void logChanged(QMap<QString, QString> message);
+
             // Listen for labjack events
             void receiveValveStatus(QVariantMap package);
 
@@ -120,6 +130,9 @@ namespace App { namespace View { namespace Managers
 
             // Holds the pressure sensor statuses for all values
             QVariantMap m_pressureSensor;
+
+            // Holds errors that have occured
+            QList<QMap<QString, QString>> m_debugMessages;
 
             // Has initial commands been sent to devices
             QMap<QString, bool> initalCommands;

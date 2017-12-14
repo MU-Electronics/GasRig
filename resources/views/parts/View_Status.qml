@@ -35,7 +35,7 @@ Item
                 text: qsTr("Pressure")
             }
             TabButton {
-                text: qsTr("Extra")
+                text: qsTr("Debug")
             }
         }
 
@@ -105,7 +105,7 @@ Item
                 width: parent.width
                 height: parent.height
                 active: (statusTabBar.currentIndex === 3) ? true : false
-                //source: "system_status/VacuumDiagram.qml"
+                source: "system_status/DebugMessages.qml"
                 asynchronous: true
                 visible: (status == Loader.Ready && statusTabBar.currentIndex == 3) ? true : false
                 onLoaded: {

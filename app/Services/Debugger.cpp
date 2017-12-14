@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QLoggingCategory>
 #include <QtGlobal>
+#include <QObject>
 
 namespace App { namespace Services
 {
@@ -25,6 +26,8 @@ namespace App { namespace Services
 
         // Setup instance
         setup();
+
+        qDebug()<< "setup";
     }
 
     /**
@@ -82,50 +85,71 @@ namespace App { namespace Services
     void Debugger::handler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
     {
         // Define message container
-        QString message;
+        QString message = "";
+        QMap<QString, QString> messageArray;
 
         // State debug message
-        message = "######## Log Message ########\n";
+        messageArray.insert("0", "Debugger Message");
 
         // Get the current date and time
-        message += "[Timestamp] " + QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss") + "\n";
+        messageArray.insert("1_Timestamp", QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss"));
 
         // Append the catergory
-        message += "[Category] " + QString::fromUtf8(context.category) + "\n";
+        messageArray.insert("2_Category", QString::fromUtf8(context.category));
 
         // Append the version number
-        message += "[Version] " + QString::number(context.version) + "\n";
+        messageArray.insert("3_Version", QString::number(context.version));
 
         // Append the file
-        message += "[File] " + QString::fromUtf8(context.file) + "\n";
+        messageArray.insert("4_File", QString::fromUtf8(context.file));
 
         // Append the function
-        message += "[Function] " + QString::fromUtf8(context.function) + "\n";
+        messageArray.insert("5_Function", QString::fromUtf8(context.function));
 
         // Append the line number
-        message += "[Line] " + QString::number(context.line) + "\n";
+        messageArray.insert("6_Line", QString::number(context.line));
 
         // Get error type
         switch (type)
         {
             case QtInfoMsg:
-                message += "[Type] Information \n";
+                messageArray.insert("7_Type", "Information");
                 break;
             case QtDebugMsg:
-                message += "[Type] Debug \n";
+                messageArray.insert("7_Type", "Debug");
                 break;
             case QtWarningMsg:
-                message += "[Type] Warning \n";
+                messageArray.insert("7_Type", "Warning");
                 break;
             case QtCriticalMsg:
-                message += "[Type] Critical \n";
+                messageArray.insert("7_Type", "Critical");
                 break;
             case QtFatalMsg:
-                message += "[Type] Fatal \n";
+                messageArray.insert("7_Type", "Fatal");
         }
 
         // Append the message
-        message += "[Message] " + msg;
+        messageArray.insert("8_Message", msg);
+
+        // Create message string
+        QMapIterator<QString, QString> messageIterator(messageArray);
+        while (messageIterator.hasNext()) {
+            // Get data
+            messageIterator.next();
+
+            // Create string
+            if(messageIterator.key() != "0")
+            {
+                message += "[" + messageIterator.key() +"] " + messageIterator.value() + "\n";
+            }
+            else if(messageIterator.key() == "0")
+            {
+                message += "######## "+ messageIterator.value() + " ########\n";
+            }
+        }
+
+        // Addtion line ending at end of string
+        message += + "\n";
 
         // Make thread safe
         static QMutex mutex;
@@ -142,9 +166,18 @@ namespace App { namespace Services
         {
             abort();
         }
+        else
+        {
+            emit Debugger::getInstance().emit_logChanged(messageArray);
+        }
     }
 
 
+    /**
+     * Defines the path to store the log and what it's name should be
+     *
+     * @brief Debugger::logPaths
+     */
     void Debugger::logPaths()
     {
         // Get the current date and time and but the log on the end
@@ -165,8 +198,11 @@ namespace App { namespace Services
         // Setup log location
         logPaths();
 
+        // Get dir info
+        QDir dir(logLocation);
+
         // Create the app data location is it does not exist
-        if(!QDir(logLocation).exists())
+        if(!dir.exists())
         {
             QDir().mkdir(logLocation);
         }
@@ -177,6 +213,28 @@ namespace App { namespace Services
         // Was the file able to be opened with write access?
         if (log->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
         {
+            // Set filtering and sorting for file list
+            dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+            dir.setSorting(QDir::Name | QDir::Reversed);
+
+            // Get file info on log dir
+            QFileInfoList list = dir.entryInfoList();
+
+            // If there are more than 10 logs
+            if(list.size() > 10)
+            {
+                // Loop through each log past 10
+                for (int i = 10; i < list.size(); ++i)
+                {
+                    // Get the file info on perticular log
+                    QFileInfo fileInfo = list.at(i);
+
+                    // Delete the log file as its old
+                    dir.remove(fileInfo.fileName());
+                }
+            }
+
+
             // Create log file streaming instance
             file = new QTextStream(log);
 

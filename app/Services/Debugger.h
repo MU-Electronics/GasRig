@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QObject>
 #include <QFile>
 #include <QtDebug>
 #include <QTextStream>
@@ -11,8 +12,10 @@
 
 namespace App { namespace Services
 {
-    class Debugger
+    class Debugger: public QObject
     {
+        Q_OBJECT
+
         public:
             // Return the instance of the singleton Debugger
             static Debugger& getInstance();
@@ -20,11 +23,15 @@ namespace App { namespace Services
             void static handlerAccessor(QtMsgType type, const QMessageLogContext &context, const QString &msg);
             bool static wasSuccess();
 
+        signals:
+            void emit_logChanged(QMap<QString, QString> message);
+
         private:
             // Make constructer and destructure private as this class is singlton
             Debugger();
             ~Debugger() {}
 
+            // Whether the dubugger was setup success or not
             bool success = false;
 
             // Stream to the log file
@@ -37,8 +44,6 @@ namespace App { namespace Services
 
             // Setup the path locations
             void logPaths();
-
-            // Delete old log files
 
             // Sets up the messaage
             void setup();

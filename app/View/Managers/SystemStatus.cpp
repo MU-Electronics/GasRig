@@ -20,6 +20,9 @@
 // Include command constructor
 #include "../../Hardware/CommandConstructor.h"
 
+#include "app/Services/Debugger.h"
+
+
 namespace App { namespace View { namespace Managers
 {
     SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
@@ -129,7 +132,73 @@ namespace App { namespace View { namespace Managers
 
         // Listen for com port connection signals
         connect(&hardware, &Hardware::Access::emit_serialComUpdated, this, &SystemStatus::setInitialValues);
+
+
+
+
+        // Listen for debugging messages
+        connect(&Services::Debugger::getInstance(), &Services::Debugger::emit_logChanged, this, &SystemStatus::logChanged);
     }
+
+
+
+
+    /**
+     * Generates the debug message from the array of messages
+     *
+     * @brief SystemStatus::debugMessages
+     * @return
+     */
+    QString SystemStatus::debugMessages()
+    {
+        QString message = "";
+        for (int i = 0; i < m_debugMessages.size(); ++i)
+        {
+            QString color = ( i % 2 == 0)? "white" : "#9b9b9b" ;
+
+            message += "<div>";
+            // Create message string
+            QMapIterator<QString, QString> messageIterator(m_debugMessages[i]);
+            while (messageIterator.hasNext()) {
+                // Get data
+                messageIterator.next();
+
+                // Create string
+                if(messageIterator.key() != "0")
+                {
+                    message += "<font color='#ed6110' size='3'>[" + messageIterator.key() +"]</font> <font color='#0054fc' size='3'>" + messageIterator.value() + "</font><br>";
+                }
+                else if(messageIterator.key() == "0")
+                {
+                    message += "<b><font color='#fc4300' size='4'>" + QString::number(i + 1) + ": " + messageIterator.value() + "</font></b><br>";
+                }
+            }
+
+            // Clsoe div and addtion break at end of string
+            message += "</div>";
+        }
+
+        return message;
+    }
+
+
+    /**
+     * Triggered when a new debugging log is added
+     *
+     * @brief SystemStatus::logChanged
+     * @param message
+     */
+    void SystemStatus::logChanged(QMap<QString, QString> message)
+    {
+        // Add message to list
+        m_debugMessages.append(message);
+
+        // Update every one
+        emit emit_debugMessagesChanged(m_debugMessages);
+    }
+
+
+
 
 
 
