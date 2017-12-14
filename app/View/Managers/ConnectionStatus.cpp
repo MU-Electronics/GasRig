@@ -2,6 +2,8 @@
 
 // Include external libs
 #include <QMap>
+#include <QLoggingCategory>
+#include "../../../bootstrap/LoggingCategory.h"
 
 // Include settings container
 #include "../../Settings/Container.h"
@@ -124,13 +126,17 @@ namespace App { namespace View { namespace Managers
      */
     void ConnectionStatus::listen_comConnectionStatus(QVariantMap package)
     {
-        // Connection failed
-        m_hardwareConnection.insert(package["responsability"].toString(), "0");
+        // Connection success
+        m_hardwareConnection.insert(package["responsability"].toString(), "1");
 
         // Connection successfully
-        if(package.value("status").toBool())
+        if(!package.value("status").toBool())
         {
-            m_hardwareConnection.insert(package["responsability"].toString(), "1");
+            // Set failed
+            m_hardwareConnection.insert(package["responsability"].toString(), "0");
+
+            // Log failed event
+            qCWarning(usbConnectionStatus) << "Failed to connect to com port!\n" << package;
         }
 
         // Update summary

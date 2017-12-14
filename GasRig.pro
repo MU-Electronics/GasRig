@@ -113,7 +113,9 @@ SOURCES += \
     app/Experiment/Machines/Purge.cpp \
     app/View/Managers/Modes/PressuriseCell.cpp \
     app/Experiment/Machines/Functions/TransitionsBuilder.cpp \
-    app/Experiment/Machines/Functions/FunctionsHelper.cpp
+    app/Experiment/Machines/Functions/FunctionsHelper.cpp \
+    bootstrap/LoggingCategory.cpp \
+    app/Services/Debugger.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -145,6 +147,7 @@ DISTFILES += \
 
 HEADERS += \
     bootstrap/Startup.h \
+    bootstrap/LoggingCategory.h \
     app/Hardware/Access.h \
     app/Hardware/HAL/PressureSensor.h \
     app/Hardware/HAL/FlowController.h \
@@ -203,4 +206,5 @@ HEADERS += \
     app/Experiment/Machines/Purge.h \
     app/View/Managers/Modes/PressuriseCell.h \
     app/Experiment/Machines/Functions/TransitionsBuilder.h \
-    app/Experiment/Machines/Functions/FunctionsHelper.h
+    app/Experiment/Machines/Functions/FunctionsHelper.h \
+    app/Services/Debugger.h

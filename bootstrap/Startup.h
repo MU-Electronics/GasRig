@@ -3,8 +3,7 @@
 #include <QObject>
 #include <QQmlApplicationEngine>
 #include "../app/Application.h"
-
-#include "MessageHandler.h"
+#include "LoggingCategory.h"
 
 //class QQuickItem;
 class QQmlApplicationEngine;
@@ -30,7 +29,7 @@ namespace Bootstrap{
 
         void configTheme();
         void loadMainView();
-        void loadSettings();
+        void loadDebugger();
 
         explicit Startup(const Startup& rhs) = delete;
         Startup& operator= (const Startup& rhs) = delete;

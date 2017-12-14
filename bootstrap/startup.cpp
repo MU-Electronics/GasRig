@@ -16,6 +16,8 @@
 #include "app/Application.h"
 
 
+
+
 namespace Bootstrap
 {
 
@@ -34,9 +36,6 @@ namespace Bootstrap
           m_isValid(true),
           m_application(*new App::Application(this, &m_engine))
     {
-        // Load the system settings
-        loadSettings();
-
         // Configure the theme being used
         configTheme();
 
@@ -101,19 +100,6 @@ namespace Bootstrap
         // Save a pointer to the root objects
         m_root = rootObjects[0];
     }
-
-
-    /**
-     * Loads the application and safety settings
-     *
-     * @brief Startup::loadSettings
-     * @author Sam Mottley <sam.mottley@manchester.ac.uk>
-     */
-    void Startup::loadSettings()
-    {
-
-    }
-
 }
 
 

@@ -8,6 +8,7 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QDir>
+#include <QLoggingCategory>
 
 // Include the template framework
 #include "iconsimageprovider.h"
@@ -16,99 +17,7 @@
 // Require app
 #include "bootstrap/Startup.h"
 
-
-/**
- * Message handler for debugging output
- */
-#ifndef QT_NO_DEBUG_OUTPUT
-
-    // Stream to text file
-    QTextStream *out = 0;
-
-    /**
-     * debug message handler
-     *
-     * @brief logOutputHandler
-     * @param type
-     * @param context
-     * @param msg
-     */
-    void logOutputHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-    {
-        // Get the current date and time
-        QString debugdate = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss");
-
-        // Get error type
-        switch (type)
-        {
-            case QtDebugMsg:
-                debugdate += " [Debug] ";
-                break;
-            case QtWarningMsg:
-                debugdate += " [Warning] ";
-                break;
-            case QtCriticalMsg:
-                debugdate += " [Critical] ";
-                break;
-            case QtFatalMsg:
-                debugdate += " [Fatal] ";
-        }
-
-        // Make thread safe
-        static QMutex mutex;
-        QMutexLocker lock(&mutex);
-
-        // Compile the error message and output it to the log file
-        (*out) << debugdate << " " << msg << endl;
-
-        // If fatel error abort the application
-        if (QtFatalMsg == type)
-        {
-            abort();
-        }
-    }
-
-
-    /**
-     * Setup and install the message handler
-     *
-     * @brief installMessageHandler
-     */
-    void installMessageHandler()
-    {
-        // Get the current date and time and but the log on the end
-        QString logFileName = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss") + ".log";
-
-        // Get the OS app data location
-        QString logLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-
-        // Create the app data location is it does not exist
-        if(!QDir(logLocation).exists())
-        {
-            QDir().mkdir(logLocation);
-        }
-
-        // Open the file
-        QFile *log = new QFile(logLocation + "/" + logFileName);
-
-        // Was the file able to be opened with write access?
-        if (log->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
-        {
-            // Create the streaming instance
-            out = new QTextStream(log);
-
-            // Attach the custom message handler to Qt
-            qInstallMessageHandler(logOutputHandler);
-        }
-        else
-        {
-            // Log file could not be opened, log error to console if one open
-            qDebug() << "Error opening log file '" << logFileName << "'" << " In location '" << logLocation << "' .All debug outputs will be redirected to console.";
-        }
-    }
-
-#endif
-
+#include "app/Services/Debugger.h"
 
 
 /**
@@ -127,10 +36,9 @@ int main(int argc, char *argv[])
     // Start app
     QApplication app(argc, argv);
 
-    // Attach message handler
-    #ifndef QT_NO_DEBUG_OUTPUT
-        installMessageHandler();
-    #endif
+    // Install the debugger
+    if(App::Services::Debugger::getInstance().wasSuccess())
+        qInstallMessageHandler(App::Services::Debugger::handlerAccessor);
 
     // Boot the applcation
     Bootstrap::Startup loader;
@@ -138,9 +46,16 @@ int main(int argc, char *argv[])
     // If successfull return event loop
     if (loader.success())
     {
-       return app.exec();
+        // State app loaded
+        qInfo() << "Application loaded";
+
+        // Run event loop
+        return app.exec();
     }
-    qDebug() << "Applcation could not load!";
+
+    // Log error
+    qCritical() << "Application could not load!";
+
     // End app
     return -1;
 }

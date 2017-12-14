@@ -265,7 +265,7 @@ namespace App { namespace Hardware
                 m_queue.enqueue(command);
 
                 // Log the issue
-                //qDebug() << "Command was relisted due to bus issue: " << command;
+                // qDebug() << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;

@@ -50,6 +50,9 @@ namespace App
         :   QObject(parent)
         ,   m_engine(engine)
 
+            // debugging instance
+
+
            // Create instance of the settings container
         ,  settings_container(*new Settings::Container)
 
