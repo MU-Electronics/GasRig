@@ -50,6 +50,8 @@ namespace App { namespace View { namespace Managers
         // Debug messages
         Q_PROPERTY(QString debugMessages READ debugMessages NOTIFY emit_debugMessagesChanged)
 
+        AUTO_PROPERTY(QString, logLocation)
+
         public:
             // constructure and destructor
             SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);

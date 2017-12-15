@@ -138,6 +138,9 @@ namespace App { namespace View { namespace Managers
 
         // Listen for debugging messages
         connect(&Services::Debugger::getInstance(), &Services::Debugger::emit_logChanged, this, &SystemStatus::logChanged);
+
+        // Set log location
+        logLocation(Services::Debugger::getInstance().log());
     }
 
 

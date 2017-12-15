@@ -22,6 +22,7 @@ namespace App { namespace Services
 
             void static handlerAccessor(QtMsgType type, const QMessageLogContext &context, const QString &msg);
             bool static wasSuccess();
+            QString static log();
 
         signals:
             void emit_logChanged(QMap<QString, QString> message);

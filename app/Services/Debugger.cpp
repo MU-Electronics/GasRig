@@ -1,4 +1,5 @@
 #include "Debugger.h"
+
 #include <QFile>
 #include <QtDebug>
 #include <QTextStream>
@@ -9,6 +10,7 @@
 #include <QLoggingCategory>
 #include <QtGlobal>
 #include <QObject>
+
 
 namespace App { namespace Services
 {
@@ -26,8 +28,6 @@ namespace App { namespace Services
 
         // Setup instance
         setup();
-
-        qDebug()<< "setup";
     }
 
     /**
@@ -44,6 +44,18 @@ namespace App { namespace Services
 
         static Debugger instance;
         return instance;
+    }
+
+
+    /**
+     * Returns the current log file location
+     *
+     * @brief Debugger::log
+     * @return
+     */
+    QString Debugger::log()
+    {
+        return Debugger::getInstance().logLocation + "/" +Debugger::getInstance().logFileName;
     }
 
 
@@ -133,7 +145,8 @@ namespace App { namespace Services
 
         // Create message string
         QMapIterator<QString, QString> messageIterator(messageArray);
-        while (messageIterator.hasNext()) {
+        while (messageIterator.hasNext())
+        {
             // Get data
             messageIterator.next();
 

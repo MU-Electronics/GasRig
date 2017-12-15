@@ -136,7 +136,7 @@ namespace App { namespace View { namespace Managers
             m_hardwareConnection.insert(package["responsability"].toString(), "0");
 
             // Log failed event
-            qCWarning(usbConnectionStatus) << "Failed to connect to com port!\n" << package;
+            qCWarning(usbConnectionStatus) << "Failed to connect to com port!" << package;
         }
 
         // Update summary

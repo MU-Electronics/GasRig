@@ -1,8 +1,7 @@
-import QtQuick 2.6
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
-import QtQuick.Controls.Universal 2.0
-import QtQuick.Layouts 1.3
+import QtQuick 2.5
+import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
+import QtQuick.Controls.Universal 2.1
 import Fluid.Controls 1.0
 import "../modes"
 
@@ -76,23 +75,25 @@ Pane {
             text: qsTr("Select Mode")
         }
         delegate: ListItem {
-            text: model.title
-            highlighted: ListView.isCurrentItem
-            //anchors.left: parent.left
-            //anchors.leftMargin: 25
-            onClicked: {
-                //Remove highligh from connection status
-                connectionTab.highlighted = false
+                text: model.title
+                highlighted: ListView.isCurrentItem
 
-                // Add highligh to mode
-                modeNavigation.currentIndex = index
+                onClicked:
+                {
+                    //Remove highligh from connection status
+                    connectionTab.highlighted = false
 
-                // Push the view update
-                stackView.replace(model.source)
+                    // Add highligh to mode
+                    modeNavigation.currentIndex = index
 
-                // Update current nav
-                GlobalManager.currentNavigation = 2;
-            }
+                    // Push the view update
+                    stackView.replace(model.source)
+
+                    // Update current nav
+                    GlobalManager.currentNavigation = 2;
+
+                }
+
         }
         ScrollBar.vertical: ScrollBar {}
     }
