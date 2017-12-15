@@ -5,9 +5,9 @@ import QtQuick.Controls.Material 2.1
 Item {
     id: alertBox
 
-    property var textContent
+    property string textContent: "Text not defined"
 
-    property var type: "Primary"
+    property string type: "Primary"
 
     state: alertBox.type
 
