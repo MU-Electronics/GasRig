@@ -28,30 +28,67 @@ Item
     }
 
     ChartView {
+        id: chartView
+
+        //animationOptions: ChartView.animationDuration
+
         title: "Vacuum Readings"
         antialiasing: true
         height: 400
         width: parent.width - 10
 
-        LineSeries {
-            id: vacuumSeries
-            name: "Vacuum"
 
-            axisX: DateTimeAxis {
-                format: "h:MM:ss"
-                tickCount: 5
-                titleText: "Time"
-            }
-            axisY: ValueAxis {
-                titleText: "Pressure (mBar)"
-                min: 0
-                max: 10
-            }
-
-            XYPoint { x: 1498478338216; y: 2 }
-            XYPoint { x: 1498478338684; y: 3 }
-
+        // Temp later change to signal
+        Timer {
+           id: refreshTimer
+           interval: 1 / 60 * 1000 // 60 Hz
+           running: true
+           repeat: true
+           onTriggered: {
+               SystemStatusManager.pressureGraphUpdate(chartView.series(0));
+           }
         }
+
+        ValueAxis {
+           id: axisY1
+           min: 0
+           max: 10000
+        }
+
+        ValueAxis {
+            id: axisX
+            min: 0
+            max: 1000
+        }
+
+        LineSeries {
+            id: lineSeries1
+            name: "signal 1"
+            axisX: axisX
+            axisY: axisY1
+            // useOpenGL: chartView.openGL
+        }
+
+
+//        LineSeries {
+//            id: vacuumSeries
+//            name: "Vacuum"
+
+//            axisX: DateTimeAxis {
+//                format: "h:MM:ss"
+//                tickCount: 5
+//                titleText: "Time"
+//            }
+//            axisY: ValueAxis {
+//                titleText: "Pressure (mBar)"
+//                min: 0
+//                max: 10
+//            }
+
+//            XYPoint { x: 1498478338216; y: 2 }
+//            XYPoint { x: 1498478338684; y: 3 }
+
+//        }
     }
 
 }

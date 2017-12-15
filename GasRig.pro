@@ -3,7 +3,7 @@ include(vendor/fluid/fluid.pri)
 
 TEMPLATE = app
 
-QT += qml quick quickcontrols2 widgets serialport
+QT += qml quick quickcontrols2 widgets serialport charts
 CONFIG += c++11
 
 QMAKE_MAC_SDK = macosx10.13
