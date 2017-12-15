@@ -157,6 +157,8 @@ namespace App { namespace View { namespace Managers
 
 
 
+
+
     void SystemStatus::pressureGraphUpdate(QAbstractSeries *series)
     {
         if (series) {
@@ -170,7 +172,10 @@ namespace App { namespace View { namespace Managers
     {
         qreal pressure = package["pressure"].toReal();
 
-        if(m_data.count() >= 100)
+        graphMaxX(m_data.count());
+        emit graphMaxXChanged(graphMaxX());
+
+        if(m_data.count() >= 10)
             m_data.pop_front();
 
         m_data.append(QPointF(m_data.count() + 1, pressure));

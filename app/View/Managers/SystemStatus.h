@@ -55,6 +55,8 @@ namespace App { namespace View { namespace Managers
 
         AUTO_PROPERTY(QString, logLocation)
 
+        AUTO_PROPERTY(int, graphMaxX)
+
         public:
             // constructure and destructor
             SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);

@@ -58,7 +58,7 @@ Item
         ValueAxis {
             id: axisX
             min: 0
-            max: 100
+            max: SystemStatusManager.graphMaxX
         }
 
         LineSeries {
