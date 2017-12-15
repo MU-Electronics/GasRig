@@ -52,13 +52,13 @@ Item
         ValueAxis {
            id: axisY1
            min: 0
-           max: 10000
+           max: 2
         }
 
         ValueAxis {
             id: axisX
             min: 0
-            max: 1000
+            max: 100
         }
 
         LineSeries {

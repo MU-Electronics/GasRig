@@ -170,7 +170,7 @@ namespace App { namespace View { namespace Managers
     {
         qreal pressure = package["pressure"].toReal();
 
-        if(m_data.count() >= 1000)
+        if(m_data.count() >= 100)
             m_data.pop_front();
 
         m_data.append(QPointF(m_data.count() + 1, pressure));
