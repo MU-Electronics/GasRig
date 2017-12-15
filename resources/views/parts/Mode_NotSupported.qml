@@ -5,7 +5,7 @@ import Fluid.Controls 1.0
 Item {
     id: item
 
-    property var featureName: "Currently Not Supported"
+    property string featureName: "Currently Not Supported"
 
     Card {
         id: card

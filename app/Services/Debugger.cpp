@@ -194,7 +194,7 @@ namespace App { namespace Services
     void Debugger::logPaths()
     {
         // Get the current date and time and but the log on the end
-        logFileName = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss") + ".log";
+        logFileName = QDateTime::currentDateTime().toString("yyyy.MM.dd hh.mm.ss") + ".log";
 
         // Get the OS app data location
         logLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/logs";
@@ -217,7 +217,7 @@ namespace App { namespace Services
         // Create the app data location is it does not exist
         if(!dir.exists())
         {
-            QDir().mkdir(logLocation);
+            QDir().mkpath(logLocation);
         }
 
         // Open the file
