@@ -36,11 +36,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
     {
         qRegisterMetaType<QAbstractSeries*>();
         qRegisterMetaType<QAbstractAxis*>();
-
-        QVariantMap test;
-        test["pressure"] = 2;
-        data(test);
-        data(test);
     }
 
 
@@ -101,7 +96,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
                 m_data.removeAt(0);
 
             // Loop through new data currentId
-            for (int i = 0; i < m_data.size(); ++i)
+            for (int i = currentId; i < m_data.size(); ++i)
             {
                 // Append data
                 xySeries->append(m_data.at(i));
