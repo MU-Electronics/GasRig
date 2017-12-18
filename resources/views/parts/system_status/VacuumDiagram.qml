@@ -35,18 +35,6 @@ Item
         height: 400
         width: parent.width - 10
 
-
-        // Temp later change to signal
-        /*Timer {
-           id: refreshTimer
-           interval: 1 / 4 * 1000
-           running: true
-           repeat: true
-           onTriggered: {
-                PressuriseVsTimeGraph.updateGraph(chartView.series(0));
-           }
-        }*/
-
         ValueAxis {
            id: axisY
            min: PressuriseVsTimeGraph.graphMinY
@@ -69,8 +57,8 @@ Item
         SplineSeries {
             id: lineSeries1
             name: "Pressure"
-            //axisX: axisX
-            //axisY: axisY
+            axisX: axisX
+            axisY: axisY
             useOpenGL: chartView.openGL
         }
     }

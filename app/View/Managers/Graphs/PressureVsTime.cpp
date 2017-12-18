@@ -105,6 +105,10 @@ namespace App { namespace View { namespace Managers { namespace Graphs
                 // Mark current id
                 currentId = i;
             }
+
+            // Delete pointer
+            xySeries = nullptr;
+            delete xySeries;
         }
     }
 
