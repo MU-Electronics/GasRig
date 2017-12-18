@@ -7,15 +7,6 @@
 #include <QtGlobal>
 #include <QTimer>
 
-#include <QtCharts/QXYSeries>
-#include <QtCharts/QAreaSeries>
-
-QT_CHARTS_USE_NAMESPACE
-
-Q_DECLARE_METATYPE(QAbstractSeries *)
-Q_DECLARE_METATYPE(QAbstractAxis *)
-
-
 // Include settings container
 #include "../../Settings/Container.h"
 
@@ -41,9 +32,6 @@ namespace App { namespace View { namespace Managers
           m_experimentEngine(experimentEngine),
           m_commandConstructor(*new Hardware::CommandConstructor)
     {
-        qRegisterMetaType<QAbstractSeries*>();
-        qRegisterMetaType<QAbstractAxis*>();
-
         // Default valves values
         m_valveState.insert("1", 0);
         m_valveState.insert("2", 0);
@@ -109,7 +97,6 @@ namespace App { namespace View { namespace Managers
         // Pressure sensor
         m_pressureSensor.insert("vacuum", 0);
         connect(&hardware, &Hardware::Access::emit_pressureSensorPressure, this, &SystemStatus::receivePressureSensorPressure);
-        connect(&hardware, &Hardware::Access::emit_pressureSensorPressure, this, &SystemStatus::pressureGraphData);
 
 
         // Vacuum status
@@ -154,34 +141,6 @@ namespace App { namespace View { namespace Managers
         // Set log location
         logLocation(Services::Debugger::getInstance().log());
     }
-
-
-
-
-
-    void SystemStatus::pressureGraphUpdate(QAbstractSeries *series)
-    {
-        if (series) {
-            QXYSeries *xySeries = static_cast<QXYSeries *>(series);
-
-            xySeries->replace(m_data);
-        }
-    }
-
-    void SystemStatus::pressureGraphData(QVariantMap package)
-    {
-        qreal pressure = package["pressure"].toReal();
-
-        graphMaxX(m_data.count());
-        emit graphMaxXChanged(graphMaxX());
-
-        if(m_data.count() >= 10)
-            m_data.pop_front();
-
-        m_data.append(QPointF(m_data.count() + 1, pressure));
-    }
-
-
 
 
 

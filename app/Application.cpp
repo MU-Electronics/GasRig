@@ -16,6 +16,9 @@
 #include "View/Managers/MachineStatus.h"
 #include "View/Managers/Modes/PressuriseCell.h"
 
+// Include view graph managers
+#include "View/Managers/Graphs/PressureVsTime.h"
+
 // Include objects for threading
 #include "Safety/Monitor.h"
 #include "Hardware/Access.h"
@@ -70,6 +73,7 @@ namespace App
         ,   manager_systemStatus(*new View::Managers::SystemStatus(parent, engine, settings_container, experiment_engine))
         ,   manager_machineStatus(*new View::Managers::MachineStatus(parent, engine, settings_container, experiment_engine))
         ,   manager_mode_pressuriseCell(*new View::Managers::Modes::PressuriseCell(parent, engine, settings_container, experiment_engine))
+        ,   manager_graph_pressureVsTime(*new View::Managers::Graphs::PressureVsTime(parent, engine, settings_container, experiment_engine))
     {
         // Register qml types with qml
         registerQmlTypes();
@@ -141,6 +145,9 @@ namespace App
 
         // Set mode pressurise cell manager
         m_engine->rootContext()->setContextProperty("PressuriseCellManager", &manager_mode_pressuriseCell);
+
+        // Set pressure vs time graph manager
+        m_engine->rootContext()->setContextProperty("PressuriseVsTimeGraph", &manager_graph_pressureVsTime);
 
     }
 
@@ -219,6 +226,9 @@ namespace App
 
         // Make connections for machine status view manager
         manager_mode_pressuriseCell.makeConnections(hardware, monitor);
+
+        // Make connections for machine pressure vs time graph
+        manager_graph_pressureVsTime.makeConnections(hardware, monitor);
     }
 
 

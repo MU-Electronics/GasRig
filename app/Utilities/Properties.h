@@ -1,5 +1,5 @@
 #pragma once
-#include <QObject>
+//#include <QObject>
 //See Gist Comment for description, usage, warnings and license information
 #define AUTO_PROPERTY(TYPE, NAME) \
     Q_PROPERTY(TYPE NAME READ NAME WRITE NAME NOTIFY NAME ## Changed ) \

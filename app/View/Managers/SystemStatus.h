@@ -8,9 +8,6 @@
 #include <QVariant>
 #include <QtGlobal>
 
-#include <QtCharts/QAbstractSeries>
-QT_CHARTS_USE_NAMESPACE
-
 // Include contract
 #include "Manager.h"
 
@@ -55,8 +52,6 @@ namespace App { namespace View { namespace Managers
 
         AUTO_PROPERTY(QString, logLocation)
 
-        AUTO_PROPERTY(int, graphMaxX)
-
         public:
             // constructure and destructor
             SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
@@ -88,9 +83,6 @@ namespace App { namespace View { namespace Managers
             void emit_debugMessagesChanged(QList<QMap<QString, QString>>);
 
         public slots:
-            void pressureGraphUpdate(QAbstractSeries *series);
-            void pressureGraphData(QVariantMap package);
-
             // Listen for debugger
             void logChanged(QMap<QString, QString> message);
 
@@ -148,10 +140,6 @@ namespace App { namespace View { namespace Managers
             QMap<QString, bool> initalCommands;
 
             void setInitialValues(QVariantMap package);
-
-
-            QVector<QPointF> m_data;
-                int m_index;
     };
 }}}
 

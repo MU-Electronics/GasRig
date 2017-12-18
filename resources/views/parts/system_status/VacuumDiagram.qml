@@ -45,27 +45,34 @@ Item
            running: true
            repeat: true
            onTriggered: {
-               SystemStatusManager.pressureGraphUpdate(chartView.series(0));
+               PressuriseVsTimeGraph.updateGraph(chartView.series(0));
            }
         }
 
         ValueAxis {
-           id: axisY1
-           min: 0
-           max: 2
+           id: axisY
+           min: PressuriseVsTimeGraph.graphMinY
+           max: PressuriseVsTimeGraph.graphMaxY
         }
 
-        ValueAxis {
+
+
+
+
+        DateTimeAxis {
             id: axisX
-            min: 0
-            max: SystemStatusManager.graphMaxX
+            min: PressuriseVsTimeGraph.graphMinX
+            max: PressuriseVsTimeGraph.graphMaxX
+            tickCount: 6
+            titleText: "Time (Minute:Second:Millisecond)"
+            format: "m:s:z" // z = millisecond
         }
 
         LineSeries {
             id: lineSeries1
             name: "signal 1"
             axisX: axisX
-            axisY: axisY1
+            axisY: axisY
             // useOpenGL: chartView.openGL
         }
 
