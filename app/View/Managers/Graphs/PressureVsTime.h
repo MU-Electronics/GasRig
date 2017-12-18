@@ -41,6 +41,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         AUTO_PROPERTY(double, graphMinY)
         AUTO_PROPERTY(QDateTime, graphMaxX)
         AUTO_PROPERTY(QDateTime, graphMinX)
+        READONLY_PROPERTY(bool, hasData)
 
         public:
             // constructure and destructor
@@ -49,7 +50,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
         signals:
-
+            void emit_newGraphData();
 
         public slots:
             void updateGraph(QAbstractSeries *series);

@@ -15,15 +15,10 @@ Item
 
     // Redraw diagram on valve update
     Connections {
-        target: SystemStatusManager
-        onEmit_valveStateChanged: {
-        }
-        onEmit_pressureSensorChanged: {
-        }
-        onEmit_vacuumStateChanged: {
-
-        }
-        onEmit_flowControllerStateChanged: {
+        target: PressuriseVsTimeGraph
+        onEmit_newGraphData: {
+            // Load the new data
+            PressuriseVsTimeGraph.updateGraph(chartView.series(0));
         }
     }
 
@@ -42,15 +37,15 @@ Item
 
 
         // Temp later change to signal
-        Timer {
+        /*Timer {
            id: refreshTimer
            interval: 1 / 4 * 1000
            running: true
            repeat: true
            onTriggered: {
-               PressuriseVsTimeGraph.updateGraph(chartView.series(0));
+                PressuriseVsTimeGraph.updateGraph(chartView.series(0));
            }
-        }
+        }*/
 
         ValueAxis {
            id: axisY
@@ -74,8 +69,8 @@ Item
         SplineSeries {
             id: lineSeries1
             name: "Pressure"
-            axisX: axisX
-            axisY: axisY
+            //axisX: axisX
+            //axisY: axisY
             useOpenGL: chartView.openGL
         }
     }

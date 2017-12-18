@@ -61,9 +61,10 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         // Set random Y axis limits
         graphMinY(0.8);
         graphMaxY(5);
+
+        // No data currently
+        hasData(false);
     }
-
-
 
 
 
@@ -134,6 +135,13 @@ namespace App { namespace View { namespace Managers { namespace Graphs
 
         // update axis to fit
         updateAxis();
+
+        // has data
+        if(!hasData())
+            hasData(true);
+
+        // Emit we have new data
+        emit emit_newGraphData();
     }
 
 

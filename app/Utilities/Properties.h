@@ -1,5 +1,5 @@
 #pragma once
-//#include <QObject>
+// #include <QObject>
 //See Gist Comment for description, usage, warnings and license information
 #define AUTO_PROPERTY(TYPE, NAME) \
     Q_PROPERTY(TYPE NAME READ NAME WRITE NAME NOTIFY NAME ## Changed ) \
@@ -12,7 +12,7 @@
         } \
        Q_SIGNAL void NAME ## Changed(TYPE value);\
     private: \
-       TYPE a_ ## NAME{};
+       TYPE a_ ## NAME;
 
 #define READONLY_PROPERTY(TYPE, NAME) \
     Q_PROPERTY(TYPE NAME READ NAME CONSTANT ) \

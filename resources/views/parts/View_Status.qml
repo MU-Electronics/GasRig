@@ -78,7 +78,7 @@ Item
                 id: vacuumGraph
                 width: parent.width
                 height: parent.height
-                source: "system_status/VacuumDiagram.qml"
+                source: (PressuriseVsTimeGraph.hasData) ? "system_status/VacuumDiagram.qml" : "";
                 active: (statusTabBar.currentIndex === 1) ? true : false
                 asynchronous: true
                 visible: (status == Loader.Ready && statusTabBar.currentIndex == 1) ? true : false
