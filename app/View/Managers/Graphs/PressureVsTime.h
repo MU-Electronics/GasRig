@@ -68,6 +68,11 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             // Saves the graph data
             QVector<QPointF> m_data;
 
+            // Scroll by
+            int scrollBy = 20;
+            int hold = 300;
+
+            // Update axis
             void updateAxis();
     };
 }}}}

@@ -36,11 +36,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
     {
         qRegisterMetaType<QAbstractSeries*>();
         qRegisterMetaType<QAbstractAxis*>();
-
-        QVariantMap temp;
-        temp["pressure"] = 1;
-        data(temp);
-        data(temp);
     }
 
 
@@ -61,7 +56,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
 
         // Append correct x axis limits
         graphMinX(current);
-        graphMaxX(current.addSecs(10));
+        graphMaxX(current.addSecs(hold));
 
         // Set random Y axis limits
         graphMinY(0.8);
@@ -83,7 +78,17 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         if (series) {
             QXYSeries *xySeries = static_cast<QXYSeries *>(series);
 
-            xySeries->replace(m_data);
+            // Loop through new data
+            for (int i = 0; i < m_data.size(); ++i)
+            {
+                // Append data
+                xySeries->append(m_data.at(i));
+
+                // Remove old data @todo
+
+                // Remove from local storages
+                m_data.removeAt(i);
+            }
         }
     }
 
@@ -123,12 +128,12 @@ namespace App { namespace View { namespace Managers { namespace Graphs
     void PressureVsTime::updateAxis()
     {
         // Does the x axis need scaling?
-        QDateTime current = QDateTime::currentDateTime();
-        if(current.currentMSecsSinceEpoch() > qRound64(m_data.last().x()))
+        if(qRound64(m_data.last().x()) > graphMaxX().toMSecsSinceEpoch())
         {
+            qDebug() << "update x axis";
             // Increase X axis
-            graphMinX(current.addSecs(-10));
-            graphMaxX(current.addSecs(10));
+            graphMinX(graphMinX().addSecs(scrollBy));
+            graphMaxX(graphMaxX().addSecs(scrollBy));
         }
 
         // Does the Y axis need scaling

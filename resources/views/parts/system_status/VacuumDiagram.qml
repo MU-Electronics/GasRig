@@ -30,10 +30,13 @@ Item
     ChartView {
         id: chartView
 
-        //animationOptions: ChartView.animationDuration
+        animationOptions: ChartView.AllAnimations
+        antialiasing: true
+        dropShadowEnabled: true
+        backgroundRoundness : 5
+        property bool openGL: true
 
         title: "Vacuum Readings"
-        antialiasing: true
         height: 400
         width: parent.width - 10
 
@@ -41,7 +44,7 @@ Item
         // Temp later change to signal
         Timer {
            id: refreshTimer
-           interval: 1 / 60 * 1000 // 60 Hz
+           interval: 1 / 4 * 1000
            running: true
            repeat: true
            onTriggered: {
@@ -53,49 +56,28 @@ Item
            id: axisY
            min: PressuriseVsTimeGraph.graphMinY
            max: PressuriseVsTimeGraph.graphMaxY
+           titleText: "Pressure (Bar)"
         }
-
-
-
-
 
         DateTimeAxis {
             id: axisX
             min: PressuriseVsTimeGraph.graphMinX
             max: PressuriseVsTimeGraph.graphMaxX
-            tickCount: 6
+            tickCount: 10
             titleText: "Time (Minute:Second:Millisecond)"
-            format: "m:s:z" // z = millisecond
+            format: "h:m:s:z" // z = millisecond
+            minorGridVisible: true
+            labelsAngle: 90
+            gridVisible : true
         }
 
-        LineSeries {
+        SplineSeries {
             id: lineSeries1
-            name: "signal 1"
+            name: "Pressure"
             axisX: axisX
             axisY: axisY
-            // useOpenGL: chartView.openGL
+            useOpenGL: chartView.openGL
         }
-
-
-//        LineSeries {
-//            id: vacuumSeries
-//            name: "Vacuum"
-
-//            axisX: DateTimeAxis {
-//                format: "h:MM:ss"
-//                tickCount: 5
-//                titleText: "Time"
-//            }
-//            axisY: ValueAxis {
-//                titleText: "Pressure (mBar)"
-//                min: 0
-//                max: 10
-//            }
-
-//            XYPoint { x: 1498478338216; y: 2 }
-//            XYPoint { x: 1498478338684; y: 3 }
-
-//        }
     }
 
 }
