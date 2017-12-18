@@ -72,6 +72,12 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             int scrollBy = 20;
             int hold = 300;
 
+            // Save last place QML updated
+            int currentId = 0;
+
+            // Limit the buffer size
+            int maxBuffer = 4000;
+
             // Update axis
             void updateAxis();
     };
