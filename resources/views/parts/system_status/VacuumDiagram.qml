@@ -22,19 +22,19 @@ Item
         }
         onEmit_newValveOneGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValveOne(1, chartView.series("Valve One"));
+            PressuriseVsTimeGraph.updateValve(1, chartView.series("Valve One"));
         }
         onEmit_newValveTwoGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValveTwo(2, chartView.series("Valve Two"));
+            PressuriseVsTimeGraph.updateValve(2, chartView.series("Valve Two"));
         }
         onEmit_newValveSevenGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValveSeven(7, chartView.series("Valve Seven"));
+            PressuriseVsTimeGraph.updateValve(7, chartView.series("Valve Seven"));
         }
         onEmit_newValveNineGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValveNine(9, chartView.series("Valve Nine"));
+            PressuriseVsTimeGraph.updateValve(9, chartView.series("Valve Nine"));
         }
     }
 
@@ -53,8 +53,10 @@ Item
 
         CategoryAxis {
             id: valveAxisY
-            min: 0
-            max: 1
+            min: -0.5
+            max: 1.5
+            labelsPosition: CategoryAxis.AxisLabelsPositionOnValue
+            titleText: "Valve Status"
             CategoryRange {
                 label: "Closed"
                 endValue: 0
@@ -70,7 +72,6 @@ Item
            min: PressuriseVsTimeGraph.graphMinY
            max: PressuriseVsTimeGraph.graphMaxY
            titleText: "Pressure (Bar)"
-           alignment:  Qt.AlignLeft;
         }
 
         DateTimeAxis {
@@ -83,10 +84,7 @@ Item
             minorGridVisible: true
             labelsAngle: 90
             gridVisible : true
-            alignment:  Qt.AlignBottom;
         }
-
-
 
         SplineSeries {
             id: pressure
@@ -96,22 +94,20 @@ Item
             useOpenGL: chartView.openGL
         }
 
-        ScatterSeries {
-            id: valveSeven
+        ScatterSeries  {
+            id: valveNine
             name: "Valve Nine"
             axisX: axisX
-            axisY: valveAxisY
-            useOpenGL: chartView.openGL
             markerSize: 5
             borderWidth: 1
+            axisYRight: valveAxisY
         }
 
         ScatterSeries {
             id: valveSeven
             name: "Valve Seven"
             axisX: axisX
-            axisY: valveAxisY
-            useOpenGL: chartView.openGL
+            axisYRight: valveAxisY
             markerSize: 5
             borderWidth: 1
         }
@@ -120,20 +116,20 @@ Item
             id: valveTwo
             name: "Valve Two"
             axisX: axisX
-            axisY: valveAxisY
-            useOpenGL: chartView.openGL
+            axisYRight: valveAxisY
             markerSize: 5
             borderWidth: 1
+
         }
 
         ScatterSeries {
             id: valveOne
             name: "Valve One"
             axisX: axisX
-            axisY: valveAxisY
-            useOpenGL: chartView.openGL
+            axisYRight: valveAxisY
             markerSize: 5
             borderWidth: 1
+
         }
     }
 

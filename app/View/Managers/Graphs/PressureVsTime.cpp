@@ -280,7 +280,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             // Increase Y axis
             graphMinY(pressure - 1);
         }
-
     }
 
 }}}}
