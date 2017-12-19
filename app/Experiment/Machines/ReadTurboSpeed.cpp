@@ -58,9 +58,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief ReadTurboSpeed::start
      */
-    void ReadTurboSpeed::start()
+    void ReadTurboSpeed::beforeStart()
     {
-        machine.start();
+
     }
 
 

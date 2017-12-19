@@ -151,9 +151,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief PulseValve::start
      */
-    void PulseValve::start()
+    void PulseValve::beforeStart()
     {
-        machine.start();
+
     }
 
 

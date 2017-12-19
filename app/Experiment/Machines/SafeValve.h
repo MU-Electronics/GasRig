@@ -29,7 +29,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void setParams(int id, bool state);
 
-            void start();
+            void beforeStart();
 
             void stopped();
 

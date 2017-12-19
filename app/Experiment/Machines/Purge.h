@@ -37,7 +37,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void setParams(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
 
-            void start();
+            void beforeStart();
 
             void stopped();
 

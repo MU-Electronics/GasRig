@@ -127,14 +127,6 @@ namespace App { namespace Experiment { namespace Machines
         m_readTurboSpeed.setParams(turboSpeedTimeInter);
         m_readVacStationTemperatures.setParams(vacStationTemperTimeInter);
 
-        // Build the machines for the three sensors
-        m_readFlowControllerFlow.buildMachine();
-        m_readPressure.buildMachine();
-        m_readVacuum.buildMachine();
-        m_readFlowControllerTemperatures.buildMachine();
-        m_readTurboSpeed.buildMachine();
-        m_readVacStationTemperatures.buildMachine();
-
         // Start the machines for the three sensors
         m_readFlowControllerFlow.start();
         m_readPressure.start();
@@ -222,9 +214,6 @@ namespace App { namespace Experiment { namespace Machines
         // Set the params
         m_vacDown.setParams(value, valueType, turbo, gasMode, mode);
 
-        // Build the machine
-        m_vacDown.buildMachine();
-
         // Start the machine
         m_vacDown.start();
 
@@ -304,9 +293,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Set the params
         m_purge.setParams(outputValve, numberCycles, nitrogenPressure, vacTo);
-
-        // Build the machine
-        m_purge.buildMachine();
 
         // Start the machine
         m_purge.start();
@@ -391,9 +377,6 @@ namespace App { namespace Experiment { namespace Machines
         // Set the params
         m_vent.setParams(output, vacuumOutput, flowCavity, nitrogenPipes, multiPipes, flowOnePipes, flowTwoPipes);
 
-        // Build the machine
-        m_vent.buildMachine();
-
         // Start the machine
         m_vent.start();
 
@@ -450,9 +433,6 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Set the params
         m_pulseValve.setParams(valve, cycles, timeOpen, timeClosed);
-
-        // Build the machine
-        m_pulseValve.buildMachine();
 
         // Start the machine
         m_pulseValve.start();
@@ -532,9 +512,6 @@ namespace App { namespace Experiment { namespace Machines
         // Set params
         m_pressurise.setParams(pressure, initVacDown, stepSize, inputValve, openOutputValve);
 
-        // Build the machine
-        m_pressurise.buildMachine();
-
         // Start the machine
         m_pressurise.start();
 
@@ -609,9 +586,6 @@ namespace App { namespace Experiment { namespace Machines
         // Set the params
         m_safeValve.setParams(id, true);
 
-        // Build the machine
-        m_safeValve.buildMachine();
-
         // Start the machine
         m_safeValve.start();
 
@@ -636,9 +610,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Set the params
         m_safeValve.setParams(id, false);
-
-        // Build the machine
-        m_safeValve.buildMachine();
 
         // Start the machine
         m_safeValve.start();

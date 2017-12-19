@@ -33,7 +33,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void setParams(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
 
-            void start();
+            void beforeStart();
 
             void stopped();
 

@@ -67,9 +67,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief ReadVacStationTemperatures::start
      */
-    void ReadVacStationTemperatures::start()
+    void ReadVacStationTemperatures::beforeStart()
     {
-        machine.start();
+
     }
 
 

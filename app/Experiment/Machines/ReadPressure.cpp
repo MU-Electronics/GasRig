@@ -58,9 +58,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief ReadPressure::start
      */
-    void ReadPressure::start()
+    void ReadPressure::beforeStart()
     {
-        machine.start();
+
     }
 
 

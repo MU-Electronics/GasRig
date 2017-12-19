@@ -32,7 +32,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void setParams(int valve, int cycles, int timeOpen, int timeClosed);
 
-            void start();
+            void beforeStart();
 
             void stopped();
 

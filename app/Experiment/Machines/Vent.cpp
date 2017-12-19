@@ -202,9 +202,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief Vent::start
      */
-    void Vent::start()
+    void Vent::beforeStart()
     {
-        machine.start();
+
     }
 
 

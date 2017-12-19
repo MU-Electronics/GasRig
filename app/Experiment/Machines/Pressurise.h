@@ -34,7 +34,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void setParams(double pressure, bool initVacDown, int stepSize, bool inputValve, bool outputValve);
 
-            void start();
+            void beforeStart();
 
             void stopped();
 

@@ -65,9 +65,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief ReadFlowControllerFlow::start
      */
-    void ReadFlowControllerFlow::start()
+    void ReadFlowControllerFlow::beforeStart()
     {
-        machine.start();
+
     }
 
 

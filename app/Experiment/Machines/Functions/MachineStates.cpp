@@ -159,15 +159,34 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
     /**
+     * Proccess in starting the machine
+     *
+     * @brief MachineStates::start
+     */
+    void MachineStates::start()
+    {
+        // Run local before start function
+        beforeStart();
+
+        // Remove old transitions
+        removeAllTransitions(machine);
+        removeAllTransitions(shutDownMachine);
+
+        // Build new transitions
+        buildMachine();
+
+        // Start machine
+        machine.start();
+    }
+
+
+    /**
      * Runs after sub machines have been stopped if there are any
      *
      * @brief MachineStates::afterSubMachinesStopped
      */
     void MachineStates::afterSubMachinesStopped()
     {
-        // Remove transistions from shutdown states machune
-        removeAllTransitions(shutDownMachine);
-
         // Tell the everyone the machine has finished
         if(error)
         {
@@ -213,9 +232,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::emitStopped()
     {
-        // Get all states from machine and loop through them
-        removeAllTransitions(machine);
-
         // Run the stopped function in the state machine
         stopped();
 

@@ -368,7 +368,7 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief Pressurise::start
      */
-    void Pressurise::start()
+    void Pressurise::beforeStart()
     {
         // Reset vars
         pressureReading = 1;
@@ -376,9 +376,6 @@ namespace App { namespace Experiment { namespace Machines
         pressureReading = 1;
         exhuastValvePressureChange.clear();
         inputValvePressureChange.clear();
-
-        // Start machine
-        machine.start();
     }
 
 

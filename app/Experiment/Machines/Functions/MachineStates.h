@@ -111,13 +111,17 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             ,   ssm_stopAsFailed;
 
 
+            // Start machine
+            void start();
+
+
             // Helper methods
             void removeAllTransitions(QStateMachine &stateMachine);
             void paramsOverride(QVariantMap override);
 
 
             // Contract methods that must be implimented
-            virtual void start() = 0;
+            virtual void beforeStart(){}
             virtual void buildMachine() = 0;
 
             // Not all machines will have a stop procedure

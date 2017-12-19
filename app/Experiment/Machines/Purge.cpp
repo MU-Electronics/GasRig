@@ -116,10 +116,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief Purge::start
      */
-    void Purge::start()
+    void Purge::beforeStart()
     {
-        // Start the machine
-        machine.start();
+
     }
 
 

@@ -29,7 +29,7 @@ namespace App { namespace Experiment { namespace Machines
 
             void setParams(double value, int valueType, bool turbo, int gasMode, int mode);
 
-            void start();
+            void beforeStart();
 
             void stopped();
 

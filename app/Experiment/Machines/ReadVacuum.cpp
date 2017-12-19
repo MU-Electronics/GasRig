@@ -58,9 +58,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief ReadVacuum::start
      */
-    void ReadVacuum::start()
+    void ReadVacuum::beforeStart()
     {
-        machine.start();
+
     }
 
 

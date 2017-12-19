@@ -92,9 +92,9 @@ namespace App { namespace Experiment { namespace Machines
      *
      * @brief VacDown::start
      */
-    void SafeValve::start()
+    void SafeValve::beforeStart()
     {
-        machine.start();
+
     }
 
 
