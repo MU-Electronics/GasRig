@@ -41,16 +41,31 @@ Item
     ChartView {
         id: chartView
 
-        animationOptions: ChartView.AllAnimations
-        antialiasing: true
-        dropShadowEnabled: true
-        backgroundRoundness : 5
+        // Slower perfromance
+        // animationOptions: ChartView.AllAnimations
+        // dropShadowEnabled: true
+
+        // Medium performance
+        // animationOptions: ChartView.GridAxisAnimations
+
+        // Fastest performance
+        animationOptions: ChartView.NoAnimation
+
+        // Enable opengl where possiable
         property bool openGL: true
 
-        title: "Vacuum Readings"
-        height: 800
+        // Looks of ChartView
+        antialiasing: true
+        backgroundRoundness : 5
+
+        // Title of graph
+        title: "Pressure Vs Time with valve statuses"
+
+        // Size of graph
+        height: height.height - 10
         width: parent.width - 10
 
+        // X axis for valve status
         CategoryAxis {
             id: valveAxisY
             min: -0.5
@@ -67,6 +82,7 @@ Item
             }
         }
 
+        // X axis for pressure
         ValueAxis {
            id: axisY
            min: PressuriseVsTimeGraph.graphMinY
@@ -74,26 +90,32 @@ Item
            titleText: "Pressure (Bar)"
         }
 
+        // Y axis for time
         DateTimeAxis {
             id: axisX
             min: PressuriseVsTimeGraph.graphMinX
             max: PressuriseVsTimeGraph.graphMaxX
             tickCount: 10
             titleText: "Time (Minute:Second:Millisecond)"
-            format: "h:m:s:z" // z = millisecond
+            format: "h:m:s:z"
             minorGridVisible: true
             labelsAngle: 90
             gridVisible : true
         }
 
-        SplineSeries {
+        // Pressure readings series
+        // SplineSeries {
+         LineSeries {
             id: pressure
             name: "Pressure"
             axisX: axisX
             axisY: axisY
-            useOpenGL: chartView.openGL
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
         }
 
+        // Valve status series
         ScatterSeries  {
             id: valveNine
             name: "Valve Nine"
@@ -102,8 +124,12 @@ Item
             borderWidth: 1
             borderColor: valveNine.color
             axisYRight: valveAxisY
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
         }
 
+        // Valve seven status series
         ScatterSeries {
             id: valveSeven
             name: "Valve Seven"
@@ -112,8 +138,12 @@ Item
             markerSize: 8
             borderWidth: 1
             borderColor: valveSeven.color
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
         }
 
+        // Valve two status series
         ScatterSeries {
             id: valveTwo
             name: "Valve Two"
@@ -122,8 +152,12 @@ Item
             markerSize: 8
             borderWidth: 1
             borderColor: valveTwo.color
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
         }
 
+        // Valve one status series
         ScatterSeries {
             id: valveOne
             name: "Valve One"
@@ -132,6 +166,9 @@ Item
             markerSize: 8
             borderWidth: 1
             borderColor: valveOne.color
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
         }
     }
 
