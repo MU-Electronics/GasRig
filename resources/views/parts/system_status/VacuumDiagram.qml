@@ -48,7 +48,7 @@ Item
         property bool openGL: true
 
         title: "Vacuum Readings"
-        height: 400
+        height: 800
         width: parent.width - 10
 
         CategoryAxis {
@@ -98,8 +98,9 @@ Item
             id: valveNine
             name: "Valve Nine"
             axisX: axisX
-            markerSize: 5
+            markerSize: 8
             borderWidth: 1
+            borderColor: valveNine.color
             axisYRight: valveAxisY
         }
 
@@ -108,8 +109,9 @@ Item
             name: "Valve Seven"
             axisX: axisX
             axisYRight: valveAxisY
-            markerSize: 5
+            markerSize: 8
             borderWidth: 1
+            borderColor: valveSeven.color
         }
 
         ScatterSeries {
@@ -117,9 +119,9 @@ Item
             name: "Valve Two"
             axisX: axisX
             axisYRight: valveAxisY
-            markerSize: 5
+            markerSize: 8
             borderWidth: 1
-
+            borderColor: valveTwo.color
         }
 
         ScatterSeries {
@@ -127,9 +129,9 @@ Item
             name: "Valve One"
             axisX: axisX
             axisYRight: valveAxisY
-            markerSize: 5
+            markerSize: 8
             borderWidth: 1
-
+            borderColor: valveOne.color
         }
     }
 
