@@ -962,91 +962,6 @@ namespace App { namespace Experiment { namespace Machines
         }
     }
 
-    int Pressurise::tuneValveSpeed(double currentPressure, QList<double>& previousPressures, double desiredStepSize, int currentSpeed)
-    {
-        qDebug() << "################ Tunning ##################";
-
-        // Add the new value
-        previousPressures.append(currentPressure);
-
-        // We need a sample of three to make decisions
-        if(previousPressures.size() <= 3)
-        {
-            return currentSpeed;
-        }
-        else if(previousPressures.size() == 4)
-        {
-            // Remove the first value
-            previousPressures.pop_front();
-        }
-
-
-        qDebug() << previousPressures;
-
-
-        // Calculate the current average pressure change
-        double pressureAverage = 0;
-        for (int i = 0; i < previousPressures.size(); ++i) {
-            pressureAverage = pressureAverage + previousPressures.at(i);
-        }
-        pressureAverage = pressureAverage / previousPressures.size();
-        double pressureChangeAverage = abs(pressureAverage - currentPressure);
-
-
-        // Account for larger pressure changes
-        /*if(currentPressure > (pressureAverage * 2))
-        {
-            // Reset pressure cache
-            previousPressures.pop_front();
-            previousPressures.pop_front();
-
-            // Reset valve timing
-            return 15;
-        }*/
-
-
-        // Find pressure difference for most recent pressure change
-        double lastPressureChange = abs(previousPressures.at(previousPressures.size() - 1) - currentPressure);
-        qDebug() << "Tunning valve, average pressure change: " << pressureChangeAverage << " target step size: " << desiredStepSize << " Last pressure change: " << lastPressureChange;
-
-        // If its 30% of the desired step size then do not tune valve speed
-        if( lastPressureChange < (desiredStepSize + (desiredStepSize * 0.3)) && lastPressureChange > (desiredStepSize - (desiredStepSize * 0.3)) )
-        {
-            // Do nothing the step size is perfect
-            qDebug() << "Tune doing nothing";
-
-            // Return current speed as timing is perfect
-            return currentSpeed;
-        }
-
-
-
-
-        // Should the valve speed be incremented by a corse value?
-        if(pressureChangeAverage < (desiredStepSize * 0.2))
-        {
-            return currentSpeed + 10;
-        }
-
-        // Should the valve speed be incremented by a fine valve?
-        if(pressureChangeAverage < (desiredStepSize * 0.8))
-        {
-            return currentSpeed + 1;
-        }
-
-        // Should the valve speed be decremented?
-        if(pressureChangeAverage > (desiredStepSize + pow(log(desiredStepSize), 2.5) + 20))
-        {
-            return currentSpeed - 5;
-        }
-        else if(pressureChangeAverage > desiredStepSize)
-        {
-            return currentSpeed - 2;
-        }
-
-        // If not decision then return current valve speed;
-        return currentSpeed;
-    }
 
     void Pressurise::validatePressureAfterValveSeven()
     {
@@ -1145,6 +1060,83 @@ namespace App { namespace Experiment { namespace Machines
             // No more action needed here
             return;
         }
+    }
+
+
+
+    int Pressurise::tuneValveSpeed(double currentPressure, QList<double>& previousPressures, double desiredStepSize, int currentSpeed)
+    {
+        // Add the new value
+        previousPressures.append(currentPressure);
+
+        // We need a sample of three to make decisions
+        if(previousPressures.size() <= 3)
+        {
+            return currentSpeed;
+        }
+        else if(previousPressures.size() == 4)
+        {
+            // Remove the first value
+            previousPressures.pop_front();
+        }
+
+        // Calculate the current average pressure change
+        double pressureAverage = 0;
+        for (int i = 0; i < previousPressures.size(); ++i) {
+            pressureAverage = pressureAverage + previousPressures.at(i);
+        }
+        pressureAverage = pressureAverage / previousPressures.size();
+        double pressureChangeAverage = abs(pressureAverage - currentPressure);
+
+
+        // Find pressure difference for most recent pressure change
+        double lastPressureChange = abs(previousPressures.at(previousPressures.size() - 1) - currentPressure);
+
+        // If its 30% of the desired step size then do not tune valve speed
+        if( lastPressureChange < (desiredStepSize + (desiredStepSize * 0.3)) && lastPressureChange > (desiredStepSize - (desiredStepSize * 0.3)) )
+        {
+            // Return current speed as timing is perfect
+            return currentSpeed;
+        }
+
+
+
+        // Should the valve speed be incremented by a corse value?
+        if(pressureChangeAverage < (desiredStepSize * 0.2))
+        {
+            return minMaxValveSpeed(currentSpeed + 10);
+        }
+
+        // Should the valve speed be incremented by a fine valve?
+        if(pressureChangeAverage < (desiredStepSize * 0.8))
+        {
+            return minMaxValveSpeed(currentSpeed + 1);
+        }
+
+        // Should the valve speed be decremented?
+        if(pressureChangeAverage > (desiredStepSize + pow(log(desiredStepSize), 2.5) + 20))
+        {
+            return minMaxValveSpeed(currentSpeed - 5);
+        }
+        else if(pressureChangeAverage > desiredStepSize)
+        {
+            return minMaxValveSpeed(currentSpeed - 2);
+        }
+
+        // If not decision then return current valve speed;
+        return currentSpeed;
+    }
+
+
+    int Pressurise::minMaxValveSpeed(int timing)
+    {
+        if(timing < 4)
+            return 4;
+
+        if(timing > 2000)
+            return 2000;
+
+        return timing;
     }
 
 

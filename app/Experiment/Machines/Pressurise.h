@@ -77,6 +77,7 @@ namespace App { namespace Experiment { namespace Machines
 
             // Valve tuning function
             int tuneValveSpeed(double currentPressure, QList<double>& previousPressures, double desiredStepSize, int currentSpeed);
+            int minMaxValveSpeed(int timing);
 
         signals:
             // State signals
