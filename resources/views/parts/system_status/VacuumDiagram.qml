@@ -38,6 +38,17 @@ Item
         }
     }
 
+
+    Component.onCompleted: {
+        // Reload the data
+        PressuriseVsTimeGraph.updatePressure(chartView.series("Pressure"));
+        PressuriseVsTimeGraph.updateValve(1, chartView.series("Valve One"));
+        PressuriseVsTimeGraph.updateValve(2, chartView.series("Valve Two"));
+        PressuriseVsTimeGraph.updateValve(7, chartView.series("Valve Seven"));
+        PressuriseVsTimeGraph.updateValve(7, chartView.series("Valve Seven"));
+    }
+
+
     ChartView {
         id: chartView
 
@@ -64,6 +75,29 @@ Item
         // Size of graph
         height: 800 // height.height - 10
         width: parent.width - 10
+
+        // Controls
+        property real zoomFactor: 1.0
+        property int xDeviation: 0
+        property int yDeviation: 0
+
+        MultiPointTouchArea {
+            anchors.fill: parent
+            touchPoints: [
+                           TouchPoint {
+                             id: touch1
+                           }
+                         ]
+            onTouchUpdated: {
+                if (chartView.zoomFactor > 1) {
+                    chartView.scrollLeft(touch1.x - touch1.previousX);
+                    chartView.xDeviation = chartView.xDeviation + (touch1.x - touch1.previousX);
+
+                    chartView.scrollUp(touch1.y - touch1.previousY);
+                    chartView.yDeviation = chartView.yDeviation + (touch1.y - touch1.previousY);
+                }
+            }
+        }
 
         // X axis for valve status
         CategoryAxis {
@@ -180,6 +214,86 @@ Item
 
             // Use opengl for performance
             // useOpenGL: chartView.openGL
+        }
+    }
+
+
+
+    Rectangle {
+        id: zoomInButton
+        anchors.top: parent.top
+        anchors.left: parent.left
+        width: 100
+        height: 100
+        opacity: 0.4
+        color: "red"
+
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            onPressed: {
+                console.log("ZoomIn pressed");
+                chartView.zoomFactor = chartView.zoomFactor * 2.0;
+                chartView.zoom(2.0)
+            }
+        }
+    }
+
+    Rectangle {
+        id: zoomOutButton
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 100
+        height: 100
+        opacity: 0.4
+        color: "red"
+
+        MouseArea {
+            id: mouseAreaOut
+            anchors.fill: parent
+            onPressed: {
+                chartView.zoomFactor = chartView.zoomFactor * 0.5;
+                var zoomDiff = 1 / chartView.zoomFactor;
+                var xMove = chartView.xDeviation * zoomDiff;
+                var yMove = chartView.yDeviation * zoomDiff;
+                chartView.xDeviation = chartView.xDeviation - xMove;
+                chartView.xDeviation = chartView.xDeviation * 0.5;
+                chartView.yDeviation = chartView.yDeviation - yMove;
+                chartView.yDeviation = chartView.yDeviation * 0.5;
+
+                if (chartView.zoomFactor >= 1.0) {
+                    chartView.scrollRight(xMove);
+                    chartView.scrollDown(yMove);
+                    chartView.zoom(0.5);
+                    if (chartView.xDeviation == 0) {
+                        // Becouse of rounding error, reset the zoom
+                        chartView.zoomReset();
+                    }
+                } else {
+                    chartView.zoomFactor = 1.0;
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        id: zoomResetButton
+        anchors.top: parent.top
+        anchors.right: parent.right
+        width: 100
+        height: 100
+        opacity: 0.4
+        color: "red"
+
+        MouseArea {
+            id: mouseAreaReset
+            anchors.fill: parent
+            onPressed: {
+                console.log("ZoomReset pressed, xDeviation " + chartView.xDeviation);
+                chartView.scrollLeft(chartView.xDeviation * -1);
+                chartView.zoomReset();
+                chartView.xDeviation = 0;
+            }
         }
     }
 
