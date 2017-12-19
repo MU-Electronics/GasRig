@@ -885,7 +885,7 @@ namespace App { namespace Experiment { namespace Machines
 
         // Calculate the boundary desired pressure
         double max, min;
-        if(abs(params.value("pressure").toDouble() - currentPressure) < params.value("step_size").toDouble())
+        if(abs(params.value("pressure").toDouble() - currentPressure - 1000) < params.value("step_size").toDouble())
         {
             // Set the new valve tolerance
             params.insert("tolerance_valve_two", params.value("tolerance_valve_two_final").toInt());
@@ -895,7 +895,7 @@ namespace App { namespace Experiment { namespace Machines
             max = params.value("pressure").toDouble() + params.value("tolerance_valve_two").toDouble();
             min = params.value("pressure").toDouble() - params.value("tolerance_valve_two").toDouble();
         }
-        else if(params.value("pressure").toDouble() > (pressureReading + params.value("step_size").toDouble() - 1000))
+        else if(params.value("pressure").toDouble() > (pressureReading + params.value("step_size").toDouble() /*- 1000*/))
         {
             // Set the new valve tolerance
             params.insert("tolerance_valve_two", params.value("tolerance_valve_two_step").toInt());
@@ -905,7 +905,7 @@ namespace App { namespace Experiment { namespace Machines
             min = (pressureReading + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
 
         }
-        else if(params.value("pressure").toDouble() < (pressureReading - params.value("step_size").toDouble() - 1000))
+        else if(params.value("pressure").toDouble() < (pressureReading - params.value("step_size").toDouble() /*- 1000*/))
         {
             // Set the new valve tolerance
             params.insert("tolerance_valve_two", params.value("tolerance_valve_two_step").toInt());
