@@ -199,32 +199,44 @@ namespace App { namespace View { namespace Managers { namespace Graphs
 
         if(valve == 1)
         {
+            // Find graph value
+            qreal graphValue = (value == 1) ? 1 : 0;
+
             // Update data
-            updateTimedData(value, m_valveOneData);
+            updateTimedData(graphValue, m_valveOneData);
 
             // Emit we have new data
             emit emit_newValveOneGraphData();
         }
         else if(valve == 2)
         {
+            // Find graph value
+            qreal graphValue = (value == 1) ? 1.2 : 0;
+
             // Update data
-            updateTimedData(value, m_valveTwoData);
+            updateTimedData(graphValue, m_valveTwoData);
 
             // Emit we have new data
             emit emit_newValveTwoGraphData();
         }
         else if(valve == 7)
         {
+            // Find graph value
+            qreal graphValue = (value == 1) ? 1.4 : 0;
+
             // Update data
-            updateTimedData(value, m_valveSevenData);
+            updateTimedData(graphValue, m_valveSevenData);
 
             // Emit we have new data
             emit emit_newValveSevenGraphData();
         }
         else if(valve == 9)
         {
+            // Find graph value
+            qreal graphValue = (value == 1) ? 1.6 : 0;
+
             // Update data
-            updateTimedData(value, m_valveNineData);
+            updateTimedData(graphValue, m_valveNineData);
 
             // Emit we have new data
             emit emit_newValveNineGraphData();

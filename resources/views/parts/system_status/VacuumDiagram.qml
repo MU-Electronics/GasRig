@@ -62,14 +62,14 @@ Item
         title: "Pressure Vs Time with valve statuses"
 
         // Size of graph
-        height: height.height - 10
+        height: 800 // height.height - 10
         width: parent.width - 10
 
         // X axis for valve status
         CategoryAxis {
             id: valveAxisY
             min: -0.5
-            max: 1.5
+            max: 5
             labelsPosition: CategoryAxis.AxisLabelsPositionOnValue
             titleText: "Valve Status"
             CategoryRange {
@@ -77,8 +77,20 @@ Item
                 endValue: 0
             }
             CategoryRange {
-                label: "Open"
+                label: "V1 Open"
                 endValue: 1
+            }
+            CategoryRange {
+                label: "V2 Open"
+                endValue: 1.2
+            }
+            CategoryRange {
+                label: "V7 Open"
+                endValue: 1.4
+            }
+            CategoryRange {
+                label: "V9 Open"
+                endValue: 1.6
             }
         }
 
@@ -103,13 +115,15 @@ Item
             gridVisible : true
         }
 
-        // Pressure readings series
-        // SplineSeries {
-         LineSeries {
-            id: pressure
-            name: "Pressure"
+        // Valve seven status series
+        ScatterSeries {
+            id: valveSeven
+            name: "Valve Seven"
             axisX: axisX
-            axisY: axisY
+            axisYRight: valveAxisY
+            markerSize: 8
+            borderWidth: 1
+            borderColor: valveSeven.color
 
             // Use opengl for performance
             // useOpenGL: chartView.openGL
@@ -124,20 +138,6 @@ Item
             borderWidth: 1
             borderColor: valveNine.color
             axisYRight: valveAxisY
-
-            // Use opengl for performance
-            // useOpenGL: chartView.openGL
-        }
-
-        // Valve seven status series
-        ScatterSeries {
-            id: valveSeven
-            name: "Valve Seven"
-            axisX: axisX
-            axisYRight: valveAxisY
-            markerSize: 8
-            borderWidth: 1
-            borderColor: valveSeven.color
 
             // Use opengl for performance
             // useOpenGL: chartView.openGL
@@ -166,6 +166,17 @@ Item
             markerSize: 8
             borderWidth: 1
             borderColor: valveOne.color
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
+        }
+
+        // Pressure readings series
+         LineSeries {
+            id: pressure
+            name: "Pressure"
+            axisX: axisX
+            axisY: axisY
 
             // Use opengl for performance
             // useOpenGL: chartView.openGL

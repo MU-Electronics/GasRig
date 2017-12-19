@@ -310,7 +310,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("valve_2_pulse", 20);
 
         // Speed to pulse valve 1
-        params.insert("valve_1_pulse", 5000);
+        params.insert("valve_1_pulse", 10000); // was 5000
 
         // Between valve 2 how long should vac down be when setting pressure below 1.5bar
         params.insert("exhuast_void_vac_down_time_pulse", 100);
@@ -801,8 +801,6 @@ namespace App { namespace Experiment { namespace Machines
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
 
-        qDebug() << currentPressure << params.value("vac_down_to").toDouble();
-
         // Is the pressure lower than required
         if(currentPressure < params.value("vac_down_to").toDouble())
         {
@@ -900,7 +898,7 @@ namespace App { namespace Experiment { namespace Machines
             max = params.value("pressure").toDouble() + params.value("tolerance_valve_two").toDouble();
             min = params.value("pressure").toDouble() - params.value("tolerance_valve_two").toDouble();
         }
-        else if(params.value("pressure").toDouble() > (pressureReading + params.value("step_size").toDouble()))
+        else if(params.value("pressure").toDouble() > (pressureReading + params.value("step_size").toDouble() - 1000))
         {
             // Set the new valve tolerance
             params.insert("tolerance_valve_two", params.value("tolerance_valve_two_step").toInt());
@@ -910,7 +908,7 @@ namespace App { namespace Experiment { namespace Machines
             min = (pressureReading + params.value("step_size").toDouble()) - params.value("tolerance_valve_two").toDouble();
 
         }
-        else if(params.value("pressure").toDouble() < (pressureReading - params.value("step_size").toDouble()))
+        else if(params.value("pressure").toDouble() < (pressureReading - params.value("step_size").toDouble() - 1000))
         {
             // Set the new valve tolerance
             params.insert("tolerance_valve_two", params.value("tolerance_valve_two_step").toInt());
@@ -939,8 +937,6 @@ namespace App { namespace Experiment { namespace Machines
         else if (currentPressure > max)
         {
             t_pulseValveTwo.setInterval(tuneValveSpeed(currentPressure, exhuastValvePressureChange, params.value("valve_2_step_size").toDouble(), t_pulseValveTwo.interval()));
-
-            qDebug() << "New valve speed: " << t_pulseValveTwo.interval();
 
             // Reduce the pressure with value 2
             emit emit_pressureToHigh();
@@ -1000,7 +996,7 @@ namespace App { namespace Experiment { namespace Machines
             max = params.value("pressure").toDouble() + params.value("tolerance_valve_seven").toDouble();
             min = params.value("pressure").toDouble();
         }
-        else if(params.value("pressure").toDouble() > (pressureReading + params.value("step_size").toDouble()))
+        else if(params.value("pressure").toDouble() > (pressureReading + params.value("step_size").toDouble() - 1000))
         {
             // Set the new valve tolerance
             params.insert("tolerance_valve_seven", params.value("tolerance_valve_seven_step").toInt());
@@ -1009,7 +1005,7 @@ namespace App { namespace Experiment { namespace Machines
             max = (pressureReading + params.value("step_size").toDouble()) + params.value("tolerance_valve_seven").toDouble();
             min = (pressureReading + params.value("step_size").toDouble()) - params.value("tolerance_valve_seven").toDouble();
         }
-        else if(params.value("pressure").toDouble() < (pressureReading + params.value("step_size").toDouble()))
+        else if(params.value("pressure").toDouble() < (pressureReading + params.value("step_size").toDouble() - 1000))
         {
             // Set the new valve tolerance
             params.insert("tolerance_valve_seven", params.value("tolerance_valve_seven_step").toInt());
