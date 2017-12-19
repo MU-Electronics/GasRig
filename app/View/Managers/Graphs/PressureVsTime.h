@@ -50,11 +50,18 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
         signals:
-            void emit_newGraphData();
+            void emit_newPressureGraphData();
+            void emit_newValveOneGraphData();
+            void emit_newValveTwoGraphData();
+            void emit_newValveSevenGraphData();
+            void emit_newValveNineGraphData();
 
         public slots:
-            void updateGraph(QAbstractSeries *series);
-            void data(QVariantMap package);
+            void updatePressure(QAbstractSeries *series);
+            void updateValve(int valve, QAbstractSeries *series);
+
+            void pressureData(QVariantMap package);
+            void valveData(QVariantMap package);
 
 
         private:
@@ -64,23 +71,35 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             Settings::Container m_settings;
 
             // Hold experiment engine
-            Experiment::Engine& m_experimentEngine;
+            Experiment::Engine& m_experimentEngine;        
 
             // Saves the graph data
-            QVector<QPointF> m_data;
+            QVector<QPointF> m_pressureData;
+            QVector<QPointF> m_valveOneData;
+            QVector<QPointF> m_valveTwoData;
+            QVector<QPointF> m_valveSevenData;
+            QVector<QPointF> m_valveNineData;
 
             // Scroll by
             int scrollBy = 20;
             int hold = 300;
 
             // Save last place QML updated
-            int currentId = 0;
+            int currentPressureId = 0;
+            int currentValveOneId = 0;
+            int currentValveTwoId = 0;
+            int currentValveSevenId = 0;
+            int currentValveNineId = 0;
 
             // Limit the buffer size
             int maxBuffer = 4000;
 
             // Update axis
-            void updateAxis();
+            void updatePressureAxis();
+
+            void updateGraph(QAbstractSeries *series, int &currentId, QVector<QPointF> &data);
+
+            void updateTimedData(qreal value, QVector<QPointF> &store);
     };
 }}}}
 
