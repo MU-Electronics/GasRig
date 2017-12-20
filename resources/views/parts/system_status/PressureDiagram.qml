@@ -277,10 +277,24 @@ Item
     }
 
 
+    /**
+     * Date time goes below graph (Qt bug) and leaves text, so just cover it up for now
+     */
+    Rectangle{
+        id: cover
+        anchors.top: chartView.bottom
+        anchors.topMargin: - 12
+        color: Material.color(Material.Grey, Material.Shade200)
+        width: parent.width
+        height: 15
+    }
+
+
+    // Control buttons for zoom in, out and reset
     Row
     {
         anchors.top: chartView.bottom
-        anchors.topMargin: 20
+        //anchors.topMargin: 20
         spacing: 20
         anchors.horizontalCenter: parent.horizontalCenter
 
