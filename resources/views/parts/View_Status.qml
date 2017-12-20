@@ -29,10 +29,10 @@ Item
                 text: qsTr("System")
             }
             TabButton {
-                text: qsTr("Vacuum")
+                text: qsTr("Pressure")
             }
             TabButton {
-                text: qsTr("Pressure")
+                text: qsTr("Vacuum")
             }
             TabButton {
                 text: qsTr("Debug")
@@ -75,10 +75,10 @@ Item
                 }
             }
             Loader {
-                id: vacuumGraph
+                id: pressureGraph
                 width: parent.width
                 height: parent.height
-                source: (PressuriseVsTimeGraph.hasData) ? "system_status/VacuumDiagram.qml" : "";
+                source: "system_status/PressureDiagram.qml"
                 active: (statusTabBar.currentIndex === 1) ? true : false
                 asynchronous: true
                 visible: (status == Loader.Ready && statusTabBar.currentIndex == 1) ? true : false
@@ -88,7 +88,7 @@ Item
                 }
             }
             Loader {
-                id: pressureGraph
+                id: vacuumGraph
                 width: parent.width
                 height: parent.height
                 active: (statusTabBar.currentIndex === 2) ? true : false
