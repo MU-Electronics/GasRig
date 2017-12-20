@@ -3,6 +3,7 @@ import QtQuick.Controls 2.1
 import QtQuick.Window 2.2
 
 import QtCharts 2.2
+import QtQuick.Controls.Material 2.0
 
 
 Item
@@ -73,13 +74,14 @@ Item
         title: "Pressure Vs Time with valve statuses"
 
         // Size of graph
-        height: 800 // height.height - 10
+        height: parent.height - 150
         width: parent.width - 10
 
         // Controls for zoom
         property real zoomFactor: 1.0
         property int xDeviation: 0
         property int yDeviation: 0
+        property bool touched: false
 
         /**
          * Pan control for touch screen
@@ -100,6 +102,9 @@ Item
 
             // Update graph on touch to pan
             onTouchUpdated: {
+                // State screen touched
+                parent.touched = true;
+
                 if (chartView.zoomFactor > 1) {
                     chartView.scrollLeft(touch1.x - touch1.previousX);
                     chartView.xDeviation = chartView.xDeviation + (touch1.x - touch1.previousX);
@@ -131,12 +136,16 @@ Item
                     // If mouse is pressed update graph
                     if (pressed)
                     {
+                        // State screen touched
+                        parent.touched = true;
+
+                        // Update X position
                         chartView.scrollLeft(mouse.x - previousPoints.x);
                         chartView.xDeviation = chartView.xDeviation + (mouse.x - previousPoints.x);
 
+                        // Update Y position
                         chartView.scrollUp(mouse.y - previousPoints.y);
                         chartView.yDeviation = chartView.yDeviation + (mouse.y - previousPoints.y);
-
                     }
 
                     // Save mouse X Y
@@ -150,9 +159,10 @@ Item
         CategoryAxis {
             id: valveAxisY
             min: -0.5
-            max: 5
+            max: 6
             labelsPosition: CategoryAxis.AxisLabelsPositionOnValue
             titleText: "Valve Status"
+            gridLineColor: Material.color(Material.BlueGrey, Material.Shade300)
             CategoryRange {
                 label: "Closed"
                 endValue: 0
@@ -163,15 +173,15 @@ Item
             }
             CategoryRange {
                 label: "V2 Open"
-                endValue: 1.2
-            }
-            CategoryRange {
-                label: "V7 Open"
                 endValue: 1.4
             }
             CategoryRange {
+                label: "V7 Open"
+                endValue: 1.8
+            }
+            CategoryRange {
                 label: "V9 Open"
-                endValue: 1.6
+                endValue: 2.2
             }
         }
 
@@ -181,6 +191,8 @@ Item
            min: PressuriseVsTimeGraph.graphMinY
            max: PressuriseVsTimeGraph.graphMaxY
            titleText: "Pressure (Bar)"
+           minorGridVisible: true
+           minorTickCount: 10
         }
 
         // Y axis for time
@@ -199,7 +211,7 @@ Item
         // Valve seven status series
         ScatterSeries {
             id: valveSeven
-            name: "Valve Seven"
+            name: "V7"
             axisX: axisX
             axisYRight: valveAxisY
             markerSize: 8
@@ -213,7 +225,7 @@ Item
         // Valve status series
         ScatterSeries  {
             id: valveNine
-            name: "Valve Nine"
+            name: "V9"
             axisX: axisX
             markerSize: 8
             borderWidth: 1
@@ -227,7 +239,7 @@ Item
         // Valve two status series
         ScatterSeries {
             id: valveTwo
-            name: "Valve Two"
+            name: "V2"
             axisX: axisX
             axisYRight: valveAxisY
             markerSize: 8
@@ -241,7 +253,7 @@ Item
         // Valve one status series
         ScatterSeries {
             id: valveOne
-            name: "Valve One"
+            name: "V1"
             axisX: axisX
             axisYRight: valveAxisY
             markerSize: 8
@@ -270,6 +282,7 @@ Item
         anchors.top: chartView.bottom
         anchors.topMargin: 20
         spacing: 20
+        anchors.horizontalCenter: parent.horizontalCenter
 
         // Zoom in button
         Button {
@@ -281,13 +294,15 @@ Item
 
                 // Zoom in
                 chartView.zoom(2.0)
+
+                // No touched
+                chartView.touched = false;
             }
         }
 
         // Zoom out button
         Button {
             id: zoomOutButton
-            anchors.top: chartView.bottom
             text: "zoom out"
             onClicked: {
                 // Scale the zoom
@@ -315,7 +330,7 @@ Item
                     chartView.zoom(0.5);
 
                     // If xDeviation is 0 then something went wrong
-                    if (chartView.xDeviation == 0)
+                    if (chartView.xDeviation == 0 && chartView.touched)
                     {
                         // Becouse of rounding error, reset the zoom
                         chartView.zoomReset();
@@ -326,13 +341,15 @@ Item
                     // Zoom greater than 1
                     chartView.zoomFactor = 1.0;
                 }
+
+                // No touched
+                chartView.touched = false;
             }
         }
 
         // Reset zoom button
         Button {
             id: zoomResetButton
-            anchors.top: chartView.bottom
             text: "zoom reset"
             onClicked: {
                 // Scroll left to start
@@ -343,6 +360,9 @@ Item
 
                 // Reset the x deviation
                 chartView.xDeviation = 0;
+
+                // No touched
+                chartView.touched = false;
             }
         }
     }

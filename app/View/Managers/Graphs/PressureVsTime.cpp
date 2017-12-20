@@ -60,8 +60,8 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         graphMaxX(current.addSecs(hold));
 
         // Set random Y axis limits
-        graphMinY(0.8);
-        graphMaxY(5);
+        graphMinY(0);
+        graphMaxY(3);
 
         // No data currently
         hasData(false);
@@ -211,7 +211,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         else if(valve == 2)
         {
             // Find graph value
-            qreal graphValue = (value == 1) ? 1.2 : 0;
+            qreal graphValue = (value == 1) ? 1.4 : 0;
 
             // Update data
             updateTimedData(graphValue, m_valveTwoData);
@@ -222,7 +222,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         else if(valve == 7)
         {
             // Find graph value
-            qreal graphValue = (value == 1) ? 1.4 : 0;
+            qreal graphValue = (value == 1) ? 1.8 : 0;
 
             // Update data
             updateTimedData(graphValue, m_valveSevenData);
@@ -233,7 +233,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         else if(valve == 9)
         {
             // Find graph value
-            qreal graphValue = (value == 1) ? 1.6 : 0;
+            qreal graphValue = (value == 1) ? 2.2 : 0;
 
             // Update data
             updateTimedData(graphValue, m_valveNineData);
