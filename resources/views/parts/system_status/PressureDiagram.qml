@@ -105,10 +105,14 @@ Item
                 // State screen touched
                 parent.touched = true;
 
-                if (chartView.zoomFactor > 1) {
+                // If zoom is greater than 1
+                if (chartView.zoomFactor > 1)
+                {
+                    // Update X position
                     chartView.scrollLeft(touch1.x - touch1.previousX);
                     chartView.xDeviation = chartView.xDeviation + (touch1.x - touch1.previousX);
 
+                    // Update Y position
                     chartView.scrollUp(touch1.y - touch1.previousY);
                     chartView.yDeviation = chartView.yDeviation + (touch1.y - touch1.previousY);
                 }
@@ -128,6 +132,9 @@ Item
             // Update on hover
             hoverEnabled: true
 
+            // Cursor shape
+            cursorShape: Qt.PointingHandCursor
+
             // Update mnouse postion
             onPositionChanged: {
                 // If zoom is 1 then no panning is allowed
@@ -136,6 +143,9 @@ Item
                     // If mouse is pressed update graph
                     if (pressed)
                     {
+                        // Show grabbed hand
+                        cursorShape = Qt.ClosedHandCursor;
+
                         // State screen touched
                         parent.touched = true;
 
@@ -146,6 +156,11 @@ Item
                         // Update Y position
                         chartView.scrollUp(mouse.y - previousPoints.y);
                         chartView.yDeviation = chartView.yDeviation + (mouse.y - previousPoints.y);
+                    }
+                    else
+                    {
+                        // Show grabbed hand
+                        cursorShape = Qt.PointingHandCursor;
                     }
 
                     // Save mouse X Y
@@ -294,7 +309,7 @@ Item
     Row
     {
         anchors.top: chartView.bottom
-        //anchors.topMargin: 20
+        anchors.topMargin: 20
         spacing: 20
         anchors.horizontalCenter: parent.horizontalCenter
 
