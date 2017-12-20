@@ -23,6 +23,7 @@ Item
         onEmit_newValveOneGraphData: {
             // Load the new data
             PressuriseVsTimeGraph.updateValve(1, chartView.series("Valve One"));
+
         }
         onEmit_newValveTwoGraphData: {
             // Load the new data
@@ -39,14 +40,14 @@ Item
     }
 
 
-    Component.onCompleted: {
+    /*Component.onCompleted: {
         // Reload the data
         PressuriseVsTimeGraph.updatePressure(chartView.series("Pressure"));
         PressuriseVsTimeGraph.updateValve(1, chartView.series("Valve One"));
         PressuriseVsTimeGraph.updateValve(2, chartView.series("Valve Two"));
         PressuriseVsTimeGraph.updateValve(7, chartView.series("Valve Seven"));
         PressuriseVsTimeGraph.updateValve(7, chartView.series("Valve Seven"));
-    }
+    }*/
 
 
     ChartView {
@@ -116,15 +117,15 @@ Item
             }
             CategoryRange {
                 label: "V2 Open"
-                endValue: 1.2
-            }
-            CategoryRange {
-                label: "V7 Open"
                 endValue: 1.4
             }
             CategoryRange {
+                label: "V7 Open"
+                endValue: 1.8
+            }
+            CategoryRange {
                 label: "V9 Open"
-                endValue: 1.6
+                endValue: 2.2
             }
         }
 

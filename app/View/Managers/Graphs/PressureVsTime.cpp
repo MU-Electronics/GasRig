@@ -105,6 +105,16 @@ namespace App { namespace View { namespace Managers { namespace Graphs
                 // Update graph
                 updateGraph(series, currentValveTwoId, m_valveTwoData);
             }
+            else if(valve == 3)
+            {
+                // Update graph
+                updateGraph(series, currentValveThreeId, m_valveThreeData);
+            }
+            else if(valve == 5)
+            {
+                // Update graph
+                updateGraph(series, currentValveFiveId, m_valveFiveData);
+            }
             else if(valve == 7)
             {
                 // Update graph
@@ -202,11 +212,15 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             // Find graph value
             qreal graphValue = (value == 1) ? 1 : 0;
 
+            qDebug() << m_valveOneData;
+
             // Update data
             updateTimedData(graphValue, m_valveOneData);
 
             // Emit we have new data
             emit emit_newValveOneGraphData();
+
+            qDebug() << "emitted";
         }
         else if(valve == 2)
         {
@@ -219,10 +233,32 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             // Emit we have new data
             emit emit_newValveTwoGraphData();
         }
-        else if(valve == 7)
+        else if(valve == 3)
         {
             // Find graph value
             qreal graphValue = (value == 1) ? 1.8 : 0;
+
+            // Update data
+            updateTimedData(graphValue, m_valveThreeData);
+
+            // Emit we have new data
+            emit emit_newValveThreeGraphData();
+        }
+        else if(valve == 5)
+        {
+            // Find graph value
+            qreal graphValue = (value == 1) ? 2.2 : 0;
+
+            // Update data
+            updateTimedData(graphValue, m_valveFiveData);
+
+            // Emit we have new data
+            emit emit_newValveFiveGraphData();
+        }
+        else if(valve == 7)
+        {
+            // Find graph value
+            qreal graphValue = (value == 1) ? 2.6 : 0;
 
             // Update data
             updateTimedData(graphValue, m_valveSevenData);
@@ -233,7 +269,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         else if(valve == 9)
         {
             // Find graph value
-            qreal graphValue = (value == 1) ? 2.2 : 0;
+            qreal graphValue = (value == 1) ? 3 : 0;
 
             // Update data
             updateTimedData(graphValue, m_valveNineData);

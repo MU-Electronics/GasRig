@@ -53,6 +53,8 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             void emit_newPressureGraphData();
             void emit_newValveOneGraphData();
             void emit_newValveTwoGraphData();
+            void emit_newValveThreeGraphData();
+            void emit_newValveFiveGraphData();
             void emit_newValveSevenGraphData();
             void emit_newValveNineGraphData();
 
@@ -77,6 +79,8 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             QVector<QPointF> m_pressureData;
             QVector<QPointF> m_valveOneData;
             QVector<QPointF> m_valveTwoData;
+            QVector<QPointF> m_valveThreeData;
+            QVector<QPointF> m_valveFiveData;
             QVector<QPointF> m_valveSevenData;
             QVector<QPointF> m_valveNineData;
 
@@ -90,6 +94,8 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             int currentValveTwoId = 0;
             int currentValveSevenId = 0;
             int currentValveNineId = 0;
+            int currentValveThreeId = 0;
+            int currentValveFiveId = 0;
 
             // Limit the buffer size
             int maxBuffer = 4000;

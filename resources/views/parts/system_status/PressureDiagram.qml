@@ -23,19 +23,27 @@ Item
         }
         onEmit_newValveOneGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(1, chartView.series("Valve One"));
+            PressuriseVsTimeGraph.updateValve(1, chartView.series("V1"));
         }
         onEmit_newValveTwoGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(2, chartView.series("Valve Two"));
+            PressuriseVsTimeGraph.updateValve(2, chartView.series("V2"));
+        }
+        onEmit_newValveThreeGraphData: {
+            // Load the new data
+            PressuriseVsTimeGraph.updateValve(3, chartView.series("V3"));
+        }
+        onEmit_newValveFiveGraphData: {
+            // Load the new data
+            PressuriseVsTimeGraph.updateValve(5, chartView.series("V5"));
         }
         onEmit_newValveSevenGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(7, chartView.series("Valve Seven"));
+            PressuriseVsTimeGraph.updateValve(7, chartView.series("V7"));
         }
         onEmit_newValveNineGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(9, chartView.series("Valve Nine"));
+            PressuriseVsTimeGraph.updateValve(9, chartView.series("V9"));
         }
     }
 
@@ -43,10 +51,12 @@ Item
     Component.onCompleted: {
         // Reload the data
         PressuriseVsTimeGraph.updatePressure(chartView.series("Pressure"));
-        PressuriseVsTimeGraph.updateValve(1, chartView.series("Valve One"));
-        PressuriseVsTimeGraph.updateValve(2, chartView.series("Valve Two"));
-        PressuriseVsTimeGraph.updateValve(7, chartView.series("Valve Seven"));
-        PressuriseVsTimeGraph.updateValve(7, chartView.series("Valve Seven"));
+        PressuriseVsTimeGraph.updateValve(1, chartView.series("V1"));
+        PressuriseVsTimeGraph.updateValve(2, chartView.series("V2"));
+        PressuriseVsTimeGraph.updateValve(3, chartView.series("V3"));
+        PressuriseVsTimeGraph.updateValve(5, chartView.series("V5"));
+        PressuriseVsTimeGraph.updateValve(7, chartView.series("V7"));
+        PressuriseVsTimeGraph.updateValve(9, chartView.series("V9"));
     }
 
 
@@ -174,7 +184,7 @@ Item
         CategoryAxis {
             id: valveAxisY
             min: -0.5
-            max: 6
+            max: 7
             labelsPosition: CategoryAxis.AxisLabelsPositionOnValue
             titleText: "Valve Status"
             gridLineColor: Material.color(Material.BlueGrey, Material.Shade300)
@@ -191,12 +201,20 @@ Item
                 endValue: 1.4
             }
             CategoryRange {
-                label: "V7 Open"
+                label: "V3 Open"
                 endValue: 1.8
             }
             CategoryRange {
-                label: "V9 Open"
+                label: "V5 Open"
                 endValue: 2.2
+            }
+            CategoryRange {
+                label: "V7 Open"
+                endValue: 2.6
+            }
+            CategoryRange {
+                label: "V9 Open"
+                endValue: 3
             }
         }
 
@@ -245,6 +263,34 @@ Item
             markerSize: 8
             borderWidth: 1
             borderColor: valveNine.color
+            axisYRight: valveAxisY
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
+        }
+
+        // Valve status series
+        ScatterSeries  {
+            id: valveThree
+            name: "V3"
+            axisX: axisX
+            markerSize: 8
+            borderWidth: 1
+            borderColor: valveThree.color
+            axisYRight: valveAxisY
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
+        }
+
+        // Valve status series
+        ScatterSeries  {
+            id: valveFive
+            name: "V5"
+            axisX: axisX
+            markerSize: 8
+            borderWidth: 1
+            borderColor: valveFive.color
             axisYRight: valveAxisY
 
             // Use opengl for performance
