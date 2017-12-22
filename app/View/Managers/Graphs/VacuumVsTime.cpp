@@ -5,29 +5,7 @@
 #include <QVariantMap>
 #include <QString>
 #include <QtGlobal>
-#include <QTimer>
 #include <QDateTime>
-
-#include <QtCharts/QXYSeries>
-#include <QtCharts/QAreaSeries>
-
-QT_CHARTS_USE_NAMESPACE
-
-Q_DECLARE_METATYPE(QAbstractSeries *)
-Q_DECLARE_METATYPE(QAbstractAxis *)
-
-// Include settings container
-#include "../../../Settings/Container.h"
-
-// Include threads
-#include "../../../Hardware/Access.h"
-#include "../../../Safety/Monitor.h"
-
-// Experiment Engine with state machine methods
-#include "../../../Experiment/Engine.h"
-
-// Graph
-#include "Graph.h"
 
 namespace App { namespace View { namespace Managers { namespace Graphs
 {
@@ -37,8 +15,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
           m_settings(settings),
           m_experimentEngine(experimentEngine)
     {
-        qRegisterMetaType<QAbstractSeries*>();
-        qRegisterMetaType<QAbstractAxis*>();
+
     }
 
 

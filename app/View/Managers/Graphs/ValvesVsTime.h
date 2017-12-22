@@ -10,9 +10,6 @@
 #include <QDateTime>
 #include <QString>
 
-#include <QtCharts/QAbstractSeries>
-QT_CHARTS_USE_NAMESPACE
-
 // Include contract
 #include "../Manager.h"
 
@@ -29,19 +26,16 @@ QT_CHARTS_USE_NAMESPACE
 // Experiment Engine with state machine methods
 #include "../../../Experiment/Engine.h"
 
+// Graph
+#include "Graph.h"
+
 namespace App { namespace View { namespace Managers { namespace Graphs
 {
 
 
-    class ValvesVsTime : public QObject, public App::View::Managers::Manager
+    class ValvesVsTime : public Graph, public App::View::Managers::Manager
     {
         Q_OBJECT
-
-        AUTO_PROPERTY(double, graphMaxY)
-        AUTO_PROPERTY(double, graphMinY)
-        AUTO_PROPERTY(QDateTime, graphMaxX)
-        AUTO_PROPERTY(QDateTime, graphMinX)
-        READONLY_PROPERTY(bool, hasData)
 
         public:
             // constructure and destructor
@@ -63,7 +57,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         public slots:
             void update(int valve, QAbstractSeries *series);
 
-            void valveData(QVariantMap package);
+            void data(QVariantMap package);
 
 
         private:
@@ -86,10 +80,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             QVector<QPointF> m_valveEightData;
             QVector<QPointF> m_valveNineData;
 
-            // Scroll by
-            int scrollBy = 20;
-            int hold = 300;
-
             // Save last place QML updated
             int currentValveOneId = 0;
             int currentValveTwoId = 0;
@@ -100,14 +90,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             int currentValveSevenId = 0;
             int currentValveEightId = 0;
             int currentValveNineId = 0;
-
-            // Limit the buffer size
-            int maxBuffer = 4000;
-
-            // Update axis
-            void updateGraph(QAbstractSeries *series, int &currentId, QVector<QPointF> &data);
-
-            void updateTimedData(qreal value, QVector<QPointF> &store);
     };
 }}}}
 

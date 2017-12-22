@@ -1,12 +1,9 @@
 #include "Graph.h"
 
-#include <cmath>
-
 #include <QObject>
 #include <QVariantMap>
 #include <QString>
 #include <QtGlobal>
-#include <QTimer>
 #include <QDateTime>
 
 #include <QtCharts/QXYSeries>

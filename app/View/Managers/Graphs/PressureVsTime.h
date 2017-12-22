@@ -29,23 +29,21 @@ QT_CHARTS_USE_NAMESPACE
 // Experiment Engine with state machine methods
 #include "../../../Experiment/Engine.h"
 
+// Graph
+#include "Graph.h"
+
 namespace App { namespace View { namespace Managers { namespace Graphs
 {
 
 
-    class PressureVsTime : public QObject, public App::View::Managers::Manager
+    class PressureVsTime : public Graph, public App::View::Managers::Manager
     {
         Q_OBJECT
-
-        AUTO_PROPERTY(double, graphMaxY)
-        AUTO_PROPERTY(double, graphMinY)
-        AUTO_PROPERTY(QDateTime, graphMaxX)
-        AUTO_PROPERTY(QDateTime, graphMinX)
-        READONLY_PROPERTY(bool, hasData)
 
         public:
             // constructure and destructor
             PressureVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
+            ~PressureVsTime(){}
 
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
@@ -69,24 +67,8 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             // Saves the graph data
             QVector<QPointF> m_pressureData;
 
-            // Scroll by
-            int scrollBy = 20;
-            int hold = 300;
-
             // Save last place QML updated
             int currentPressureId = 0;
-
-            // Limit the buffer size
-            int maxBuffer = 4000;
-
-            // Update axis
-            void updatePressureAxis();
-
-            // Adds and removes data from a series
-            void updateGraph(QAbstractSeries *series, int &currentId, QVector<QPointF> &data);
-
-            // Adds and removes data from the data container
-            void updateTimedData(qreal value, QVector<QPointF> &store);
     };
 }}}}
 

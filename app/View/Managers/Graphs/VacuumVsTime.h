@@ -10,9 +10,6 @@
 #include <QDateTime>
 #include <QString>
 
-#include <QtCharts/QAbstractSeries>
-QT_CHARTS_USE_NAMESPACE
-
 // Include contract
 #include "../Manager.h"
 
