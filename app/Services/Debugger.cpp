@@ -169,7 +169,8 @@ namespace App { namespace Services
         QMutexLocker lock(&mutex);
 
         // Output to log file
-        (*file) << message << "\n\n" << endl;
+        if(type != QtDebugMsg)
+            (*file) << message << "\n\n" << endl;
 
         // Output to console
         (*console) << message << "\n\n" << endl;
