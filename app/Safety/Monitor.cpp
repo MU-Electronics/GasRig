@@ -58,7 +58,7 @@ namespace App { namespace Safety
         //qDebug() << "Safety thread";
         //qDebug() << m_settings.safety.pressure["rise"];
 
-        thread()->usleep(1000);
+        thread()->usleep(10000);
     }
 
 }}

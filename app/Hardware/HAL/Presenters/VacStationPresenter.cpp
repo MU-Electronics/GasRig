@@ -75,6 +75,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // There was an error
         if(error_returnedPackageSize != -1 || error_returnedCommandId != -1)
         {
+            // Log error
+            qCCritical(halAccessVacStationPresenter) << "Could not find the correct vac station presenter method. " << generateError(method, commands, package);
+
             // Generate the error package and sent it back
             return generateError(method, commands, package);
         }
@@ -85,6 +88,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             error["error_id"] = "FlowControllerPresenter_NoMethodFound";
             error["level"] = "critical";
             error["message"] = "The method " + method + " does not exist in the flow controller presenter class.";
+
+            // Log error
+            qCCritical(halAccessVacStationPresenter) << "Could not find the correct vac station presenter method. " << error;
 
             // Return the package
             return error;

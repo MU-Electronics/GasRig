@@ -197,9 +197,6 @@ namespace App { namespace Hardware { namespace HAL
     {
         // Send the data to the handware access manager
         emit emit_pressureSensorData(m_responsability, m_method, m_command, readData);
-
-        //QVariantMap
-        //qDebug() << "Read on port: " << readData;
     }
 
 

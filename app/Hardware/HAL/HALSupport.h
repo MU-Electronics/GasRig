@@ -3,6 +3,9 @@
 #include <QObject>
 #include <QVariantMap>
 
+// Debugging catergories
+#include "../../Services/Debuging.h"
+
 namespace App { namespace Hardware { namespace HAL
 {
 
