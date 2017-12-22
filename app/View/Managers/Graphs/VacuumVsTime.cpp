@@ -112,7 +112,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
                 hasData(true);
 
             // Emit we have new data
-            //emit emit_newVacuumGraphData();
+            emit emit_newVacuumGraphData();
         }
     }
 
