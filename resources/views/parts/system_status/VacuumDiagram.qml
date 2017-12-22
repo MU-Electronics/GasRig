@@ -68,7 +68,7 @@ Item
 
     Component.onCompleted: {
         // Reload the data
-        VacuumVsTimeGraph.update(chartView.series("Pressure"));
+        VacuumVsTimeGraph.update(chartView.series("Vacuum"));
         ValvesVsTimeGraph.update(1, chartView.series("V1"));
         ValvesVsTimeGraph.update(2, chartView.series("V2"));
         ValvesVsTimeGraph.update(3, chartView.series("V3"));
@@ -102,7 +102,7 @@ Item
         backgroundRoundness : 5
 
         // Title of graph
-        title: "Pressure Vs Time with valve statuses"
+        title: "Vacuum Vs Time with valve statuses"
 
         // Size of graph
         height: parent.height - 150
@@ -256,7 +256,7 @@ Item
            id: axisY
            min: VacuumVsTimeGraph.graphMinY
            max: VacuumVsTimeGraph.graphMaxY
-           titleText: "Pressure (Bar)"
+           titleText: "Vacuum (mBar)"
            minorGridVisible: true
            minorTickCount: 10
         }
