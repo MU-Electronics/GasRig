@@ -118,7 +118,8 @@ SOURCES += \
     app/Services/Debugger.cpp \
     app/View/Managers/Graphs/PressureVsTime.cpp \
     app/View/Managers/Graphs/ValvesVsTime.cpp \
-    app/View/Managers/Graphs/VacuumVsTime.cpp
+    app/View/Managers/Graphs/VacuumVsTime.cpp \
+    app/View/Managers/Graphs/Graph.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -213,4 +214,5 @@ HEADERS += \
     app/Services/Debugger.h \
     app/View/Managers/Graphs/PressureVsTime.h \
     app/View/Managers/Graphs/ValvesVsTime.h \
-    app/View/Managers/Graphs/VacuumVsTime.h
+    app/View/Managers/Graphs/VacuumVsTime.h \
+    app/View/Managers/Graphs/Graph.h
