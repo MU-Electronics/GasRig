@@ -124,8 +124,11 @@ namespace App { namespace Services
         // Check for valid data
         if(byteLength < length)
         {
+            // Log error
+            qCWarning(labJackService) << "Could not read any data from the labjack";
+
             // Tell the application we failed
-            emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "Could not read any data from the labjack"));
+            emit emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "Could not read any data from the labjack"));
 
             // Return empty array
             QStringList returnEmpty;
@@ -163,7 +166,7 @@ namespace App { namespace Services
     bool LabJackController::write(QByteArray package)
     {
         // Convert QBtyeArray to char
-        // unsigned char data[package.size()];  << Not standard c++, GCC allows but MSVC does not
+        // unsigned char data[package.size()];  << Not standard C++, GCC allows but MSVC does not
         unsigned char* data = new unsigned char[package.size()];
         for (int i = 0; i < package.size(); i++) {
             data[i] = package.at(i);
@@ -190,6 +193,9 @@ namespace App { namespace Services
         // Check for valid data
         if(byteLength < package.size())
         {
+            // Log error
+            qCWarning(labJackService) << "Could not write any data from the labjack";
+
             // Tell the application we failed
             emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "Could not write any data to the labjack"));
 
@@ -261,7 +267,7 @@ namespace App { namespace Services
             if(returnedData.isEmpty() || !validate(type, returnedData))
             {
                 // Print debug message
-                qDebug() << "There was a problem with the check sum validation for the LabJack. Sent Package:" << package << "; Returned Package: " << returnedData;
+                qCWarning(labJackService) << "There was a problem with the check sum validation for the LabJack. Sent Package:" << package << "; Returned Package: " << returnedData;
 
                 // Empty the contain for incorrect data
                 returnedData.clear();
@@ -404,7 +410,7 @@ namespace App { namespace Services
             if(package.at(7).toInt() != 0)
             {
                 // Log the error
-                qDebug() << "There was an error in the frame data for the LabJack; Error code received was:" << package.at(6).toInt() << "; For frame:" << package.at(7).toInt() << "; In Package:" << package << "; With type:" << type;
+                qCWarning(labJackService) <<"There was an error in the frame data for the LabJack; Error code received was:" << package.at(6).toInt() << "; For frame:" << package.at(7).toInt() << "; In Package:" << package << "; With type:" << type;
 
                 // Tell the application we failed
                 emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "There was an error in the frame data for the LabJack"));
@@ -419,11 +425,12 @@ namespace App { namespace Services
         }
 
         // There should never by invalid data here as this is a sync lib
-        qDebug() << "There was an checksum error from the LabJack; "    << "In Package:" << package
-                                                                        << "; With type:" << type
-                                                                        << "; CheckSum 8:" << package.at(0).toInt() << " Should be:" <<  checksum8.toInt()
-                                                                        << "; CheckSum 16 LSB:" << package.at(4).toInt() << " Should be:" << lowCheckSumDecimal
-                                                                        << "; CheckSum 16 MSB:" << package.at(5).toInt() << " Should be:" << highCheckSumDecimal;
+        qCWarning(labJackService) << "There was an checksum error from the LabJack; "
+                                    << "In Package:" << package
+                                    << "; With type:" << type
+                                    << "; CheckSum 8:" << package.at(0).toInt() << " Should be:" <<  checksum8.toInt()
+                                    << "; CheckSum 16 LSB:" << package.at(4).toInt() << " Should be:" << lowCheckSumDecimal
+                                    << "; CheckSum 16 MSB:" << package.at(5).toInt() << " Should be:" << highCheckSumDecimal;
 
         // Tell the application we failed
         emit_critialLabJackError(errorPackageGenerator("Device1", "Device1", "There was an checksum error from the LabJack"));
@@ -539,6 +546,8 @@ namespace App { namespace Services
             if(port >= 0 && port <= 7)
                 return port;
         }
+
+        qCWarning(labJackService) << "Labjack port " << name << "could not be converted to port name.";
 
         // No name found
         return 999;

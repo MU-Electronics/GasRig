@@ -30,8 +30,11 @@ namespace App { namespace Services
         QFile loadFile(m_loadedFile);
 
         // Open the file and return error if failed
-        if (!loadFile.open(QIODevice::ReadOnly)) {
-            qWarning("Couldn't open save file.");
+        if (!loadFile.open(QIODevice::ReadOnly))
+        {
+            // Log error
+            qCCritical(jsonFileService) << "Couldn't open file to read in " << location;
+
             return false;
         }
 
@@ -65,8 +68,11 @@ namespace App { namespace Services
         QFile saveFile(m_loadedFile);
 
         // Open the file and error if failed
-        if (!saveFile.open(QIODevice::WriteOnly)) {
-            qWarning("Couldn't open save file.");
+        if (!saveFile.open(QIODevice::WriteOnly))
+        {
+            // Log error
+            qCCritical(jsonFileService) << "Couldn't open file to save in " << m_loadedFile;
+
             return false;
         }
 

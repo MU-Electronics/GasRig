@@ -98,7 +98,7 @@ namespace App { namespace Services
         if (!m_serialPort.open(QIODevice::ReadWrite))
         {
             // Error out
-            qDebug() << "Failed to open port" << com << "error: " << m_serialPort.errorString();
+            qCWarning(serialService) << "Failed to open port" << com << "error: " << m_serialPort.errorString();
 
             // Com port open signal
             emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
@@ -158,6 +158,9 @@ namespace App { namespace Services
 
         // Reset vars
         clearVars();
+
+        // Log action
+        qCWarning(serialService) << "Serial bus responsable for: " << m_responsability << " closed";
 
         // Com port open signal
         emit emit_comConnectionStatus(comConnectionPackageGenerator(m_connectionValues.value("com").toString(), false));
@@ -325,7 +328,7 @@ namespace App { namespace Services
     void SerialController::handleTimeout()
     {
         // General error message for any timeout event
-        qDebug() << "Operation timed out for port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString() << "; Data collected: " << m_readData;
+        qCWarning(serialService) << "Operation timed out for port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString() << "; Data collected: " << m_readData;
 
         // Clear the output and input buffer
         m_serialPort.flush();
@@ -355,17 +358,17 @@ namespace App { namespace Services
             // Handle read errors
             if (serialPortError == QSerialPort::ReadError)
             {
-                qDebug() << "An I/O error occurred while reading the data from port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+                qCWarning(serialService) << "An I/O error occurred while reading the data from port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
             }
             // Handle write errors
             else if (serialPortError == QSerialPort::WriteError)
             {
-                qDebug() << "An I/O error occurred while writing the data to port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+                qCWarning(serialService) << "An I/O error occurred while writing the data to port: " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
             }
             // If port avaiable and error is device not confiured then
             else if(m_serialPort.errorString() == "Device not configured")
             {
-                qDebug() << "An I/O error occured most probably related to a USB glitch or being unplugged and plugged; On port: " << m_serialPort.portName() << "; error message: " << m_serialPort.errorString();
+                qCWarning(serialService) << "An I/O error occured most probably related to a USB glitch or being unplugged and plugged; On port: " << m_serialPort.portName() << "; error message: " << m_serialPort.errorString();
             }
 
             // Create package to be emitted
@@ -445,7 +448,7 @@ namespace App { namespace Services
         if (bytesWritten == -1)
         {
             // If not bytes were written then error
-            qDebug() << "Failed to write the data to port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+            qCWarning(serialService) << "Failed to write the data to port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
 
             // Create package to be emitted
             emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_serialPort.portName(), m_serialPort.errorString()));
@@ -461,7 +464,7 @@ namespace App { namespace Services
         else if (bytesWritten != m_writeData.size())
         {
             // If not enough btyes were written then error
-            qDebug() << "Failed to write all the data to port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
+            qCWarning(serialService) << "Failed to write all the data to port " << m_serialPort.portName() << "; error: " << m_serialPort.errorString();
 
             // Emit a signal saying device communication failed
             emit emit_critialSerialError(errorPackageGenerator(m_connectionValues.value("com").toString(), m_serialPort.portName(), m_serialPort.errorString()));
