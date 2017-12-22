@@ -24,6 +24,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         public:
             TransitionsBuilder(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef);
 
+            // Com errors transitions
+            void stateComErrors(QState* state, QState* failed);
+
             // Pressure related transistions
             void validatePressure(QState* waitForPressure,
                                   CommandValidatorState* validatePressureReading,
