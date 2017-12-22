@@ -40,7 +40,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         graphMaxX(current.addSecs(hold));
 
         // Set random Y axis limits
-        graphMinY(-2);
+        graphMinY(0.001);
         graphMaxY(2);
 
         // No data currently

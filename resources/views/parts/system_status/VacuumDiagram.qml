@@ -252,13 +252,15 @@ Item
         }
 
         // X axis for pressure
-        ValueAxis {
+        // ValueAxis {
+        LogValueAxis {
            id: axisY
            min: VacuumVsTimeGraph.graphMinY
            max: VacuumVsTimeGraph.graphMaxY
            titleText: "Vacuum (mBar)"
            minorGridVisible: true
-           minorTickCount: 10
+           //base: 10
+           // minorTickCount: 10
         }
 
         // Y axis for time
@@ -402,7 +404,7 @@ Item
         }
 
         // Pressure readings series
-         LineSeries {
+        LineSeries {
             id: pressure
             name: "Vacuum"
             axisX: axisX
