@@ -108,7 +108,14 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         else if (value < graphMinY())
         {
             // Increase Y axis
-            graphMinY(value - 1);
+            if(value > 1)
+            {
+               graphMinY(value - 1);
+            }
+            else
+            {
+                graphMinY(value - (value / 2));
+            }
         }
     }
 

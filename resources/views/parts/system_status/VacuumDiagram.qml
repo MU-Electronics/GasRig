@@ -259,6 +259,7 @@ Item
            max: VacuumVsTimeGraph.graphMaxY
            titleText: "Vacuum (mBar)"
            minorGridVisible: true
+           labelFormat: "%.00e"
            //base: 10
            // minorTickCount: 10
         }
