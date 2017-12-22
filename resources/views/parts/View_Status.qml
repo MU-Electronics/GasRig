@@ -92,7 +92,7 @@ Item
                 width: parent.width
                 height: parent.height
                 active: (statusTabBar.currentIndex === 2) ? true : false
-                //source: "system_status/VacuumDiagram.qml"
+                source: "system_status/VacuumDiagram.qml"
                 asynchronous: true
                 visible: (status == Loader.Ready && statusTabBar.currentIndex == 2) ? true : false
                 onLoaded: {
