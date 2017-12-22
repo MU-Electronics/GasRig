@@ -11,7 +11,17 @@ Q_DECLARE_LOGGING_CATEGORY(jsonFileService)
 
 
 // Define logging catergoies for state machines
+Q_DECLARE_LOGGING_CATEGORY(flowStateFunctions)
 
+Q_DECLARE_LOGGING_CATEGORY(pressureStateFunctions)
+
+Q_DECLARE_LOGGING_CATEGORY(vacStationStateFunctions)
+
+Q_DECLARE_LOGGING_CATEGORY(valvesStateFunctions)
+
+Q_DECLARE_LOGGING_CATEGORY(machineStates)
+
+Q_DECLARE_LOGGING_CATEGORY(machineStatesValidator)
 
 
 

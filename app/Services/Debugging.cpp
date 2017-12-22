@@ -13,7 +13,13 @@ Q_LOGGING_CATEGORY(usbConnectionStatus, "usb.connection.status")
 
 
 // Define logging catergoies for state machines
+Q_LOGGING_CATEGORY(flowStateFunctions, "machine.states.functions.flow")
+Q_LOGGING_CATEGORY(pressureStateFunctions, "machine.states.functions.pressure")
+Q_LOGGING_CATEGORY(vacStationStateFunctions, "machine.states.functions.vac-station")
+Q_LOGGING_CATEGORY(valvesStateFunctions, "machine.states.functions.valves")
 
+Q_LOGGING_CATEGORY(machineStates, "machine.states")
+Q_LOGGING_CATEGORY(machineStatesValidator, "machine.states.validator")
 
 
 
