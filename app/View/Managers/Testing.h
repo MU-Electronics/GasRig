@@ -4,7 +4,8 @@
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
 #include <QString>
-#include <QString>
+#include <QVariantMap>
+#include <QDebug>
 
 #include "Manager.h"
 #include "../../Utilities/Properties.h"

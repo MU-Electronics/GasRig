@@ -3,19 +3,6 @@
 // Include external libs
 #include <QMap>
 
-// Include settings container
-#include "../../Settings/Container.h"
-
-// Include threads
-#include "../../Hardware/Access.h"
-#include "../../Safety/Monitor.h"
-
-// Experiment Engine with state machine methods
-#include "../../Experiment/Engine.h"
-
-// Include machine container
-#include "../../Experiment/Machines/Machines.h"
-
 namespace App { namespace View { namespace Managers
 {
     MachineStatus::MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)

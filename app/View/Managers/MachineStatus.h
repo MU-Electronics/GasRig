@@ -20,6 +20,9 @@
 // Experiment Engine with state machine methods
 #include "../../Experiment/Engine.h"
 
+// Include machine container
+#include "../../Experiment/Machines/Machines.h"
+
 namespace App { namespace View { namespace Managers
 {
 

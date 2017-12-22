@@ -5,16 +5,6 @@
 #include <QLoggingCategory>
 #include "../../../bootstrap/LoggingCategory.h"
 
-// Include settings container
-#include "../../Settings/Container.h"
-
-// Include threads
-#include "../../Hardware/Access.h"
-#include "../../Safety/Monitor.h"
-
-// Experiment Engine with state machine methods
-#include "../../Experiment/Engine.h"
-
 
 namespace App { namespace View { namespace Managers
 {

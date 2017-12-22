@@ -2,24 +2,6 @@
 
 #include <cmath>
 
-#include <QObject>
-#include <QDebug>
-#include <QVariantMap>
-#include <QString>
-
-// Include settings container
-#include "../../Settings/Container.h"
-
-// Include threads
-#include "../../Hardware/Access.h"
-#include "../../Safety/Monitor.h"
-
-// Experiment Engine with state machine methods
-#include "../../Experiment/Engine.h"
-
-// Include command constructor
-#include "../../Hardware/CommandConstructor.h"
-
 namespace App { namespace View { namespace Managers
 {
     Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)

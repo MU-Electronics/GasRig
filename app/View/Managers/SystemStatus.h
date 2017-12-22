@@ -27,6 +27,11 @@
 // Experiment Engine with state machine methods
 #include "../../Experiment/Engine.h"
 
+// Include command constructor
+#include "../../Hardware/CommandConstructor.h"
+
+#include "app/Services/Debugger.h"
+
 namespace App { namespace View { namespace Managers
 {
 
