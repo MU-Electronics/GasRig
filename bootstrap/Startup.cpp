@@ -5,7 +5,6 @@
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QQmlContext>
-#include <QDebug>
 #include <QtGlobal>
 
 // Include the template framework
@@ -14,9 +13,6 @@
 
 // Application includes
 #include "app/Application.h"
-#include "app/Services/Debugger.h"
-
-
 
 
 namespace Bootstrap

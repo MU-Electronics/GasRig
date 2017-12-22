@@ -4,6 +4,9 @@
 #include <QByteArray>
 #include <QVariantMap>
 
+// Debugging catergories
+#include "../Services/Debuging.h"
+
 // Import correct labjack driver
 #ifdef _WIN32
     #include "vendor/labjack/windowsUD/LabJackUD.h"

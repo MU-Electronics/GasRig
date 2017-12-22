@@ -721,8 +721,6 @@ namespace App { namespace View { namespace Managers
 
     void Testing::requestPurge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo)
     {
-        qDebug() << "Running purge";
-
         m_experimentEngine.machines().purge(outputValve, numberCycles, nitrogenPressure, vacTo);
     }
 
@@ -737,15 +735,11 @@ namespace App { namespace View { namespace Managers
 
     void Testing::requestVent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes)
     {
-        qDebug() << "Running vent";
-
         m_experimentEngine.machines().vent(output, vacuumOutput, flowCavity, nitrogenPipes, multiPipes, flowOnePipes, flowTwoPipes);
     }
 
     void Testing::requestVentStop()
     {
-        qDebug() << "Running vent";
-
         m_experimentEngine.machines().stopVent();
     }
 
@@ -764,8 +758,6 @@ namespace App { namespace View { namespace Managers
      */
     void Testing::requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve)
     {
-        qDebug() << "Running high pressure";
-
         m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve, openOutputValve);
     }
 

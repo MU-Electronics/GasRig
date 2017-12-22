@@ -114,12 +114,12 @@ SOURCES += \
     app/View/Managers/Modes/PressuriseCell.cpp \
     app/Experiment/Machines/Functions/TransitionsBuilder.cpp \
     app/Experiment/Machines/Functions/FunctionsHelper.cpp \
-    bootstrap/LoggingCategory.cpp \
     app/Services/Debugger.cpp \
     app/View/Managers/Graphs/PressureVsTime.cpp \
     app/View/Managers/Graphs/ValvesVsTime.cpp \
     app/View/Managers/Graphs/VacuumVsTime.cpp \
-    app/View/Managers/Graphs/Graph.cpp
+    app/View/Managers/Graphs/Graph.cpp \
+    app/Services/Debugging.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -151,7 +151,6 @@ DISTFILES += \
 
 HEADERS += \
     bootstrap/Startup.h \
-    bootstrap/LoggingCategory.h \
     app/Hardware/Access.h \
     app/Hardware/HAL/PressureSensor.h \
     app/Hardware/HAL/FlowController.h \
@@ -215,4 +214,5 @@ HEADERS += \
     app/View/Managers/Graphs/PressureVsTime.h \
     app/View/Managers/Graphs/ValvesVsTime.h \
     app/View/Managers/Graphs/VacuumVsTime.h \
-    app/View/Managers/Graphs/Graph.h
+    app/View/Managers/Graphs/Graph.h \
+    app/Services/Debuging.h

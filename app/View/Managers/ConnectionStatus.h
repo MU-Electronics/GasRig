@@ -3,10 +3,14 @@
 #include <QObject>
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
-#include "Manager.h"
 #include <QString>
 #include <QMap>
 #include <QVariantMap>
+
+// View contract
+#include "Manager.h"
+
+// Macro for c++ => QML properties
 #include "../../Utilities/Properties.h"
 
 // Include settings container

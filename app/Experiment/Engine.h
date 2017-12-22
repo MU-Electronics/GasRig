@@ -3,6 +3,9 @@
 // Include extenral deps
 #include <QObject>
 
+// Debugging catergories
+#include "../Services/Debuging.h"
+
 // Include settings container
 #include "../Settings/Container.h"
 
