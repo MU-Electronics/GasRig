@@ -18,6 +18,7 @@
 
 // Include view graph managers
 #include "View/Managers/Graphs/PressureVsTime.h"
+#include "View/Managers/Graphs/ValvesVsTime.h"
 
 // Include objects for threading
 #include "Safety/Monitor.h"
@@ -74,6 +75,7 @@ namespace App
         ,   manager_machineStatus(*new View::Managers::MachineStatus(parent, engine, settings_container, experiment_engine))
         ,   manager_mode_pressuriseCell(*new View::Managers::Modes::PressuriseCell(parent, engine, settings_container, experiment_engine))
         ,   manager_graph_pressureVsTime(*new View::Managers::Graphs::PressureVsTime(parent, engine, settings_container, experiment_engine))
+        ,   manager_graph_valvesVsTime(*new View::Managers::Graphs::ValvesVsTime(parent, engine, settings_container, experiment_engine))
     {
         // Register qml types with qml
         registerQmlTypes();
@@ -149,6 +151,8 @@ namespace App
         // Set pressure vs time graph manager
         m_engine->rootContext()->setContextProperty("PressuriseVsTimeGraph", &manager_graph_pressureVsTime);
 
+        // Set valves vs time graph manager
+        m_engine->rootContext()->setContextProperty("ValvesVsTimeGraph", &manager_graph_valvesVsTime);
     }
 
 
@@ -229,6 +233,9 @@ namespace App
 
         // Make connections for machine pressure vs time graph
         manager_graph_pressureVsTime.makeConnections(hardware, monitor);
+
+        // Make connections for machine valves vs time graph
+        manager_graph_valvesVsTime.makeConnections(hardware, monitor);
     }
 
 

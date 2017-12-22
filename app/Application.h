@@ -19,6 +19,7 @@
 
 // Include view graph managers
 #include "View/Managers/Graphs/PressureVsTime.h"
+#include "View/Managers/Graphs/ValvesVsTime.h"
 
 // Objects to the threaded
 #include "Safety/Monitor.h"
@@ -64,6 +65,7 @@ namespace App
             View::Managers::MachineStatus& manager_machineStatus;
             View::Managers::Modes::PressuriseCell& manager_mode_pressuriseCell;
             View::Managers::Graphs::PressureVsTime& manager_graph_pressureVsTime;
+            View::Managers::Graphs::ValvesVsTime& manager_graph_valvesVsTime;
 
             void registerManagers();
             void registerQmlTypes();

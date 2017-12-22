@@ -116,7 +116,8 @@ SOURCES += \
     app/Experiment/Machines/Functions/FunctionsHelper.cpp \
     bootstrap/LoggingCategory.cpp \
     app/Services/Debugger.cpp \
-    app/View/Managers/Graphs/PressureVsTime.cpp
+    app/View/Managers/Graphs/PressureVsTime.cpp \
+    app/View/Managers/Graphs/ValvesVsTime.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -209,4 +210,5 @@ HEADERS += \
     app/Experiment/Machines/Functions/TransitionsBuilder.h \
     app/Experiment/Machines/Functions/FunctionsHelper.h \
     app/Services/Debugger.h \
-    app/View/Managers/Graphs/PressureVsTime.h
+    app/View/Managers/Graphs/PressureVsTime.h \
+    app/View/Managers/Graphs/ValvesVsTime.h

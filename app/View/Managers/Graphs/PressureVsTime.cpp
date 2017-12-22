@@ -50,7 +50,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
     {
         // Pressure sensor
         connect(&hardware, &Hardware::Access::emit_pressureSensorPressure, this, &PressureVsTime::pressureData);
-        connect(&hardware, &Hardware::Access::emit_setValveState, this, &PressureVsTime::valveData);
 
         // Get the current date time
         QDateTime current = QDateTime::currentDateTime();
@@ -75,7 +74,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
      * @brief PressureVsTime::updateGraph
      * @param series
      */
-    void PressureVsTime::updatePressure(QAbstractSeries *series)
+    void PressureVsTime::update(QAbstractSeries *series)
     {
         // If series not null
         if (series)
@@ -83,50 +82,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
     }
 
 
-    /**
-     * Updates valve data
-     *
-     * @brief PressureVsTime::updateValve
-     * @param valve
-     * @param series
-     */
-    void PressureVsTime::updateValve(int valve, QAbstractSeries *series)
-    {
-        // If series not null
-        if (series)
-        {
-            if(valve == 1)
-            {
-                // Update graph
-                updateGraph(series, currentValveOneId, m_valveOneData);
-            }
-            else if(valve == 2)
-            {
-                // Update graph
-                updateGraph(series, currentValveTwoId, m_valveTwoData);
-            }
-            else if(valve == 3)
-            {
-                // Update graph
-                updateGraph(series, currentValveThreeId, m_valveThreeData);
-            }
-            else if(valve == 5)
-            {
-                // Update graph
-                updateGraph(series, currentValveFiveId, m_valveFiveData);
-            }
-            else if(valve == 7)
-            {
-                // Update graph
-                updateGraph(series, currentValveSevenId, m_valveSevenData);
-            }
-            else if(valve == 9)
-            {
-                // Update graph
-                updateGraph(series, currentValveNineId, m_valveNineData);
-            }
-        }
-    }
 
     /**
      * Updates graph data
@@ -164,9 +119,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             // Mark current id
             currentId = i;
         }
-
-        // Delete pointer
-        // delete xySeries;
     }
 
 
@@ -191,95 +143,6 @@ namespace App { namespace View { namespace Managers { namespace Graphs
         // Emit we have new data
         emit emit_newPressureGraphData();
     }
-
-
-    /**
-     * Updates the valve data
-     *
-     * @brief PressureVsTime::valveData
-     * @param package
-     */
-    void PressureVsTime::valveData(QVariantMap package)
-    {
-        // Get valve number
-        int valve = m_settings.hardware.valve_connections.key(package.value("port").toString()).toInt();
-
-        // Update valve value
-        int value = package.value("value").toReal();
-
-        if(valve == 1)
-        {
-            // Find graph value
-            qreal graphValue = (value == 1) ? 1 : 0;
-
-            qDebug() << m_valveOneData;
-
-            // Update data
-            updateTimedData(graphValue, m_valveOneData);
-
-            // Emit we have new data
-            emit emit_newValveOneGraphData();
-
-            qDebug() << "emitted";
-        }
-        else if(valve == 2)
-        {
-            // Find graph value
-            qreal graphValue = (value == 1) ? 1.4 : 0;
-
-            // Update data
-            updateTimedData(graphValue, m_valveTwoData);
-
-            // Emit we have new data
-            emit emit_newValveTwoGraphData();
-        }
-        else if(valve == 3)
-        {
-            // Find graph value
-            qreal graphValue = (value == 1) ? 1.8 : 0;
-
-            // Update data
-            updateTimedData(graphValue, m_valveThreeData);
-
-            // Emit we have new data
-            emit emit_newValveThreeGraphData();
-        }
-        else if(valve == 5)
-        {
-            // Find graph value
-            qreal graphValue = (value == 1) ? 2.2 : 0;
-
-            // Update data
-            updateTimedData(graphValue, m_valveFiveData);
-
-            // Emit we have new data
-            emit emit_newValveFiveGraphData();
-        }
-        else if(valve == 7)
-        {
-            // Find graph value
-            qreal graphValue = (value == 1) ? 2.6 : 0;
-
-            // Update data
-            updateTimedData(graphValue, m_valveSevenData);
-
-            // Emit we have new data
-            emit emit_newValveSevenGraphData();
-        }
-        else if(valve == 9)
-        {
-            // Find graph value
-            qreal graphValue = (value == 1) ? 3 : 0;
-
-            // Update data
-            updateTimedData(graphValue, m_valveNineData);
-
-            // Emit we have new data
-            emit emit_newValveNineGraphData();
-        }
-
-    }
-
 
 
     /**

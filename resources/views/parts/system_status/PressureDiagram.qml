@@ -14,49 +14,70 @@ Item
     width: parent.width
     height: parent.height
 
-    // Redraw diagram on valve update
+    // Redraw diagram on pressure update
     Connections {
         target: PressuriseVsTimeGraph
         onEmit_newPressureGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updatePressure(chartView.series("Pressure"));
+            PressuriseVsTimeGraph.update(chartView.series("Pressure"));
         }
+    }
+
+
+    // Redraw diagram on valve update
+    Connections {
+        target: ValvesVsTimeGraph
         onEmit_newValveOneGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(1, chartView.series("V1"));
+            ValvesVsTimeGraph.update(1, chartView.series("V1"));
         }
         onEmit_newValveTwoGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(2, chartView.series("V2"));
+            ValvesVsTimeGraph.update(2, chartView.series("V2"));
         }
         onEmit_newValveThreeGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(3, chartView.series("V3"));
+            ValvesVsTimeGraph.update(3, chartView.series("V3"));
+        }
+        onEmit_newValveFourGraphData: {
+            // Load the new data
+            ValvesVsTimeGraph.update(4, chartView.series("V4"));
         }
         onEmit_newValveFiveGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(5, chartView.series("V5"));
+            ValvesVsTimeGraph.update(5, chartView.series("V5"));
+        }
+        onEmit_newValveSixGraphData: {
+            // Load the new data
+            ValvesVsTimeGraph.update(6, chartView.series("V6"));
         }
         onEmit_newValveSevenGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(7, chartView.series("V7"));
+            ValvesVsTimeGraph.update(7, chartView.series("V7"));
+        }
+        onEmit_newValveEightGraphData: {
+            // Load the new data
+            ValvesVsTimeGraph.update(8, chartView.series("V8"));
         }
         onEmit_newValveNineGraphData: {
             // Load the new data
-            PressuriseVsTimeGraph.updateValve(9, chartView.series("V9"));
+            ValvesVsTimeGraph.update(9, chartView.series("V9"));
         }
     }
 
 
     Component.onCompleted: {
         // Reload the data
-        PressuriseVsTimeGraph.updatePressure(chartView.series("Pressure"));
-        PressuriseVsTimeGraph.updateValve(1, chartView.series("V1"));
-        PressuriseVsTimeGraph.updateValve(2, chartView.series("V2"));
-        PressuriseVsTimeGraph.updateValve(3, chartView.series("V3"));
-        PressuriseVsTimeGraph.updateValve(5, chartView.series("V5"));
-        PressuriseVsTimeGraph.updateValve(7, chartView.series("V7"));
-        PressuriseVsTimeGraph.updateValve(9, chartView.series("V9"));
+        PressuriseVsTimeGraph.update(chartView.series("Pressure"));
+        ValvesVsTimeGraph.update(1, chartView.series("V1"));
+        ValvesVsTimeGraph.update(2, chartView.series("V2"));
+        ValvesVsTimeGraph.update(3, chartView.series("V3"));
+        ValvesVsTimeGraph.update(4, chartView.series("V4"));
+        ValvesVsTimeGraph.update(5, chartView.series("V5"));
+        ValvesVsTimeGraph.update(6, chartView.series("V6"));
+        ValvesVsTimeGraph.update(7, chartView.series("V7"));
+        ValvesVsTimeGraph.update(8, chartView.series("V8"));
+        ValvesVsTimeGraph.update(9, chartView.series("V9"));
     }
 
 
@@ -205,16 +226,28 @@ Item
                 endValue: 1.8
             }
             CategoryRange {
-                label: "V5 Open"
+                label: "V4 Open"
                 endValue: 2.2
             }
             CategoryRange {
-                label: "V7 Open"
+                label: "V5 Open"
                 endValue: 2.6
             }
             CategoryRange {
-                label: "V9 Open"
+                label: "V6 Open"
                 endValue: 3
+            }
+            CategoryRange {
+                label: "V7 Open"
+                endValue: 3.4
+            }
+            CategoryRange {
+                label: "V8 Open"
+                endValue: 3.8
+            }
+            CategoryRange {
+                label: "V9 Open"
+                endValue: 4.2
             }
         }
 
@@ -241,42 +274,57 @@ Item
             gridVisible : true
         }
 
-        // Valve seven status series
+        // Valve one status series
         ScatterSeries {
-            id: valveSeven
-            name: "V7"
+            id: valveOne
+            name: "V1"
             axisX: axisX
             axisYRight: valveAxisY
             markerSize: 8
             borderWidth: 1
-            borderColor: valveSeven.color
+            borderColor: valveOne.color
 
             // Use opengl for performance
             // useOpenGL: chartView.openGL
         }
 
-        // Valve status series
-        ScatterSeries  {
-            id: valveNine
-            name: "V9"
+        // Valve two status series
+        ScatterSeries {
+            id: valveTwo
+            name: "V2"
             axisX: axisX
+            axisYRight: valveAxisY
             markerSize: 8
             borderWidth: 1
-            borderColor: valveNine.color
-            axisYRight: valveAxisY
+            borderColor: valveTwo.color
 
             // Use opengl for performance
             // useOpenGL: chartView.openGL
         }
 
-        // Valve status series
-        ScatterSeries  {
+        // Valve two status series
+        ScatterSeries {
             id: valveThree
             name: "V3"
             axisX: axisX
+            axisYRight: valveAxisY
             markerSize: 8
             borderWidth: 1
             borderColor: valveThree.color
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
+        }
+
+
+        // Valve status series
+        ScatterSeries  {
+            id: valveFour
+            name: "V4"
+            axisX: axisX
+            markerSize: 8
+            borderWidth: 1
+            borderColor: valveFour.color
             axisYRight: valveAxisY
 
             // Use opengl for performance
@@ -297,29 +345,57 @@ Item
             // useOpenGL: chartView.openGL
         }
 
-        // Valve two status series
+        // Valve seven status series
         ScatterSeries {
-            id: valveTwo
-            name: "V2"
+            id: valveSix
+            name: "V6"
             axisX: axisX
             axisYRight: valveAxisY
             markerSize: 8
             borderWidth: 1
-            borderColor: valveTwo.color
+            borderColor: valveSix.color
 
             // Use opengl for performance
             // useOpenGL: chartView.openGL
         }
 
-        // Valve one status series
+        // Valve seven status series
         ScatterSeries {
-            id: valveOne
-            name: "V1"
+            id: valveSeven
+            name: "V7"
             axisX: axisX
             axisYRight: valveAxisY
             markerSize: 8
             borderWidth: 1
-            borderColor: valveOne.color
+            borderColor: valveSeven.color
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
+        }
+
+        // Valve seven status series
+        ScatterSeries {
+            id: valveEight
+            name: "V8"
+            axisX: axisX
+            axisYRight: valveAxisY
+            markerSize: 8
+            borderWidth: 1
+            borderColor: valveEight.color
+
+            // Use opengl for performance
+            // useOpenGL: chartView.openGL
+        }
+
+        // Valve status series
+        ScatterSeries  {
+            id: valveNine
+            name: "V9"
+            axisX: axisX
+            markerSize: 8
+            borderWidth: 1
+            borderColor: valveNine.color
+            axisYRight: valveAxisY
 
             // Use opengl for performance
             // useOpenGL: chartView.openGL

@@ -33,7 +33,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
 {
 
 
-    class PressureVsTime : public QObject, public App::View::Managers::Manager
+    class ValvesVsTime : public QObject, public App::View::Managers::Manager
     {
         Q_OBJECT
 
@@ -45,17 +45,26 @@ namespace App { namespace View { namespace Managers { namespace Graphs
 
         public:
             // constructure and destructor
-            PressureVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
+            ValvesVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
 
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
         signals:
-            void emit_newPressureGraphData();
+            void emit_newValveOneGraphData();
+            void emit_newValveTwoGraphData();
+            void emit_newValveThreeGraphData();
+            void emit_newValveFourGraphData();
+            void emit_newValveFiveGraphData();
+            void emit_newValveSixGraphData();
+            void emit_newValveSevenGraphData();
+            void emit_newValveEightGraphData();
+            void emit_newValveNineGraphData();
 
         public slots:
-            void update(QAbstractSeries *series);
+            void update(int valve, QAbstractSeries *series);
 
-            void pressureData(QVariantMap package);
+            void valveData(QVariantMap package);
+
 
         private:
             QQmlApplicationEngine* m_root;
@@ -67,25 +76,37 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             Experiment::Engine& m_experimentEngine;        
 
             // Saves the graph data
-            QVector<QPointF> m_pressureData;
+            QVector<QPointF> m_valveOneData;
+            QVector<QPointF> m_valveTwoData;
+            QVector<QPointF> m_valveThreeData;
+            QVector<QPointF> m_valveFourData;
+            QVector<QPointF> m_valveFiveData;
+            QVector<QPointF> m_valveSixData;
+            QVector<QPointF> m_valveSevenData;
+            QVector<QPointF> m_valveEightData;
+            QVector<QPointF> m_valveNineData;
 
             // Scroll by
             int scrollBy = 20;
             int hold = 300;
 
             // Save last place QML updated
-            int currentPressureId = 0;
+            int currentValveOneId = 0;
+            int currentValveTwoId = 0;
+            int currentValveThreeId = 0;
+            int currentValveFourId = 0;
+            int currentValveFiveId = 0;
+            int currentValveSixId = 0;
+            int currentValveSevenId = 0;
+            int currentValveEightId = 0;
+            int currentValveNineId = 0;
 
             // Limit the buffer size
             int maxBuffer = 4000;
 
             // Update axis
-            void updatePressureAxis();
-
-            // Adds and removes data from a series
             void updateGraph(QAbstractSeries *series, int &currentId, QVector<QPointF> &data);
 
-            // Adds and removes data from the data container
             void updateTimedData(qreal value, QVector<QPointF> &store);
     };
 }}}}
