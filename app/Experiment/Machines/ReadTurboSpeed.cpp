@@ -91,7 +91,7 @@ namespace App { namespace Experiment { namespace Machines
         sml_readTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, &sml_startTurboSpeedTimer);
 
         // Account for com issues
-        sml_readTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startTurboSpeedTimer);
+        transitionsBuilder()->stateComErrors(&sml_readTurboSpeed, &sml_startTurboSpeedTimer);
     }
 
 

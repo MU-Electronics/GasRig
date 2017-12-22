@@ -96,6 +96,10 @@ namespace App { namespace Experiment { namespace Machines
         // Read flow rate
         sml_readTemperature_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, &sml_readTemperature_2);
         sml_readTemperature_2.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, &sml_startFlowControllerMonitor);
+
+        // Account for com issues
+        transitionsBuilder()->stateComErrors(&sml_readTemperature_1, &sml_startFlowControllerMonitor);
+        transitionsBuilder()->stateComErrors(&sml_readTemperature_2, &sml_startFlowControllerMonitor);
     }
 
 

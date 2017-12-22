@@ -91,7 +91,7 @@ namespace App { namespace Experiment { namespace Machines
         sml_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_startPressureMonitor);
 
         // Account for com issues
-        sml_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startPressureMonitor);
+        transitionsBuilder()->stateComErrors(&sml_systemPressure, &sml_startPressureMonitor);
     }
 
 

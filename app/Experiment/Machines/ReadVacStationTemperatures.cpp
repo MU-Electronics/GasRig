@@ -98,15 +98,23 @@ namespace App { namespace Experiment { namespace Machines
 
         // Get the bearing temperture
         sml_getBearingTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getTC110ElectronicsTemperature);
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(&sml_getBearingTemperature, &sml_getTC110ElectronicsTemperature);
 
         // Get the electronics temperature
         sml_getTC110ElectronicsTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getMotorTemperature);
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(&sml_getTC110ElectronicsTemperature, &sml_getMotorTemperature);
 
         // Get the motor temperature
         sml_getMotorTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getPumpBottomTemperature);
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(&sml_getMotorTemperature, &sml_getPumpBottomTemperature);
 
         // Get the pump bottom temperature
         sml_getPumpBottomTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_startVacuumTemperatureTimer);
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(&sml_getPumpBottomTemperature, &sml_startVacuumTemperatureTimer);
     }
 
 

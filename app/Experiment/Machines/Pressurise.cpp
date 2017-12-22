@@ -437,6 +437,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Check that turbo is not spinner before we stop
         state("waitForTurboSpeed", false)->addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, validator("turboSpeedZero", false));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("waitForTurboSpeed", false), state("waitForTurboSpeed", false));
             // Is the turbo spinning
             validator("turboSpeedZero", false)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, state("waitForTurboSpeed", false));
             validator("turboSpeedZero", false)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &ssm_stop);
@@ -474,6 +476,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Close Slow Exhuast
         state("sml_closeSlowExhuastPath_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("sml_validateCloseSlowExhuastPath_1", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("sml_closeSlowExhuastPath_1", true), &sm_stopAsFailed);
             // Wrong signal was picked up
             validator("sml_validateCloseSlowExhuastPath_1", true)->addTransition(this->valves(), &Functions::Valves::emit_validationWrongId, state("sml_closeSlowExhuastPath_1", true));
             // Open the fast exhaust path valve
@@ -508,6 +512,8 @@ namespace App { namespace Experiment { namespace Machines
 
             // Read the pressure
             state("sml_waitForInitialSystemVacDown", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_validateInitialSystemVacuum", true));
+                // Account for com issues
+                transitionsBuilder()->stateComErrors(state("sml_waitForInitialSystemVacDown", true), state("sml_waitForInitialSystemVacDown", true));
                 // Vacuum low enough to move on to the next stage?
                 validator("sml_validateInitialSystemVacuum", true)->addTransition(this, &Pressurise::emit_initialSystemVacuumWithinTolerance, state("sml_closeFastExhuastPath_1", true));
                 // Vacuum too high keep on checking pressure
@@ -516,6 +522,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Close Fast Exhuast
         state("sml_closeFastExhuastPath_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("sml_validateCloseFastExhuastPath_1", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("sml_closeFastExhuastPath_1", true), &sm_stopAsFailed);
             // Wrong signal was picked up
             validator("sml_validateCloseFastExhuastPath_1", true)->addTransition(this->valves(), &Functions::Valves::emit_validationWrongId, state("sml_closeFastExhuastPath_1", true));
             // Opened the fast exhaust path valve    @ see if statment below
@@ -555,6 +563,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Set inital valve to use
         state("sml_waitForPressureBeforeSelectValve", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_validatePressureBeforeSelectValve", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("sml_waitForPressureBeforeSelectValve", true), state("sml_waitForPressureBeforeSelectValve", true));
             // Too low go to open valve 7
             validator("sml_validatePressureBeforeSelectValve", true)->addTransition(this, &Pressurise::emit_pressureToLow, inputValveOpen);
             // Too high go to pulse valve 2
@@ -580,6 +590,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Compare pressure to step size
         state("sml_waitForPressureAfterValveSeven", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_validatePressureAfterValveSeven", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("sml_waitForPressureAfterValveSeven", true), state("sml_waitForPressureAfterValveSeven", true));
             // Too low go back to open valve 7
             validator("sml_validatePressureAfterValveSeven", true)->addTransition(this, &Pressurise::emit_pressureToLow, inputValveOpen);
             // Too high go to pulse valve 2
@@ -593,6 +605,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Request current pressure
         state("sml_waitForPressureBeforeValveFive", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_shouldCloseValveFive", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("sml_waitForPressureBeforeValveFive", true), state("sml_waitForPressureBeforeValveFive", true));
 
         // Should vacuum in valve be closed and exhuast opened?
         validator("sml_shouldCloseValveFive", true)->addTransition(this, &Pressurise::emit_shouldCloseValveFiveFalse, state("sml_closeVacuumInForSlowExhuast_2", true));
@@ -637,6 +651,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Request current pressure
         state("sml_waitForPressureAfterValveFive", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_shouldOpenValveFive", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("sml_waitForPressureAfterValveFive", true), state("sml_waitForPressureAfterValveFive", true));
 
         // Should vacuum in valve be opened?
         validator("sml_shouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveFalse, state("sml_waitForPressureAfterValveTwo", true));
@@ -651,6 +667,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Compare pressure to step size
         state("sml_waitForPressureAfterValveTwo", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_validatePressureAfterValveTwo", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("sml_waitForPressureAfterValveTwo", true), state("sml_waitForPressureAfterValveTwo", true));
             // Too low go back to open valve 7
             validator("sml_validatePressureAfterValveTwo", true)->addTransition(this, &Pressurise::emit_pressureToLow, inputValveOpen);
             // Too high go to pulse valve 2
@@ -680,6 +698,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Compare pressure to step size
         state("sml_waitForPressureAfterValveOne", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_validatePressureAfterValveOne", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("sml_waitForPressureAfterValveOne", true), state("sml_waitForPressureAfterValveOne", true));
             // Calculated new step size is it more than tolerence the go to open valve 2
             validator("sml_validatePressureAfterValveOne", true)->addTransition(this, &Pressurise::emit_pressureToHigh, state("sml_waitForPressureBeforeValveFive", true));
             // Calculated new step size is it less than zero then go to open valve 7

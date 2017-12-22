@@ -91,7 +91,7 @@ namespace App { namespace Experiment { namespace Machines
         sml_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_readVacuumPressure, &sml_startVacuumPressureMonitor);
 
         // Account for com issues
-        sml_vacPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startVacuumPressureMonitor);
+        transitionsBuilder()->stateComErrors(&sml_vacPressure, &sml_startVacuumPressureMonitor);
     }
 
     /**

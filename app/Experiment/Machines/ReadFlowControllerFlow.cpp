@@ -101,8 +101,8 @@ namespace App { namespace Experiment { namespace Machines
         sml_flowControllerTwoFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &sml_startFlowControllerFlowMonitor);
 
         // Account for com issues
-        sml_flowControllerOneFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startFlowControllerFlowMonitor);
-        sml_flowControllerTwoFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startFlowControllerFlowMonitor);
+        transitionsBuilder()->stateComErrors(&sml_flowControllerOneFlow_1, &sml_startFlowControllerFlowMonitor);
+        transitionsBuilder()->stateComErrors(&sml_flowControllerTwoFlow_1, &sml_startFlowControllerFlowMonitor);
     }
 
 

@@ -26,6 +26,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             // Com errors transitions
             void stateComErrors(QState* state, QState* failed);
+            void stateComErrors(CommandValidatorState* state, QState* failed);
 
             // Pressure related transistions
             void validatePressure(QState* waitForPressure,

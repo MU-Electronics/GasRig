@@ -284,16 +284,22 @@ namespace App { namespace Experiment { namespace Machines
         transitionsBuilder()->openValve(state("openSlowExhuastPath", true), validator("openSlowExhuastPath", true), state("sml_waitForPressureAfterSlowExhuast", true), &sm_stopAsFailed);
             // Wait for pressure reading?
             state("sml_waitForPressureAfterSlowExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("pressureAfterSlowExhuast", true));
+                // Account for com issues
+                transitionsBuilder()->stateComErrors(state("sml_waitForPressureAfterSlowExhuast", true), state("sml_waitForPressureAfterSlowExhuast", true));
                 // Are we at atmopheric if so close the fast exhuast and move to next stage
                 validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationSuccess, state("closeFastExhuastPathWaitingInternal", true));
                     // Close fast exhuast
                     state("closeFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, state("sml_stageFinder", true));
+                    // Account for com issues
+                    transitionsBuilder()->stateComErrors(state("closeFastExhuastPathWaitingInternal", true), &sm_stopAsFailed);
                 // Pressure too high wait till lower to open valve 4
                 validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_validationFailed, state("sml_waitForPressureAfterSlowExhuast", true));
                 // Pressure low enough to open fast exhuast
                 validator("pressureAfterSlowExhuast", true)->addTransition(this, &Vent::emit_openValveFour, state("openFastExhuastPathWaitingInternal", true));
                     // Open fast exhuast
                     state("openFastExhuastPathWaitingInternal", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, state("sml_waitForPressureAfterSlowExhuast", true));
+                    // Account for com issues
+                    transitionsBuilder()->stateComErrors(state("openFastExhuastPathWaitingInternal", true), &sm_stopAsFailed);
 
 
         // Open the output valve, wait for pressure drop and then close
@@ -358,6 +364,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Open the flow controller internal valve
         state("flowControllerOneValveOverrideOpen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("flowControllerOneValveOverrideOpen", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("flowControllerOneValveOverrideOpen", true), &sm_stopAsFailed);
             // Check valve open
             validator("flowControllerOneValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
             validator("flowControllerOneValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("openFlowController_2", true));
@@ -374,6 +382,8 @@ namespace App { namespace Experiment { namespace Machines
                                   &sm_stopAsFailed);
                     // Turn off valve override
                     state("flowControllerOneValveOverrideOff", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("flowControllerOneValveOverrideOff", true));
+                        // Account for com issues
+                        transitionsBuilder()->stateComErrors(state("flowControllerOneValveOverrideOff", true), &sm_stopAsFailed);
                         // Check valve override off
                         validator("flowControllerOneValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
                         validator("flowControllerOneValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("sml_stageFinder", true));
@@ -381,6 +391,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Open the flow controller internal valve
         state("flowControllerTwoValveOverrideOpen", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("flowControllerTwoValveOverrideOpen", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("flowControllerTwoValveOverrideOpen", true), &sm_stopAsFailed);
             // Check valve open
             validator("flowControllerTwoValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
             validator("flowControllerTwoValveOverrideOpen", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("openFlowController_3", true));
@@ -397,6 +409,8 @@ namespace App { namespace Experiment { namespace Machines
                                   &sm_stopAsFailed);
                     // Turn off valve override
                     state("flowControllerTwoValveOverrideOff", true)->addTransition(&m_hardware, &Hardware::Access::emit_setFlowControllerValveOverride, validator("flowControllerTwoValveOverrideOff", true));
+                        // Account for com issues
+                        transitionsBuilder()->stateComErrors(state("flowControllerTwoValveOverrideOff", true), &sm_stopAsFailed);
                         // Check valve override off
                         validator("flowControllerTwoValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, &sm_stopAsFailed);
                         validator("flowControllerTwoValveOverrideOff", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("sml_stageFinder", true));
@@ -548,22 +562,30 @@ namespace App { namespace Experiment { namespace Machines
     {
         // Open the output valve
         open->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, openValidate);
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(open, &sm_stopAsFailed);
             // Failed close all valves
             openValidate->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, failed);
             // Success finish here
             openValidate->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, pressureWait);
                 // Wait for pressure reading?
                 pressureWait->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, pressureValidate);
+                    // Account for com issues
+                    transitionsBuilder()->stateComErrors(pressureWait, &sm_stopAsFailed);
                     // Are we at atmopheric
                     pressureValidate->addTransition(this, &Vent::emit_validationFailed, pressureWait);
                     pressureValidate->addTransition(this, &Vent::emit_openValveFour, openFastExhuast);
                         // Open valve four
                         openFastExhuast->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, pressureWait);
+                        // Account for com issues
+                        transitionsBuilder()->stateComErrors(openFastExhuast, &sm_stopAsFailed);
                     pressureValidate->addTransition(this, &Vent::emit_validationSuccess, closeFastExhuast);
                         // Close fast exhuast
                         closeFastExhuast->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, close);
                             // Close valve
                             close->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, closeValidate);
+                                // Account for com issues
+                                transitionsBuilder()->stateComErrors(close, &sm_stopAsFailed);
                                 // Validate close
                                 closeValidate->addTransition(this->valves(), &Functions::Valves::emit_validationFailed, failed);
                                 closeValidate->addTransition(this->valves(), &Functions::Valves::emit_validationSuccess, finished);
