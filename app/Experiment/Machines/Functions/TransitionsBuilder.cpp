@@ -50,10 +50,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     void TransitionsBuilder::stateComErrors(QState* state, QState* failed)
     {
         // Check for timeout errors on bus
-        state->addTransition(hardware, &Hardware::Access::emit_timeoutSerialError, failed);
+        state->addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, failed);
 
         // Check for critical errors on bus
-        state->addTransition(hardware, &Hardware::Access::emit_critialSerialError, failed);
+        state->addTransition(&m_hardware, &Hardware::Access::emit_critialSerialError, failed);
     }
 
 
