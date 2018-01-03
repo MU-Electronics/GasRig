@@ -182,7 +182,8 @@ namespace App { namespace Services
         }
         else
         {
-            emit Debugger::getInstance().emit_logChanged(messageArray);
+            if(type != QtDebugMsg)
+                emit Debugger::getInstance().emit_logChanged(messageArray);
         }
     }
 
