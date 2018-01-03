@@ -160,7 +160,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         errorDetails.clear();
         errorDetails.insert("message", "the vacuum pressure is too high for the turbo pump to be turned on");
         emit emit_validationFailed(errorDetails);
-
     }
 
 
