@@ -20,6 +20,13 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             QVariantMap commandId(QVariantMap commands, QVariantMap package);
             QVariantMap methodOverride(QVariantMap commands, QVariantMap package);
 
+            // Convert 3 btyes to int
+            union ThreeByteIntConvertion
+            {
+                int number;
+                unsigned char buf[3];
+            }ThreeByteIntConvertion;
+
             // Convert 4 btyes to float
             union FourByteFloatConvertion
             {
