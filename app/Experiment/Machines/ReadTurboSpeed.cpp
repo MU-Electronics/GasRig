@@ -25,6 +25,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_turboSpeed(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         connect(&sml_readTurboSpeed, &QState::entered, this->vacuum(), &Functions::Vacuum::getTurboSpeed);
         connect(&sml_startTurboSpeedTimer, &QState::entered, this, &ReadTurboSpeed::startTurboTimer);
     }

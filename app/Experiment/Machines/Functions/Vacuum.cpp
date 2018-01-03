@@ -165,12 +165,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
         // Store the error
-        QVariantMap error;
-        error.insert("message", "the turbo pump is still spinner");
-        error.insert("current_speed", turboSpeed);
+        errorDetails.clear();
+        errorDetails.insert("message", "the turbo pump is still spinner");
+        errorDetails.insert("current_speed", turboSpeed);
 
         // Emit not safe to proceed
-        emit emit_validationFailed(error);
+        emit emit_validationFailed(errorDetails);
     }
 
 
@@ -200,13 +200,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         }
 
         // Store the error
-        QVariantMap error;
-        error.insert("message", "the turbo pump could not be disabled");
-        error.insert("current_stated", package.value("state").toBool());
-        error.insert("requested_state", false);
+        errorDetails.clear();
+        errorDetails.insert("message", "the turbo pump could not be disabled");
+        errorDetails.insert("current_stated", package.value("state").toBool());
+        errorDetails.insert("requested_state", false);
 
         // Emit not safe to proceed
-        emit emit_validationFailed(error);
+        emit emit_validationFailed(errorDetails);
     }
 
     void Vacuum::validateEnableTurboPump()
@@ -229,11 +229,11 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             return;
         }
 
-        QVariantMap fail;
-        fail.insert("message", "the turbo pump could not be enabled");
-        fail.insert("requested_state", true);
-        fail.insert("current_stated", m_turboState);
-        emit emit_validationFailed(fail);
+        errorDetails.clear();
+        errorDetails.insert("message", "the turbo pump could not be enabled");
+        errorDetails.insert("requested_state", true);
+        errorDetails.insert("current_stated", m_turboState);
+        emit emit_validationFailed(errorDetails);
 
 
     }
@@ -246,11 +246,20 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        QVariantMap success;
-        emit emit_validationSuccess(success);
-        qDebug()<<"validating disable pump";
+        // Check state
+        if(!package.value("state").toBool())
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
 
-        qDebug() << package;
+            return;
+        }
+
+        errorDetails.clear();
+        errorDetails.insert("message", "Backing pump could not be disabled");
+        errorDetails.insert("requested_state", false);
+        errorDetails.insert("current_stated", package.value("state").toBool());
+        emit emit_validationFailed(errorDetails);
     }
 
     void Vacuum::validateEnableBackingPump()
@@ -261,10 +270,20 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        QVariantMap success;
-        emit emit_validationSuccess(success);
+        // Check state
+        if(package.value("state").toBool())
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
 
-        //qDebug() << package;
+            return;
+        }
+
+        errorDetails.clear();
+        errorDetails.insert("message", "Backing pump could not be enabled");
+        errorDetails.insert("requested_state", true);
+        errorDetails.insert("current_stated", package.value("state").toBool());
+        emit emit_validationFailed(errorDetails);
     }
 
     void Vacuum::validateSetGasModeHeavy()
@@ -275,10 +294,21 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        QVariantMap success;
-        emit emit_validationSuccess(success);
+        // Check state
+        if(package.value("mode").toInt() == 0)
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
 
-        qDebug() << package;
+            return;
+        }
+
+        errorDetails.clear();
+        errorDetails.insert("message", "Could not set gas mode to heavy");
+        errorDetails.insert("requested_mode", 0);
+        errorDetails.insert("current_mode", package.value("mode").toInt());
+        emit emit_validationFailed(errorDetails);
+
     }
 
     void Vacuum::validateSetGasModeMedium()
@@ -289,10 +319,20 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        QVariantMap success;
-        emit emit_validationSuccess(success);
+        // Check state
+        if(package.value("mode").toInt() == 1)
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
 
-        qDebug() << package;
+            return;
+        }
+
+        errorDetails.clear();
+        errorDetails.insert("message", "Could not set gas mode to medium");
+        errorDetails.insert("requested_mode", 1);
+        errorDetails.insert("current_mode", package.value("mode").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
     void Vacuum::validateSetGasModeHelium()
@@ -303,10 +343,19 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        QVariantMap success;
-        emit emit_validationSuccess(success);
+        // Check state
+        if(package.value("mode").toInt() == 2)
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+            return;
+        }
 
-        qDebug() << package;
+        errorDetails.clear();
+        errorDetails.insert("message", "Could not set gas mode to helium");
+        errorDetails.insert("requested_mode", 2);
+        errorDetails.insert("current_mode", package.value("mode").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
     void Vacuum::validateGetBearingTemperature()
@@ -320,7 +369,20 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         QVariantMap success;
         emit emit_validationSuccess(success);
 
-        qDebug() << package;
+        // Check state
+        if(package.value("location").toInt() == 3)
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+            return;
+        }
+
+        errorDetails.clear();
+        errorDetails.insert("message", "Could not get bearing temperature");
+        errorDetails.insert("requested_location", 3);
+        errorDetails.insert("current_location", package.value("location").toInt());
+        errorDetails.insert("temperature", package.value("temperature").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
     void Vacuum::validateGetTC110ElectronicsTemperature()
@@ -331,10 +393,20 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        QVariantMap success;
-        emit emit_validationSuccess(success);
+        // Check state
+        if(package.value("location").toInt() == 2)
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+            return;
+        }
 
-        qDebug() << package;
+        errorDetails.clear();
+        errorDetails.insert("message", "Could not get TC110 electronics temperature");
+        errorDetails.insert("requested_location", 2);
+        errorDetails.insert("current_location", package.value("location").toInt());
+        errorDetails.insert("temperature", package.value("temperature").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
     void Vacuum::validateGetPumpBottomTemperature()
@@ -345,10 +417,20 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        QVariantMap success;
-        emit emit_validationSuccess(success);
+        // Check state
+        if(package.value("location").toInt() == 1)
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+            return;
+        }
 
-        qDebug() << package;
+        errorDetails.clear();
+        errorDetails.insert("message", "Could not get pump bottom temperature");
+        errorDetails.insert("requested_location", 1);
+        errorDetails.insert("current_location", package.value("location").toInt());
+        errorDetails.insert("temperature", package.value("temperature").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
     void Vacuum::validateGetMotorTemperature()
@@ -359,10 +441,20 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the package data from the instance
         QVariantMap package = state->package;
 
-        QVariantMap success;
-        emit emit_validationSuccess(success);
+        // Check state
+        if(package.value("location").toInt() == 4)
+        {
+            QVariantMap success;
+            emit emit_validationSuccess(success);
+            return;
+        }
 
-        qDebug() << package;
+        errorDetails.clear();
+        errorDetails.insert("message", "Could not get motor temperature");
+        errorDetails.insert("requested_location", 4);
+        errorDetails.insert("current_location", package.value("location").toInt());
+        errorDetails.insert("temperature", package.value("temperature").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
 

@@ -87,10 +87,15 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             QVariantMap success;
             emit emit_validationSuccess(success);
+
+            return;
         }
 
-        QVariantMap error;
-        emit emit_validationFailed(error);
+        errorDetails.clear();
+        errorDetails.insert("message", "Valve override validation failed, value should be 1");
+        errorDetails.insert("controller", 1);
+        errorDetails.insert("override_value", package.value("override").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
 
@@ -115,10 +120,15 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             QVariantMap success;
             emit emit_validationSuccess(success);
+
+            return;
         }
 
-        QVariantMap error;
-        emit emit_validationFailed(error);
+        errorDetails.clear();
+        errorDetails.insert("message", "Valve override validation failed, value should be 1");
+        errorDetails.insert("controller", 2);
+        errorDetails.insert("override_value", package.value("override").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
 
@@ -143,10 +153,15 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             QVariantMap success;
             emit emit_validationSuccess(success);
+
+            return;
         }
 
-        QVariantMap error;
-        emit emit_validationFailed(error);
+        errorDetails.clear();
+        errorDetails.insert("message", "Valve override validation failed, value should be 2");
+        errorDetails.insert("controller", 1);
+        errorDetails.insert("override_value", package.value("override").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
 
@@ -171,10 +186,14 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             QVariantMap success;
             emit emit_validationSuccess(success);
+            return;
         }
 
-        QVariantMap error;
-        emit emit_validationFailed(error);
+        errorDetails.clear();
+        errorDetails.insert("message", "Valve override validation failed, value should be 2");
+        errorDetails.insert("controller", 2);
+        errorDetails.insert("override_value", package.value("override").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
 
@@ -199,10 +218,15 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             QVariantMap success;
             emit emit_validationSuccess(success);
+
+            return;
         }
 
-        QVariantMap error;
-        emit emit_validationFailed(error);
+        errorDetails.clear();
+        errorDetails.insert("message", "Valve override validation failed, value should be 0");
+        errorDetails.insert("controller", 1);
+        errorDetails.insert("override_value", package.value("override").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
 
@@ -228,10 +252,15 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         {
             QVariantMap success;
             emit emit_validationSuccess(success);
+
+            return;
         }
 
-        QVariantMap error;
-        emit emit_validationFailed(error);
+        errorDetails.clear();
+        errorDetails.insert("message", "Valve override validation failed, value should be 0");
+        errorDetails.insert("controller", 2);
+        errorDetails.insert("override_value", package.value("override").toInt());
+        emit emit_validationFailed(errorDetails);
     }
 
 
@@ -294,8 +323,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         QVariantMap success;
         emit emit_validationSuccess(success);
-
-        qDebug() << package;
     }
 
     void Flow::flowControllerTwoFlow()
@@ -315,8 +342,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         QVariantMap success;
         emit emit_validationSuccess(success);
-
-        qDebug() << package;
     }
 
 

@@ -25,6 +25,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_vacPressureMonitor(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         connect(&sml_vacPressure, &QState::entered, this->pressure(), &Functions::Pressure::vacPressure);
         connect(&sml_startVacuumPressureMonitor, &QState::entered, this, &ReadVacuum::startVacuumPressureMonitor);
     }

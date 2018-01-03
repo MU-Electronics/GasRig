@@ -134,9 +134,6 @@ namespace App { namespace Services
         // Unlock the object
         mutex.unlock();
 
-        // Send out a debug notice
-        qCWarning(threadService) << "Aborted the thread: " << thread()->currentThreadId();
-
         // Tell the app that the process has finished
         emit finished();
     }

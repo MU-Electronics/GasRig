@@ -18,6 +18,9 @@ namespace App { namespace Experiment { namespace Machines
     SafeValve::SafeValve(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // Link close valve states
         connect(state("closeHighPressureInput", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
         connect(state("closeHighPressureNitrogen", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);

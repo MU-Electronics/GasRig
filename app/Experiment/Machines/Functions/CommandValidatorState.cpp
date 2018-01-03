@@ -42,6 +42,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
                 // state cast failed
                 package.insert("cast_status", false);
 
+                // Log error
+                qCCritical(machineStatesValidator) << "Statemachine validator state could not cast signal event" <<package;
+
                 return;
             }
 

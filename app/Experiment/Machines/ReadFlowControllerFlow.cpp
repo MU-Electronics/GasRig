@@ -28,6 +28,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timer
         ,   t_flowControllerFlowMonitor(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // Flow
         connect(&sml_flowControllerOneFlow_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneFlow);
         connect(&sml_flowControllerTwoFlow_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoFlow);

@@ -24,7 +24,7 @@ namespace App { namespace Experiment { namespace Machines
         // We have stop state machines
         shutDownMachines = true;
 
-        // Child name
+        // Set class name
         childClassName = QString::fromStdString(typeid(this).name());
 
         // General

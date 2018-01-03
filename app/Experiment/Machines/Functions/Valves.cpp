@@ -121,25 +121,26 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
                 return;
             }
-            qDebug() << "fail";
 
             // Failed data to passon
-            returnPackage.insert("message", "The valve failed to update correctly");
-            returnPackage.insert("requested_valve", valveName);
-            returnPackage.insert("requested_valve_id", number);
-            returnPackage.insert("valve_changed", package.value("port").toString());
-            returnPackage.insert("requested_state", state);
-            returnPackage.insert("state", package.value("value").toBool());
+            errorDetails.clear();
+            errorDetails.insert("message", "The valve failed to update correctly");
+            errorDetails.insert("requested_valve", valveName);
+            errorDetails.insert("requested_valve_id", number);
+            errorDetails.insert("valve_changed", package.value("port").toString());
+            errorDetails.insert("requested_state", state);
+            errorDetails.insert("state", package.value("value").toBool());
         }
         else
         {
-            returnPackage.insert("message", "Validation casting failed");
-            returnPackage.insert("requested_valve_id", number);
-            returnPackage.insert("requested_state", state);
+            errorDetails.clear();
+            errorDetails.insert("message", "Validation casting failed");
+            errorDetails.insert("requested_valve_id", number);
+            errorDetails.insert("requested_state", state);
         }
 
         // Emit not safe to proceed
-        emit emit_validationFailed(returnPackage);
+        emit emit_validationFailed(errorDetails);
     }
 
 

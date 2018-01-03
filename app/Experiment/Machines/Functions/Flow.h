@@ -67,6 +67,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             void connectStatesToMethods();
 
+            // Error container
+            QVariantMap errorDetails;
+
         signals:
             void hardwareRequest(QVariantMap command);
 

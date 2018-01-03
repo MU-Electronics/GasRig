@@ -28,6 +28,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_temperatureMonitor(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // States
         connect(&sml_getBearingTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getBearingTemperature);
         connect(&sml_getTC110ElectronicsTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getTC110ElectronicsTemperature);

@@ -26,6 +26,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_flowControllerTemperatureMonitor(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // Flow temperature
         connect(&sml_readTemperature_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneTemperature);
         connect(&sml_readTemperature_2, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoTemperature);
