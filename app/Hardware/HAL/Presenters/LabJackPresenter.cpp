@@ -242,7 +242,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_setAnaloguePort";
 
-        qDebug() << "Set analgoue port presenter is currently not implimented" <<package;
+        // Has no responce data (https://labjack.com/support/datasheets/u3/low-level-function-reference/feedback/dac16)
+        presented["port"] = commands["port"];
+        presented["value"] = commands["value"];
 
         // Return the presenter data
         return presented;
@@ -263,7 +265,11 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_readPortDirection";
 
-        qDebug() << "Read port direction presenter is currently not implimented" << package;
+        // Which port was requested
+        presented["port"] = commands["port"];
+
+        // Returns 1 bit = direction (https://labjack.com/support/datasheets/u3/low-level-function-reference/feedback/bitdirread)
+        presented["direction"] = package.at(9).toInt();
 
         // Return the presenter data
         return presented;
@@ -284,7 +290,11 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_readDigitalPort";
 
-        qDebug() << "Read digital port presenter is currently not implimented" << package;
+        // Which port was requested
+        presented["port"] = commands["port"];
+
+        // Returns 1 bit = state (https://labjack.com/support/datasheets/u3/low-level-function-reference/feedback/bitstateread)
+        presented["state"] = package.at(9).toInt();
 
         // Return the presenter data
         return presented;
@@ -305,7 +315,7 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_readAnaloguePort";
 
-        // Which signal should be triggered by the access thread
+        // Which port was requested
         presented["port"] = commands["port"];
 
         // Get the voltage in digital form
