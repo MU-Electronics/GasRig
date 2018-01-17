@@ -202,6 +202,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::afterSubMachinesStopped()
     {
+        qInfo() << "Shut down state machine finished: " << childClassName;
         // Tell the everyone the machine has finished
         if(error)
         {
@@ -222,6 +223,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopShutDownSubMachineWithoutError()
     {        
+        qInfo() << "Shut down state machine stopped: " << childClassName;
         // Stop the shutdown state machine
         shutDownMachine.stop();
     }
@@ -269,6 +271,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             // Tell every one were stopping wuth the stop state machine
            emit emit_machineStopping(errorDetails);
+
+            qInfo() << "Running shutdown state machine: " << childClassName;
         }
 
         // Stop main machine
@@ -292,7 +296,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopMachineWithoutError()
     {
-        qDebug() << "Stopping machine without error: " << childClassName;
+        qInfo() << "Stopping machine without error: " << childClassName;
         // There was no error
         error = false;
 
