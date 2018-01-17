@@ -321,7 +321,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVent()
     {
-        m_vent.buildMachine();
         // Start the machine
         m_vent.stopMachineWithoutError();
     }
