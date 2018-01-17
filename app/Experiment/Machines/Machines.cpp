@@ -322,6 +322,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Machines::purgeFinished(QVariantMap params)
     {
+        qDebug() << "Purge finished";
         // Emit machine stopped
         emit emit_purgeStopped(params);
     }

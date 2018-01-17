@@ -192,7 +192,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     void MachineStates::cancelStateMachine()
     {
         emit emit_cancelMachine();
-        qDebug() << "Canceling";
     }
 
 
@@ -293,7 +292,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopMachineWithoutError()
     {
-        qDebug() << "Stopping machine without error";
+        qDebug() << "Stopping machine without error: " << childClassName;
         // There was no error
         error = false;
 

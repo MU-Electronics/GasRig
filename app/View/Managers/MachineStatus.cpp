@@ -222,6 +222,8 @@ namespace App { namespace View { namespace Managers
         // Set the controllable
         setControllable("purgeMachine", 1);
 
+        qDebug() << m_purgeMachine;
+
         // Tell everyone
         emit emit_purgeMachineChanged(m_purgeMachine);
     }
