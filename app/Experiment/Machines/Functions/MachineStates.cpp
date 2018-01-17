@@ -346,6 +346,34 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     }
 
 
+
+
+    /**
+     * Find out if an inject machine is running
+     *
+     * @brief MachineStates::getInjectedMachineStatus
+     * @param name
+     * @return
+     */
+    bool MachineStates::getInjectedMachineStatus(QString name)
+    {
+        return m_injectedMachines.value(name);
+    }
+
+
+    /**
+     * Set status of inject machine as running
+     *
+     * @brief MachineStates::setInjectedMachineStatus
+     * @param name
+     * @param state
+     */
+    void MachineStates::setInjectedMachineStatus(QString name, bool state)
+    {
+        m_injectedMachines.insert(name, state);
+    }
+
+
     /**
      * This helper method removes all transistions from all the states
      *

@@ -127,6 +127,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
             // Helper methods
+            bool getInjectedMachineStatus(QString name);
+            void setInjectedMachineStatus(QString name, bool state);
             void removeAllTransitions(QStateMachine &stateMachine);
             void paramsOverride(QVariantMap override);
 
@@ -180,14 +182,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Connect states to their function
             void connectStatesToMethods();
 
-            // Turbo pump state
-            // bool turboState = false;
-
-            // Vacuum pressure
-            // double vacuumPressure = 0;
-
-            // Pressure
-            // double pressureSensor = 0;
+            // Holds status of inject machines
+            QMap<QString, bool> m_injectedMachines;
 
     };
 }}}}

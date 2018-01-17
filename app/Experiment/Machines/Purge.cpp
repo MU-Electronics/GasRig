@@ -141,23 +141,34 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::buildShutDownMachine()
     {
-        // Where to start the machine
-        shutDownMachine.setInitialState(state("vent", false));
-
+        ///////////////////////////////////////////////////
+        // ONLY ONE INJECTED STATE MACHINE RUNS AT ONCE! //
+        ///////////////////////////////////////////////////
         // Vent
-        //state("vent", false)->addTransition(&m_vent, &Vent::emit_machineAlreadyStopped, state("vacDown", false));
-        state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFinished, state("vacDown", false));
-        state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFailed, state("vacDown", false));
+        if(getInjectedMachineStatus("vent"))
+        {
+            shutDownMachine.setInitialState(state("vent", false));
+            state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFinished, state("closeOuput", false));
+            state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFailed, state("closeOuput", false));
+        }
 
         // Vac down to X
-        //state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineAlreadyStopped, state("pressurise", false));
-        state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFinished, state("pressurise", false));
-        state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFailed, state("pressurise", false));
+        if(getInjectedMachineStatus("vacDown"))
+        {
+            shutDownMachine.setInitialState(state("vacDown", false));
+            state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFinished, state("closeOuput", false));
+            state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFailed, state("closeOuput", false));
+        }
 
         // Set high pressure
-        //state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineAlreadyStopped, state("closeOuput", false));
-        state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, state("closeOuput", false));
-        state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFailed, state("closeOuput", false));
+        if(getInjectedMachineStatus("pressurise"))
+        {
+            shutDownMachine.setInitialState(state("pressurise", false));
+            state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, state("closeOuput", false));
+            state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFailed, state("closeOuput", false));
+        }
+
+
 
         // Ensure all valves are closed
         transitionsBuilder()->closeAllValves(
@@ -287,6 +298,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_pressurise.start();
+
+        // Set status
+        setInjectedMachineStatus("pressurise", true);
     }
 
     /**
@@ -299,6 +313,9 @@ namespace App { namespace Experiment { namespace Machines
         qInfo() << "Stopping pressurise";
         // Start the machine
         m_pressurise.cancelStateMachine();
+
+        // Set status
+        setInjectedMachineStatus("pressurise", false);
     }
 
 
@@ -317,6 +334,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_vent.start();
+
+        // Set status
+        setInjectedMachineStatus("vent", true);
     }
 
     /**
@@ -329,6 +349,9 @@ namespace App { namespace Experiment { namespace Machines
         qInfo() << "Stopping vent";
         // Start the machine
         m_vent.cancelStateMachine();
+
+        // Set status
+        setInjectedMachineStatus("vent", false);
     }
 
 
@@ -347,6 +370,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_vacDown.start();
+
+        // Set status
+        setInjectedMachineStatus("vacDown", true);
     }
 
 
@@ -360,6 +386,9 @@ namespace App { namespace Experiment { namespace Machines
         qInfo() << "Stopping vac down";
         // Start the machine
         m_vacDown.cancelStateMachine();
+
+        // Set status
+        setInjectedMachineStatus("vacDown", false);
     }
 
 }}}
