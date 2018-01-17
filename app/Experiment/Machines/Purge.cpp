@@ -145,16 +145,19 @@ namespace App { namespace Experiment { namespace Machines
         shutDownMachine.setInitialState(state("vent", false));
 
         // Vent
-        state("vent", false)->addTransition(&m_vent, &Vent::emit_machineAlreadyStopped, state("vacDown", false));
+        //state("vent", false)->addTransition(&m_vent, &Vent::emit_machineAlreadyStopped, state("vacDown", false));
         state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFinished, state("vacDown", false));
+        state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFailed, state("vacDown", false));
 
         // Vac down to X
-        state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineAlreadyStopped, state("pressurise", false));
+        //state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineAlreadyStopped, state("pressurise", false));
         state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFinished, state("pressurise", false));
+        state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFailed, state("pressurise", false));
 
         // Set high pressure
-        state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineAlreadyStopped, state("closeOuput", false));
+        //state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineAlreadyStopped, state("closeOuput", false));
         state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, state("closeOuput", false));
+        state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFailed, state("closeOuput", false));
 
         // Ensure all valves are closed
         transitionsBuilder()->closeAllValves(
@@ -293,6 +296,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopPressurise()
     {
+        qInfo() << "Stopping pressurise";
         // Start the machine
         m_pressurise.cancelStateMachine();
     }
@@ -322,6 +326,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVent()
     {
+        qInfo() << "Stopping vent";
         // Start the machine
         m_vent.cancelStateMachine();
     }
@@ -352,6 +357,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVacuum()
     {
+        qInfo() << "Stopping vac down";
         // Start the machine
         m_vacDown.cancelStateMachine();
     }

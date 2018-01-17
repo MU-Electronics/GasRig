@@ -202,15 +202,16 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::afterSubMachinesStopped()
     {
-        qInfo() << "Shut down state machine finished: " << childClassName;
         // Tell the everyone the machine has finished
         if(error)
         {
+            qInfo() << "Shut down state machine finished (failed): " << childClassName;
             // Failed signal
             emit emit_machineFailed(errorDetails);
         }
         else
         {
+            qInfo() << "Shut down state machine finished (success): " << childClassName;
             emit emit_machineFinished(errorDetails);
         }
     }
@@ -223,7 +224,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopShutDownSubMachineWithoutError()
     {        
-        qInfo() << "Shut down state machine stopped: " << childClassName;
+        //qInfo() << "Shut down state machine stopped: " << childClassName;
         // Stop the shutdown state machine
         shutDownMachine.stop();
     }
@@ -272,7 +273,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Tell every one were stopping wuth the stop state machine
            emit emit_machineStopping(errorDetails);
 
-            qInfo() << "Running shutdown state machine: " << childClassName;
+            //qInfo() << "Running shutdown state machine: " << childClassName;
         }
 
         // Stop main machine
@@ -307,6 +308,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         }
         else
         {
+            qInfo() << "Machine not running" << childClassName;
             emit emit_machineAlreadyStopped();
         }
     }
@@ -337,6 +339,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         else
         {
             emit emit_machineAlreadyStopped();
+
+//            qInfo() << "1: ";
+//            emit emit_machineFinished(errorDetails);
         }
     }
 

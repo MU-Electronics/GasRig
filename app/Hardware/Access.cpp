@@ -264,7 +264,7 @@ namespace App { namespace Hardware
                 m_queue.enqueue(command);
 
                 // Log the issue only to console
-                qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
+                //qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;
@@ -286,7 +286,7 @@ namespace App { namespace Hardware
                 m_queue.enqueue(command);
 
                 // Log the issue only to console
-                qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
+                //qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;
@@ -307,7 +307,7 @@ namespace App { namespace Hardware
                 m_queue.enqueue(command);
 
                 // Log the issue only to console
-                qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
+                //qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;
@@ -328,7 +328,7 @@ namespace App { namespace Hardware
                 m_queue.enqueue(command);
 
                 // Log the issue only to console
-                qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
+                //qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;

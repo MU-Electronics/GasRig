@@ -25,7 +25,8 @@ namespace App { namespace Experiment { namespace Machines
         shutDownMachines = true;
 
         // Set class name
-        childClassName = QString::fromStdString(typeid(this).name());
+        //childClassName = QString::fromStdString(typeid(this).name());
+        childClassName = "Vac Down";
 
         // Pressure validator states
         connect(validator("vacPressureForTurbo", true), &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validateVacPressureForTurbo);

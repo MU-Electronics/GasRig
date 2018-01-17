@@ -25,7 +25,8 @@ namespace App { namespace Experiment { namespace Machines
         shutDownMachines = true;
 
         // Set class name
-        childClassName = QString::fromStdString(typeid(this).name());
+        //childClassName = QString::fromStdString(typeid(this).name());
+        childClassName = "Vent";
 
         // General
         connect(state("sml_stageFinder", true), &QState::entered, this, &Vent::stageFinder);

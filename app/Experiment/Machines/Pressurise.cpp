@@ -31,8 +31,8 @@ namespace App { namespace Experiment { namespace Machines
         shutDownMachines = true;
 
         // Set class name
-        childClassName = QString::fromStdString(typeid(this).name());
-
+        //childClassName = QString::fromStdString(typeid(this).name());
+        childClassName = "Pressuirse";
         // Connect signals and slots
         connectStatesToMethods();
     }
