@@ -86,12 +86,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::connectStatesToMethods()
     {
+        machine.setInitialState(&sm_master);
+
         // Connect cancel state machine signal
         sm_master.addTransition(this, &MachineStates::emit_cancelMachine, &sm_stop_2);
-
-        // Tell the machine to stop becuase of success or error
         connect(&machine, &QStateMachine::finished, this, &MachineStates::stopMachineWithoutError);
 
+        // Tell the machine to stop becuase of success or error
         connect(&sm_stop, &QState::entered, this, &MachineStates::stopMachineWithoutError);
         connect(&sm_stopAsFailed, &QState::entered, this, &MachineStates::stopMachineWithError);
 
@@ -182,8 +183,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         // Build new transitions
         buildMachine();
-
-        machine.setInitialState(&sm_master);
 
         // Start machine
         machine.start();
@@ -294,6 +293,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopMachineWithoutError()
     {
+        qDebug() << "Stopping machine without error";
         // There was no error
         error = false;
 
