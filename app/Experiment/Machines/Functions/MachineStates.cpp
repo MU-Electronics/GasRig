@@ -86,10 +86,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::connectStatesToMethods()
     {
-        machine.setInitialState(&sm_master);
-
         // Connect cancel state machine signal
-        sm_master.addTransition(this, &MachineStates::emit_cancelMachine, &sm_stop_2);
         connect(&machine, &QStateMachine::finished, this, &MachineStates::stopMachineWithoutError);
 
         // Tell the machine to stop becuase of success or error
@@ -180,6 +177,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Remove old transitions
         removeAllTransitions(machine);
         removeAllTransitions(shutDownMachine);
+
+        machine.setInitialState(&sm_master);
+        sm_master.addTransition(this, &MachineStates::emit_cancelMachine, &sm_stop_2);
 
         // Build new transitions
         buildMachine();
