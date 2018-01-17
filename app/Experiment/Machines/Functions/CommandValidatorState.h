@@ -14,7 +14,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     class CommandValidatorState: public QState
     {
         public:
-            CommandValidatorState(QStateMachine *machine);
+            CommandValidatorState(QState *machine);
 
             QVariantMap package;
 

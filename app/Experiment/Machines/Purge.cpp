@@ -294,7 +294,7 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::stopPressurise()
     {
         // Start the machine
-        m_pressurise.stopMachineWithoutError();
+        m_pressurise.cancelStateMachine();
     }
 
 
@@ -323,7 +323,7 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::stopVent()
     {
         // Start the machine
-        m_vent.stopMachineWithoutError();
+        m_vent.cancelStateMachine();
     }
 
 
@@ -353,7 +353,7 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::stopVacuum()
     {
         // Start the machine
-        m_vacDown.stopMachineWithoutError();
+        m_vacDown.cancelStateMachine();
     }
 
 }}}

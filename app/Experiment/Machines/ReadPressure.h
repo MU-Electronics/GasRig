@@ -50,11 +50,6 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
             QTimer t_pressureMonitor;
 
-            // States
-            QState
-                sml_startPressureMonitor
-            ,   sml_systemPressure;
-
     };
 }}}
 

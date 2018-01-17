@@ -128,12 +128,12 @@ namespace App { namespace Experiment { namespace Machines
         m_readVacStationTemperatures.setParams(vacStationTemperTimeInter);
 
         // Start the machines for the three sensors
-        m_readFlowControllerFlow.start();
+       // m_readFlowControllerFlow.start();
         m_readPressure.start();
-        m_readVacuum.start();
-        m_readFlowControllerTemperatures.start();
-        m_readTurboSpeed.start();
-        m_readVacStationTemperatures.start();
+        //m_readVacuum.start();
+        //m_readFlowControllerTemperatures.start();
+       // m_readTurboSpeed.start();
+        //m_readVacStationTemperatures.start();
 
         // Set the sensors to being monitored
         sensorMonitors = true;

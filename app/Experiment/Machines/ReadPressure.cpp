@@ -18,18 +18,14 @@ namespace App { namespace Experiment { namespace Machines
     ReadPressure::ReadPressure(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
-            // States
-        ,   sml_startPressureMonitor(&machine)
-        ,   sml_systemPressure(&machine)
-
             // Timers
         ,   t_pressureMonitor(parent)
     {
         // Set class name
         childClassName = QString::fromStdString(typeid(this).name());
 
-        connect(&sml_systemPressure, &QState::entered, this->pressure(), &Functions::Pressure::systemPressure);
-        connect(&sml_startPressureMonitor, &QState::entered, this, &ReadPressure::startPressureMonitor);
+        connect(state("sml_systemPressure", true), &QState::entered, this->pressure(), &Functions::Pressure::systemPressure);
+        connect(state("sml_startPressureMonitor", true), &QState::entered, this, &ReadPressure::startPressureMonitor);
     }
 
     ReadPressure::~ReadPressure()
@@ -85,16 +81,16 @@ namespace App { namespace Experiment { namespace Machines
     void ReadPressure::buildMachine()
     {
         // Where to start the machine
-        sm_master.setInitialState(&sml_startPressureMonitor);
+        sm_master.setInitialState(state("sml_startPressureMonitor", true));
 
         // Start the pressure monitor
-        sml_startPressureMonitor.addTransition(&t_pressureMonitor, &QTimer::timeout, &sml_systemPressure);
+        state("sml_startPressureMonitor", true)->addTransition(&t_pressureMonitor, &QTimer::timeout, state("sml_systemPressure", true));
 
         // Read the pressure sensor
-        sml_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_startPressureMonitor);
+        state("sml_systemPressure", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, state("sml_startPressureMonitor", true));
 
         // Account for com issues
-        transitionsBuilder()->stateComErrors(&sml_systemPressure, &sml_startPressureMonitor);
+        transitionsBuilder()->stateComErrors(state("sml_systemPressure", true),state("sml_startPressureMonitor", true));
     }
 
 

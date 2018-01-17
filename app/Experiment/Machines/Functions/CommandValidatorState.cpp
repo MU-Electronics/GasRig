@@ -15,7 +15,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      * @brief CommandValidatorState::CommandValidatorState
      * @param machine
      */
-    CommandValidatorState::CommandValidatorState(QStateMachine *machine)
+    CommandValidatorState::CommandValidatorState(QState *machine)
         :   QState(machine)
     {
 

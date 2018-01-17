@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QStateMachine>
 #include <QState>
+#include <QFinalState>
 #include <QTimer>
 #include <QVariantMap>
 
@@ -106,11 +107,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
             QState sm_master;
+            QFinalState sm_stop_2;
 
             // Create the stop and stopped as failed states
             QState
-                sm_stop
-            ,   sm_stopAsFailed
+                sm_stop,
+               sm_stopAsFailed
 
             ,   ssm_stop
             ,   ssm_stopAsFailed;
