@@ -105,6 +105,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             TransitionsBuilder* transitionsBuilder();
 
 
+            QState sm_master;
+
             // Create the stop and stopped as failed states
             QState
                 sm_stop
@@ -116,6 +118,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             // Start machine
             void start();
+
+
+            // Cancel state machine
+            void cancelStateMachine();
 
 
             // Helper methods
@@ -147,6 +153,8 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             void emit_machineFailed(QVariantMap errorDetails);
 
             void emit_machineAlreadyStopped();
+
+            void emit_cancelMachine();
 
         public slots:
             // Finishing state machine slots

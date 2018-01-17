@@ -154,12 +154,12 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopSensorReadings()
     {
         // Stop the machine
-        m_readFlowControllerFlow.stopMachineWithoutError();
-        m_readPressure.stopMachineWithoutError();
-        m_readVacuum.stopMachineWithoutError();
-        m_readFlowControllerTemperatures.stopMachineWithoutError();
-        m_readTurboSpeed.stopMachineWithoutError();
-        m_readVacStationTemperatures.stopMachineWithoutError();
+        m_readFlowControllerFlow.cancelStateMachine();
+        m_readPressure.cancelStateMachine();
+        m_readVacuum.cancelStateMachine();
+        m_readFlowControllerTemperatures.cancelStateMachine();
+        m_readTurboSpeed.cancelStateMachine();
+        m_readVacStationTemperatures.cancelStateMachine();
 
         // Set the sensors to being monitored
         sensorMonitors = false;
@@ -232,7 +232,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopVacDown()
     {
         // Stop the machine
-        m_vacDown.stopMachineWithoutError();
+        m_vacDown.cancelStateMachine();
     }
 
     /**
@@ -312,7 +312,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopPurge()
     {
         // Stop the machine
-        m_purge.stopMachineWithoutError();
+        m_purge.cancelStateMachine();
     }
 
     /**
@@ -395,7 +395,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopVent()
     {
         // Stop the machine
-        m_vent.stopMachineWithoutError();
+        m_vent.cancelStateMachine();
     }
 
     void Machines::ventFinished(QVariantMap params)
@@ -452,7 +452,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopPulseValve()
     {
         // Stop the pulse valve machine
-        m_pulseValve.stopMachineWithoutError();
+        m_pulseValve.cancelStateMachine();
     }
 
     /**
@@ -531,7 +531,7 @@ namespace App { namespace Experiment { namespace Machines
     void Machines::stopSetPressure()
     {
         // Stop the pulse valve machine
-        m_pressurise.stopMachineWithoutError();
+        m_pressurise.cancelStateMachine();
     }
 
 

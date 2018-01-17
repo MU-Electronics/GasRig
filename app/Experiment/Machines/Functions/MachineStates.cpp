@@ -48,9 +48,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Builders to build transition blocks for common state machine logic
         ,   m_transitionsBuilder(new TransitionsBuilder(parent, settings, hardware, m_valves, m_vacuum, m_pressure, m_flow))
 
+        ,   // Main state for machine
+            sm_master(&machine)
+
             // States for stopping with success and failure for start state machine
-        ,   sm_stop(&machine)
-        ,   sm_stopAsFailed(&machine)
+        ,   sm_stop(&sm_master)
+        ,   sm_stopAsFailed(&sm_master)
 
             // States for stopping with success and failure for stop state machine
         ,   ssm_stop(&shutDownMachine)
@@ -82,6 +85,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::connectStatesToMethods()
     {
+        // Connect cancel state machine signal
+        sm_master.addTransition(this, &MachineStates::emit_cancelMachine, &sm_stop);
+
         // Tell the machine to stop becuase of success or error
         connect(&sm_stop, &QState::entered, this, &MachineStates::stopMachineWithoutError);
         connect(&sm_stopAsFailed, &QState::entered, this, &MachineStates::stopMachineWithError);
@@ -89,7 +95,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // When machine has stopped running the stopped method in each machine
         connect(&machine, &QStateMachine::stopped, this, &MachineStates::emitStopped);
         connect(this, &MachineStates::emit_machineAlreadyStopped, this, &MachineStates::emitStopped);
-
 
         // Shut down sub state machines
         connect(&ssm_stop, &QState::entered, this, &MachineStates::stopShutDownSubMachineWithoutError);
@@ -177,6 +182,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         // Start machine
         machine.start();
+    }
+
+
+    void MachineStates::cancelStateMachine()
+    {
+        emit emit_cancelMachine();
     }
 
 
@@ -376,7 +387,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // If does not exist then make it
         if(!m_states.contains(id))
         {
-            m_states.insert(id, ( new QState( (type) ? &machine : &shutDownMachine ) ));
+            m_states.insert(id, ( new QState( (type) ? &sm_master : &shutDownMachine ) ));
         }
 
         // return the state

@@ -261,7 +261,7 @@ namespace App { namespace Experiment { namespace Machines
     void Vent::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(state("sml_stageFinder", true));
+        sm_master.setInitialState(state("sml_stageFinder", true));
 
 
         // What the next stage should be?

@@ -85,7 +85,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacuum::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sml_startVacuumPressureMonitor);
+        sm_master.setInitialState(&sml_startVacuumPressureMonitor);
 
         // Start the vacuum monitor
         sml_startVacuumPressureMonitor.addTransition(&t_vacPressureMonitor, &QTimer::timeout, &sml_vacPressure);

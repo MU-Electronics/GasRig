@@ -213,7 +213,7 @@ namespace App { namespace Experiment { namespace Machines
     void PulseValve::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(valvePointerOpen);
+        sm_master.setInitialState(valvePointerOpen);
 
 
         // Open the valve

@@ -456,7 +456,7 @@ namespace App { namespace Experiment { namespace Machines
     void Pressurise::buildMachine()
     {
         // Where to start the machine
-        (params.value("disable_init_vac_down").toBool()) ? machine.setInitialState(state("sml_closeHighPressureInput_1", true)) : machine.setInitialState(state("sml_waitForInitalPressure", true)) ;
+        (params.value("disable_init_vac_down").toBool()) ? sm_master.setInitialState(state("sml_closeHighPressureInput_1", true)) : sm_master.setInitialState(state("sml_waitForInitalPressure", true)) ;
 
         // Check the system pressure
         transitionsBuilder()->validatePressure(state("sml_waitForInitalPressure", true), validator("sml_validatePressureForVacuum", true), state("sml_closeHighPressureInput_1", true), &sm_stopAsFailed);

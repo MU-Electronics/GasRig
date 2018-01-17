@@ -94,7 +94,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacStationTemperatures::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sml_startVacuumTemperatureTimer);
+        sm_master.setInitialState(&sml_startVacuumTemperatureTimer);
 
         // Start timer
         sml_startVacuumTemperatureTimer.addTransition(&t_temperatureMonitor, &QTimer::timeout, &sml_getBearingTemperature);

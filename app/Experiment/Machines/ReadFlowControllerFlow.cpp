@@ -94,7 +94,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sml_startFlowControllerFlowMonitor);
+        sm_master.setInitialState(&sml_startFlowControllerFlowMonitor);
 
         // Start the flow controller flow monitor
         sml_startFlowControllerFlowMonitor.addTransition(&t_flowControllerFlowMonitor, &QTimer::timeout, &sml_flowControllerOneFlow_1);

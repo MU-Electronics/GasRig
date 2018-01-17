@@ -85,7 +85,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadPressure::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sml_startPressureMonitor);
+        sm_master.setInitialState(&sml_startPressureMonitor);
 
         // Start the pressure monitor
         sml_startPressureMonitor.addTransition(&t_pressureMonitor, &QTimer::timeout, &sml_systemPressure);

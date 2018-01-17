@@ -190,7 +190,7 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(state("vent", true));
+        sm_master.setInitialState(state("vent", true));
 
         // Vent
         state("vent", true)->addTransition(&m_vent, &Vent::emit_machineFailed, &sm_stopAsFailed);

@@ -257,7 +257,7 @@ namespace App { namespace Experiment { namespace Machines
     void VacDown::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(state("checkPressureForVacuum", true));
+        sm_master.setInitialState(state("checkPressureForVacuum", true));
 
         // Check the system pressure
         transitionsBuilder()->validatePressure(state("checkPressureForVacuum", true), validator("pressureForVacuum", true), state("closeHighPressureInput", true), &sm_stopAsFailed);

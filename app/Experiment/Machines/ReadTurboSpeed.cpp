@@ -85,7 +85,7 @@ namespace App { namespace Experiment { namespace Machines
     void ReadTurboSpeed::buildMachine()
     {
         // Where to start the machine
-        machine.setInitialState(&sml_startTurboSpeedTimer);
+        sm_master.setInitialState(&sml_startTurboSpeedTimer);
 
         // Start the speed monitor
         sml_startTurboSpeedTimer.addTransition(&t_turboSpeed, &QTimer::timeout, &sml_readTurboSpeed);

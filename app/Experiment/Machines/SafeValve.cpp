@@ -158,14 +158,14 @@ namespace App { namespace Experiment { namespace Machines
         // Check the output valve opened / closed correctly
         if(logic == true)
         {
-            machine.setInitialState(state("openOutput", true));
+            sm_master.setInitialState(state("openOutput", true));
 
             // Open the output valve
             transitionsBuilder()->openValve(state("openOutput", true), validator("openOutput", true), &sm_stop, &sm_stopAsFailed);
         }
         else
         {
-            machine.setInitialState(state("closeOutput", true));
+            sm_master.setInitialState(state("closeOutput", true));
 
             // Close the output valve
             transitionsBuilder()->closeValve(state("closeOutput", true), validator("closeOutput", true), &sm_stop, &sm_stopAsFailed);
@@ -184,7 +184,7 @@ namespace App { namespace Experiment { namespace Machines
         if(logic == true)
         {
             // Set the starting point
-            machine.setInitialState(state("closeVacuumOut", true));
+            sm_master.setInitialState(state("closeVacuumOut", true));
 
             // Close the vacuum otuput
             transitionsBuilder()->closeValve(state("closeVacuumOut", true), validator("closeVacuumOut", true), state("openSlowExhuastPath", true), &sm_stopAsFailed);
@@ -195,7 +195,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Set the starting point
-            machine.setInitialState(state("closeSlowExhuastPath", true));
+            sm_master.setInitialState(state("closeSlowExhuastPath", true));
 
             // Close the slow exhuast path valve
             transitionsBuilder()->closeValve(state("closeSlowExhuastPath", true), validator("closeSlowExhuastPath", true), &sm_stop, &sm_stopAsFailed);
@@ -215,7 +215,7 @@ namespace App { namespace Experiment { namespace Machines
         if(logic == true)
         {
             // Set the starting point
-            machine.setInitialState(state("closeVacuumIn", true));
+            sm_master.setInitialState(state("closeVacuumIn", true));
 
             // Close the vacuum input
             transitionsBuilder()->closeValve(state("closeVacuumIn", true), validator("closeVacuumIn", true), state("openExhuast", true), &sm_stopAsFailed);
@@ -226,7 +226,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Set the starting point
-            machine.setInitialState(state("closeExhuast", true));
+            sm_master.setInitialState(state("closeExhuast", true));
 
             // Close the exhuast valve
             transitionsBuilder()->closeValve(state("closeExhuast", true), validator("closeExhuast", true), &sm_stop, &sm_stopAsFailed);
@@ -246,7 +246,7 @@ namespace App { namespace Experiment { namespace Machines
         if(logic == true)
         {
             // Set the starting point
-            machine.setInitialState(state("closeVacuumOut", true));
+            sm_master.setInitialState(state("closeVacuumOut", true));
 
             // Close the vacuum output
             transitionsBuilder()->closeValve(state("closeVacuumOut", true), validator("closeVacuumOut", true), state("openFastExhuastPath", true), &sm_stopAsFailed);
@@ -256,7 +256,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Set the starting point
-            machine.setInitialState(state("closeFastExhuastPath", true));
+            sm_master.setInitialState(state("closeFastExhuastPath", true));
 
             // Close the fast exhuast value
             transitionsBuilder()->closeValve(state("closeFastExhuastPath", true), validator("closeFastExhuastPath", true), &sm_stop, &sm_stopAsFailed);
@@ -276,7 +276,7 @@ namespace App { namespace Experiment { namespace Machines
         if(logic == true)
         {
             // Set the starting point
-            machine.setInitialState(state("closeExhuast", true));
+            sm_master.setInitialState(state("closeExhuast", true));
 
             // Close exhuaust
             transitionsBuilder()->closeValve(state("closeExhuast", true), validator("closeExhuast", true), state("closeHighPressureInput", true), &sm_stopAsFailed);
@@ -296,7 +296,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Set the starting point
-            machine.setInitialState(state("closeVacuumIn", true));
+            sm_master.setInitialState(state("closeVacuumIn", true));
 
             // Close the vacuum input
             transitionsBuilder()->closeValve(state("closeVacuumIn", true), validator("closeVacuumIn", true), &sm_stop, &sm_stopAsFailed);
@@ -316,7 +316,7 @@ namespace App { namespace Experiment { namespace Machines
         if(logic == true)
         {
             // Set the starting point
-            machine.setInitialState(state("closeFastExhuastPath", true));
+            sm_master.setInitialState(state("closeFastExhuastPath", true));
 
             // Close the fast exhuast path
             transitionsBuilder()->closeValve(state("closeFastExhuastPath", true), validator("closeFastExhuastPath", true), state("closeSlowExhuastPath", true), &sm_stopAsFailed);
@@ -330,7 +330,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Set the starting point
-            machine.setInitialState(state("closeVacuumOut", true));
+            sm_master.setInitialState(state("closeVacuumOut", true));
 
             // Close the slow exhuast path valve
             transitionsBuilder()->closeValve(state("closeVacuumOut", true), validator("closeVacuumOut", true), &sm_stop, &sm_stopAsFailed);
@@ -350,7 +350,7 @@ namespace App { namespace Experiment { namespace Machines
         if(logic == true)
         {
             // Set the starting point
-           machine.setInitialState(state("closeVacuumIn", true));
+           sm_master.setInitialState(state("closeVacuumIn", true));
 
 
             // Close vacuum input
@@ -371,7 +371,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Set the starting point
-            machine.setInitialState(state("closeHighPressureInput", true));
+            sm_master.setInitialState(state("closeHighPressureInput", true));
 
             // Close the vacuum input
             transitionsBuilder()->closeValve(state("closeHighPressureInput", true), validator("closeHighPressureInput", true), &sm_stop, &sm_stopAsFailed);
@@ -391,7 +391,7 @@ namespace App { namespace Experiment { namespace Machines
         if(logic == true)
         {
             // Set the starting point
-            machine.setInitialState(state("closeVacuumIn", true));
+            sm_master.setInitialState(state("closeVacuumIn", true));
 
             // Close vacuum input
             transitionsBuilder()->closeValve(state("closeVacuumIn", true), validator("closeVacuumIn", true), state("closeVacuumOut", true), &sm_stopAsFailed);
@@ -411,7 +411,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Set the starting point
-            machine.setInitialState(state("closeFlowController", true));
+            sm_master.setInitialState(state("closeFlowController", true));
 
             // Close the flow controller
             transitionsBuilder()->closeValve(state("closeFlowController", true), validator("closeFlowController", true), &sm_stop, &sm_stopAsFailed);
@@ -431,7 +431,7 @@ namespace App { namespace Experiment { namespace Machines
         if(logic == true)
         {
             // Set the starting point
-            machine.setInitialState(state("closeVacuumIn", true));
+            sm_master.setInitialState(state("closeVacuumIn", true));
 
             // Close vacuum input
             transitionsBuilder()->closeValve(state("closeVacuumIn", true), validator("closeVacuumIn", true), state("closeVacuumOut", true), &sm_stopAsFailed);
@@ -451,7 +451,7 @@ namespace App { namespace Experiment { namespace Machines
         else
         {
             // Set the starting point
-            machine.setInitialState(state("closeHighPressureNitrogen", true));
+            sm_master.setInitialState(state("closeHighPressureNitrogen", true));
 
             // Close the high pressure nitrogen
             transitionsBuilder()->closeValve(state("closeHighPressureNitrogen", true), validator("closeHighPressureNitrogen", true), &sm_stop, &sm_stopAsFailed);
