@@ -25,11 +25,15 @@ namespace App { namespace Experiment { namespace Machines
         childClassName = QString::fromStdString(typeid(this).name());
 
         // Flow temperature
-        connect(state("sml_readTemperature_1", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneTemperature);
-        connect(state("sml_readTemperature_2", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoTemperature);
+        connect(state("readTemperature_1", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneTemperature);
+        connect(state("readTemperature_2", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoTemperature);
+
+        connect(validator("readTemperature_1", true), &QState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneTemperature);
+        connect(validator("readTemperature_2", true), &QState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoTemperature);
+
 
         // Timers
-        connect(state("sml_startFlowControllerMonitor", true), &QState::entered, this, &ReadFlowControllerTemperatures::startFlowControllerTemperatureMonitor);
+        connect(state("startFlowControllerMonitor", true), &QState::entered, this, &ReadFlowControllerTemperatures::startFlowControllerTemperatureMonitor);
     }
 
     ReadFlowControllerTemperatures::~ReadFlowControllerTemperatures()
@@ -86,18 +90,26 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerTemperatures::buildMachine()
     {
         // Where to start the machine
-        sm_master.setInitialState(state("sml_startFlowControllerMonitor", true));
+        sm_master.setInitialState(state("startFlowControllerMonitor", true));
 
         // Start the flow controller temperature monitor
-        state("sml_startFlowControllerMonitor", true)->addTransition(&t_flowControllerTemperatureMonitor, &QTimer::timeout, state("sml_readTemperature_1", true));
+        state("startFlowControllerMonitor", true)->addTransition(&t_flowControllerTemperatureMonitor, &QTimer::timeout, state("readTemperature_1", true));
 
         // Read flow rate
-        state("sml_readTemperature_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, state("sml_readTemperature_2", true));
-        state("sml_readTemperature_2", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, state("sml_startFlowControllerMonitor", true));
+        state("readTemperature_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, validator("readTemperature_1", true));
+            // Validate
+            validator("readTemperature_1", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, state("readTemperature_2", true));
+            validator("readTemperature_1", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("readTemperature_2", true));
+        state("readTemperature_2", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, validator("readTemperature_2", true));
+            // Validate
+            validator("readTemperature_2", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, state("startFlowControllerMonitor", true));
+            validator("readTemperature_2", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("startFlowControllerMonitor", true));
 
         // Account for com issues
-        transitionsBuilder()->stateComErrors(state("sml_readTemperature_1", true), state("sml_startFlowControllerMonitor", true));
-        transitionsBuilder()->stateComErrors(state("sml_readTemperature_2", true), state("sml_startFlowControllerMonitor", true));
+        transitionsBuilder()->stateComErrors(state("readTemperature_1", true), state("startFlowControllerMonitor", true));
+        transitionsBuilder()->stateComErrors(state("readTemperature_2", true), state("startFlowControllerMonitor", true));
+        transitionsBuilder()->stateComErrors(validator("readTemperature_1", true), state("startFlowControllerMonitor", true));
+        transitionsBuilder()->stateComErrors(validator("readTemperature_2", true), state("startFlowControllerMonitor", true));
     }
 
 

@@ -79,6 +79,41 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
 
+    void Pressure::validatePressure()
+    {
+        // Get the validator state instance
+        CommandValidatorState* state = (CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Get the pressure
+        float pressureIn = package.value("pressure").toFloat();
+
+        // Check the pressure is safe to vac down
+        if(pressureIn > 0 && pressureIn < 150)
+        {
+            // Store the stage info
+            QVariantMap data;
+            data.insert("pressure", pressureIn);
+
+            // Emit safe to proceed
+            emit emit_validationSuccess(data);
+
+            return;
+        }
+
+        // Store the error
+        errorDetails.clear();
+        errorDetails.insert("message", "pressure that was read was out of spec for the pressure sensor");
+        errorDetails.insert("system_pressure", pressureIn);
+
+        // Emit not safe to proceed
+        emit emit_validationFailed(errorDetails);
+    }
+
+
+
     /**
      * Validate a reading of the system pressure
      *

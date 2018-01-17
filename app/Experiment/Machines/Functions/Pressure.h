@@ -75,6 +75,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Conditiona validation
             void validatePressureForVacuum();
             void validateVacPressureForTurbo();
+            void validatePressure();
 
 
         private:

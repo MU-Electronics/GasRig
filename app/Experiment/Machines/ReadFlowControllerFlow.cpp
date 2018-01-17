@@ -25,11 +25,15 @@ namespace App { namespace Experiment { namespace Machines
         childClassName = QString::fromStdString(typeid(this).name());
 
         // Flow
-        connect(state("sml_flowControllerOneFlow_1", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneFlow);
-        connect(state("sml_flowControllerTwoFlow_1", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoFlow);
+        connect(state("flowControllerOneFlow", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneFlow);
+        connect(state("flowControllerTwoFlow", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoFlow);
+
+        connect(validator("flowControllerOneFlow", true), &QState::entered, this->flow(), &Functions::Flow::validateFlowControllerOneFlow);
+        connect(validator("flowControllerTwoFlow", true), &QState::entered, this->flow(), &Functions::Flow::validateFlowControllerTwoFlow);
+
 
         // Timers
-        connect(state("sml_startFlowControllerFlowMonitor", true), &QState::entered, this, &ReadFlowControllerFlow::startFlowControllerFlowMonitor);
+        connect(state("startFlowControllerFlowMonitor", true), &QState::entered, this, &ReadFlowControllerFlow::startFlowControllerFlowMonitor);
     }
 
     ReadFlowControllerFlow::~ReadFlowControllerFlow()
@@ -87,18 +91,28 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::buildMachine()
     {
         // Where to start the machine
-        sm_master.setInitialState(state("sml_startFlowControllerFlowMonitor", true));
+        sm_master.setInitialState(state("startFlowControllerFlowMonitor", true));
 
         // Start the flow controller flow monitor
-        state("sml_startFlowControllerFlowMonitor", true)->addTransition(&t_flowControllerFlowMonitor, &QTimer::timeout, state("sml_flowControllerOneFlow_1", true));
+        state("startFlowControllerFlowMonitor", true)->addTransition(&t_flowControllerFlowMonitor, &QTimer::timeout, state("flowControllerOneFlow", true));
 
         // Read the flow controller flow sensor
-        state("sml_flowControllerOneFlow_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, state("sml_flowControllerTwoFlow_1", true));
-        state("sml_flowControllerTwoFlow_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, state("sml_startFlowControllerFlowMonitor", true));
+        state("flowControllerOneFlow", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, validator("flowControllerOneFlow", true));
+            // Validate flow controller output
+            validator("flowControllerOneFlow", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, state("flowControllerTwoFlow", true));
+            validator("flowControllerOneFlow", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("flowControllerTwoFlow", true));
+
+        state("flowControllerTwoFlow", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, validator("flowControllerTwoFlow", true));
+            // Validate flow controller output
+            validator("flowControllerTwoFlow", true)->addTransition(this->flow(), &Functions::Flow::emit_validationFailed, state("startFlowControllerFlowMonitor", true));
+            validator("flowControllerTwoFlow", true)->addTransition(this->flow(), &Functions::Flow::emit_validationSuccess, state("startFlowControllerFlowMonitor", true));
+
 
         // Account for com issues
-        transitionsBuilder()->stateComErrors(state("sml_flowControllerOneFlow_1", true), state("sml_startFlowControllerFlowMonitor", true));
-        transitionsBuilder()->stateComErrors(state("sml_flowControllerTwoFlow_1", true), state("sml_startFlowControllerFlowMonitor", true));
+        transitionsBuilder()->stateComErrors(state("flowControllerOneFlow", true), state("startFlowControllerFlowMonitor", true));
+        transitionsBuilder()->stateComErrors(state("flowControllerTwoFlow", true), state("startFlowControllerFlowMonitor", true));
+        transitionsBuilder()->stateComErrors(validator("flowControllerOneFlow", true), state("startFlowControllerFlowMonitor", true));
+        transitionsBuilder()->stateComErrors(validator("flowControllerTwoFlow", true), state("startFlowControllerFlowMonitor", true));
     }
 
 

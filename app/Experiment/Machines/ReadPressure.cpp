@@ -24,8 +24,9 @@ namespace App { namespace Experiment { namespace Machines
         // Set class name
         childClassName = QString::fromStdString(typeid(this).name());
 
-        connect(state("sml_systemPressure", true), &QState::entered, this->pressure(), &Functions::Pressure::systemPressure);
-        connect(state("sml_startPressureMonitor", true), &QState::entered, this, &ReadPressure::startPressureMonitor);
+        connect(state("systemPressure", true), &QState::entered, this->pressure(), &Functions::Pressure::systemPressure);
+        connect(validator("systemPressure", true), &QState::entered, this->pressure(), &Functions::Pressure::validatePressure);
+        connect(state("startPressureMonitor", true), &QState::entered, this, &ReadPressure::startPressureMonitor);
     }
 
     ReadPressure::~ReadPressure()
@@ -81,16 +82,20 @@ namespace App { namespace Experiment { namespace Machines
     void ReadPressure::buildMachine()
     {
         // Where to start the machine
-        sm_master.setInitialState(state("sml_startPressureMonitor", true));
+        sm_master.setInitialState(state("startPressureMonitor", true));
 
         // Start the pressure monitor
-        state("sml_startPressureMonitor", true)->addTransition(&t_pressureMonitor, &QTimer::timeout, state("sml_systemPressure", true));
+        state("startPressureMonitor", true)->addTransition(&t_pressureMonitor, &QTimer::timeout, state("systemPressure", true));
 
         // Read the pressure sensor
-        state("sml_systemPressure", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, state("sml_startPressureMonitor", true));
+        state("systemPressure", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("systemPressure", true));
+            // Validate
+            validator("systemPressure", true)->addTransition(this->pressure(), &Functions::Pressure::emit_validationFailed, state("startPressureMonitor", true));
+            validator("systemPressure", true)->addTransition(this->pressure(), &Functions::Pressure::emit_validationSuccess, state("startPressureMonitor", true));
 
         // Account for com issues
-        transitionsBuilder()->stateComErrors(state("sml_systemPressure", true), state("sml_startPressureMonitor", true));
+        transitionsBuilder()->stateComErrors(state("systemPressure", true), state("startPressureMonitor", true));
+        transitionsBuilder()->stateComErrors(validator("systemPressure", true), state("startPressureMonitor", true));
     }
 
 
