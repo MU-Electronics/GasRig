@@ -1,7 +1,5 @@
 #include "HALSupport.h"
 
-#include <QVariantMap>
-
 namespace App { namespace Hardware { namespace HAL
 {
 

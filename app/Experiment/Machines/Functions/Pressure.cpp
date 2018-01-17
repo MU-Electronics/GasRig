@@ -112,13 +112,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         }
 
         // Store the error
-        QVariantMap error;
-        error.insert("message", "pressure in system is too high for the vac station; Exhuast the system first.");
-        error.insert("system_pressure", pressureIn);
-        error.insert("system_pressure_max", maxPressure);
+        errorDetails.clear();
+        errorDetails.insert("message", "pressure in system is too high for the vac station; Exhuast the system first.");
+        errorDetails.insert("system_pressure", pressureIn);
+        errorDetails.insert("system_pressure_max", maxPressure);
 
         // Emit not safe to proceed
-        emit emit_validationFailed(error);
+        emit emit_validationFailed(errorDetails);
     }
 
 
@@ -157,10 +157,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         }
 
         // Store the error
-        QVariantMap error;
-        error.insert("message", "the vacuum pressure is too high for the turbo pump to be turned on");
-        emit emit_validationFailed(error);
-
+        errorDetails.clear();
+        errorDetails.insert("message", "the vacuum pressure is too high for the turbo pump to be turned on");
+        emit emit_validationFailed(errorDetails);
     }
 
 

@@ -17,7 +17,11 @@
 // Require app
 #include "bootstrap/Startup.h"
 
+// Debugger
 #include "app/Services/Debugger.h"
+
+// Debugging catergories
+#include "app/Services/Debuging.h"
 
 
 /**

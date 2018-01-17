@@ -3,7 +3,6 @@
 // Include external libs
 #include <QObject>
 #include <QThread>
-#include <QDebug>
 #include <QMetaObject>
 #include <QVariantMap>
 #include <QVariant>
@@ -264,8 +263,8 @@ namespace App { namespace Hardware
                 // Re add the method to the queue as this one will be removed
                 m_queue.enqueue(command);
 
-                // Log the issue
-                // qDebug() << "Command was relisted due to bus issue: " << command;
+                // Log the issue only to console
+                qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;
@@ -286,8 +285,8 @@ namespace App { namespace Hardware
                 // Re add the method to the queue as this one will be removed
                 m_queue.enqueue(command);
 
-                // Log the issue
-                //qDebug() << "Command was relisted due to bus issue: " << command;
+                // Log the issue only to console
+                qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;
@@ -307,8 +306,8 @@ namespace App { namespace Hardware
                 // Re add the method to the queue as this one will be removed
                 m_queue.enqueue(command);
 
-                // Log the issue
-                //qDebug() << "Command was relisted due to bus issue: " << command;
+                // Log the issue only to console
+                qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;
@@ -328,8 +327,8 @@ namespace App { namespace Hardware
                 // Re add the method to the queue as this one will be removed
                 m_queue.enqueue(command);
 
-                // Log the issue
-                //qDebug() << "Command was relisted due to bus issue: " << command;
+                // Log the issue only to console
+                qCDebug(halAccess) << "Command was relisted due to bus issue: " << command;
 
                 // Return back to worker for next method
                 return true;
@@ -355,7 +354,7 @@ namespace App { namespace Hardware
             else
             {
                 // Error
-                qDebug() << "Method not allow or does not exsist in Access class: " << command;
+                qCWarning(halAccess) << "Method not allow or does not exsist in Access class: " << command;
 
                 // Failed to run method not allowed
                 status["resulting_status"]  = false;
@@ -449,6 +448,9 @@ namespace App { namespace Hardware
      */
     void Access::listen_serialComUpdates(QVariantMap command)
     {
+        // Error
+        qCInfo(halAccess) << "Serial port status updated: " << command;
+
         emit emit_serialComUpdated(command);
     }
 
@@ -459,6 +461,9 @@ namespace App { namespace Hardware
      */
     void Access::listen_critialSerialError(QVariantMap command)
     {
+        // Error
+        qCCritical(halAccess) << "Serial com port had a critical issue event" << command;
+
         emit emit_critialSerialError(command);
     }
 
@@ -469,6 +474,9 @@ namespace App { namespace Hardware
      */
     void Access::listen_timeoutSerialError(QVariantMap command)
     {
+        // Error
+        qCWarning(halAccess) << "Serial com port had a time out event" << command;
+
         emit emit_timeoutSerialError(command);
     }
 

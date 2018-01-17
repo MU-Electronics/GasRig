@@ -24,6 +24,7 @@ namespace App { namespace Experiment { namespace Machines
         // We have stop state machines
         shutDownMachines = true;
 
+        // Set class name
         childClassName = QString::fromStdString(typeid(this).name());
 
         // Pressure validator states
@@ -237,6 +238,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Check that turbo is not spinner before we stop
         state("waitForTurboSpeed", false)->addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, validator("turboSpeedZero", false));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("waitForTurboSpeed", false), state("waitForTurboSpeed", false));
             // Is the turbo spinning
             validator("turboSpeedZero", false)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationFailed, state("waitForTurboSpeed", false));
             validator("turboSpeedZero", false)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, &ssm_stop);
@@ -270,6 +273,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Close the exhuast valve
         state("closeExhuast", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeExhuast", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("closeExhuast", true), &sm_stopAsFailed);
             // Wrong signal was picked up
             validator("closeExhuast", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeExhuast", true));
             // Valve closed successfully check to see what state the output valve should be in
@@ -288,7 +293,11 @@ namespace App { namespace Experiment { namespace Machines
 
         // Set the output valve
         state("closeOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeOutput", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("closeOutput", true), &sm_stopAsFailed);
         state("openOutput", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openOutput", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("openOutput", true), &sm_stopAsFailed);
             // Wrong signal was picked up
             validator("openOutput", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("openOutput", true));
             validator("closeOutput", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeOutput", true));
@@ -314,7 +323,11 @@ namespace App { namespace Experiment { namespace Machines
 
         // Set the exhuast path valve fast
         state("closeFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeFastExhuastPath", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("closeFastExhuastPath", true), &sm_stopAsFailed);
         state("openFastExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openFastExhuastPath", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("openFastExhuastPath", true), &sm_stopAsFailed);
             // Wrong signal was picked up
             validator("closeFastExhuastPath", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeFastExhuastPath", true));
             validator("openFastExhuastPath", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("openFastExhuastPath", true));
@@ -340,7 +353,11 @@ namespace App { namespace Experiment { namespace Machines
 
         // Set the exhuast path valve slow
         state("closeSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeSlowExhuastPath", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("closeSlowExhuastPath", true), &sm_stopAsFailed);
         state("openSlowExhuastPath", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openSlowExhuastPath", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("openSlowExhuastPath", true), &sm_stopAsFailed);
             // Wrong signal was picked up
             validator("closeSlowExhuastPath", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeSlowExhuastPath", true));
             validator("openSlowExhuastPath", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("openSlowExhuastPath", true));
@@ -361,7 +378,11 @@ namespace App { namespace Experiment { namespace Machines
 
         // Set vacuum out valve
         state("closeVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("closeVacuumOut", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("closeVacuumOut", true), &sm_stopAsFailed);
         state("openVacuumOut", true)->addTransition(&m_hardware, &Hardware::Access::emit_setValveState, validator("openVacuumOut", true));
+            // Account for com issues
+            transitionsBuilder()->stateComErrors(state("openVacuumOut", true), &sm_stopAsFailed);
             // Wrong signal was picked up
             validator("closeVacuumOut", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("closeVacuumOut", true));
             validator("openVacuumOut", true)->addTransition(m_valves, &Functions::Valves::emit_validationWrongId, state("openVacuumOut", true));
@@ -398,6 +419,8 @@ namespace App { namespace Experiment { namespace Machines
         {
             // Read vac pressure
             state("timerWait", true)->addTransition(&m_hardware, &Hardware::Access::emit_readVacuumPressure, validator("vacPressureForTurbo", true));
+                // Account for com issues
+                transitionsBuilder()->stateComErrors(state("timerWait", true), state("timerWait", true));
                 // Pressure low enough for turbo so enable it
                 validator("vacPressureForTurbo", true)->addTransition(this->pressure(), &Functions::Pressure::emit_validationSuccess, state("enableTurboPump", true));
                 // Pressure too high for turbo, wait for next time out untill we check again
@@ -407,6 +430,8 @@ namespace App { namespace Experiment { namespace Machines
             // Enable turbo pump
             state("enableTurboPump", true)->addTransition(this->vacuum(), &Functions::Vacuum::emit_turboPumpAlreadyEnabled, state("timerWait", true));
             state("enableTurboPump", true)->addTransition(&m_hardware, &Hardware::Access::emit_setTurboPumpState, validator("enableTurboPump", true));
+                // Account for com issues
+                transitionsBuilder()->stateComErrors(state("enableTurboPump", true), &sm_stopAsFailed);
                 // Successfully enabled
                 validator("enableTurboPump", true)->addTransition(this->vacuum(), &Functions::Vacuum::emit_validationSuccess, state("timerWait", true));
                 // Could not enable
@@ -423,6 +448,8 @@ namespace App { namespace Experiment { namespace Machines
         {
             // Value based
             state("timerWait", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("pressureForStop", true));
+                // Account for com issues
+                transitionsBuilder()->stateComErrors(state("timerWait", true), state("timerWait", true));
                 // Pressure is too low carry on vac'ing
                 validator("pressureForStop", true)->addTransition(this, &VacDown::emit_pressureToLow, state("timerWait", true));
                 // Pressure is perfect so stop

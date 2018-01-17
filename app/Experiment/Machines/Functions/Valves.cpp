@@ -80,9 +80,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Get the validator state instance
         CommandValidatorState* command = dynamic_cast<CommandValidatorState*>(sender());
 
-        // Failed data to passon
-        QVariantMap returnPackage;
-
         // If cast successfull
         if(command != NULL && command->package.value("cast_status").toBool())
         {
@@ -95,12 +92,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // If id was not registered then the signal name was correct but the signal is not
             if(!isRegister(package.value("command_identifier").toString()))
             {
-                returnPackage.insert("message", "ID was wrong in the package, not an error but skipping signal");
-                returnPackage.insert("acutal_id", package.value("command_identifier").toInt());
-                returnPackage.insert("ids", stringOfIds());
+                errorDetails.clear();
+                errorDetails.insert("message", "ID was wrong in the package, not an error but skipping signal");
+                errorDetails.insert("acutal_id", package.value("command_identifier").toInt());
+                errorDetails.insert("ids", stringOfIds());
 
                 // Tell everyone the signal was wrong
-                emit emit_validationWrongId(returnPackage);
+                emit emit_validationWrongId(errorDetails);
 
                 // Do nothing else
                 return;
@@ -109,37 +107,41 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             // Check valve is the same
             if(package.value("port").toString() == valveName && state == package.value("value").toBool())
             {
+                // Failed data to passon
+                QVariantMap successPackage;
+
                 // Data to pass on
-                returnPackage.insert("requested_valve", valveName);
-                returnPackage.insert("requested_valve_id", number);
-                returnPackage.insert("valve_changed", package.value("port").toString());
-                returnPackage.insert("requested_state", state);
-                returnPackage.insert("state", package.value("value").toBool());
+                successPackage.insert("requested_valve", valveName);
+                successPackage.insert("requested_valve_id", number);
+                successPackage.insert("valve_changed", package.value("port").toString());
+                successPackage.insert("requested_state", state);
+                successPackage.insert("state", package.value("value").toBool());
 
                 // Emit safe to proceed
-                emit emit_validationSuccess(returnPackage);
+                emit emit_validationSuccess(successPackage);
 
                 return;
             }
-            qDebug() << "fail";
 
             // Failed data to passon
-            returnPackage.insert("message", "The valve failed to update correctly");
-            returnPackage.insert("requested_valve", valveName);
-            returnPackage.insert("requested_valve_id", number);
-            returnPackage.insert("valve_changed", package.value("port").toString());
-            returnPackage.insert("requested_state", state);
-            returnPackage.insert("state", package.value("value").toBool());
+            errorDetails.clear();
+            errorDetails.insert("message", "The valve failed to update correctly");
+            errorDetails.insert("requested_valve", valveName);
+            errorDetails.insert("requested_valve_id", number);
+            errorDetails.insert("valve_changed", package.value("port").toString());
+            errorDetails.insert("requested_state", state);
+            errorDetails.insert("state", package.value("value").toBool());
         }
         else
         {
-            returnPackage.insert("message", "Validation casting failed");
-            returnPackage.insert("requested_valve_id", number);
-            returnPackage.insert("requested_state", state);
+            errorDetails.clear();
+            errorDetails.insert("message", "Validation casting failed");
+            errorDetails.insert("requested_valve_id", number);
+            errorDetails.insert("requested_state", state);
         }
 
         // Emit not safe to proceed
-        emit emit_validationFailed(returnPackage);
+        emit emit_validationFailed(errorDetails);
     }
 
 

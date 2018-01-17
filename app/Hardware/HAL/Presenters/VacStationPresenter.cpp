@@ -75,6 +75,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // There was an error
         if(error_returnedPackageSize != -1 || error_returnedCommandId != -1)
         {
+            // Log error
+            qCCritical(halAccessVacStationPresenter) << "Could not find the correct vac station presenter method. " << generateError(method, commands, package);
+
             // Generate the error package and sent it back
             return generateError(method, commands, package);
         }
@@ -85,6 +88,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             error["error_id"] = "FlowControllerPresenter_NoMethodFound";
             error["level"] = "critical";
             error["message"] = "The method " + method + " does not exist in the flow controller presenter class.";
+
+            // Log error
+            qCCritical(halAccessVacStationPresenter) << "Could not find the correct vac station presenter method. " << error;
 
             // Return the package
             return error;
@@ -320,9 +326,8 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getError";
 
-
-        qDebug() << "GET ERROR MESSAGE NEEDS IMPLIMENTING IN PRESENTER";
-
+        // Returns type 4 = string in TC110 docs and has to be 6 characters long
+        presented.insert("error", data.value("data").toString());
 
         // Return the presenter data
         return presented;
@@ -438,19 +443,17 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["method"] = "emit_getTurboPumpState";
 
-        qDebug() << "GET TURBO STATE NEEDS IMPLIMENTING IN PRESENTER";
-
         // State of pump
-//        if(data.value("data").toString() == "111111")
-//        {
-//            presented.insert("state", true);
-//            presented.insert("state_verbal", "on");
-//        }
-//        else
-//        {
-//            presented.insert("state", false);
-//            presented.insert("state_verbal", "off");
-//        }
+        if(data.value("data").toString() == "111111")
+        {
+            presented.insert("state", true);
+            presented.insert("state_verbal", "on");
+        }
+        else
+        {
+            presented.insert("state", false);
+            presented.insert("state_verbal", "off");
+        }
 
         // Return the presenter data
         return presented;

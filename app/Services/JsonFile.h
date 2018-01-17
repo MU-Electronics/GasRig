@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <QJsonObject>
 
+// Debugging catergories
+#include "../Services/Debuging.h"
+
 namespace App { namespace Services {
     class JsonFile
     {

@@ -5,6 +5,9 @@
 #include <QThread>
 #include <QMutex>
 
+// Debugging catergories
+#include "../Services/Debuging.h"
+
 namespace App { namespace Services{
     class Thread : public QObject
     {

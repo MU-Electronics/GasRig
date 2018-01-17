@@ -98,6 +98,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // There was an error
         if(error_returnedPackageSize != -1 || error_returnedCommandId != -1)
         {
+            // Log error
+            qCCritical(halAccessFlowControllerPresenter) << "There was an error with the package size or command id" << generateError(method, commands, package);
+
             // Generate the error package and sent it back
             return generateError(method, commands, package);
         }
@@ -108,6 +111,9 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             error["error_id"] = "FlowControllerPresenter_NoMethodFound";
             error["level"] = "critical";
             error["message"] = "The method " + method + " does not exist in the flow controller presenter class.";
+
+            // Log error
+            qCCritical(halAccessFlowControllerPresenter) << "Could not find the correct flow controll presenter method. " << error;
 
             // Return the package
             return error;
@@ -242,16 +248,21 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
 
+        // Command 11
+        presented["manufacturer_id"] = package.at(13).toInt();
+        presented["device_type"] = package.at(14).toInt();
+        presented["response_chars"] = package.at(15).toInt();
+        presented["command_rev"] = package.at(16).toInt();
+        presented["tran_command_rev"] = package.at(17).toInt();
+        presented["software_rev"] = package.at(18).toInt();
+        presented["hardware_rev"] = package.at(19).toInt();
+        presented["flags"] = package.at(20).toInt();
 
-
-
-        qDebug() << "Flow controller get identifiers need implimenting"  << package;
-
-
-
-
-
-
+        // Set the device id
+        ThreeByteIntConvertion.buf[0] = package.at(21).toInt(); // MSB
+        ThreeByteIntConvertion.buf[1] = package.at(22).toInt();
+        ThreeByteIntConvertion.buf[2] = package.at(23).toInt(); // LSB
+        presented["device_id"] = ThreeByteIntConvertion.number;
 
         // Return the presenter data
         return presented;
@@ -742,7 +753,39 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
 
-        qDebug() << "Set flow unit has not be implimented" << package;
+        // Flow referance
+        presented["referance"] = package.at(12).toInt();
+        presented["verbal_referance"] = "unknown";
+        if(package.at(12).toInt() == 0)
+            presented["verbal_referance"] = "Normal";
+        if(package.at(12).toInt() == 1)
+            presented["verbal_referance"] = "Standard";
+        if(package.at(12).toInt() == 2)
+            presented["verbal_referance"] = "Calibration";
+
+        // Flow unit
+        presented["unit"] = package.at(13).toInt();
+        presented["unit_referance"] = "unknown";
+        if(package.at(13).toInt() == 17)
+            presented["unit_referance"] = "Litres/minute";
+        if(package.at(13).toInt() == 19)
+            presented["unit_referance"] = "Cubic meters/hour";
+        if(package.at(13).toInt() == 24)
+            presented["unit_referance"] = "Litres/second";
+        if(package.at(13).toInt() == 28)
+            presented["unit_referance"] = "Cubic meters/second";
+        if(package.at(13).toInt() == 57)
+            presented["unit_referance"] = "Percent of flow range";
+        if(package.at(13).toInt() == 131)
+            presented["unit_referance"] = "Cubic meters/minute";
+        if(package.at(13).toInt() == 138)
+            presented["unit_referance"] = "Liters/hour";
+        if(package.at(13).toInt() == 170)
+            presented["unit_referance"] = "Millilitres/second";
+        if(package.at(13).toInt() == 171)
+            presented["unit_referance"] = "Millilitres/minute";
+        if(package.at(13).toInt() == 172)
+            presented["unit_referance"] = "Millilitres/hour";
 
         // Return the presenter data
         return presented;
@@ -771,7 +814,17 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
         // Which signal should be triggered by the access thread
         presented["controller"] = commands["controller"];
 
-        qDebug() << "Set temperature unit has not be implimented" << package;
+        // Returns int of unit (mapping in settings file)
+        presented["unit"] = package.at(12).toInt();
+        presented["unit_verbal"] = "unknown";
+        if(package.at(12).toInt() == 32)
+            presented["unit_verbal"] = "Degrees Celsius";
+
+        if(package.at(12).toInt() == 33)
+            presented["unit_verbal"] = "Degrees Fahrenheit";
+
+        if(package.at(12).toInt() == 35)
+            presented["unit_verbal"] = "Kelvin";
 
         // Return the presenter data
         return presented;

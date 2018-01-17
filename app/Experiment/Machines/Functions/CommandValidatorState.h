@@ -5,6 +5,9 @@
 #include <QStateMachine>
 #include <QVariantMap>
 
+// Debugging catergories
+#include "../../../Services/Debuging.h"
+
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 

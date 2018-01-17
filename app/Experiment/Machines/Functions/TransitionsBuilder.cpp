@@ -39,6 +39,37 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
     }
 
+
+    /**
+     * Transitions to react to com bus errors
+     *
+     * @brief TransitionsBuilder::stateComErrors
+     * @param state
+     * @param failed
+     */
+    void TransitionsBuilder::stateComErrors(QState* state, QState* failed)
+    {
+        // Check for timeout errors on bus
+        state->addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, failed);
+
+        // Check for critical errors on bus
+        state->addTransition(&m_hardware, &Hardware::Access::emit_critialSerialError, failed);
+    }
+
+    void TransitionsBuilder::stateComErrors(CommandValidatorState* state, QState* failed)
+    {
+        // Check for timeout errors on bus
+        state->addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, failed);
+
+        // Check for critical errors on bus
+        state->addTransition(&m_hardware, &Hardware::Access::emit_critialSerialError, failed);
+    }
+
+
+
+
+
+
     /**
      * Validate a pressure with success or fail signals
      *
@@ -59,6 +90,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             validatePressureReading->addTransition(m_pressure, &Functions::Pressure::emit_validationSuccess, finished);
             // Pressure is too high
             validatePressureReading->addTransition(m_pressure, &Functions::Pressure::emit_validationFailed, failed);
+
+        // Account for bus errors
+        stateComErrors(waitForPressure, failed);
     }
 
 
@@ -83,6 +117,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             enableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationFailed, failed);
             // Validate backing pump on
             enableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationSuccess, finished);
+
+        // Account for bus errors
+        stateComErrors(enable, failed);
     }
 
     /**
@@ -105,6 +142,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationFailed, failed);
             // Validate backing pump on
             disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationSuccess, finished);
+
+        // Account for bus errors
+        stateComErrors(disable, failed);
     }
 
     /**
@@ -129,6 +169,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationSuccess, finished);
             // Turbo pump could not be disabled
             disableValidate->addTransition(m_vacuum, &Functions::Vacuum::emit_validationFailed, failed);
+
+        // Account for bus errors
+        stateComErrors(disable, failed);
     }
 
 
@@ -154,6 +197,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             openValidate->addTransition(m_valves, &Functions::Valves::emit_validationSuccess, finished);
             // Valve failed to close
             openValidate->addTransition(m_valves, &Functions::Valves::emit_validationFailed, failed);
+
+        // Account for bus errors
+        stateComErrors(open, failed);
     }
 
     /**
@@ -178,6 +224,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             closeValidate->addTransition(m_valves, &Functions::Valves::emit_validationSuccess, finished);
             // Valve failed to close
             closeValidate->addTransition(m_valves, &Functions::Valves::emit_validationFailed, failed);
+
+        // Account for bus errors
+        stateComErrors(close, failed);
     }
 
 

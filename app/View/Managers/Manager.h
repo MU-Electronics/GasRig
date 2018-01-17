@@ -1,5 +1,8 @@
 #pragma once
 
+// Debugging catergories
+#include "../../Services/Debuging.h"
+
 // Include threads
 #include "../../Hardware/Access.h"
 #include "../../Safety/Monitor.h"

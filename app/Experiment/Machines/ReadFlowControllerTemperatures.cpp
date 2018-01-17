@@ -26,6 +26,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_flowControllerTemperatureMonitor(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // Flow temperature
         connect(&sml_readTemperature_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneTemperature);
         connect(&sml_readTemperature_2, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoTemperature);
@@ -96,6 +99,10 @@ namespace App { namespace Experiment { namespace Machines
         // Read flow rate
         sml_readTemperature_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, &sml_readTemperature_2);
         sml_readTemperature_2.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, &sml_startFlowControllerMonitor);
+
+        // Account for com issues
+        transitionsBuilder()->stateComErrors(&sml_readTemperature_1, &sml_startFlowControllerMonitor);
+        transitionsBuilder()->stateComErrors(&sml_readTemperature_2, &sml_startFlowControllerMonitor);
     }
 
 

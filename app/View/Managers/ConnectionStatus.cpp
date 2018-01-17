@@ -2,9 +2,6 @@
 
 // Include external libs
 #include <QMap>
-#include <QLoggingCategory>
-#include "../../../bootstrap/LoggingCategory.h"
-
 
 namespace App { namespace View { namespace Managers
 {
@@ -148,6 +145,9 @@ namespace App { namespace View { namespace Managers
         // Set connection to timeout error
         m_hardwareConnection.insert(package["responsability"].toString(), "2");
 
+        // Log failed event
+        qCWarning(usbConnectionStatus) << "Comport timeout event occured!" << package;
+
         // Update summary
         allConnections();
 
@@ -166,6 +166,9 @@ namespace App { namespace View { namespace Managers
     {
         // Set connection to critial error
         m_hardwareConnection.insert(package["responsability"].toString(), "3");
+
+        // Log failed event
+        qCWarning(usbConnectionStatus) << "Critical erro on the comport!" << package;
 
         // Update summary
         allConnections();

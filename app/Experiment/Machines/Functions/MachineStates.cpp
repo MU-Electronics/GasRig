@@ -190,6 +190,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Tell the everyone the machine has finished
         if(error)
         {
+            // Failed signal
             emit emit_machineFailed(errorDetails);
         }
         else
@@ -222,6 +223,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         // Stop the shutdown state machine
         shutDownMachine.stop();
+
+        // Log error
+        qCCritical(machineStates)    <<  childClassName         << " stop state machine failed!"    << "\n"
+                                     << "Last pressure error: " << m_pressure->errorDetails         << "\n"
+                                     << "Last valve error: "    << m_valves->errorDetails           << "\n"
+                                     << "Last vacuum error: "   << m_vacuum->errorDetails           << "\n"
+                                     << "Last flow error: "     << m_flow->errorDetails             << "\n";
     }
 
 
@@ -293,6 +301,13 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     {
         // There was an error
         error = true;
+
+        // Log error
+        qCCritical(machineStates)   << childClassName           << " run machine failed!"   << "\n"
+                                     << "Last pressure error: " << m_pressure->errorDetails << "\n"
+                                     << "Last valve error: "    << m_valves->errorDetails   << "\n"
+                                     << "Last vacuum error: "   << m_vacuum->errorDetails   << "\n"
+                                     << "Last flow error: "     << m_flow->errorDetails     << "\n";
 
         // Stop the machine
         if(machine.isRunning())

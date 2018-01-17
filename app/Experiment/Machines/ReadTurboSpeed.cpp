@@ -25,6 +25,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_turboSpeed(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         connect(&sml_readTurboSpeed, &QState::entered, this->vacuum(), &Functions::Vacuum::getTurboSpeed);
         connect(&sml_startTurboSpeedTimer, &QState::entered, this, &ReadTurboSpeed::startTurboTimer);
     }
@@ -91,7 +94,7 @@ namespace App { namespace Experiment { namespace Machines
         sml_readTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, &sml_startTurboSpeedTimer);
 
         // Account for com issues
-        sml_readTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startTurboSpeedTimer);
+        transitionsBuilder()->stateComErrors(&sml_readTurboSpeed, &sml_startTurboSpeedTimer);
     }
 
 

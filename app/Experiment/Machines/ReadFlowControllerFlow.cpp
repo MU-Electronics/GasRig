@@ -28,6 +28,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timer
         ,   t_flowControllerFlowMonitor(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         // Flow
         connect(&sml_flowControllerOneFlow_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneFlow);
         connect(&sml_flowControllerTwoFlow_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoFlow);
@@ -101,8 +104,8 @@ namespace App { namespace Experiment { namespace Machines
         sml_flowControllerTwoFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &sml_startFlowControllerFlowMonitor);
 
         // Account for com issues
-        sml_flowControllerOneFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startFlowControllerFlowMonitor);
-        sml_flowControllerTwoFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startFlowControllerFlowMonitor);
+        transitionsBuilder()->stateComErrors(&sml_flowControllerOneFlow_1, &sml_startFlowControllerFlowMonitor);
+        transitionsBuilder()->stateComErrors(&sml_flowControllerTwoFlow_1, &sml_startFlowControllerFlowMonitor);
     }
 
 

@@ -7,7 +7,6 @@
 #include <QQmlEngine>
 #include <QThread>
 #include <QString>
-#include <QDebug>
 
 // Include view manangers
 #include "View/Managers/Testing.h"
@@ -99,9 +98,6 @@ namespace App
 
         // Start addtional application threads
         startAddtionalThread();
-
-        // Debugging area for testing
-        debug();
     }
 
 
@@ -266,17 +262,6 @@ namespace App
     void Application::connectThreads()
     {
 
-
-    }
-
-    /**
-     * A simple area that allows classes etc to be tested before used
-     * NOTE: Will be remove before first release
-     *
-     * @brief debug
-     */
-    void Application::debug()
-    {
 
     }
 }

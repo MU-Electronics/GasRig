@@ -6,10 +6,12 @@
 #include <QString>
 #include <QMap>
 #include <QVariantMap>
-#include "../../../Utilities/Properties.h"
 
-// Include parent
+// View contract
 #include "../Manager.h"
+
+// Macro for c++ => QML properties
+#include "../../../Utilities/Properties.h"
 
 // Include settings container
 #include "../../../Settings/Container.h"

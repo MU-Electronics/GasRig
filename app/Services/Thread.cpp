@@ -59,9 +59,6 @@ namespace App { namespace Services
         thread_working = true;
         thread_abort = false;
 
-        // Send out a debug notice
-        //qDebug() << "Started a Thread: " << thread()->currentThreadId();
-
         // Unlock the object
         mutex.unlock();
 
@@ -85,7 +82,7 @@ namespace App { namespace Services
             thread_abort = true;
 
             // Send out a debug notice
-            //qDebug() << "Aborting the thread: " << thread()->currentThreadId();
+            qCWarning(threadService) << "Aborting the thread: " << thread()->currentThreadId();
         }
 
         // Unlock the object
@@ -117,9 +114,6 @@ namespace App { namespace Services
             // Check if we need to abort the thread
             if (abort)
             {
-                // Send out a debug notice
-                //qDebug() << "Aborting a worker in thread: " << thread()->currentThreadId();
-
                 // Break out of loop
                 break;
             }
@@ -139,9 +133,6 @@ namespace App { namespace Services
 
         // Unlock the object
         mutex.unlock();
-
-        // Send out a debug notice
-        //qDebug() << "Worker process has finished in thread: " << thread()->currentThreadId();
 
         // Tell the app that the process has finished
         emit finished();

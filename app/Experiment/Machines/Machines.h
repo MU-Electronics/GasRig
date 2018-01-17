@@ -1,8 +1,7 @@
 #pragma once
 
-// Include external libs
-#include <QDebug>
-#include <QThread>
+// Debugging catergories
+#include "../../Services/Debuging.h"
 
 // Include state machine
 #include "VacDown.h"

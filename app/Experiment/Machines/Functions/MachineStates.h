@@ -9,6 +9,9 @@
 #include <QTimer>
 #include <QVariantMap>
 
+// Debugging catergories
+#include "../../../Services/Debuging.h"
+
 // Include settings container
 #include "../../../Settings/Container.h"
 

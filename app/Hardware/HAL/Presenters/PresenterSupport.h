@@ -3,6 +3,9 @@
 #include <QStringList>
 #include <QVariantMap>
 
+// Debugging catergories
+#include "../../../Services/Debuging.h"
+
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
 
@@ -16,6 +19,13 @@ namespace App { namespace Hardware { namespace HAL { namespace Presenters
             QVariantMap extend(QVariantMap commands, QVariantMap package);
             QVariantMap commandId(QVariantMap commands, QVariantMap package);
             QVariantMap methodOverride(QVariantMap commands, QVariantMap package);
+
+            // Convert 3 btyes to int
+            union ThreeByteIntConvertion
+            {
+                int number;
+                unsigned char buf[3];
+            }ThreeByteIntConvertion;
 
             // Convert 4 btyes to float
             union FourByteFloatConvertion

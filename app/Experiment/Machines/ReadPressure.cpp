@@ -25,6 +25,9 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
         ,   t_pressureMonitor(parent)
     {
+        // Set class name
+        childClassName = QString::fromStdString(typeid(this).name());
+
         connect(&sml_systemPressure, &QState::entered, this->pressure(), &Functions::Pressure::systemPressure);
         connect(&sml_startPressureMonitor, &QState::entered, this, &ReadPressure::startPressureMonitor);
     }
@@ -91,7 +94,7 @@ namespace App { namespace Experiment { namespace Machines
         sml_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, &sml_startPressureMonitor);
 
         // Account for com issues
-        sml_systemPressure.addTransition(&m_hardware, &Hardware::Access::emit_timeoutSerialError, &sml_startPressureMonitor);
+        transitionsBuilder()->stateComErrors(&sml_systemPressure, &sml_startPressureMonitor);
     }
 
 

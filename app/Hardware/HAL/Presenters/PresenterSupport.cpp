@@ -1,7 +1,6 @@
 #include "PresenterSupport.h"
 
-#include <QStringList>
-#include <QDebug>
+
 namespace App { namespace Hardware { namespace HAL { namespace Presenters
 {
 
