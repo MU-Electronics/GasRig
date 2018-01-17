@@ -311,11 +311,11 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::stopPressurise()
     {
         qInfo() << "Stopping pressurise";
-        // Start the machine
-        m_pressurise.cancelStateMachine();
-
         // Set status
         setInjectedMachineStatus("pressurise", false);
+
+        // Start the machine
+        m_pressurise.cancelStateMachine();
     }
 
 
@@ -347,11 +347,11 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::stopVent()
     {
         qInfo() << "Stopping vent";
-        // Start the machine
-        m_vent.cancelStateMachine();
-
         // Set status
         setInjectedMachineStatus("vent", false);
+
+        // Start the machine
+        m_vent.cancelStateMachine();
     }
 
 
@@ -384,11 +384,11 @@ namespace App { namespace Experiment { namespace Machines
     void Purge::stopVacuum()
     {
         qInfo() << "Stopping vac down";
-        // Start the machine
-        m_vacDown.cancelStateMachine();
-
         // Set status
         setInjectedMachineStatus("vacDown", false);
+
+        // Start the machine
+        m_vacDown.cancelStateMachine();
     }
 
 }}}

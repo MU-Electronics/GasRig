@@ -357,6 +357,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     bool MachineStates::getInjectedMachineStatus(QString name)
     {
+        qInfo() << m_injectedMachines;
         return m_injectedMachines.value(name);
     }
 
@@ -370,6 +371,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::setInjectedMachineStatus(QString name, bool state)
     {
+        m_injectedMachines.clear();
         m_injectedMachines.insert(name, state);
     }
 
