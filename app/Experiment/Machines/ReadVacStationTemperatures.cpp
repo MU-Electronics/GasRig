@@ -18,13 +18,6 @@ namespace App { namespace Experiment { namespace Machines
     ReadVacStationTemperatures::ReadVacStationTemperatures(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
-            // States
-        ,   sml_startVacuumTemperatureTimer(&machine)
-        ,   sml_getBearingTemperature(&machine)
-        ,   sml_getTC110ElectronicsTemperature(&machine)
-        ,   sml_getMotorTemperature(&machine)
-        ,   sml_getPumpBottomTemperature(&machine)
-
             // Timers
         ,   t_temperatureMonitor(parent)
     {
@@ -32,13 +25,13 @@ namespace App { namespace Experiment { namespace Machines
         childClassName = QString::fromStdString(typeid(this).name());
 
         // States
-        connect(&sml_getBearingTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getBearingTemperature);
-        connect(&sml_getTC110ElectronicsTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getTC110ElectronicsTemperature);
-        connect(&sml_getMotorTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getMotorTemperature);
-        connect(&sml_getPumpBottomTemperature, &QState::entered, this->vacuum(), &Functions::Vacuum::getPumpBottomTemperature);
+        connect(state("sml_getBearingTemperature", true), &QState::entered, this->vacuum(), &Functions::Vacuum::getBearingTemperature);
+        connect(state("sml_getTC110ElectronicsTemperature", true), &QState::entered, this->vacuum(), &Functions::Vacuum::getTC110ElectronicsTemperature);
+        connect(state("sml_getMotorTemperature", true), &QState::entered, this->vacuum(), &Functions::Vacuum::getMotorTemperature);
+        connect(state("sml_getPumpBottomTemperature", true), &QState::entered, this->vacuum(), &Functions::Vacuum::getPumpBottomTemperature);
 
         // Timer
-        connect(&sml_startVacuumTemperatureTimer, &QState::entered, this, &ReadVacStationTemperatures::startTemperatureTimer);
+        connect(state("sml_startVacuumTemperatureTimer", true), &QState::entered, this, &ReadVacStationTemperatures::startTemperatureTimer);
     }
 
     ReadVacStationTemperatures::~ReadVacStationTemperatures()
@@ -94,30 +87,30 @@ namespace App { namespace Experiment { namespace Machines
     void ReadVacStationTemperatures::buildMachine()
     {
         // Where to start the machine
-        sm_master.setInitialState(&sml_startVacuumTemperatureTimer);
+        sm_master.setInitialState(state("sml_startVacuumTemperatureTimer", true));
 
         // Start timer
-        sml_startVacuumTemperatureTimer.addTransition(&t_temperatureMonitor, &QTimer::timeout, &sml_getBearingTemperature);
+        state("sml_startVacuumTemperatureTimer", true)->addTransition(&t_temperatureMonitor, &QTimer::timeout, state("sml_getBearingTemperature", true));
 
         // Get the bearing temperture
-        sml_getBearingTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getTC110ElectronicsTemperature);
+        state("sml_getBearingTemperature", true)->addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, state("sml_getTC110ElectronicsTemperature", true));
             // Account for com issues
-            transitionsBuilder()->stateComErrors(&sml_getBearingTemperature, &sml_getTC110ElectronicsTemperature);
+            transitionsBuilder()->stateComErrors(state("sml_getBearingTemperature", true), state("sml_getTC110ElectronicsTemperature", true));
 
         // Get the electronics temperature
-        sml_getTC110ElectronicsTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getMotorTemperature);
+        state("sml_getTC110ElectronicsTemperature", true)->addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, state("sml_getMotorTemperature", true));
             // Account for com issues
-            transitionsBuilder()->stateComErrors(&sml_getTC110ElectronicsTemperature, &sml_getMotorTemperature);
+            transitionsBuilder()->stateComErrors(state("sml_getTC110ElectronicsTemperature", true), state("sml_getMotorTemperature", true));
 
         // Get the motor temperature
-        sml_getMotorTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_getPumpBottomTemperature);
+        state("sml_getMotorTemperature", true)->addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, state("sml_getPumpBottomTemperature", true));
             // Account for com issues
-            transitionsBuilder()->stateComErrors(&sml_getMotorTemperature, &sml_getPumpBottomTemperature);
+            transitionsBuilder()->stateComErrors(state("sml_getMotorTemperature", true), state("sml_getPumpBottomTemperature", true));
 
         // Get the pump bottom temperature
-        sml_getPumpBottomTemperature.addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, &sml_startVacuumTemperatureTimer);
+        state("sml_getPumpBottomTemperature", true)->addTransition(&m_hardware, &Hardware::Access::emit_getTemperature, state("sml_startVacuumTemperatureTimer", true));
             // Account for com issues
-            transitionsBuilder()->stateComErrors(&sml_getPumpBottomTemperature, &sml_startVacuumTemperatureTimer);
+            transitionsBuilder()->stateComErrors(state("sml_getPumpBottomTemperature", true), state("sml_startVacuumTemperatureTimer", true));
     }
 
 

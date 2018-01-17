@@ -50,13 +50,6 @@ namespace App { namespace Experiment { namespace Machines
             // Timer for flow
             QTimer t_flowControllerTemperatureMonitor;
 
-            // States
-            QState
-                sml_readTemperature_1
-            ,   sml_readTemperature_2
-            ,   sml_startFlowControllerMonitor;
-
-
     };
 }}}
 

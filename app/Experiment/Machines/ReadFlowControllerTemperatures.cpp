@@ -18,11 +18,6 @@ namespace App { namespace Experiment { namespace Machines
     ReadFlowControllerTemperatures::ReadFlowControllerTemperatures(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
-            // States
-        ,   sml_readTemperature_1(&machine)
-        ,   sml_readTemperature_2(&machine)
-        ,   sml_startFlowControllerMonitor(&machine)
-
             // Timers
         ,   t_flowControllerTemperatureMonitor(parent)
     {
@@ -30,11 +25,11 @@ namespace App { namespace Experiment { namespace Machines
         childClassName = QString::fromStdString(typeid(this).name());
 
         // Flow temperature
-        connect(&sml_readTemperature_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneTemperature);
-        connect(&sml_readTemperature_2, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoTemperature);
+        connect(state("sml_readTemperature_1", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneTemperature);
+        connect(state("sml_readTemperature_2", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoTemperature);
 
         // Timers
-        connect(&sml_startFlowControllerMonitor, &QState::entered, this, &ReadFlowControllerTemperatures::startFlowControllerTemperatureMonitor);
+        connect(state("sml_startFlowControllerMonitor", true), &QState::entered, this, &ReadFlowControllerTemperatures::startFlowControllerTemperatureMonitor);
     }
 
     ReadFlowControllerTemperatures::~ReadFlowControllerTemperatures()
@@ -91,18 +86,18 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerTemperatures::buildMachine()
     {
         // Where to start the machine
-        sm_master.setInitialState(&sml_startFlowControllerMonitor);
+        sm_master.setInitialState(state("sml_startFlowControllerMonitor", true));
 
         // Start the flow controller temperature monitor
-        sml_startFlowControllerMonitor.addTransition(&t_flowControllerTemperatureMonitor, &QTimer::timeout, &sml_readTemperature_1);
+        state("sml_startFlowControllerMonitor", true)->addTransition(&t_flowControllerTemperatureMonitor, &QTimer::timeout, state("sml_readTemperature_1", true));
 
         // Read flow rate
-        sml_readTemperature_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, &sml_readTemperature_2);
-        sml_readTemperature_2.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, &sml_startFlowControllerMonitor);
+        state("sml_readTemperature_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, state("sml_readTemperature_2", true));
+        state("sml_readTemperature_2", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerTemperature, state("sml_startFlowControllerMonitor", true));
 
         // Account for com issues
-        transitionsBuilder()->stateComErrors(&sml_readTemperature_1, &sml_startFlowControllerMonitor);
-        transitionsBuilder()->stateComErrors(&sml_readTemperature_2, &sml_startFlowControllerMonitor);
+        transitionsBuilder()->stateComErrors(state("sml_readTemperature_1", true), state("sml_startFlowControllerMonitor", true));
+        transitionsBuilder()->stateComErrors(state("sml_readTemperature_2", true), state("sml_startFlowControllerMonitor", true));
     }
 
 

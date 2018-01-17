@@ -18,13 +18,6 @@ namespace App { namespace Experiment { namespace Machines
     ReadFlowControllerFlow::ReadFlowControllerFlow(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
-            // Flow states
-        ,   sml_flowControllerOneFlow_1(&machine)
-        ,   sml_flowControllerTwoFlow_1(&machine)
-
-            // Timer states
-        ,   sml_startFlowControllerFlowMonitor(&machine)
-
             // Timer
         ,   t_flowControllerFlowMonitor(parent)
     {
@@ -32,11 +25,11 @@ namespace App { namespace Experiment { namespace Machines
         childClassName = QString::fromStdString(typeid(this).name());
 
         // Flow
-        connect(&sml_flowControllerOneFlow_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerOneFlow);
-        connect(&sml_flowControllerTwoFlow_1, &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoFlow);
+        connect(state("sml_flowControllerOneFlow_1", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerOneFlow);
+        connect(state("sml_flowControllerTwoFlow_1", true), &QState::entered, this->flow(), &Functions::Flow::flowControllerTwoFlow);
 
         // Timers
-        connect(&sml_startFlowControllerFlowMonitor, &QState::entered, this, &ReadFlowControllerFlow::startFlowControllerFlowMonitor);
+        connect(state("sml_startFlowControllerFlowMonitor", true), &QState::entered, this, &ReadFlowControllerFlow::startFlowControllerFlowMonitor);
     }
 
     ReadFlowControllerFlow::~ReadFlowControllerFlow()
@@ -94,18 +87,18 @@ namespace App { namespace Experiment { namespace Machines
     void ReadFlowControllerFlow::buildMachine()
     {
         // Where to start the machine
-        sm_master.setInitialState(&sml_startFlowControllerFlowMonitor);
+        sm_master.setInitialState(state("sml_startFlowControllerFlowMonitor", true));
 
         // Start the flow controller flow monitor
-        sml_startFlowControllerFlowMonitor.addTransition(&t_flowControllerFlowMonitor, &QTimer::timeout, &sml_flowControllerOneFlow_1);
+        state("sml_startFlowControllerFlowMonitor", true)->addTransition(&t_flowControllerFlowMonitor, &QTimer::timeout, state("sml_flowControllerOneFlow_1", true));
 
         // Read the flow controller flow sensor
-        sml_flowControllerOneFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &sml_flowControllerTwoFlow_1);
-        sml_flowControllerTwoFlow_1.addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, &sml_startFlowControllerFlowMonitor);
+        state("sml_flowControllerOneFlow_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, state("sml_flowControllerTwoFlow_1", true));
+        state("sml_flowControllerTwoFlow_1", true)->addTransition(&m_hardware, &Hardware::Access::emit_getFlowControllerFlowRate, state("sml_startFlowControllerFlowMonitor", true));
 
         // Account for com issues
-        transitionsBuilder()->stateComErrors(&sml_flowControllerOneFlow_1, &sml_startFlowControllerFlowMonitor);
-        transitionsBuilder()->stateComErrors(&sml_flowControllerTwoFlow_1, &sml_startFlowControllerFlowMonitor);
+        transitionsBuilder()->stateComErrors(state("sml_flowControllerOneFlow_1", true), state("sml_startFlowControllerFlowMonitor", true));
+        transitionsBuilder()->stateComErrors(state("sml_flowControllerTwoFlow_1", true), state("sml_startFlowControllerFlowMonitor", true));
     }
 
 

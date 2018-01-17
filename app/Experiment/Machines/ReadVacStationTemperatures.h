@@ -50,14 +50,6 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
             QTimer t_temperatureMonitor;
 
-            // States
-            QState
-                sml_startVacuumTemperatureTimer
-            ,   sml_getBearingTemperature
-            ,   sml_getTC110ElectronicsTemperature
-            ,   sml_getMotorTemperature
-            ,   sml_getPumpBottomTemperature;
-
     };
 }}}
 

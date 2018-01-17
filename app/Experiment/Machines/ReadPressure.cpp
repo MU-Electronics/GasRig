@@ -90,7 +90,7 @@ namespace App { namespace Experiment { namespace Machines
         state("sml_systemPressure", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, state("sml_startPressureMonitor", true));
 
         // Account for com issues
-        transitionsBuilder()->stateComErrors(state("sml_systemPressure", true),state("sml_startPressureMonitor", true));
+        transitionsBuilder()->stateComErrors(state("sml_systemPressure", true), state("sml_startPressureMonitor", true));
     }
 
 

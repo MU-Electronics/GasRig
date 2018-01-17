@@ -51,15 +51,6 @@ namespace App { namespace Experiment { namespace Machines
             // How often to update
             QTimer t_flowControllerFlowMonitor;
 
-            // States
-            QState
-                // Timers
-                sml_startFlowControllerFlowMonitor
-
-                // Flow states
-            ,   sml_flowControllerOneFlow_1
-            ,   sml_flowControllerTwoFlow_1;
-
     };
 }}}
 

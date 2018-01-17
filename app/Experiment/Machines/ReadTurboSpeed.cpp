@@ -18,18 +18,14 @@ namespace App { namespace Experiment { namespace Machines
     ReadTurboSpeed::ReadTurboSpeed(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
-            // States
-        ,   sml_startTurboSpeedTimer(&machine)
-        ,   sml_readTurboSpeed(&machine)
-
             // Timers
         ,   t_turboSpeed(parent)
     {
         // Set class name
         childClassName = QString::fromStdString(typeid(this).name());
 
-        connect(&sml_readTurboSpeed, &QState::entered, this->vacuum(), &Functions::Vacuum::getTurboSpeed);
-        connect(&sml_startTurboSpeedTimer, &QState::entered, this, &ReadTurboSpeed::startTurboTimer);
+        connect(state("sml_readTurboSpeed", true), &QState::entered, this->vacuum(), &Functions::Vacuum::getTurboSpeed);
+        connect(state("sml_startTurboSpeedTimer", true), &QState::entered, this, &ReadTurboSpeed::startTurboTimer);
     }
 
     ReadTurboSpeed::~ReadTurboSpeed()
@@ -85,16 +81,16 @@ namespace App { namespace Experiment { namespace Machines
     void ReadTurboSpeed::buildMachine()
     {
         // Where to start the machine
-        sm_master.setInitialState(&sml_startTurboSpeedTimer);
+        sm_master.setInitialState(state("sml_startTurboSpeedTimer", true));
 
         // Start the speed monitor
-        sml_startTurboSpeedTimer.addTransition(&t_turboSpeed, &QTimer::timeout, &sml_readTurboSpeed);
+        state("sml_startTurboSpeedTimer", true)->addTransition(&t_turboSpeed, &QTimer::timeout, state("sml_readTurboSpeed", true));
 
         // Read the speed sensor
-        sml_readTurboSpeed.addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, &sml_startTurboSpeedTimer);
+        state("sml_readTurboSpeed", true)->addTransition(&m_hardware, &Hardware::Access::emit_getTurboSpeed, state("sml_startTurboSpeedTimer", true));
 
         // Account for com issues
-        transitionsBuilder()->stateComErrors(&sml_readTurboSpeed, &sml_startTurboSpeedTimer);
+        transitionsBuilder()->stateComErrors(state("sml_readTurboSpeed", true), state("sml_startTurboSpeedTimer", true));
     }
 
 

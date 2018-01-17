@@ -50,11 +50,6 @@ namespace App { namespace Experiment { namespace Machines
             // Timers
             QTimer t_turboSpeed;
 
-            // States
-            QState
-                sml_startTurboSpeedTimer
-            ,   sml_readTurboSpeed;
-
     };
 }}}
 
