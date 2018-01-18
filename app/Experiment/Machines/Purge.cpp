@@ -144,28 +144,28 @@ namespace App { namespace Experiment { namespace Machines
         ///////////////////////////////////////////////////
         // ONLY ONE INJECTED STATE MACHINE RUNS AT ONCE! //
         ///////////////////////////////////////////////////
-        // Vent
-        if(getInjectedMachineStatus("vent"))
+
+        if(m_vent.machine.isRunning()) // Vent
         {
             shutDownMachine.setInitialState(state("vent", false));
             state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFinished, state("closeOuput", false));
             state("vent", false)->addTransition(&m_vent, &Vent::emit_machineFailed, state("closeOuput", false));
         }
-
-        // Vac down to X
-        if(getInjectedMachineStatus("vacDown"))
+        else if(m_vacDown.machine.isRunning()) // Vac down to X
         {
             shutDownMachine.setInitialState(state("vacDown", false));
             state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFinished, state("closeOuput", false));
             state("vacDown", false)->addTransition(&m_vacDown, &VacDown::emit_machineFailed, state("closeOuput", false));
         }
-
-        // Set high pressure
-        if(getInjectedMachineStatus("pressurise"))
+        else if(m_pressurise.machine.isRunning()) // Set high pressure
         {
             shutDownMachine.setInitialState(state("pressurise", false));
             state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, state("closeOuput", false));
             state("pressurise", false)->addTransition(&m_pressurise, &Pressurise::emit_machineFailed, state("closeOuput", false));
+        }
+        else
+        {
+            shutDownMachine.setInitialState(state("closeOuput", false));
         }
 
 
