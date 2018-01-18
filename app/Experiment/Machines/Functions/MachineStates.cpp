@@ -189,6 +189,11 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     }
 
 
+    /**
+     * Method that triggers cancellation of state machine
+     *
+     * @brief MachineStates::cancelStateMachine
+     */
     void MachineStates::cancelStateMachine()
     {
         emit emit_cancelMachine();
@@ -205,13 +210,11 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         // Tell the everyone the machine has finished
         if(error)
         {
-            qInfo() << "Shut down state machine finished (failed): " << childClassName;
             // Failed signal
             emit emit_machineFailed(errorDetails);
         }
         else
         {
-            qInfo() << "Shut down state machine finished (success): " << childClassName;
             emit emit_machineFinished(errorDetails);
         }
     }
@@ -224,7 +227,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopShutDownSubMachineWithoutError()
     {        
-        //qInfo() << "Shut down state machine stopped: " << childClassName;
         // Stop the shutdown state machine
         shutDownMachine.stop();
     }
@@ -272,8 +274,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
             // Tell every one were stopping wuth the stop state machine
            emit emit_machineStopping(errorDetails);
-
-            //qInfo() << "Running shutdown state machine: " << childClassName;
         }
 
         // Stop main machine
@@ -297,7 +297,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
      */
     void MachineStates::stopMachineWithoutError()
     {
-        qInfo() << "Stopping machine without error: " << childClassName;
         // There was no error
         error = false;
 
@@ -308,7 +307,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         }
         else
         {
-            qInfo() << "Machine not running" << childClassName;
             emit emit_machineAlreadyStopped();
         }
     }
@@ -339,40 +337,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         else
         {
             emit emit_machineAlreadyStopped();
-
-//            qInfo() << "1: ";
-//            emit emit_machineFinished(errorDetails);
         }
-    }
-
-
-
-
-    /**
-     * Find out if an inject machine is running
-     *
-     * @brief MachineStates::getInjectedMachineStatus
-     * @param name
-     * @return
-     */
-    bool MachineStates::getInjectedMachineStatus(QString name)
-    {
-        qInfo() << m_injectedMachines;
-        return m_injectedMachines.value(name);
-    }
-
-
-    /**
-     * Set status of inject machine as running
-     *
-     * @brief MachineStates::setInjectedMachineStatus
-     * @param name
-     * @param state
-     */
-    void MachineStates::setInjectedMachineStatus(QString name, bool state)
-    {
-        m_injectedMachines.clear();
-        m_injectedMachines.insert(name, state);
     }
 
 

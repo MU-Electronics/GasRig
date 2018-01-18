@@ -127,8 +127,6 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
 
             // Helper methods
-            bool getInjectedMachineStatus(QString name);
-            void setInjectedMachineStatus(QString name, bool state);
             void removeAllTransitions(QStateMachine &stateMachine);
             void paramsOverride(QVariantMap override);
 

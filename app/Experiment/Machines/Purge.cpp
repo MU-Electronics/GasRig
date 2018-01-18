@@ -310,7 +310,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopPressurise()
     {
-        qInfo() << "Stopping pressurise";
         // Set status
         setInjectedMachineStatus("pressurise", false);
 
@@ -346,7 +345,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVent()
     {
-        qInfo() << "Stopping vent";
         // Set status
         setInjectedMachineStatus("vent", false);
 
@@ -383,7 +381,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVacuum()
     {
-        qInfo() << "Stopping vac down";
         // Set status
         setInjectedMachineStatus("vacDown", false);
 
