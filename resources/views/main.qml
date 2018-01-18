@@ -57,5 +57,4 @@ ApplicationWindow {
         }
         initialItem: ConnectionStatus{}
     }
-
 }

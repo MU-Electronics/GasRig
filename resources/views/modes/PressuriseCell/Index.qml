@@ -8,6 +8,12 @@ import Fluid.Core 1.0 as FluidCore
 
 import '../../parts'
 
+Mode_NotSupported{
+    featureName: qsTr("Pressurise Cell Not Supported Yet")
+}
+
+/*
+Below is for future guided experiments
 Item
 {
 
@@ -60,4 +66,4 @@ Item
         duration: 5000
     }
 }
-
+*/

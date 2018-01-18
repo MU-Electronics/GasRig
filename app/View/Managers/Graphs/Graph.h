@@ -53,7 +53,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             int hold = 300;
 
             // Limit the buffer size
-            int maxBuffer = 4000;
+            int maxBuffer = 300;
 
             // Update axis
             void updateAxis(QVector<QPointF> &data);

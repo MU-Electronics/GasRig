@@ -60,8 +60,8 @@ namespace App { namespace View { namespace Managers
             return;
         }
 
-        // @todo change to false, true for debugging
-        m_hardwareConnection.insert("all_connections", true);
+        // change false to true for debugging
+        m_hardwareConnection.insert("all_connections", false);
     }
 
     void ConnectionStatus::request_reconnect(QString item)
