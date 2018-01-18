@@ -298,9 +298,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_pressurise.start();
-
-        // Set status
-        setInjectedMachineStatus("pressurise", true);
     }
 
     /**
@@ -310,9 +307,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopPressurise()
     {
-        // Set status
-        setInjectedMachineStatus("pressurise", false);
-
         // Start the machine
         m_pressurise.cancelStateMachine();
     }
@@ -333,9 +327,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_vent.start();
-
-        // Set status
-        setInjectedMachineStatus("vent", true);
     }
 
     /**
@@ -345,9 +336,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVent()
     {
-        // Set status
-        setInjectedMachineStatus("vent", false);
-
         // Start the machine
         m_vent.cancelStateMachine();
     }
@@ -368,9 +356,6 @@ namespace App { namespace Experiment { namespace Machines
 
         // Start the machine
         m_vacDown.start();
-
-        // Set status
-        setInjectedMachineStatus("vacDown", true);
     }
 
 
@@ -381,9 +366,6 @@ namespace App { namespace Experiment { namespace Machines
      */
     void Purge::stopVacuum()
     {
-        // Set status
-        setInjectedMachineStatus("vacDown", false);
-
         // Start the machine
         m_vacDown.cancelStateMachine();
     }
