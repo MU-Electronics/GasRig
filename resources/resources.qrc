@@ -58,9 +58,9 @@
         <file>views/management/TestingMaintenance/Valve/SetHighPressure.qml</file>
         <file>views/parts/system_status/DebugMessages.qml</file>
         <file>views/parts/system_status/PressureDiagram.qml</file>
-        <file>views/modes/Scripts/Editor.qml</file>
-        <file>views/modes/Scripts/SysFunction.qml</file>
-        <file>views/modes/Scripts/FunctionDropArea.qml</file>
-        <file>views/modes/Scripts/Details.qml</file>
+        <file>views/modes/Scripts/Editor/Details.qml</file>
+        <file>views/modes/Scripts/Editor/FunctionDropArea.qml</file>
+        <file>views/modes/Scripts/Editor/Index.qml</file>
+        <file>views/modes/Scripts/Editor/SysFunction.qml</file>
     </qresource>
 </RCC>

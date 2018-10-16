@@ -8,7 +8,7 @@ import Fluid.Core 1.0 as FluidCore
 import QtQuick.Layouts 1.0
 
 
-import "../../parts"
+import "../../../parts"
 
 Item
 {
