@@ -8,7 +8,6 @@
         <file>views/template/SideBar.qml</file>
         <file>views/template/TitleBar.qml</file>
         <file>views/modes/RemoteControl.qml</file>
-        <file>views/modes/CustomExperiment.qml</file>
         <file>views/modes/VacuumStation.qml</file>
         <file>views/modes/DepressuriseCell.qml</file>
         <file>views/modes/CyclePressure.qml</file>
@@ -59,5 +58,8 @@
         <file>views/management/TestingMaintenance/Valve/SetHighPressure.qml</file>
         <file>views/parts/system_status/DebugMessages.qml</file>
         <file>views/parts/system_status/PressureDiagram.qml</file>
+        <file>views/modes/Scripts/Editor.qml</file>
+        <file>views/modes/Scripts/CheckBox.qml</file>
+        <file>views/modes/Scripts/SysFunction.qml</file>
     </qresource>
 </RCC>

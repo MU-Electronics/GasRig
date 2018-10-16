@@ -63,13 +63,14 @@ Pane {
         currentIndex: -1
         enabled: ConnectionStatusManager.hardwareConnection["all_connections"];
         model: ListModel {
-            ListElement { title: qsTr("Pressurise Cell"); source: "qrc:/views/modes/PressuriseCell/Index.qml" }
-            ListElement { title: qsTr("De-Pressurise Cell"); source: "qrc:/views/modes/DepressuriseCell.qml" }
-            ListElement { title: qsTr("Vacuum Station"); source: "qrc:/views/modes/VacuumStation.qml" }
-            ListElement { title: qsTr("Change Gas"); source: "qrc:/views/modes/ChangeGas.qml" }
-            ListElement { title: qsTr("Cycle Pressure"); source: "qrc:/views/modes/CyclePressure.qml" }
-            ListElement { title: qsTr("Continuous Flow"); source: "qrc:/views/modes/ContinuousFlow.qml" }
-            ListElement { title: qsTr("Remote Control"); source: "qrc:/views/modes/RemoteControl.qml"  }
+            ListElement { title: qsTr("Script Editor"); source: "qrc:/views/modes/Scripts/Editor.qml" }
+//            ListElement { title: qsTr("Pressurise Cell"); source: "qrc:/views/modes/PressuriseCell/Index.qml" }
+//            ListElement { title: qsTr("De-Pressurise Cell"); source: "qrc:/views/modes/DepressuriseCell.qml" }
+//            ListElement { title: qsTr("Vacuum Station"); source: "qrc:/views/modes/VacuumStation.qml" }
+//            ListElement { title: qsTr("Change Gas"); source: "qrc:/views/modes/ChangeGas.qml" }
+//            ListElement { title: qsTr("Cycle Pressure"); source: "qrc:/views/modes/CyclePressure.qml" }
+//            ListElement { title: qsTr("Continuous Flow"); source: "qrc:/views/modes/ContinuousFlow.qml" }
+//            ListElement { title: qsTr("Remote Control"); source: "qrc:/views/modes/RemoteControl.qml"  }
         }
         header: Subheader {
             text: qsTr("Select Mode")
