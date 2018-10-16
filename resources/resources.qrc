@@ -62,5 +62,6 @@
         <file>views/modes/Scripts/Editor/FunctionDropArea.qml</file>
         <file>views/modes/Scripts/Editor/Index.qml</file>
         <file>views/modes/Scripts/Editor/SysFunction.qml</file>
+        <file>views/modes/Scripts/Editor/ScriptList.qml</file>
     </qresource>
 </RCC>

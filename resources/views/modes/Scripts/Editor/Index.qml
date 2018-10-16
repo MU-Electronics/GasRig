@@ -48,13 +48,22 @@ Item
         anchors.top: detailsContainer.bottom
         anchors.topMargin: 20
 
-        FunctionDropArea {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.alignment: Qt.AlignTop
-            height: 142
-            display: "Drop here"
+        ColumnLayout{
+            // Current functions
+            ScriptList{
+
+            }
+
+            // Drag area
+            FunctionDropArea {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignTop
+                height: 142
+            }
+
         }
+
 
         ColumnLayout
         {
