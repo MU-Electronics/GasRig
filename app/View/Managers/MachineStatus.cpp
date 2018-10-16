@@ -108,6 +108,9 @@ namespace App { namespace View { namespace Managers
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineStopped, this, &MachineStatus::safetyValveStopped);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineFailed, this, &MachineStatus::safetyValveStopped);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineStopping, this, &MachineStatus::safetyValveStopping);
+
+        // Disable unused compiler warnings
+        UNUSED(safety);
     }
 
 

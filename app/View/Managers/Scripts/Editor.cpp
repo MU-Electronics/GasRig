@@ -1,17 +1,16 @@
-#include "Global.h"
+#include "Editor.h"
 
 // Include external libs
 #include <QMap>
 
-namespace App { namespace View { namespace Managers
+namespace App { namespace View { namespace Managers { namespace Scripts
 {
-    Global::Global(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    Editor::Editor(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings)
     {
-        // Disable unused compiler warnings
-        UNUSED(experimentEngine);
+
     }
 
 
@@ -22,12 +21,13 @@ namespace App { namespace View { namespace Managers
      * @param hardware
      * @param safety
      */
-    void Global::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
+    void Editor::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
     {
         // Disable unused compiler warnings
         UNUSED(hardware);
+        UNUSED(safety);
     }
 
 
-}}}
+}}}}
 

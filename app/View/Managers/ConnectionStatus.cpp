@@ -22,6 +22,9 @@ namespace App { namespace View { namespace Managers
 
         // All connects ok
         m_hardwareConnection.insert("all_connections", false);
+
+        // Disable unused compiler warnings
+        UNUSED(experimentEngine);
     }
 
 
@@ -45,6 +48,9 @@ namespace App { namespace View { namespace Managers
 
         // Requests for hardware reconnects
         connect(this, &ConnectionStatus::emit_hardwareAccess, &hardware, &Hardware::Access::hardwareAccess);
+
+        // Disable unused compiler warnings
+        UNUSED(safety);
     }
 
 
@@ -61,7 +67,7 @@ namespace App { namespace View { namespace Managers
         }
 
         // change false to true for debugging
-        m_hardwareConnection.insert("all_connections", false);
+        m_hardwareConnection.insert("all_connections", true);
     }
 
     void ConnectionStatus::request_reconnect(QString item)

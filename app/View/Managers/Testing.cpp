@@ -49,6 +49,9 @@ namespace App { namespace View { namespace Managers
 
         // Connect the experiment function signals
 
+
+        // Disable unused compiler warnings
+        UNUSED(safety);
     }
 
 

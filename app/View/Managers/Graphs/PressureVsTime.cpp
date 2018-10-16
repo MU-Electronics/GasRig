@@ -45,6 +45,9 @@ namespace App { namespace View { namespace Managers { namespace Graphs
 
         // No data currently
         hasData(false);
+
+        // Disable unused compiler warnings
+        UNUSED(safety);
     }
 
 

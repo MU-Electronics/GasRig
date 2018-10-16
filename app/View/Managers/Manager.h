@@ -7,6 +7,10 @@
 #include "../../Hardware/Access.h"
 #include "../../Safety/Monitor.h"
 
+// Disable compiler warining for un-used vars
+#define UNUSED( x ) ( &reinterpret_cast< const int& >( x ) )
+
+
 namespace App { namespace View { namespace Managers
 {
     class Manager

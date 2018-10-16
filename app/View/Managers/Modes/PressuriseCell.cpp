@@ -11,7 +11,8 @@ namespace App { namespace View { namespace Managers { namespace Modes
           m_root(root),
           m_settings(settings)
     {
-
+        // Disable unused compiler warnings
+        UNUSED(experimentEngine);
     }
 
 
@@ -24,7 +25,9 @@ namespace App { namespace View { namespace Managers { namespace Modes
      */
     void PressuriseCell::makeConnections(Hardware::Access& hardware, Safety::Monitor& safety)
     {
-
+        // Disable unused compiler warnings
+        UNUSED(hardware);
+        UNUSED(safety);
     }
 
 

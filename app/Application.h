@@ -16,6 +16,7 @@
 #include "View/Managers/MachineStatus.h"
 #include "View/Managers/Global.h"
 #include "View/Managers/Modes/PressuriseCell.h"
+#include "View/Managers/Scripts/Editor.h"
 
 // Include view graph managers
 #include "View/Managers/Graphs/PressureVsTime.h"
@@ -68,6 +69,7 @@ namespace App
             View::Managers::Graphs::PressureVsTime& manager_graph_pressureVsTime;
             View::Managers::Graphs::ValvesVsTime& manager_graph_valvesVsTime;
             View::Managers::Graphs::VacuumVsTime& manager_graph_vacuumVsTime;
+            View::Managers::Scripts::Editor& manager_scripts_editor;
 
             void registerManagers();
             void registerQmlTypes();

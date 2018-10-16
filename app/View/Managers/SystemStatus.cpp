@@ -125,6 +125,9 @@ namespace App { namespace View { namespace Managers
 
         // Set log location
         logLocation(Services::Debugger::getInstance().log());
+
+        // Disable unused compiler warnings
+        UNUSED(safety);
     }
 
 

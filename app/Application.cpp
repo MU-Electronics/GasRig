@@ -14,6 +14,7 @@
 #include "View/Managers/SystemStatus.h"
 #include "View/Managers/MachineStatus.h"
 #include "View/Managers/Modes/PressuriseCell.h"
+#include "View/Managers/Scripts/Editor.h"
 
 // Include view graph managers
 #include "View/Managers/Graphs/PressureVsTime.h"
@@ -77,6 +78,8 @@ namespace App
         ,   manager_graph_pressureVsTime(*new View::Managers::Graphs::PressureVsTime(parent, engine, settings_container, experiment_engine))
         ,   manager_graph_valvesVsTime(*new View::Managers::Graphs::ValvesVsTime(parent, engine, settings_container, experiment_engine))
         ,   manager_graph_vacuumVsTime(*new View::Managers::Graphs::VacuumVsTime(parent, engine, settings_container, experiment_engine))
+        ,   manager_scripts_editor(*new View::Managers::Scripts::Editor(parent, engine, settings_container, experiment_engine))
+
     {
         // Register qml types with qml
         registerQmlTypes();
@@ -154,6 +157,11 @@ namespace App
 
         // Set valves vs time graph manager
         m_engine->rootContext()->setContextProperty("VacuumVsTimeGraph", &manager_graph_vacuumVsTime);
+
+        // Set scripts
+        m_engine->rootContext()->setContextProperty("ScriptEditorManager", &manager_scripts_editor);
+
+
     }
 
 
@@ -240,6 +248,9 @@ namespace App
 
         // Make connections for machine vacuum vs time graph
         manager_graph_vacuumVsTime.makeConnections(hardware, monitor);
+
+        // Script
+        manager_scripts_editor.makeConnections(hardware, monitor);
     }
 
 
