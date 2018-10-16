@@ -59,7 +59,8 @@
         <file>views/parts/system_status/DebugMessages.qml</file>
         <file>views/parts/system_status/PressureDiagram.qml</file>
         <file>views/modes/Scripts/Editor.qml</file>
-        <file>views/modes/Scripts/CheckBox.qml</file>
         <file>views/modes/Scripts/SysFunction.qml</file>
+        <file>views/modes/Scripts/FunctionDropArea.qml</file>
+        <file>views/modes/Scripts/Details.qml</file>
     </qresource>
 </RCC>

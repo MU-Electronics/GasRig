@@ -15,34 +15,68 @@ Item
     width: parent.width
     height: 500
 
-    ColumnLayout {
+    Text {
+        id: title
+        Layout.fillWidth: true
+        text: "Create custom script"
+        wrapMode: Text.WordWrap
+    }
 
-        anchors.fill: parent
-        anchors.margins: 8
+    Details{
+        id: detailsContainer
 
-        Text {
+        width: parent.width - 32
+
+        anchors.top: title.bottom
+        anchors.topMargin: 20
+
+        anchors.left: parent.left
+        anchors.leftMargin: 16
+    }
+
+
+    RowLayout {
+
+        width: parent.width - 32
+        height: 500
+
+        spacing: 16
+
+        anchors.left: parent.left
+        anchors.leftMargin: 16
+
+        anchors.top: detailsContainer.bottom
+        anchors.topMargin: 20
+
+        FunctionDropArea {
             Layout.fillWidth: true
-            text: "Drag text into, out of, and between the boxes below."
-            wrapMode: Text.WordWrap
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignTop
+            height: 142
+            display: "Drop here"
         }
 
-        SysFunction {
+        ColumnLayout
+        {
+            Layout.minimumWidth: 30
+            Layout.preferredWidth: 300
+            Layout.maximumWidth: 400
             Layout.fillWidth: true
-            height: 142
-            display: "Sample Text"
-        }
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignTop
 
-        SysFunction {
-            Layout.fillWidth: true
-            height: 142
-            display: "Option/ctrl drag to copy instead of move text."
-        }
-
-        SysFunction {
-            Layout.fillWidth: true
-            height: 142
-            dropEnabled: false
-            display: "Drag out into other applications."
+            SysFunction {
+                Layout.fillWidth: true
+                height: 80
+                display: "Set Pressure"
+                dropEnabled: true
+            }
+            SysFunction {
+                Layout.fillWidth: true
+                height: 80
+                display: "Set Valve"
+                dropEnabled: true
+            }
         }
     }
 }
