@@ -63,5 +63,9 @@
         <file>views/modes/Scripts/Editor/Index.qml</file>
         <file>views/modes/Scripts/Editor/SysFunction.qml</file>
         <file>views/modes/Scripts/Editor/ScriptList.qml</file>
+        <file>views/modes/Scripts/Editor/DraggableFunction.qml</file>
+        <file>views/modes/Scripts/Editor/FunctionList.qml</file>
+        <file>views/modes/Scripts/Index.qml</file>
+        <file>views/modes/Scripts/ListScripts.qml</file>
     </qresource>
 </RCC>

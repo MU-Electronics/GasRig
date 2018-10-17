@@ -6,26 +6,30 @@ import Fluid.Material 1.0 as FluidMaterial
 import QtQuick.Controls.Material 2.0
 import Fluid.Core 1.0 as FluidCore
 import QtQuick.Layouts 1.0
+import QtQuick.Controls 2.2
+
 
 
 import "../../../parts"
 
 Item
 {
-    width: parent.width
-    height: 500
+    id: root
 
-    Text {
-        id: title
-        Layout.fillWidth: true
-        text: "Create custom script"
-        wrapMode: Text.WordWrap
-    }
+    width: parent.width
+    height: parent.height
+
+//    Text {
+//        id: title
+//        Layout.fillWidth: true
+//        text: "Create custom script"
+//        wrapMode: Text.WordWrap
+//    }
 
     Details{
         id: detailsContainer
 
-        width: parent.width - 32
+        width: root.width - 32
 
         anchors.top: title.bottom
         anchors.topMargin: 20
@@ -37,8 +41,8 @@ Item
 
     RowLayout {
 
-        width: parent.width - 32
-        height: 500
+        width: root.width - 32
+        height: root.height - detailsContainer.height - title.height - 100
 
         spacing: 16
 
@@ -49,42 +53,62 @@ Item
         anchors.topMargin: 20
 
         ColumnLayout{
-            // Current functions
-            ScriptList{
-
-            }
-
-            // Drag area
-            FunctionDropArea {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.alignment: Qt.AlignTop
-                height: 142
-            }
-
-        }
-
-
-        ColumnLayout
-        {
-            Layout.minimumWidth: 30
-            Layout.preferredWidth: 300
-            Layout.maximumWidth: 400
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignTop
-
-            SysFunction {
+            // Current functions
+            ScriptList{
                 Layout.fillWidth: true
-                height: 80
-                display: "Set Pressure"
-                dropEnabled: true
+               // Layout.fillHeight: true
+                Layout.alignment: Qt.AlignTop
+                height: root.height - 195
             }
-            SysFunction {
+        }
+
+        ColumnLayout
+        {
+            id: functionconfig
+
+            Layout.minimumWidth: 600
+            Layout.preferredWidth: 600
+            Layout.maximumWidth: 600
+            Layout.alignment: Qt.AlignTop
+
+            FunctionDropArea {
+                id: functiondrop
                 Layout.fillWidth: true
-                height: 80
-                display: "Set Valve"
-                dropEnabled: true
+                Layout.minimumHeight: 200
+                Layout.preferredHeight: 200
+                Layout.alignment: Qt.AlignTop
+            }
+
+            Flickable {
+                id: functionflickable
+                width: 400
+                height: root.height - functiondrop.height - 400
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                contentWidth: functionflickable.width - 20
+                contentHeight: functionlist.height * 2
+
+                focus: true
+                clip: true
+
+                Keys.onUpPressed: scrollBar.decrease()
+                Keys.onDownPressed: scrollBar.increase()
+
+                ScrollBar.vertical: ScrollBar {
+                    id: vbar;
+                    active: true
+                    //anchors.left: parent.right
+                    policy: ScrollBar.AlwaysOn
+                }
+
+                FunctionList
+                {
+                    id: functionlist
+                }
             }
         }
     }

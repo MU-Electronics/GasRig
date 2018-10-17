@@ -4,7 +4,8 @@ Item{
     id: item
     property bool dropEnabled: true
     property string draggedFunction: ""
-
+    height: parent.height
+    width: parent.width
     Rectangle{
 
         ColorAnimation on color {
@@ -16,13 +17,13 @@ Item{
 
         color: dropArea.containsDrag ? "#c4fcc4" : "#eeeeee"
 
-        height: 100 + 16
-        width: parent.width - 16
+        height: parent.height
+        width: parent.width
 
         Rectangle {
             id: dragArea
 
-            height: 100
+            height: parent.height - 16
             width: parent.width - 16
 
             anchors.left: parent.left
@@ -44,7 +45,7 @@ Item{
                 wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.pointSize: 24;
+                font.pointSize: 18  ;
                 style: Text.Raised;
                 styleColor: "#d6d6d6"
                 font.weight: Font.DemiBold
@@ -68,6 +69,7 @@ Item{
                 onDropped: if (drop.hasText && item.dropEnabled) {
                     if (drop.proposedAction == Qt.MoveAction || drop.proposedAction == Qt.CopyAction) {
                         item.draggedFunction = drop.text
+                        //item.display = drop.text
                         drop.acceptProposedAction()
                     }
                 }

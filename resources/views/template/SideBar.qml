@@ -63,7 +63,7 @@ Pane {
         currentIndex: -1
         enabled: ConnectionStatusManager.hardwareConnection["all_connections"];
         model: ListModel {
-            ListElement { title: qsTr("Script Editor"); source: "qrc:/views/modes/Scripts/Editor/Index.qml" }
+            ListElement { title: qsTr("Script Editor"); source: "qrc:/views/modes/Scripts/Index.qml" }
 //            ListElement { title: qsTr("Pressurise Cell"); source: "qrc:/views/modes/PressuriseCell/Index.qml" }
 //            ListElement { title: qsTr("De-Pressurise Cell"); source: "qrc:/views/modes/DepressuriseCell.qml" }
 //            ListElement { title: qsTr("Vacuum Station"); source: "qrc:/views/modes/VacuumStation.qml" }
