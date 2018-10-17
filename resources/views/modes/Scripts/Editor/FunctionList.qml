@@ -11,94 +11,111 @@ import QtQuick.Layouts 1.0
 ColumnLayout
 {
     width: parent.width
-    height: parent.height
+    height: a.height + b.height + c.height + d.height + e.height + f.height
+   //height: parent.height
     RowLayout
     {
+        id: a
         SysFunction {
             Layout.fillWidth: true
-            height: 80
-            display: "Set Pressure"
+            display: "Pressurise"
+            desc: "Set a pressure of a selected gas from 5 mbar to 95 Bar"
             dropEnabled: true
         }
         SysFunction {
             Layout.fillWidth: true
-            height: 80
-            display: "Set Valve"
+            display: "Vent"
+            desc: "Vent a pressure to exhuast"
             dropEnabled: true
         }
     }
     RowLayout
     {
+        id: b
         SysFunction {
             Layout.fillWidth: true
             height: 80
-            display: "Set Flow"
+            display: "Purge"
+            desc: "Purge the system and or output automatically"
             dropEnabled: true
         }
         SysFunction {
             Layout.fillWidth: true
             height: 80
-            display: "Set Vacuum"
-            dropEnabled: true
-        }
-    }
-    RowLayout
-    {
-        SysFunction {
-            Layout.fillWidth: true
-            height: 80
-            display: "Set Pressure"
-            dropEnabled: true
-        }
-        SysFunction {
-            Layout.fillWidth: true
-            height: 80
-            display: "Set Valve"
+            display: "Pulse Valve"
+            desc: "Pulse a valve x times with a defined duty cycle"
             dropEnabled: true
         }
     }
     RowLayout
     {
+        id: c
         SysFunction {
             Layout.fillWidth: true
             height: 80
-            display: "Set Pressure"
+            display: "Set Valve"
+            desc: "Set the state of a valve"
             dropEnabled: true
         }
         SysFunction {
             Layout.fillWidth: true
             height: 80
-            display: "Set Valve"
+            display: "Vacumm"
+            desc: "Enable the vac station for x minutes with a selected location"
             dropEnabled: true
         }
     }
     RowLayout
     {
+        id: d
         SysFunction {
             Layout.fillWidth: true
             height: 80
-            display: "Set Pressure"
+            display: "Backing Pump"
+            desc: "Enable backing pump perminatly"
             dropEnabled: true
         }
         SysFunction {
             Layout.fillWidth: true
             height: 80
-            display: "Set Valve"
+            display: "Pumping Gas Type"
+            desc: "Define the type of gas the vac station is handling"
             dropEnabled: true
         }
     }
     RowLayout
     {
+        id: e
         SysFunction {
             Layout.fillWidth: true
             height: 80
-            display: "Set Pressure"
+            display: "Flow rate"
+            desc: "Set a flow rate for a selected flow controller"
             dropEnabled: true
         }
         SysFunction {
             Layout.fillWidth: true
             height: 80
-            display: "Set Valve"
+            display: "Flow output"
+            desc: "Set the internal output valve of the flow controller"
+            dropEnabled: true
+        }
+    }
+    RowLayout
+    {
+        id: f
+        SysFunction {
+            Layout.fillWidth: true
+            height: 80
+            display: "Flow soft start"
+            desc: "Define a soft start value for a selected flow controller"
+            dropEnabled: true
+        }
+        SysFunction {
+            Layout.fillWidth: true
+            height: 80
+            display: "Wait"
+            desc: "Wait for a period of time"
             dropEnabled: true
         }
     }

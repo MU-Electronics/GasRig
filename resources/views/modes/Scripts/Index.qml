@@ -47,8 +47,10 @@ Item
             asynchronous: true
             visible: (status == Loader.Ready && tabbar.currentIndex == 0) ? true : false
             onLoaded: {
-                item.anchors.top = tabbar.bottom
-                item.anchors.topMargin = 20
+//                item.anchors.top = tabbar.bottom
+//                item.anchors.topMargin = 20
+                item.height = parent.height
+                item.width = parent.width
             }
         }
 
@@ -61,8 +63,8 @@ Item
             asynchronous: true
             visible: (status == Loader.Ready && tabbar.currentIndex == 1) ? true : false
             onLoaded: {
-                item.anchors.top = tabbar.bottom
-                item.anchors.topMargin = 20
+//                item.anchors.top = tabbar.bottom
+//                item.anchors.topMargin = 20
                 item.height = parent.height
                 item.width = parent.width
             }

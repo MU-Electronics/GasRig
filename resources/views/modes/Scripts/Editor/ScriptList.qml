@@ -49,9 +49,7 @@ Item {
                 {
                     text: "Order and Configuration of Execution"
                     horizontalAlignment: Text.AlignHCenter
-
-                     anchors.centerIn: parent
-
+                    anchors.centerIn: parent
                     color: Material.color(Material.Grey, Material.Shade700)
                 }
             }

@@ -19,13 +19,6 @@ Item
     width: parent.width
     height: parent.height
 
-//    Text {
-//        id: title
-//        Layout.fillWidth: true
-//        text: "Create custom script"
-//        wrapMode: Text.WordWrap
-//    }
-
     Details{
         id: detailsContainer
 
@@ -90,7 +83,7 @@ Item
                 Layout.fillHeight: true
 
                 contentWidth: functionflickable.width - 20
-                contentHeight: functionlist.height * 2
+                contentHeight: functionlist.height + 20
 
                 focus: true
                 clip: true
