@@ -11,7 +11,7 @@ import QtQuick.Layouts 1.0
 ColumnLayout
 {
     width: parent.width
-    height: a.height + b.height + c.height + d.height + e.height + f.height
+    height: a.height + b.height + c.height + d.height + e.height + f.height + g.height
    //height: parent.height
     RowLayout
     {
@@ -61,7 +61,7 @@ ColumnLayout
             Layout.fillWidth: true
             height: 80
             display: "Vacumm"
-            desc: "Enable the vac station for x minutes with a selected location"
+            desc: "Enable the vac station for x minutes or target value with a selected location"
             dropEnabled: true
         }
     }
@@ -116,6 +116,24 @@ ColumnLayout
             height: 80
             display: "Wait"
             desc: "Wait for a period of time"
+            dropEnabled: true
+        }
+    }
+    RowLayout
+    {
+        id: g
+        SysFunction {
+            Layout.fillWidth: true
+            height: 80
+            display: "Conditional Wait"
+            desc: "Wait untill a condition is satisfied"
+            dropEnabled: true
+        }
+        SysFunction {
+            Layout.fillWidth: true
+            height: 80
+            display: "Conditional Progression"
+            desc: "Only progress if condition is satified else stop"
             dropEnabled: true
         }
     }
