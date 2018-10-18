@@ -6,6 +6,7 @@ Rectangle {
     id: item
     property string display
     property string desc: ""
+    property string functionOption: "NotSupported"
     property bool dropEnabled: false
     //color: dropArea.containsDrag ? "#CFC" : "#EEE"
     color: "#EEE"
@@ -61,7 +62,7 @@ Rectangle {
         Drag.active: mouseArea.drag.active
         Drag.hotSpot.x: 0
         Drag.hotSpot.y: 0
-        Drag.mimeData: { "text/plain": item.display }
+        Drag.mimeData: { "text/plain": item.functionOption }
         Drag.dragType: Drag.Automatic
         // Drag.onDragFinished: if (dropAction == Qt.MoveAction) item.display = ""
     }

@@ -20,6 +20,7 @@ ColumnLayout
             Layout.fillWidth: true
             display: "Pressurise"
             desc: "Set a pressure of a selected gas from 5 mbar to 95 Bar"
+            functionOption: "Pressurise"
             dropEnabled: true
         }
         SysFunction {

@@ -1,9 +1,12 @@
-import QtQuick 2.2
+import QtQuick 2.9
+
+import "FunctionOptions" as FunctionOptions
 
 Item{
     id: item
     property bool dropEnabled: true
     property string draggedFunction: ""
+    property var loadedoption: null
     height: parent.height
     width: parent.width
     Rectangle{
@@ -51,10 +54,9 @@ Item{
                 font.weight: Font.DemiBold
                 color: dropArea.containsDrag ? "#63a563" : "#b5b5b5"
             }
-            Text {
+            Item {
+                id: optionContainer
                 anchors.fill: parent
-                text: item.draggedFunction
-                wrapMode: Text.WordWrap
             }
             DropArea {
                 id: dropArea
@@ -67,10 +69,19 @@ Item{
                     rejectAnimationText.start()
                 }
                 onDropped: if (drop.hasText && item.dropEnabled) {
-                    if (drop.proposedAction == Qt.MoveAction || drop.proposedAction == Qt.CopyAction) {
-                        item.draggedFunction = drop.text
-                        //item.display = drop.text
+                    if (drop.proposedAction == Qt.MoveAction || drop.proposedAction == Qt.CopyAction)
+                    {
+                        // Turn box green
                         drop.acceptProposedAction()
+
+                        // Create the relivant view
+                        if(item.loadedoption != null)
+                            item.loadedoption.destroy();
+
+                        var component = Qt.createComponent("FunctionOptions/"+drop.text+".qml");
+                        item.loadedoption = component.createObject(optionContainer);
+                        // item.loadedoption.x = (item.loadedoption.width + 10) * i;
+                        // item.draggedFunction = drop.text
                     }
                 }
             }
