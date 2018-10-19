@@ -74,14 +74,19 @@ Item{
                         // Turn box green
                         drop.acceptProposedAction()
 
-                        // Create the relivant view
+                        // Save current function
+                        item.draggedFunction = drop.text
+
+                        // Delete old instance of function
                         if(item.loadedoption != null)
                             item.loadedoption.destroy();
 
+                        // Create the relivant view
                         var component = Qt.createComponent("FunctionOptions/"+drop.text+".qml");
                         item.loadedoption = component.createObject(optionContainer);
+
+                        // Set any options
                         // item.loadedoption.x = (item.loadedoption.width + 10) * i;
-                        // item.draggedFunction = drop.text
                     }
                 }
             }
