@@ -59,7 +59,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
             void addHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve)
             {
                 // Set data
-                functionOption.id = "pressurise";
+                functionOption.id = "Pressurise";
                 functionOption.options["pressure"] = pressure;
                 functionOption.options["initVacDown"] = initVacDown;
                 functionOption.options["stepSize"] = stepSize;

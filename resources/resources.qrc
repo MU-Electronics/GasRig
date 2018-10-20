@@ -69,5 +69,6 @@
         <file>views/modes/Scripts/ListScripts.qml</file>
         <file>views/modes/Scripts/Editor/FunctionOptions/Pressurise.qml</file>
         <file>views/modes/Scripts/Editor/FunctionOptions/NotSupported.qml</file>
+        <file>views/modes/Scripts/Editor/ViewOptions/Pressurise.qml</file>
     </qresource>
 </RCC>

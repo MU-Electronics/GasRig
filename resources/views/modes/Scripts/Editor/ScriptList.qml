@@ -4,11 +4,12 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.2
 
-
 import Fluid.Layouts 1.0 as FluidLayouts
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Material 1.0 as FluidMaterial
 import Fluid.Core 1.0 as FluidCore
+
+import 'ViewOptions' as ViewOptions
 
 Item {
     id: root
@@ -69,12 +70,21 @@ Item {
             }
 
             ScrollView {
-                width: parent.width
+                width: parent.width - 15
                 height: mainContent.height - title.height - 50
 
                 contentWidth: parent.width
                 contentHeight: listView.height + 10
                 z:5
+
+                ScrollBar.vertical: ScrollBar {
+                    id: vbar2;
+                    active: true
+                    policy: ScrollBar.AlwaysOn
+                    anchors.left: parent.right
+                    height: parent.height + 51
+                }
+
                 ListView {
                     id: listView
                     model: functionlist
@@ -87,11 +97,40 @@ Item {
                         font.bold: true
                     }
                     delegate: DraggableFunction {
+
                         Rectangle {
-                            // height: textLabel.height * 2
+                            id: functioncontainer
                             height: 50
                             width: listView.width
                             color: "white"
+
+                            property var viewpanel
+                            property var viewpanelcomp
+
+                            Component.onCompleted: {
+                                functioncontainer.viewpanelcomp = Qt.createComponent("ViewOptions/"+model.id+".qml");
+
+                                if (functioncontainer.viewpanelcomp.status === Component.Ready || functioncontainer.viewpanelcomp.status === Component.Error)
+                                {
+                                    finishCreation();
+                                 }else{
+                                    functioncontainer.viewpanelcomp.statusChanged.connect(finishCreation);
+                                 }
+                            }
+
+                            function finishCreation() {
+                                if (functioncontainer.viewpanelcomp.status === Component.Ready)
+                                {
+                                    functioncontainer.viewpanel = functioncontainer.viewpanelcomp.createObject(functionShowOptions, {"options": model.options});
+
+                                    if (functioncontainer.viewpanel === null)
+                                        console.log("Error creating image");
+                                }
+                                else if (functioncontainer.viewpanelcomp.status === Component.Error)
+                                {
+                                    console.log("Error loading component:", functioncontainer.viewpanelcomp.errorString());
+                                }
+                            }
 
                             Row{
                                 width: parent.width
@@ -173,13 +212,11 @@ Item {
                                         }
                                     }
                                 }
-
-                                Text{
-                                    text: model.options["pressure"]
-                                    width: 100
-                                    Layout.maximumWidth: 50
+                                Item{
+                                    id: functionShowOptions
+                                    height: 50
+                                    width: parent.width - 30 - 130
                                 }
-
                             }
 
                             // Bottom line border
