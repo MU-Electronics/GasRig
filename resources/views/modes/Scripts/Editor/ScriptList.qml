@@ -16,6 +16,14 @@ Item {
     width: parent.width
     height: 400
 
+    Connections {
+        target: ScriptAddManager
+        onFunctionListChanged: {
+            var options = ScriptAddManager.option(0);
+            console.log(options["pressure"]);
+        }
+    }
+
     ListModel {
         id: functionlist
         ListElement {

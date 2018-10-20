@@ -1,35 +1,10 @@
 #include "Application.h"
 
 // External libs
-#include <QQmlApplicationEngine>
-#include <QObject>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QThread>
 #include <QString>
-
-// Include view manangers
-#include "View/Managers/Testing.h"
-#include "View/Managers/ConnectionStatus.h"
-#include "View/Managers/SystemStatus.h"
-#include "View/Managers/MachineStatus.h"
-#include "View/Managers/Modes/PressuriseCell.h"
-#include "View/Managers/Scripts/Editor.h"
-
-// Include view graph managers
-#include "View/Managers/Graphs/PressureVsTime.h"
-#include "View/Managers/Graphs/ValvesVsTime.h"
-#include "View/Managers/Graphs/VacuumVsTime.h"
-
-// Include objects for threading
-#include "Safety/Monitor.h"
-#include "Hardware/Access.h"
-
-// Include the setting contain
-#include "Settings/Container.h"
-
-// Include the expeirment engine
-#include "Experiment/Engine.h"
 
 // For debugging only to be removed
 
@@ -79,6 +54,7 @@ namespace App
         ,   manager_graph_valvesVsTime(*new View::Managers::Graphs::ValvesVsTime(parent, engine, settings_container, experiment_engine))
         ,   manager_graph_vacuumVsTime(*new View::Managers::Graphs::VacuumVsTime(parent, engine, settings_container, experiment_engine))
         ,   manager_scripts_editor(*new View::Managers::Scripts::Editor(parent, engine, settings_container, experiment_engine))
+        ,   manager_scripts_add(*new View::Managers::Scripts::Add(parent, engine, settings_container, experiment_engine))
 
     {
         // Register qml types with qml
@@ -160,6 +136,8 @@ namespace App
 
         // Set scripts
         m_engine->rootContext()->setContextProperty("ScriptEditorManager", &manager_scripts_editor);
+        m_engine->rootContext()->setContextProperty("ScriptAddManager", &manager_scripts_add);
+
 
 
     }
@@ -175,6 +153,7 @@ namespace App
     {
         // Rig diagram qml type
         //qmlRegisterType<App::View::QmlTypes::RigDiagram>("App", 1, 0, "RigDiagram");
+       // qRegisterMetaType<QMap<qint64, QMap<QString, QMap<QString, QVariant>>>*>("QMap<qint64, QMap<QString, QMap<QString, QVariant>>>*");
     }
 
 
@@ -251,6 +230,7 @@ namespace App
 
         // Script
         manager_scripts_editor.makeConnections(hardware, monitor);
+        manager_scripts_add.makeConnections(hardware, monitor);
     }
 
 

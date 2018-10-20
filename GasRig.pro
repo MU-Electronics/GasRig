@@ -120,7 +120,8 @@ SOURCES += \
     app/View/Managers/Graphs/VacuumVsTime.cpp \
     app/View/Managers/Graphs/Graph.cpp \
     app/Services/Debugging.cpp \
-    app/View/Managers/Scripts/Editor.cpp
+    app/View/Managers/Scripts/Editor.cpp \
+    app/View/Managers/Scripts/Add.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -217,4 +218,5 @@ HEADERS += \
     app/View/Managers/Graphs/VacuumVsTime.h \
     app/View/Managers/Graphs/Graph.h \
     app/Services/Debuging.h \
-    app/View/Managers/Scripts/Editor.h
+    app/View/Managers/Scripts/Editor.h \
+    app/View/Managers/Scripts/Add.h

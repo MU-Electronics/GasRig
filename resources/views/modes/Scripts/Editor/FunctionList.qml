@@ -73,7 +73,7 @@ ColumnLayout
             Layout.fillWidth: true
             height: 80
             display: "Backing Pump"
-            desc: "Enable backing pump perminatly"
+            desc: "Enable / disable backing pump perminatly"
             dropEnabled: true
         }
         SysFunction {

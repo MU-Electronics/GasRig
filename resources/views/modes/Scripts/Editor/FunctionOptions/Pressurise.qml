@@ -183,7 +183,7 @@ Item
                     Material.foreground:  Material.color(Material.Grey, Material.Shade100)
                     onClicked:
                     {
-
+                        ScriptAddManager.addHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text, setInputValve_pressure.model.get(setInputValve_pressure.currentIndex).value, setUseVac_openOutputValve.checked);
                     }
                 }
 
