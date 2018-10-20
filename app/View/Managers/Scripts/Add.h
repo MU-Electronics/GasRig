@@ -45,11 +45,12 @@ namespace App { namespace View { namespace Managers { namespace Scripts
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
         signals:
-            void functionListChanged();
+            void functionAdded();
+            void functionRemoved(int i);
 
         public slots:
             // Methods for controlling script functions and there matching options
-            void removeFunction(int i) { m_functionList.removeAt(i); emit functionListChanged(); }
+            void removeFunction(int i) { m_functionList.removeAt(i); emit functionRemoved(i); }
             int countFunctions() { return m_functionList.count(); }
             QVariantMap option(int i) { return m_functionList.at(i).options; }
             QString id(int i) { return m_functionList.at(i).id; }
@@ -119,7 +120,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
                 clearStrutOptions();
 
                 // Emit change
-                emit functionListChanged();
+                emit functionAdded();
             }
     };
 }}}}
