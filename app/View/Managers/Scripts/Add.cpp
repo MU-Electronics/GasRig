@@ -29,5 +29,51 @@ namespace App { namespace View { namespace Managers { namespace Scripts
     }
 
 
+    /**
+     * Save current config to file
+     *
+     * @brief Add::save
+     */
+    void Add::save()
+    {
+        // Check ${name}.json does not exist
+            // Create json file
+                // Create json object
+                    // Serialise json object
+                        // Put serialise json into file
+                            // Navigate to list tab
+                        // General file error
+                    // General file error
+                // General file error
+            // File creation error
+        // Name already exists error
+    }
+
+
+    /**
+     * Save info on funtion to list
+     *
+     * @brief Add::addHighPressure
+     * @param pressure
+     * @param initVacDown
+     * @param stepSize
+     * @param inputValve
+     * @param openOutputValve
+     */
+    void Add::addHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve)
+    {
+        // Set data
+        functionOption.id = "Pressurise";
+        functionOption.options["pressure"] = pressure;
+        functionOption.options["initVacDown"] = initVacDown;
+        functionOption.options["stepSize"] = stepSize;
+        functionOption.options["inputValve"] = inputValve;
+        functionOption.options["openOutputValve"] = openOutputValve;
+
+        // Save
+        appendFunction(functionOption);
+    }
+
+
 }}}}
 

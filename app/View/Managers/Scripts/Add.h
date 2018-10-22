@@ -33,6 +33,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
         Q_OBJECT
 
         public:
+            // Function structure for selected functions
             struct t_functionOption
             {
                 QString id;
@@ -50,27 +51,91 @@ namespace App { namespace View { namespace Managers { namespace Scripts
             void functionMoved(int from, int to);
 
         public slots:
-            // Methods for controlling script functions and there matching options
-            void moveFunction(int from, int to){ emit functionMoved(from, to); }
-            void removeFunction(int i) { m_functionList.removeAt(i); emit functionRemoved(i); }
+
+            /**
+             * Save current to file
+             *
+             * @brief save
+             */
+            void save();
+
+            /**
+             * Is the function list empty?
+             *
+             * @brief emptyList
+             * @return
+             */
+            bool emptyList()
+            {
+                return m_functionList.isEmpty();
+            }
+
+            /**
+             * Destory current data
+             *
+             * @brief destroy
+             */
+            void destroyData()
+            {
+                m_name = "";
+                m_description = "";
+                m_functionList.clear();
+                clearStrutOptions();
+            }
+
+            /**
+             * Move functions in list
+             *
+             * @brief moveFunction
+             * @param from
+             * @param to
+             */
+            void moveFunction(int from, int to)
+            {
+                m_functionList.swap(from, to);
+                emit functionMoved(from, to);
+            }
+
+            /**
+             * Remove function from list
+             *
+             * @brief removeFunction
+             * @param i
+             */
+            void removeFunction(int i)
+            {
+                m_functionList.removeAt(i);
+                emit functionRemoved(i);
+            }
+
+            /**
+             * Count number of functions that have been added
+             *
+             * @brief countFunctions
+             * @return
+             */
             int countFunctions() { return m_functionList.count(); }
+
+            /**
+             * Return function options
+             *
+             * @brief option
+             * @param i
+             * @return
+             */
             QVariantMap option(int i) { return m_functionList.at(i).options; }
+
+            /**
+             * Return function id
+             *
+             * @brief id
+             * @param i
+             * @return
+             */
             QString id(int i) { return m_functionList.at(i).id; }
 
             // State machines
-            void addHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve)
-            {
-                // Set data
-                functionOption.id = "Pressurise";
-                functionOption.options["pressure"] = pressure;
-                functionOption.options["initVacDown"] = initVacDown;
-                functionOption.options["stepSize"] = stepSize;
-                functionOption.options["inputValve"] = inputValve;
-                functionOption.options["openOutputValve"] = openOutputValve;
-
-                // Save
-                appendFunction(functionOption);
-            }
+            void addHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve);
 //            void addVent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
 //            void addPurge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
 //            void addValveStateSafe(int port, bool state);

@@ -19,6 +19,8 @@ Item
     width: parent.width
     height: parent.height
 
+    Component.onDestruction: ScriptAddManager.destroyData();
+
     Details{
         id: detailsContainer
 

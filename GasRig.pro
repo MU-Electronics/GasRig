@@ -25,6 +25,13 @@ win32 {
     # Supplier labjack driver is for windows 7
     LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LabJackUD_64.lib"
 
+    # Fix problem with qrc not being compiled
+    update_qml.target = $${PWD_WIN}\\resources\\qml.qrc
+    update_qml.commands = echo>>$${update_qml.target} # same as touch
+    update_qml.depends = $$files($${PWD_WIN}\\resources\\*, true) # recurse into subdirs
+    QMAKE_EXTRA_TARGETS += update_qml
+    PRE_TARGETDEPS += $${update_qml.target}
+
 }
 
 macx {
@@ -49,7 +56,6 @@ linux {
 
 QMAKE_EXTRA_TARGETS += configfiles
 POST_TARGETDEPS += configfiles
-
 
 # Application is very dynamic in nature to allow for easy expantion and since there is no worry of resource
 # As such paramaters are passed to methods that they may not use but are required to keep a tidy format or for reflection

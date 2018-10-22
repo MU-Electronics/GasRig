@@ -92,7 +92,6 @@ Pane {
 
                     // Update current nav
                     GlobalManager.currentNavigation = 2;
-
                 }
 
         }
