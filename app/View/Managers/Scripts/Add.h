@@ -47,9 +47,11 @@ namespace App { namespace View { namespace Managers { namespace Scripts
         signals:
             void functionAdded();
             void functionRemoved(int i);
+            void functionMoved(int from, int to);
 
         public slots:
             // Methods for controlling script functions and there matching options
+            void moveFunction(int from, int to){ emit functionMoved(from, to); }
             void removeFunction(int i) { m_functionList.removeAt(i); emit functionRemoved(i); }
             int countFunctions() { return m_functionList.count(); }
             QVariantMap option(int i) { return m_functionList.at(i).options; }

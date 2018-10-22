@@ -34,7 +34,10 @@ Item {
             functionlist.append(data);
         }
         onFunctionRemoved: {
-            console.log(i);
+            // console.log(i);
+        }
+        onFunctionMoved: {
+            functionlist.move(from, to, 1);
         }
     }
 
@@ -235,7 +238,8 @@ Item {
                         draggedItemParent: mainContent
 
                         onMoveItemRequested: {
-                            functionlist.move(from, to, 1);
+                            // Move function in back end
+                            ScriptAddManager.moveFunction(from, to);
                         }
                     }
                 }
