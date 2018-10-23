@@ -36,6 +36,10 @@ namespace App { namespace View { namespace Managers { namespace Scripts
      */
     void Add::save()
     {
+        // Create json
+        auto doc = QJsonDocument(toJson(m_functionList));
+        qDebug() << doc.toJson().constData();
+
         // Check ${name}.json does not exist
             // Create json file
                 // Create json object

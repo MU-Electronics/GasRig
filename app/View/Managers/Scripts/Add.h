@@ -7,6 +7,9 @@
 #include <QList>
 #include <QVariantMap>
 #include <QDebug>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 
 // View contract
 #include "../Manager.h"
@@ -33,11 +36,40 @@ namespace App { namespace View { namespace Managers { namespace Scripts
         Q_OBJECT
 
         public:
+
             // Function structure for selected functions
             struct t_functionOption
             {
-                QString id;
-                QMap<QString, QVariant> options;
+                QString id = "";
+                QMap<QString, QVariant> options{};
+                QJsonObject toJson() const
+                {
+                    // Create root object
+                    QJsonObject root;
+
+                    // Assigned id to object
+                    root["id"] = id;
+
+                    // Create object for options
+                    QJsonObject opt;
+
+                    // Loop through all current functon options
+                    QMapIterator<QString, QVariant> i(options);
+                    while (i.hasNext())
+                    {
+                        // Continue to next
+                        i.next();
+
+                        // Add new value to option object
+                        opt[i.key()] = QJsonValue::fromVariant(i.value());
+                    }
+
+                    // Assign option objetc to root
+                    root["options"] = opt;
+
+                    // Return root json object
+                    return root;
+               }
             } functionOption;
 
             Add(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
@@ -59,6 +91,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
              */
             void save();
 
+
             /**
              * Is the function list empty?
              *
@@ -69,6 +102,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
             {
                 return m_functionList.isEmpty();
             }
+
 
             /**
              * Destory current data
@@ -83,6 +117,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
                 clearStrutOptions();
             }
 
+
             /**
              * Move functions in list
              *
@@ -96,6 +131,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
                 emit functionMoved(from, to);
             }
 
+
             /**
              * Remove function from list
              *
@@ -108,6 +144,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
                 emit functionRemoved(i);
             }
 
+
             /**
              * Count number of functions that have been added
              *
@@ -115,6 +152,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
              * @return
              */
             int countFunctions() { return m_functionList.count(); }
+
 
             /**
              * Return function options
@@ -125,6 +163,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
              */
             QVariantMap option(int i) { return m_functionList.at(i).options; }
 
+
             /**
              * Return function id
              *
@@ -133,6 +172,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
              * @return
              */
             QString id(int i) { return m_functionList.at(i).id; }
+
 
             // State machines
             void addHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve);
@@ -170,14 +210,46 @@ namespace App { namespace View { namespace Managers { namespace Scripts
             QString m_description;
             QList<t_functionOption> m_functionList;
 
-            // Clear structure
+
+            /**
+             * Convert function list to json object
+             *
+             * @brief toJson
+             * @param list
+             * @return
+             */
+            QJsonArray toJson(const QList<t_functionOption> & list)
+            {
+                // Create array of functions
+                QJsonArray array;
+
+                // Loop though functions and append to array in order
+                for (auto & func : list)
+                    array.append(func.toJson());
+
+                // Return json array
+                return array;
+            }
+
+
+            /**
+             * Clear the strut of all data
+             *
+             * @brief clearStrutOptions
+             */
             void clearStrutOptions()
             {
                 functionOption.id = "";
                 functionOption.options.clear();
             }
 
-            // Save data
+
+            /**
+             * Append function to list
+             *
+             * @brief appendFunction
+             * @param i
+             */
             void appendFunction(t_functionOption i)
             {
                 // Save

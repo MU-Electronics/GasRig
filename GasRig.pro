@@ -26,11 +26,11 @@ win32 {
     LIBS += "$${PWD_WIN}\\vendor\\labjack\\windowsUD\\LabJackUD_64.lib"
 
     # Fix problem with qrc not being compiled
-    update_qml.target = $${PWD_WIN}\\resources\\qml.qrc
-    update_qml.commands = echo>>$${update_qml.target} # same as touch
-    update_qml.depends = $$files($${PWD_WIN}\\resources\\*, true) # recurse into subdirs
-    QMAKE_EXTRA_TARGETS += update_qml
-    PRE_TARGETDEPS += $${update_qml.target}
+#    update_qml.target = $${PWD_WIN}\\resources\\resources.qrc
+#    update_qml.commands = echo>>$${update_qml.target} # same as touch
+#    update_qml.depends = $$files($${PWD_WIN}\\resources\\*, true) # recurse into subdirs
+#    QMAKE_EXTRA_TARGETS += update_qml
+#    PRE_TARGETDEPS += $${update_qml.target}
 
 }
 
