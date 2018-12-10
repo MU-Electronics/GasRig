@@ -9,9 +9,13 @@ Item {
 
     property string type: "Primary"
 
+    property bool hide: false
+
     state: alertBox.type
 
-    height: alertText.y + alertText.height + 7;
+    height: (hide) ? 0 :  alertText.y + alertText.height + 7;
+    visible: !hide
+    enabled: !hide
 
     states: [
         State {

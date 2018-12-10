@@ -47,7 +47,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
                     // Create root object
                     QJsonObject root;
 
-                    // Assigned id to object
+                    // Assigned root to object
                     root["id"] = id;
 
                     // Create object for options
@@ -89,7 +89,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
              *
              * @brief save
              */
-            void save();
+            bool save(QString name, QString desc);
 
 
             /**
@@ -111,8 +111,6 @@ namespace App { namespace View { namespace Managers { namespace Scripts
              */
             void destroyData()
             {
-                m_name = "";
-                m_description = "";
                 m_functionList.clear();
                 clearStrutOptions();
             }
@@ -206,8 +204,6 @@ namespace App { namespace View { namespace Managers { namespace Scripts
             Settings::Container m_settings;
 
             // Hold current setup
-            QString m_name;
-            QString m_description;
             QList<t_functionOption> m_functionList;
 
 
@@ -218,8 +214,13 @@ namespace App { namespace View { namespace Managers { namespace Scripts
              * @param list
              * @return
              */
-            QJsonArray toJson(const QList<t_functionOption> & list)
+            QJsonObject toJson(QString name, QString desc, const QList<t_functionOption> & list)
             {
+                // Root object
+                QJsonObject root;
+                root.insert("name", name);
+                root.insert("desc", desc);
+
                 // Create array of functions
                 QJsonArray array;
 
@@ -227,8 +228,10 @@ namespace App { namespace View { namespace Managers { namespace Scripts
                 for (auto & func : list)
                     array.append(func.toJson());
 
+                root.insert("functions", array);
+
                 // Return json array
-                return array;
+                return root;
             }
 
 

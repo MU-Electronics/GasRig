@@ -2,6 +2,9 @@
 
 // Include external libs
 #include <QMap>
+#include <QStandardPaths>
+#include <QFile>
+#include <QDir>
 
 namespace App { namespace View { namespace Managers { namespace Scripts
 {
@@ -34,23 +37,53 @@ namespace App { namespace View { namespace Managers { namespace Scripts
      *
      * @brief Add::save
      */
-    void Add::save()
+    bool Add::save(QString name, QString desc)
     {
         // Create json
-        auto doc = QJsonDocument(toJson(m_functionList));
-        qDebug() << doc.toJson().constData();
+        auto doc = QJsonDocument(toJson(name, desc, m_functionList));
+
+        // Where to store
+        QString folder = QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation) + "/GasRig";
+
+        // Create folder is not exists
+        if(!QDir(folder).exists())
+        {
+            // Parent folder
+            QDir().mkdir(folder);
+
+            // Script folder
+            folder += "/Scripts";
+
+            // Check + create
+            if(!QDir(folder).exists())
+                QDir().mkdir(folder);
+        }
+        else
+        {
+            // Script folder
+            folder += "/Scripts";
+        }
+
+        // File location
+        QString file = folder + "/" + name + ".json";
 
         // Check ${name}.json does not exist
-            // Create json file
-                // Create json object
-                    // Serialise json object
-                        // Put serialise json into file
-                            // Navigate to list tab
-                        // General file error
-                    // General file error
-                // General file error
-            // File creation error
-        // Name already exists error
+        QFileInfo fileInfo(file);
+        if (fileInfo.exists() && fileInfo.isFile())
+            return false;
+
+        // Create file and write
+        QFile jsonFile(file);
+        if(jsonFile.open(QFile::WriteOnly))
+        {
+            if(jsonFile.write(doc.toJson()) != -1)
+            {
+                return true;
+            }
+        }
+
+        // Error creating script
+        return false;
     }
 
 

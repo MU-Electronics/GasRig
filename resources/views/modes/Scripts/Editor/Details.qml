@@ -8,10 +8,12 @@ import Fluid.Core 1.0 as FluidCore
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.2
 
+import '../../../parts'
+
 FluidControls.Card {
     id: item
 
-    height: 80
+    height: script_basic_info_alert.height + script_basic_info.height + 20
     width: parent.width
 
     property int listFunctionCount: 0
@@ -26,15 +28,29 @@ FluidControls.Card {
         }
     }
 
+    AlertBox
+    {
+        id: script_basic_info_alert
+        width: parent.width
+        type: "Warning"
+        textContent: "Unable to save script, try a different name."
+        hide: true
+    }
+
     RowLayout
     {
+        id: script_basic_info
         spacing: 10
-        anchors.margins: 10
-        anchors.fill: parent
+        anchors.top: script_basic_info_alert.bottom
+        height: 60
+        width: parent.width - 40
+
         ColumnLayout
         {
             spacing: 5
             Layout.maximumWidth: 250
+            Layout.leftMargin: 20
+            Layout.topMargin: 10
             Text {
                 anchors.fill: parent
                 text: "Name"
@@ -51,6 +67,7 @@ FluidControls.Card {
         {
             spacing: 5
             Layout.maximumWidth: 550
+            Layout.topMargin: 10
             Text {
                 anchors.fill: parent
                 text: "Description"
@@ -65,6 +82,7 @@ FluidControls.Card {
 
         Button
         {
+            Layout.topMargin: 10
             text: qsTr("Save Script")
             enabled: (set_scriptname.text && set_description.text && item.listFunctionCount !== 0)
             visible: true
@@ -73,7 +91,17 @@ FluidControls.Card {
             Material.foreground:  Material.color(Material.Grey, Material.Shade100)
             onClicked:
             {
-                ScriptAddManager.save();
+                var scriptAddResult = ScriptAddManager.save(set_scriptname.text, set_description.text);
+
+                // Lazy! check if success
+                if(scriptAddResult)
+                {
+                    stackView.replace("qrc:/views/modes/Scripts/Index.qml");
+                }
+                else
+                {
+                    script_basic_info_alert.hide = false;
+                }
             }
         }
     }
