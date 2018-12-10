@@ -44,17 +44,17 @@ namespace App
         ,    experiment_engine(*new Experiment::Engine(this, settings_container, hardware, monitor))
 
             // Create instance for each view manager
-        ,   manager_global(*new View::Managers::Global(parent, engine, settings_container, experiment_engine))
-        ,   manager_testing(*new View::Managers::Testing(parent, engine, settings_container, experiment_engine))
-        ,   manager_connection(*new View::Managers::ConnectionStatus(parent, engine, settings_container, experiment_engine))
-        ,   manager_systemStatus(*new View::Managers::SystemStatus(parent, engine, settings_container, experiment_engine))
-        ,   manager_machineStatus(*new View::Managers::MachineStatus(parent, engine, settings_container, experiment_engine))
-        ,   manager_mode_pressuriseCell(*new View::Managers::Modes::PressuriseCell(parent, engine, settings_container, experiment_engine))
-        ,   manager_graph_pressureVsTime(*new View::Managers::Graphs::PressureVsTime(parent, engine, settings_container, experiment_engine))
-        ,   manager_graph_valvesVsTime(*new View::Managers::Graphs::ValvesVsTime(parent, engine, settings_container, experiment_engine))
-        ,   manager_graph_vacuumVsTime(*new View::Managers::Graphs::VacuumVsTime(parent, engine, settings_container, experiment_engine))
-        ,   manager_scripts_editor(*new View::Managers::Scripts::Editor(parent, engine, settings_container, experiment_engine))
-        ,   manager_scripts_add(*new View::Managers::Scripts::Add(parent, engine, settings_container, experiment_engine))
+        ,   manager_global(*new View::Managers::Global(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_testing(*new View::Managers::Testing(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_connection(*new View::Managers::ConnectionStatus(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_systemStatus(*new View::Managers::SystemStatus(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_machineStatus(*new View::Managers::MachineStatus(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_mode_pressuriseCell(*new View::Managers::Modes::PressuriseCell(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_graph_pressureVsTime(*new View::Managers::Graphs::PressureVsTime(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_graph_valvesVsTime(*new View::Managers::Graphs::ValvesVsTime(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_graph_vacuumVsTime(*new View::Managers::Graphs::VacuumVsTime(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_scripts_editor(*new View::Managers::Scripts::Editor(parent, m_engine, settings_container, experiment_engine))
+        ,   manager_scripts_add(*new View::Managers::Scripts::Add(parent, m_engine, settings_container, experiment_engine))
 
     {
         // Register qml types with qml
