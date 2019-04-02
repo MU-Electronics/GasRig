@@ -118,7 +118,7 @@ namespace App { namespace Experiment { namespace Machines
                     // LEAK drop of over X stop machine
                     validator("checkPressure", true)->addTransition(this, &ContinuousPressure::emit_leakDetected, &sm_stopAsFailed);
                     // Top up using pressure state machine below Y
-                    validator("checkPressure", true)->addTransition(this, &ContinuousPressure::emit_leakDetected, state("setPressure", true));
+                    validator("checkPressure", true)->addTransition(this, &ContinuousPressure::emit_topUpRequired, state("setPressure", true));
                     // Max time ran out
                     validator("checkPressure", true)->addTransition(this, &ContinuousPressure::emit_maxTimeElapsed, &sm_stop);
                     // Carry on checking
