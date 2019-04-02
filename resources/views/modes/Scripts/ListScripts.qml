@@ -46,10 +46,53 @@ Item
 
             }
 
-            delegate: Item {
-                height: 25
-                width: 100
-                Text { text: model.modelData.name + " " + model.modelData.desc }
+            delegate: Rectangle {
+                height: 50
+                width: root.width
+                color: "#dbdbdb"
+
+                RowLayout
+                {
+                    spacing: 6
+                    Rectangle {
+                        id: scriptTitle
+                        color: index % 2 == 0 ? "#e2e2e2" : "#e4e4e4"
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 200
+                        Layout.preferredWidth: 200
+                        Layout.maximumWidth: 300
+                        Layout.minimumHeight: 50
+                        Text {
+                            anchors.centerIn: parent
+                            text: model.modelData.name
+                        }
+                    }
+                    Rectangle {
+                        color: index % 2 == 0 ? "#e2e2e2" : "#e4e4e4"
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: root.width - (scriptTitle.width + scriptRun.width + 6 + 6)
+                        Layout.preferredWidth: root.width - (scriptTitle.width + scriptRun.width + 6 + 6)
+                        Layout.maximumWidth: root.width - (scriptTitle.width + scriptRun.width + 6 + 6)
+                        Layout.minimumHeight: 50
+                        Text {
+                            anchors.centerIn: parent
+                            text: model.modelData.desc
+                        }
+                    }
+                    Rectangle {
+                        id: scriptRun
+                        color: index % 2 == 0 ? "#e2e2e2" : "#e4e4e4"
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 200
+                        Layout.preferredWidth: 200
+                        Layout.maximumWidth: 300
+                        Layout.minimumHeight: 50
+                        Text {
+                            anchors.centerIn: parent
+                            text: "run"
+                        }
+                    }
+                }
 
                 MouseArea {
                     anchors.fill: parent

@@ -20,7 +20,13 @@ namespace App { namespace Experiment { namespace Machines
         ,   m_pressurise(*new Pressurise(parent, settings, hardware, safety))
         ,   m_vent(*new Vent(parent, settings, hardware, safety))
         ,   m_purge(*new Purge(parent, settings, hardware, safety))
+        ,   m_continuousPressure(*new ContinuousPressure(parent, settings, hardware, safety))
     {
+        // Connect the finishing signals for the continious pressurise state machine
+        connect(&m_continuousPressure, &ContinuousPressure::emit_machineStopping, this, &Machines::continuousPressureStopping);
+        connect(&m_continuousPressure, &ContinuousPressure::emit_machineFinished, this, &Machines::continuousPressureFinished);
+        connect(&m_continuousPressure, &ContinuousPressure::emit_machineFailed, this, &Machines::continuousPressureFailed);
+
         // Connect the finished signals for the pruge
         connect(&m_purge, &Purge::emit_machineStopping, this, &Machines::purgeStopping);
         connect(&m_purge, &Purge::emit_machineFinished, this, &Machines::purgeFinished);
@@ -349,6 +355,51 @@ namespace App { namespace Experiment { namespace Machines
         emit emit_purgeFailed(params);
     }
 
+
+
+
+
+
+
+    int Machines::setContinuousPressure(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve)
+    {
+        // This state machine requires to sensors to be monitored
+        if(!sensorMonitors)
+            return machineFailedToStart(-1);
+
+        // Set the params
+        m_continuousPressure.setParams(maxTime, monitorTime, topUp, leak, pressure, stepSize, inputValve, outputValve);
+
+        // Start the machine
+        m_continuousPressure.start();
+
+        // Tell everyone
+        emit emit_continuousPressureStarted(maxTime, monitorTime, topUp, leak, pressure, stepSize, inputValve, outputValve);
+
+        // Return success
+        return 1;
+    }
+
+    void Machines::stopSetContinuousPressure()
+    {
+        // Stop the machine
+        m_continuousPressure.cancelStateMachine();
+    }
+
+    void Machines::continuousPressureStopping(QVariantMap params)
+    {
+        emit emit_continuousPressureStopping(params);
+    }
+
+    void Machines::continuousPressureFinished(QVariantMap params)
+    {
+        emit emit_continuousPressureStopped(params);
+    }
+
+    void Machines::continuousPressureFailed(QVariantMap params)
+    {
+        emit emit_continuousPressureFailed(params);
+    }
 
 
 

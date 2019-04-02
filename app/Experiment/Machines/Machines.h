@@ -16,6 +16,7 @@
 #include "Pressurise.h"
 #include "Vent.h"
 #include "Purge.h"
+#include "ContinuousPressure.h"
 
 namespace App { namespace Experiment { namespace Machines
 {
@@ -53,6 +54,9 @@ namespace App { namespace Experiment { namespace Machines
             int setFlowRate(int flowController, double rate);
             void stopFlowRate();
 
+            int setContinuousPressure(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve);
+            void stopSetContinuousPressure();
+
         signals:
             void emit_vacDownMachineStarted(double value, int valueType, bool turbo, int gasMode, int mode);
             void emit_vacDownMachineStopping(QVariantMap params);
@@ -88,6 +92,11 @@ namespace App { namespace Experiment { namespace Machines
             void emit_purgeStopped(QVariantMap params);
             void emit_purgeFailed(QVariantMap params);
 
+            void emit_continuousPressureStarted(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve);
+            void emit_continuousPressureStopping(QVariantMap params);
+            void emit_continuousPressureStopped(QVariantMap params);
+            void emit_continuousPressureFailed(QVariantMap params);
+
         public slots:
             void vacDownStopping(QVariantMap params);
             void vacDownFinished(QVariantMap params);
@@ -116,6 +125,10 @@ namespace App { namespace Experiment { namespace Machines
             void purgeFinished(QVariantMap params);
             void purgeFailed(QVariantMap params);
 
+            void continuousPressureStopping(QVariantMap params);
+            void continuousPressureFinished(QVariantMap params);
+            void continuousPressureFailed(QVariantMap params);
+
         private:
             // Are the sensors being monitored?
             bool sensorMonitors = false;
@@ -133,6 +146,7 @@ namespace App { namespace Experiment { namespace Machines
             Pressurise& m_pressurise;
             Vent& m_vent;
             Purge& m_purge;
+            ContinuousPressure& m_continuousPressure;
 
             // Sensor reading thread
             QThread thread_sensorReadings;

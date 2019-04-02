@@ -127,7 +127,8 @@ SOURCES += \
     app/View/Managers/Graphs/Graph.cpp \
     app/Services/Debugging.cpp \
     app/View/Managers/Scripts/Editor.cpp \
-    app/View/Managers/Scripts/Add.cpp
+    app/View/Managers/Scripts/Add.cpp \
+    app/Experiment/Machines/ContinuousPressure.cpp
 
 RESOURCES += \
     resources/resources.qrc
@@ -225,4 +226,5 @@ HEADERS += \
     app/View/Managers/Graphs/Graph.h \
     app/Services/Debuging.h \
     app/View/Managers/Scripts/Editor.h \
-    app/View/Managers/Scripts/Add.h
+    app/View/Managers/Scripts/Add.h \
+    app/Experiment/Machines/ContinuousPressure.h

@@ -36,7 +36,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
         Q_PROPERTY(QString desc READ desc NOTIFY descChanged)
 
         public:
-            ScriptInfoObject::ScriptInfoObject(QString name, QString desc)
+            ScriptInfoObject(QString name, QString desc)
             {
                 m_name = name;
                 m_desc = desc;
