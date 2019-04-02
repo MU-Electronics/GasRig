@@ -28,7 +28,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ~ContinuousPressure();
 
-            void setParams(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize = 2000, bool inputValve = true, bool outputValve = true);
+            void setParams(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize = 2000, bool inputValve = true, bool outputValve = true, bool exhuastValveOnly = false);
 
             void beforeStart();
 

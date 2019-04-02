@@ -761,7 +761,8 @@ namespace App { namespace View { namespace Managers
      */
     void Testing::requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve)
     {
-        m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve, openOutputValve);
+        // @todo set exhuast valve only var at the end
+        m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve, openOutputValve, false);
     }
 
     void Testing::requestHighPressureStop()

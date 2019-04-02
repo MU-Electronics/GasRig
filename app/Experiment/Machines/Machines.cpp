@@ -361,20 +361,20 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
-    int Machines::setContinuousPressure(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve)
+    int Machines::setContinuousPressure(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve, bool exhuastValveOnly)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
         // Set the params
-        m_continuousPressure.setParams(maxTime, monitorTime, topUp, leak, pressure, stepSize, inputValve, outputValve);
+        m_continuousPressure.setParams(maxTime, monitorTime, topUp, leak, pressure, stepSize, inputValve, outputValve, exhuastValveOnly);
 
         // Start the machine
         m_continuousPressure.start();
 
         // Tell everyone
-        emit emit_continuousPressureStarted(maxTime, monitorTime, topUp, leak, pressure, stepSize, inputValve, outputValve);
+        emit emit_continuousPressureStarted(maxTime, monitorTime, topUp, leak, pressure, stepSize, inputValve, outputValve, exhuastValveOnly);
 
         // Return success
         return 1;
@@ -555,20 +555,20 @@ namespace App { namespace Experiment { namespace Machines
      * @param input
      * @param frequency
      */
-    int Machines::setPressure(double pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve)
+    int Machines::setPressure(double pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve, bool exhuastValveOnly)
     {
         // This state machine requires to sensors to be monitored
         if(!sensorMonitors)
             return machineFailedToStart(-1);
 
         // Set params
-        m_pressurise.setParams(pressure, initVacDown, stepSize, inputValve, openOutputValve);
+        m_pressurise.setParams(pressure, initVacDown, stepSize, inputValve, openOutputValve, exhuastValveOnly);
 
         // Start the machine
         m_pressurise.start();
 
         // Emit machine started
-        emit emit_pressuriseStarted(pressure, initVacDown, stepSize, inputValve, openOutputValve);
+        emit emit_pressuriseStarted(pressure, initVacDown, stepSize, inputValve, openOutputValve, exhuastValveOnly);
 
         // Return success
         return 1;

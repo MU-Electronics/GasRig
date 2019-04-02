@@ -52,7 +52,7 @@ namespace App { namespace Experiment { namespace Machines
      * @param turbo
      * @param gasMode
      */
-    void ContinuousPressure::setParams(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve)
+    void ContinuousPressure::setParams(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve, bool exhuastValveOnly)
     {       
         // Save params
         params.insert("maxTime", maxTime); // minutes
@@ -63,6 +63,7 @@ namespace App { namespace Experiment { namespace Machines
         params.insert("stepSize", stepSize); // millbar
         params.insert("inputValve", inputValve);
         params.insert("outputValve", outputValve); // valve 1 at step size
+        params.insert("exhuastValveOnly", exhuastValveOnly);
 
         // Setup timers
         t_maxTime.setInterval(maxTime);
@@ -203,7 +204,7 @@ namespace App { namespace Experiment { namespace Machines
     void ContinuousPressure::setHighPressure()
     {
         // Set params
-        m_pressurise.setParams(params.value("pressure").toDouble(), true, params["stepSize"].toInt(), params.value("inputValve").toBool(), params.value("outputValve").toBool());
+        m_pressurise.setParams(params.value("pressure").toDouble(), true, params["stepSize"].toInt(), params.value("inputValve").toBool(), params.value("outputValve").toBool(), params.value("exhuastValveOnly").toBool());
 
         // Build the machine
         m_pressurise.buildMachine();

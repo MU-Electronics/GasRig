@@ -32,7 +32,7 @@ namespace App { namespace Experiment { namespace Machines
 
             ~Pressurise();
 
-            void setParams(double pressure, bool initVacDown, int stepSize, bool inputValve, bool outputValve);
+            void setParams(double pressure, bool initVacDown, int stepSize, bool inputValve = true, bool outputValve = true, bool exhuastValveOnly = false);
 
             void beforeStart();
 

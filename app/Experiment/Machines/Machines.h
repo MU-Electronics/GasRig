@@ -45,7 +45,7 @@ namespace App { namespace Experiment { namespace Machines
             int pulseValve(int valve, int cycles, int timeOpen, int timeClosed);
             void stopPulseValve();
 
-            int setPressure(double pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve);
+            int setPressure(double pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve, bool exhuastValveOnly = false);
             void stopSetPressure();
 
             int safeValveOpen(int id);
@@ -54,7 +54,7 @@ namespace App { namespace Experiment { namespace Machines
             int setFlowRate(int flowController, double rate);
             void stopFlowRate();
 
-            int setContinuousPressure(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve);
+            int setContinuousPressure(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve, bool exhuastValveOnly);
             void stopSetContinuousPressure();
 
         signals:
@@ -77,7 +77,7 @@ namespace App { namespace Experiment { namespace Machines
             void emit_sensorReadingsMachineStopped();
             void emit_sensorsNotBeingMonitored();
 
-            void emit_pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve);
+            void emit_pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve, bool exhuastValveOnly);
             void emit_pressuriseStopping(QVariantMap params);
             void emit_pressuriseStopped(QVariantMap params);
             void emit_pressuriseFailed(QVariantMap params);
@@ -92,7 +92,7 @@ namespace App { namespace Experiment { namespace Machines
             void emit_purgeStopped(QVariantMap params);
             void emit_purgeFailed(QVariantMap params);
 
-            void emit_continuousPressureStarted(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve);
+            void emit_continuousPressureStarted(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve, bool exhuastValveOnly);
             void emit_continuousPressureStopping(QVariantMap params);
             void emit_continuousPressureStopped(QVariantMap params);
             void emit_continuousPressureFailed(QVariantMap params);

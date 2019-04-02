@@ -211,7 +211,7 @@ namespace App { namespace Experiment { namespace Machines
     // Below show the to be implimented function vars
     // Valve 7 init step size, Valve 7 final step size, Valve 2 init step size, Valve 2 final step size
     // Valve 1 tolerance, Valve 2 tolerance, Valve 7 tolerance
-    void Pressurise::setParams(double pressure, bool initVacDown, int stepSize = 2000, bool inputValve = true, bool outputValve = true)
+    void Pressurise::setParams(double pressure, bool initVacDown, int stepSize = 2000, bool inputValve, bool outputValve, bool exhuastValveOnly)
     {
         /*#######################################
          # Configuration Settings
@@ -260,7 +260,7 @@ namespace App { namespace Experiment { namespace Machines
          ######################################*/
 
         // When do we need a vacuum backing for the exhaust
-        params.insert("vacuum_backing", 4000);
+        (exhuastValveOnly == true) ? params.insert("vacuum_backing", 4000) : params.insert("vacuum_backing", 1000000);
 
         // Vac down the exhuast void to provide a initial buffer
         params.insert("exhuast_void_vac_down_time", 5000);
