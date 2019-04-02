@@ -122,7 +122,7 @@ namespace App { namespace Experiment { namespace Machines
             void shouldDisablingBackingPump();
             void shouldOpenValveOne();
             void waitForPressureAfterShouldOpenValveFive();
-            void previousPressureReading();
+            void updatePreviousPressureReading();
 
             // Timers
             void startValveOnePulseTimer();
