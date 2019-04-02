@@ -50,6 +50,7 @@ namespace App { namespace Experiment { namespace Machines
 
             // Hold the pressure for the previous stage
             double pressureReading = 1;
+            double previousPressureReading = -1;
 
             // Hold the state of the backing pump
             bool backingPumpEnabled = false;
@@ -103,6 +104,8 @@ namespace App { namespace Experiment { namespace Machines
             void emit_shouldDisableBackingPumpTrue();
             void emit_shouldDisableBackingPumpFalse();
 
+            void emit_continue();
+
             // Timer signals
             void emit_timerActive();
 
@@ -118,6 +121,8 @@ namespace App { namespace Experiment { namespace Machines
             void shouldEnableBackingPump();
             void shouldDisablingBackingPump();
             void shouldOpenValveOne();
+            void waitForPressureAfterShouldOpenValveFive();
+            void previousPressureReading();
 
             // Timers
             void startValveOnePulseTimer();

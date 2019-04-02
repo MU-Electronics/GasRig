@@ -151,6 +151,27 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
+
+
+
+/*
+ * States to connect to functions
+ *
+        state("sml_valveTwoPirorReading", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_valveTwoPirorReading", true));
+            validator("sml_valveTwoPirorReading", true)->addTransition(this, &Pressurise::emit_continue, state("sml_openSlowExhuastPath_1", true));
+
+
+        state("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_waitForPressureAfterShouldOpenValveFive", true));
+            validator("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveTrue, state("sml_waitForVacuumValveTimer_3", true));
+            validator("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveFalse, state("sml_openExhuastValve", true));
+                transitionsBuilder()->openValve(state("sml_openExhuastValve", true), validator("sml_validateOpenExhuastValve", true), state("sml_waitExhuastValve", true), &sm_stopAsFailed);
+                state("sml_waitExhuastValve", true)->addTransition(&t_pulseValveTwo, &QTimer::timeout, state("sml_closeExhuastValve", true));
+                transitionsBuilder()->closeValve(state("sml_closeExhuastValve", true), validator("sml_validateCloseExhuastValve", true), state("sml_waitForVacuumValveTimer_3", true), &sm_stopAsFailed);
+
+*/
+
+
+
         // Timers
         connect(state("sml_startValveOneTimer", true), &QState::entered, this, &Pressurise::startValveOnePulseTimer);
         connect(state("sml_startValveTwoTimer", true), &QState::entered, this, &Pressurise::startValveTwoPulseTimer);
@@ -261,6 +282,9 @@ namespace App { namespace Experiment { namespace Machines
 
         // When do we need a vacuum backing for the exhaust
         (exhuastValveOnly == true) ? params.insert("vacuum_backing", 4000) : params.insert("vacuum_backing", 1000000);
+
+        // Max pressure drop that vacuum pump and absorb without damage
+        params.insert("backing_max_pressure", 500);
 
         // Vac down the exhuast void to provide a initial buffer
         params.insert("exhuast_void_vac_down_time", 5000);
@@ -622,7 +646,7 @@ namespace App { namespace Experiment { namespace Machines
                         // Disable backing pump
                         transitionsBuilder()->disableBackingPump(state("sml_disableBackingPump_2", true), validator("sml_validateDisableBackingPump_2", true), state("sml_openExhuast_2", true), &sm_stopAsFailed);
                     // Open exhuast valve 3
-                    transitionsBuilder()->openValve(state("sml_openExhuast_2", true), validator("sml_validateOpenExhuast_2", true), state("sml_openSlowExhuastPath_1", true), &sm_stopAsFailed);
+                    transitionsBuilder()->openValve(state("sml_openExhuast_2", true), validator("sml_validateOpenExhuast_2", true), state("sml_valveTwoPirorReading", true), &sm_stopAsFailed);
 
 
         // Should exhuast be closed and vacuum enabled.
@@ -636,11 +660,17 @@ namespace App { namespace Experiment { namespace Machines
                     // Wait for valve to close
                     state("sml_waitForVacuumValveTimer_2", true)->addTransition(&t_vacuumValveTimer, &QTimer::timeout, state("sml_shouldEnableBackingPump", true));
                         // Skip any action on the backing pump
-                        state("sml_shouldEnableBackingPump", true)->addTransition(this, &Pressurise::emit_shouldEnableBackingPumpSkip, state("sml_openSlowExhuastPath_1", true));
+                        state("sml_shouldEnableBackingPump", true)->addTransition(this, &Pressurise::emit_shouldEnableBackingPumpSkip, state("sml_valveTwoPirorReading", true));
                         // Backing pump needs enabling
                         state("sml_shouldEnableBackingPump", true)->addTransition(this, &Pressurise::emit_shouldEnableBackingPumpTrue, state("sml_enableBackingPump_2", true));
                             // Enable backing pump
-                            transitionsBuilder()->enableBackingPump(state("sml_enableBackingPump_2", true), validator("sml_validateEnableBackingPump_2", true), state("sml_openSlowExhuastPath_1", true), &sm_stopAsFailed);
+                            transitionsBuilder()->enableBackingPump(state("sml_enableBackingPump_2", true), validator("sml_validateEnableBackingPump_2", true), state("sml_valveTwoPirorReading", true), &sm_stopAsFailed);
+
+        // Save pressure reading
+        // previousPressureReading
+        state("sml_valveTwoPirorReading", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_valveTwoPirorReading", true));
+            validator("sml_valveTwoPirorReading", true)->addTransition(this, &Pressurise::emit_continue, state("sml_openSlowExhuastPath_1", true));
+
 
         // Open valve 2
         transitionsBuilder()->openValve(state("sml_openSlowExhuastPath_1", true), validator("sml_validateOpenSlowExhuastPath_1", true), state("sml_startValveTwoTimer", true), &sm_stopAsFailed);
@@ -659,7 +689,14 @@ namespace App { namespace Experiment { namespace Machines
         // Should vacuum in valve be opened?
         validator("sml_shouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveFalse, state("sml_waitForPressureAfterValveTwo", true));
         // Open vacuum in valve and ensure backing pump on
-        validator("sml_shouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveTrue, state("sml_waitForVacuumValveTimer_3", true));
+        validator("sml_shouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveTrue, state("sml_waitForPressureAfterShouldOpenValveFive", true));
+            // Ensure pressure drop is less than X to protect backing pump
+            state("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_waitForPressureAfterShouldOpenValveFive", true));
+                validator("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveTrue, state("sml_waitForVacuumValveTimer_3", true));
+                validator("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveFalse, state("sml_openExhuastValve", true));
+                    transitionsBuilder()->openValve(state("sml_openExhuastValve", true), validator("sml_validateOpenExhuastValve", true), state("sml_waitExhuastValve", true), &sm_stopAsFailed);
+                    state("sml_waitExhuastValve", true)->addTransition(&t_pulseValveTwo, &QTimer::timeout, state("sml_closeExhuastValve", true));
+                    transitionsBuilder()->closeValve(state("sml_closeExhuastValve", true), validator("sml_validateCloseExhuastValve", true), state("sml_waitForVacuumValveTimer_3", true), &sm_stopAsFailed);
             // Wait for valve to open
             state("sml_waitForVacuumValveTimer_3", true)->addTransition(&t_vacuumValveTimer, &QTimer::timeout, state("sml_openVacuumInForSlowExhuast", true));
                 // Open the vacumm in valve
@@ -709,6 +746,41 @@ namespace App { namespace Experiment { namespace Machines
             // Calculated new step size is it less than the tolerence then finish
             validator("sml_validatePressureAfterValveOne", true)->addTransition(this, &Pressurise::emit_pressureWithinTolerance, &sm_stop);
 
+    }
+
+    void Pressurise::updatePreviousPressureReading()
+    {
+        // Get the validator state instance
+        Functions::CommandValidatorState* state = (Functions::CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Current pressure value
+        double currentPressure = package.value("pressure").toDouble() * 1000;
+
+        // Update previous reading
+        previousPressureReading = currentPressure;
+    }
+
+    void Pressurise::waitForPressureAfterShouldOpenValveFive()
+    {
+        // Get the validator state instance
+        Functions::CommandValidatorState* state = (Functions::CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Current pressure value
+        double currentPressure = package.value("pressure").toDouble() * 1000;
+
+        if((previousPressureReading - currentPressure) > params["backing_max_pressure"].toDouble())
+        {
+            emit emit_shouldCloseValveFiveTrue();
+            return;
+        }
+
+        emit emit_shouldCloseValveFiveFalse();
     }
 
     void Pressurise::shouldOpenValveOne()
