@@ -242,12 +242,12 @@ FluidControls.Card
             TextField
             {
                 id: setTopUp
-                validator: IntValidator { bottom:1; top: (setHighPressure_pressure.text - 11) }
+                validator: IntValidator { bottom:10; top: 1000 }
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: (parent.width/2) - ((root.labelWidth - root.labelPadding) * 1)
-                text: (setHighPressure_pressure.text > 1000) ? "100" : 10
-                placeholderText: "Minimum: 10 mBar;      Maximum: " + (setHighPressure_pressure.text - 11) + " mBar"
+                text: (setHighPressure_pressure.text > 1000) ? "100" : "10"
+                placeholderText: "Minimum: 10 mBar;      Maximum: 1000 mBar"
             }
 
             Text {
@@ -262,11 +262,11 @@ FluidControls.Card
             TextField
             {
                 id: setLeak
-                validator: IntValidator { bottom:(setTopUp.text + 5); top: (setHighPressure_pressure.text - 5) }
+                validator: IntValidator { bottom:10; top: 1000 }
                 inputMethodHints: Qt.ImhDigitsOnly
                 height: parent.height
                 width: (parent.width/2) - ((root.labelWidth - root.labelPadding) * 1)
-                text: (setHighPressure_pressure.text > 1000) ? "500" : 15
+                text: (setHighPressure_pressure.text > 1000) ? "500" : "15"
                 placeholderText: "Minimum: " + (setTopUp.text + 5) + " mBar;      Maximum: " + (setHighPressure_pressure.text - 5) + " mBar"
             }
         }
@@ -314,8 +314,58 @@ FluidControls.Card
         }
         Row{
             spacing: 20
-            opacity: (setHighPressure_pressure.text < 20 || setStepSize_pressure.text < 100) ? 0 : 1;
-            height: (setHighPressure_pressure.text < 20 || setStepSize_pressure.text < 100) ? 0 : 50;
+            opacity: {
+                if(setHighPressure_pressure.acceptableInput && setStepSize_pressure.acceptableInput)
+                {
+                    if(setContiniousPressure.checked)
+                    {
+                        if(!setMaxTime.acceptableInput)
+                            return 0;
+
+                        if(!setMonitorTime.acceptableInput)
+                            return 0;
+
+                        if(!setTopUp.acceptableInput)
+                            return 0;
+
+                        if(!setLeak.acceptableInput)
+                            return 0;
+
+                        if(setTopUp.text >= setLeak.text)
+                            return 0;
+                    }
+
+                    return 1;
+                }
+
+                return 0;
+            }
+            height: {
+                if(setHighPressure_pressure.acceptableInput && setStepSize_pressure.acceptableInput)
+                {
+                    if(setContiniousPressure.checked)
+                    {
+                        if(!setMaxTime.acceptableInput)
+                            return 0;
+
+                        if(!setMonitorTime.acceptableInput)
+                            return 0;
+
+                        if(!setTopUp.acceptableInput)
+                            return 0;
+
+                        if(!setLeak.acceptableInput)
+                            return 0;
+
+                        if(setTopUp.text >= setLeak.text)
+                            return 0;
+                    }
+
+                    return 50;
+                }
+
+                return 0;
+            }
             width: parent.width
             Behavior on opacity {
                 NumberAnimation {

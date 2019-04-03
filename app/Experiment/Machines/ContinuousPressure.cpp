@@ -295,20 +295,23 @@ namespace App { namespace Experiment { namespace Machines
             m_time = time;
 
             // Check for leak
-            if((currentPressure - m_pastPressure) > params["leak"].toDouble())
+            if(abs(currentPressure - m_pastPressure) > params["leak"].toDouble())
             {
+                qDebug() << "Leak detected"<<abs(currentPressure - m_pastPressure);
                 emit emit_leakDetected();
                 return;
             }
 
             // Check for topup
-            if((currentPressure - m_pastPressure) > params["topUp"].toDouble())
+            if(abs(currentPressure - m_pastPressure) > params["topUp"].toDouble())
             {
+                qDebug() << "top up detected"<<abs(currentPressure - m_pastPressure);
                 emit emit_topUpRequired();
                 return;
             }
-        }
 
+        }
+        qDebug() << "nothing required"<<abs(currentPressure - m_pastPressure);
         // Continue along some path
         emit emit_nothingRequired();
     }

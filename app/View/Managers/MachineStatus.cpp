@@ -364,39 +364,39 @@ namespace App { namespace View { namespace Managers
      */
     void MachineStatus::continuousPressuriseStarted(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve, bool exhuastValveOnly)
     {
-        m_continiousPressuriseMachine.insert("status", 1);
-        m_continiousPressuriseMachine.insert("pressure", pressure);
-        m_continiousPressuriseMachine.insert("stepSize", stepSize);
-        m_continiousPressuriseMachine.insert("inputValve", inputValve);
-        m_continiousPressuriseMachine.insert("maxTime", maxTime);
-        m_continiousPressuriseMachine.insert("monitorTime", monitorTime);
-        m_continiousPressuriseMachine.insert("topUp", topUp);
-        m_continiousPressuriseMachine.insert("leak", leak);
+        m_pressuriseMachine.insert("status", 1);
+        m_pressuriseMachine.insert("pressure", pressure);
+        m_pressuriseMachine.insert("stepSize", stepSize);
+        m_pressuriseMachine.insert("inputValve", inputValve);
+        m_pressuriseMachine.insert("maxTime", maxTime);
+        m_pressuriseMachine.insert("monitorTime", monitorTime);
+        m_pressuriseMachine.insert("topUp", topUp);
+        m_pressuriseMachine.insert("leak", leak);
 
         // Set the controllable
         setControllable("pressuriseMachine", 2);
 
-        emit emit_continiousPressuriseMachineChanged(m_pressuriseMachine);
+        emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }
 
     void MachineStatus::continuousPressuriseStopping(QVariantMap params)
     {
-        m_continiousPressuriseMachine.insert("status", 2);
+        m_pressuriseMachine.insert("status", 2);
 
         // Set the controllable
         setControllable("pressuriseMachine", 0);
 
-        emit emit_continiousPressuriseMachineChanged(m_pressuriseMachine);
+        emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }
 
     void MachineStatus::continuousPressuriseStopped(QVariantMap params)
     {
-        m_continiousPressuriseMachine.insert("status", 0);
+        m_pressuriseMachine.insert("status", 0);
 
         // Set the controllable
         setControllable("pressuriseMachine", 1);
 
-        emit emit_continiousPressuriseMachineChanged(m_pressuriseMachine);
+        emit emit_pressuriseMachineChanged(m_pressuriseMachine);
     }
 
 
