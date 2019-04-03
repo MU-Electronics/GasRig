@@ -67,7 +67,8 @@ namespace App { namespace Experiment { namespace Machines
             ,       t_pulseValveTwo
             ,       t_pulseValveSeven
             ,       t_exhuastVoidVacDownTimer
-            ,       t_vacuumValveTimer;
+            ,       t_vacuumValveTimer
+            ,       t_exhuastValveTimer;
 
 
             // Valve to open and close
@@ -130,6 +131,7 @@ namespace App { namespace Experiment { namespace Machines
             void startValveSevenPulseTimer();
             void startExhuastVoidVacDownTimer();
             void startVacuumValveTimer();
+            void startExhuastTimer();
     };
 }}}
 
