@@ -36,8 +36,8 @@ namespace App { namespace Experiment { namespace Machines
             void buildMachine();
 
         signals:
-            void pressureOk();
-            void pressureTooHigh();
+            void emit_pressureOk();
+            void emit_pressureTooHigh();
 
         public slots:
             void systemPressureFlowController();

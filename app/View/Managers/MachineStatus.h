@@ -34,6 +34,7 @@ namespace App { namespace View { namespace Managers
         Q_PROPERTY(QVariantMap vacDownMachine READ vacDownMachine NOTIFY emit_vacDownMachineChanged)
         Q_PROPERTY(QVariantMap pulseValveMachine READ pulseValveMachine NOTIFY emit_pulseValveMachineChanged)
         Q_PROPERTY(QVariantMap pressuriseMachine READ pressuriseMachine NOTIFY emit_pressuriseMachineChanged)
+        Q_PROPERTY(QVariantMap continiousPressuriseMachine READ continiousPressuriseMachine NOTIFY emit_continiousPressuriseMachineChanged)
         Q_PROPERTY(QVariantMap ventMachine READ ventMachine NOTIFY emit_ventMachineChanged)
         Q_PROPERTY(QVariantMap purgeMachine READ purgeMachine NOTIFY emit_purgeMachineChanged)
         Q_PROPERTY(QVariantMap safetyValveMachine READ safetyValveMachine NOTIFY emit_safetyValveMachineChanged)
@@ -51,6 +52,7 @@ namespace App { namespace View { namespace Managers
             QVariantMap vacDownMachine() const { return m_vacDownMachine; }
             QVariantMap pulseValveMachine() const { return m_pulseValveMachine; }
             QVariantMap pressuriseMachine() const { return m_pressuriseMachine; }
+            QVariantMap continiousPressuriseMachine() const { return m_continiousPressuriseMachine; }
             QVariantMap ventMachine() const { return m_ventMachine; }
             QVariantMap purgeMachine() const { return m_purgeMachine; }
             QVariantMap safetyValveMachine() const { return m_safetyValveMachine; }
@@ -67,6 +69,7 @@ namespace App { namespace View { namespace Managers
             void emit_purgeMachineChanged(QVariantMap);
             void emit_controllableChanged(QVariantMap);
             void emit_safetyValveMachineChanged(QVariantMap);
+            void emit_continiousPressuriseMachineChanged(QVariantMap);
 
         public slots:
             void ventStarted(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
@@ -84,6 +87,10 @@ namespace App { namespace View { namespace Managers
             void pressuriseStarted(double pressure, bool initVacDown, int stepSize, bool inputValve);
             void pressuriseStopping(QVariantMap params);
             void pressuriseStopped(QVariantMap params);
+
+            void continuousPressuriseStarted(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve, bool exhuastValveOnly);
+            void continuousPressuriseStopping(QVariantMap params);
+            void continuousPressuriseStopped(QVariantMap params);
 
             void purgeStarted(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
             void purgeStopping(QVariantMap params);
@@ -110,6 +117,9 @@ namespace App { namespace View { namespace Managers
 
             // Holds the pressurise machine statuses
             QVariantMap m_pressuriseMachine;
+
+            // Holds the continious pressurise machine statuses
+            QVariantMap m_continiousPressuriseMachine;
 
             // Holds the vent machine statuses
             QVariantMap m_ventMachine;

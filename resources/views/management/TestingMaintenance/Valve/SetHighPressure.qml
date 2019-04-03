@@ -136,7 +136,7 @@ FluidControls.Card
             spacing: 10
             width: parent.width
             height: 50
-            enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true || setContiniousPressure.checked) ? 0 : 1;
             Text {
                 text: qsTr("Disable inital vac down: ")
                 color: "#595959"
@@ -148,7 +148,7 @@ FluidControls.Card
             }
             CheckBox {
                 id: setUseVac_pressure
-                checked: true
+                checked: (setContiniousPressure.checked) ? true : true;
                 text: (!setUseVac_pressure.checked) ? "Init pressure must be atmospheric" : ""
             }
         }
@@ -171,7 +171,7 @@ FluidControls.Card
                 id: setContiniousPressure
                 checked: (setHighPressure_pressure.text < 20) ? false : false;
                 enabled: (setHighPressure_pressure.text < 20) ? false : true;
-                text: (!setContiniousPressure.checked) ? "Pressurises then stops" : "Tops up pressure at set intervals if required"
+                text: (!setContiniousPressure.checked) ? "Pressurises then stops" : "Tops up at set intervals if required"
             }
         }
         Row

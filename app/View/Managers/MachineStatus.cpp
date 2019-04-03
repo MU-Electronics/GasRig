@@ -45,6 +45,17 @@ namespace App { namespace View { namespace Managers
         m_pressuriseMachine.insert("stepSize", -1);
         m_pressuriseMachine.insert("inputValve", -1);
 
+        // Default values for continuous pressurise state machine
+        m_continiousPressuriseMachine.insert("status", 0);
+        m_continiousPressuriseMachine.insert("pressure", -1);
+        m_continiousPressuriseMachine.insert("initVacDown", -1);
+        m_continiousPressuriseMachine.insert("stepSize", -1);
+        m_continiousPressuriseMachine.insert("inputValve", -1);
+        m_continiousPressuriseMachine.insert("maxTime", -1);
+        m_continiousPressuriseMachine.insert("monitorTime", -1);
+        m_continiousPressuriseMachine.insert("topUp", -1);
+        m_continiousPressuriseMachine.insert("leak", -1);
+
         // Default valves for vent state machine
         m_ventMachine.insert("status", 0);
         m_ventMachine.insert("output", false);
@@ -90,6 +101,12 @@ namespace App { namespace View { namespace Managers
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStopped, this, &MachineStatus::pulseValveStopped);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveFailed, this, &MachineStatus::pulseValveStopped);
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStopping, this, &MachineStatus::pulseValveStopping);
+
+        // Connect signals to and from experiment engine
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_continuousPressureStarted, this, &MachineStatus::continuousPressuriseStarted);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_continuousPressureStopped, this, &MachineStatus::continuousPressuriseStopped);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_continuousPressureFailed, this, &MachineStatus::continuousPressuriseStopped);
+        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_continuousPressureStopping, this, &MachineStatus::continuousPressuriseStopping);
 
         // Connect signals to and from experiment engine
         connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseStarted, this, &MachineStatus::pressuriseStarted);
@@ -323,6 +340,63 @@ namespace App { namespace View { namespace Managers
         setControllable("pressuriseMachine", 1);
 
         emit emit_pressuriseMachineChanged(m_pressuriseMachine);
+    }
+
+
+
+
+
+
+
+    /**
+     * Triggered when continious pressurise state machine is started
+     *
+     * @brief MachineStatus::continuousPressuriseStarted
+     * @param maxTime
+     * @param monitorTime
+     * @param topUp
+     * @param leak
+     * @param pressure
+     * @param stepSize
+     * @param inputValve
+     * @param outputValve
+     * @param exhuastValveOnly
+     */
+    void MachineStatus::continuousPressuriseStarted(int maxTime, int monitorTime, double topUp, double leak, double pressure, int stepSize, bool inputValve, bool outputValve, bool exhuastValveOnly)
+    {
+        m_continiousPressuriseMachine.insert("status", 1);
+        m_continiousPressuriseMachine.insert("pressure", pressure);
+        m_continiousPressuriseMachine.insert("stepSize", stepSize);
+        m_continiousPressuriseMachine.insert("inputValve", inputValve);
+        m_continiousPressuriseMachine.insert("maxTime", maxTime);
+        m_continiousPressuriseMachine.insert("monitorTime", monitorTime);
+        m_continiousPressuriseMachine.insert("topUp", topUp);
+        m_continiousPressuriseMachine.insert("leak", leak);
+
+        // Set the controllable
+        setControllable("pressuriseMachine", 2);
+
+        emit emit_continiousPressuriseMachineChanged(m_pressuriseMachine);
+    }
+
+    void MachineStatus::continuousPressuriseStopping(QVariantMap params)
+    {
+        m_continiousPressuriseMachine.insert("status", 2);
+
+        // Set the controllable
+        setControllable("pressuriseMachine", 0);
+
+        emit emit_continiousPressuriseMachineChanged(m_pressuriseMachine);
+    }
+
+    void MachineStatus::continuousPressuriseStopped(QVariantMap params)
+    {
+        m_continiousPressuriseMachine.insert("status", 0);
+
+        // Set the controllable
+        setControllable("pressuriseMachine", 1);
+
+        emit emit_continiousPressuriseMachineChanged(m_pressuriseMachine);
     }
 
 
