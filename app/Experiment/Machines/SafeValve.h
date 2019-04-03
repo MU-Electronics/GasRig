@@ -36,6 +36,11 @@ namespace App { namespace Experiment { namespace Machines
             void buildMachine();
 
         signals:
+            void pressureOk();
+            void pressureTooHigh();
+
+        public slots:
+            void systemPressureFlowController();
 
         private:
             // Referance to QObject

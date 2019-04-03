@@ -21,6 +21,12 @@ namespace App { namespace Experiment { namespace Machines
         // Set class name
         childClassName = QString::fromStdString(typeid(this).name());
 
+        // Pressure checks
+        connect(state("systemPressure", true), &QState::entered, this->pressure(), &Functions::Pressure::systemPressure);
+        connect(validator("systemPressure", true), &Functions::CommandValidatorState::entered, this->pressure(), &Functions::Pressure::validatePressure);
+        connect(validator("systemPressureFlowController", true), &Functions::CommandValidatorState::entered, this, &SafeValve::systemPressureFlowController);
+
+
         // Link close valve states
         connect(state("closeHighPressureInput", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureInput);
         connect(state("closeHighPressureNitrogen", true), &QState::entered, this->valves(), &Functions::Valves::closeHighPressureNitrogen);
@@ -87,6 +93,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // State of the valve
         params.insert("state", state);
+
+        params.insert("v8_max_pressure", 10000);
     }
 
 
@@ -373,7 +381,6 @@ namespace App { namespace Experiment { namespace Machines
             // Set the starting point
            sm_master.setInitialState(state("closeVacuumIn", true));
 
-
             // Close vacuum input
             transitionsBuilder()->closeValve(state("closeVacuumIn", true), validator("closeVacuumIn", true), state("closeVacuumOut", true), &sm_stopAsFailed);
 
@@ -424,7 +431,17 @@ namespace App { namespace Experiment { namespace Machines
             transitionsBuilder()->closeValve(state("closeHighPressureNitrogen", true), validator("closeHighPressureNitrogen", true), state("closeHighPressureInput", true), &sm_stopAsFailed);
 
             // Close high pressure input
-            transitionsBuilder()->closeValve(state("closeHighPressureInput", true), validator("closeHighPressureInput", true), state("openFlowController", true), &sm_stopAsFailed);
+            transitionsBuilder()->closeValve(state("closeHighPressureInput", true), validator("closeHighPressureInput", true), state("systemPressure", true), &sm_stopAsFailed);
+
+            // Check pressure is below 10 bar as can damger flow controllers
+            state("systemPressure", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("systemPressure", true));
+            // Validate
+            validator("systemPressure", true)->addTransition(this->pressure(), &Functions::Pressure::emit_validationFailed, state("systemPressure", true));
+            validator("systemPressure", true)->addTransition(this->pressure(), &Functions::Pressure::emit_validationSuccess, validator("systemPressureFlowController", true));
+                    // Pressure lower than X open valve
+                    validator("systemPressureFlowController", true)->addTransition(this, &SafeValve::emit_pressureOk, state("openFlowController", true));
+                    // Pressure too high fail
+                    validator("systemPressureFlowController", true)->addTransition(this, &SafeValve::emit_pressureTooHigh, &sm_stopAsFailed);
 
             // Open the high pressure input
             transitionsBuilder()->openValve(state("openFlowController", true), validator("openFlowController", true), &sm_stop, &sm_stopAsFailed);
@@ -437,6 +454,27 @@ namespace App { namespace Experiment { namespace Machines
             // Close the flow controller
             transitionsBuilder()->closeValve(state("closeFlowController", true), validator("closeFlowController", true), &sm_stop, &sm_stopAsFailed);
         }
+    }
+
+
+    void SafeValve::systemPressureFlowController()
+    {
+        // Get the validator state instance
+        Functions::CommandValidatorState* state = (Functions::CommandValidatorState*)sender();
+
+        // Get the package data from the instance
+        QVariantMap package = state->package;
+
+        // Current pressure value and convert to mbar
+        double currentPressure = package.value("pressure").toDouble() * 1000;
+
+        if(currentPressure > params["v8_max_pressure"].toDouble())
+        {
+            emit emit_pressureTooHigh();
+            return;
+        }
+
+        emit emit_pressureOk();
     }
 
 
