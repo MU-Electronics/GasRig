@@ -159,6 +159,124 @@ FluidControls.Card
             height: 50
             enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
             Text {
+                text: qsTr("Continuous Pressurising: ")
+                color: "#595959"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth
+            }
+            CheckBox {
+                id: setContiniousPressure
+                checked: (setHighPressure_pressure.text < 20) ? false : false;
+                enabled: (setHighPressure_pressure.text < 20) ? false : true;
+                text: (!setContiniousPressure.checked) ? "Pressurises then stops" : "Tops up pressure at set intervals if required"
+            }
+        }
+        Row
+        {
+            anchors.left: parent.left
+            spacing: 10
+            width: parent.width
+            height: (setContiniousPressure.checked) ? 50 : 0;
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true && setContiniousPressure.checked) ? 0 : 1;
+            opacity: (setContiniousPressure.checked) ? 1 : 0;
+            Text {
+                text: qsTr("Max time (min): ")
+                color: "#777777"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth - 100
+            }
+            TextField
+            {
+                id: setMaxTime
+                validator: IntValidator { bottom:1; top: 9999 }
+                inputMethodHints: Qt.ImhDigitsOnly
+                height: parent.height
+                width: (parent.width/2) - ((root.labelWidth - root.labelPadding) * 1)
+                text: "60"
+                placeholderText: "Minimum: 1 minute;      Maximum: 9999 mBar"
+            }
+
+            Text {
+                text: qsTr("            Monitor Time (secs): ")
+                color: "#777777"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth
+            }
+            TextField
+            {
+                id: setMonitorTime
+                validator: IntValidator { bottom:5; top: 120 }
+                inputMethodHints: Qt.ImhDigitsOnly
+                height: parent.height
+                width: (parent.width/2) - ((root.labelWidth - root.labelPadding) * 1)
+                text: "60"
+                placeholderText: "Minimum: 5 second;      Maximum: 120 second"
+            }
+        }
+        Row
+        {
+            anchors.left: parent.left
+            spacing: 10
+            width: parent.width
+            height: (setContiniousPressure.checked) ? 50 : 0;
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true && setContiniousPressure.checked) ? 0 : 1;
+            opacity: (setContiniousPressure.checked) ? 1 : 0;
+            Text {
+                text: qsTr("Top up (mBar): ")
+                color: "#777777"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth - 100
+            }
+            TextField
+            {
+                id: setTopUp
+                validator: IntValidator { bottom:1; top: (setHighPressure_pressure.text - 11) }
+                inputMethodHints: Qt.ImhDigitsOnly
+                height: parent.height
+                width: (parent.width/2) - ((root.labelWidth - root.labelPadding) * 1)
+                text: (setHighPressure_pressure.text > 1000) ? "100" : 10
+                placeholderText: "Minimum: 10 mBar;      Maximum: " + (setHighPressure_pressure.text - 11) + " mBar"
+            }
+
+            Text {
+                text: qsTr("            Leak (mBar): ")
+                color: "#777777"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth
+            }
+            TextField
+            {
+                id: setLeak
+                validator: IntValidator { bottom:(setTopUp.text + 5); top: (setHighPressure_pressure.text - 5) }
+                inputMethodHints: Qt.ImhDigitsOnly
+                height: parent.height
+                width: (parent.width/2) - ((root.labelWidth - root.labelPadding) * 1)
+                text: (setHighPressure_pressure.text > 1000) ? "500" : 15
+                placeholderText: "Minimum: " + (setTopUp.text + 5) + " mBar;      Maximum: " + (setHighPressure_pressure.text - 5) + " mBar"
+            }
+        }
+        Row
+        {
+            spacing: 10
+            width: parent.width
+            height: 50
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
+            Text {
                 text: qsTr("Should open output valve: ")
                 color: "#595959"
                 visible: parent.opacity

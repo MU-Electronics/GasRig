@@ -36,6 +36,8 @@ namespace App { namespace Experiment { namespace Machines
 
             void buildMachine();
 
+            void buildShutDownMachine();
+
             Pressurise& m_pressurise;
 
         signals:
@@ -49,6 +51,8 @@ namespace App { namespace Experiment { namespace Machines
 
         public slots:
             void startMaxTime();
+            void startMonitorTime();
+            void startDelayTime();
 
             void checkPressure();
 
@@ -64,6 +68,8 @@ namespace App { namespace Experiment { namespace Machines
 
             // Timers
             QTimer t_maxTime;
+            QTimer t_monitorTime;
+            QTimer t_pressureDelayTime;
 
             // Past time and pressure
             long long  m_time = -1;
