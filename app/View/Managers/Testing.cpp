@@ -764,7 +764,7 @@ namespace App { namespace View { namespace Managers
     {
         if(continiousPressure)
         {
-            m_experimentEngine.machines().setContinuousPressure(maxTime, monitorTime, setTop, setLeak, pressure.toInt(), stepSize, inputValve, openOutputValve, exhuastMethod);
+            m_experimentEngine.machines().setContinuousPressure((maxTime*60000), (monitorTime*1000), setTop, setLeak, pressure.toInt(), stepSize, inputValve, openOutputValve, exhuastMethod);
             m_pressuriser = 2;
         }
         else

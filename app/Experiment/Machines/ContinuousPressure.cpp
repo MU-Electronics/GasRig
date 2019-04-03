@@ -228,7 +228,7 @@ namespace App { namespace Experiment { namespace Machines
         state("setPressure", true)->addTransition(&m_pressurise, &Pressurise::emit_machineFinished, state("startMonitorTime", true));
 
         // At monitor interval
-        state("startMonitorTime", true)->addTransition(&t_pressureDelayTime, &QTimer::timeout, state("openValve1", true));
+        state("startMonitorTime", true)->addTransition(&t_monitorTime, &QTimer::timeout, state("openValve1", true));
 
         // Open valve 1
         transitionsBuilder()->openValve(state("openValve1", true), validator("openValve1", true), state("startDelayTime", true), &sm_stopAsFailed);
@@ -279,39 +279,25 @@ namespace App { namespace Experiment { namespace Machines
 
         // Current pressure value and convert to mbar
         double currentPressure = package.value("pressure").toDouble() * 1000;
+        double desiredPressure = params["pressure"].toDouble();
 
-        // Mark first time time
-        if(m_time == -1)
+        // Check for leak
+        if(abs(currentPressure - desiredPressure) > params["leak"].toDouble())
         {
-            m_pastPressure = currentPressure;
+            qInfo() << "Leak detected "<<abs(currentPressure - desiredPressure);
+            emit emit_leakDetected();
+            return;
         }
 
-        // Mark current time
-        long long time = QDateTime::currentSecsSinceEpoch();
-
-        if((time - m_time) > params["monitorTime"].toInt())
+        // Check for topup
+        if(abs(currentPressure - desiredPressure) > params["topUp"].toDouble())
         {
-            // Mark new time
-            m_time = time;
-
-            // Check for leak
-            if(abs(currentPressure - m_pastPressure) > params["leak"].toDouble())
-            {
-                qDebug() << "Leak detected"<<abs(currentPressure - m_pastPressure);
-                emit emit_leakDetected();
-                return;
-            }
-
-            // Check for topup
-            if(abs(currentPressure - m_pastPressure) > params["topUp"].toDouble())
-            {
-                qDebug() << "top up detected"<<abs(currentPressure - m_pastPressure);
-                emit emit_topUpRequired();
-                return;
-            }
-
+            qDebug() << "top up detected"<<abs(currentPressure - desiredPressure);
+            emit emit_topUpRequired();
+            return;
         }
-        qDebug() << "nothing required"<<abs(currentPressure - m_pastPressure);
+
+        qDebug() << "nothing required"<<abs(currentPressure - desiredPressure);
         // Continue along some path
         emit emit_nothingRequired();
     }
@@ -324,6 +310,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ContinuousPressure::startMaxTime()
     {
+        qDebug() << "max timer started"<<t_maxTime.interval();
         // Setup timer
         t_maxTime.setSingleShot(true);
         t_maxTime.start();
@@ -337,6 +324,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ContinuousPressure::startMonitorTime()
     {
+        qDebug() << "monitor timer started"<<t_monitorTime.interval();
         // Setup timer
         t_monitorTime.setSingleShot(true);
         t_monitorTime.start();
@@ -349,6 +337,7 @@ namespace App { namespace Experiment { namespace Machines
      */
     void ContinuousPressure::startDelayTime()
     {
+        qDebug() << "pressure timer started"<<t_pressureDelayTime.interval();
         // Setup timer
         t_pressureDelayTime.setSingleShot(true);
         t_pressureDelayTime.start();
