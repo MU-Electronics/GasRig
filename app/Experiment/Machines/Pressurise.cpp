@@ -757,6 +757,8 @@ namespace App { namespace Experiment { namespace Machines
         // Update previous reading
         previousPressureReading = currentPressure;
 
+        qDebug() << "Updated previous pressure reading value" << previousPressureReading;
+
         emit emit_continue();
     }
 
@@ -770,14 +772,14 @@ namespace App { namespace Experiment { namespace Machines
 
         // Current pressure value
         double currentPressure = package.value("pressure").toDouble() * 1000;
-
-        if((previousPressureReading - currentPressure) > params["backing_max_pressure"].toDouble())
+        qDebug() << "Pressure drop was" << (previousPressureReading - currentPressure);
+        if((previousPressureReading - currentPressure) < params["backing_max_pressure"].toDouble())
         {
-            emit emit_shouldCloseValveFiveTrue();
+            emit emit_shouldOpenValveFiveTrue();
             return;
         }
 
-        emit emit_shouldCloseValveFiveFalse();
+        emit emit_shouldOpenValveFiveFalse();
     }
 
     void Pressurise::shouldOpenValveOne()
@@ -848,6 +850,7 @@ namespace App { namespace Experiment { namespace Machines
 
     void Pressurise::shouldOpenValveFive()
     {
+        qDebug () << "should open valve 5"<< exhuastMode;
         if(exhuastMode)
         {
             emit emit_shouldOpenValveFiveTrue();
