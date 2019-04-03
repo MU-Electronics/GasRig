@@ -218,7 +218,28 @@ namespace App { namespace Experiment { namespace Machines
             sm_master.setInitialState(state("closeVacuumIn", true));
 
             // Close the vacuum input
-            transitionsBuilder()->closeValve(state("closeVacuumIn", true), validator("closeVacuumIn", true), state("openExhuast", true), &sm_stopAsFailed);
+            transitionsBuilder()->closeValve(state("closeVacuumIn", true), validator("closeVacuumIn", true), state("closeSlowExhuastPath", true), &sm_stopAsFailed);
+
+            // Close slow exhuast valve
+            transitionsBuilder()->closeValve(state("closeSlowExhuastPath", true), validator("closeSlowExhuastPath", true), state("closeFastExhuastPath", true), &sm_stopAsFailed);
+
+            // Close fast exhust valve
+            transitionsBuilder()->closeValve(state("closeFastExhuastPath", true), validator("closeFastExhuastPath", true), state("closeOutput", true), &sm_stopAsFailed);
+
+            // Close output
+            transitionsBuilder()->closeValve(state("closeOutput", true), validator("closeOutput", true), state("closeVacuumOut", true), &sm_stopAsFailed);
+
+            // Close vacuum output
+            transitionsBuilder()->closeValve(state("closeVacuumOut", true), validator("closeVacuumOut", true), state("closeHighPressureNitrogen", true), &sm_stopAsFailed);
+
+            // Close the high pressure nitrogen
+            transitionsBuilder()->closeValve(state("closeHighPressureNitrogen", true), validator("closeHighPressureNitrogen", true), state("closeFlowController", true), &sm_stopAsFailed);
+
+            // Close the flow controller
+            transitionsBuilder()->closeValve(state("closeFlowController", true), validator("closeFlowController", true), state("closeHighPressureInput", true), &sm_stopAsFailed);
+
+            // Close high pressure in
+            transitionsBuilder()->closeValve(state("closeHighPressureInput", true), validator("closeHighPressureInput", true), state("openExhuast", true), &sm_stopAsFailed);
 
             // Open the exhuast valve
             transitionsBuilder()->openValve(state("openExhuast", true), validator("openExhuast", true), &sm_stop, &sm_stopAsFailed);
