@@ -67,7 +67,8 @@ namespace App { namespace View { namespace Managers
             void requestFlowControllerTemperature(QString controller);
 
             // Request experiment methods
-            void requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve);
+            void requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve, bool vacuumExhuast,
+                                     bool continiousPressure, int maxTime, int monitorTime, int setTop, int setLeak);
             void requestVent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes);
             void requestPurge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo);
             void requestValveStateSafe(int port, bool state);
@@ -123,6 +124,9 @@ namespace App { namespace View { namespace Managers
 
             // Requested command which is allowed to show a responce in the command terminal
             QString requestedCommand;
+
+            // Pick which pressuriser
+            int m_pressuriser = 0;
 
 
             void setRequestedCommand(QString command)

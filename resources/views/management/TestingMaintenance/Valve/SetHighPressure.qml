@@ -277,6 +277,27 @@ FluidControls.Card
             height: 50
             enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
             Text {
+                text: qsTr("Vacuum exhaust method: ")
+                color: "#595959"
+                visible: parent.opacity
+                font.pixelSize: 16
+                verticalAlignment : Text.AlignVCenter
+                height: parent.height
+                width: root.labelWidth
+            }
+            CheckBox {
+                id: setUseExhuast
+                checked: true
+                text: (setUseExhuast.checked) ? "V2 and V5" : "V2 and V3"
+            }
+        }
+        Row
+        {
+            spacing: 10
+            width: parent.width
+            height: 50
+            enabled: (MachineStatusManager.pressuriseMachine["status"] === true) ? 0 : 1;
+            Text {
                 text: qsTr("Should open output valve: ")
                 color: "#595959"
                 visible: parent.opacity
@@ -315,7 +336,9 @@ FluidControls.Card
                 visible: (MachineStatusManager.pressuriseMachine["status"] === 0) ? 1 : 0;
                 onClicked:
                 {
-                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text, setInputValve_pressure.model.get(setInputValve_pressure.currentIndex).value, setUseVac_openOutputValve.checked);
+                    TestingManager.requestHighPressure(setHighPressure_pressure.text, setUseVac_pressure.checked, setStepSize_pressure.text,
+                                                       setInputValve_pressure.model.get(setInputValve_pressure.currentIndex).value, setUseVac_openOutputValve.checked, !setUseExhuast.checked,
+                                                       setContiniousPressure.checked, setMaxTime.text, setMonitorTime.text, setTopUp.text, setLeak.text);
                 }
             }
             Button

@@ -759,15 +759,33 @@ namespace App { namespace View { namespace Managers
      * @param stepSize
      * @param inputValve
      */
-    void Testing::requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve)
+    void Testing::requestHighPressure(QString pressure, bool initVacDown, int stepSize, bool inputValve, bool openOutputValve, bool exhuastMethod,
+                                      bool continiousPressure, int maxTime, int monitorTime, int setTop, int setLeak)
     {
-        // @todo set exhuast valve only var at the end
-        m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve, openOutputValve, false);
+        if(continiousPressure)
+        {
+            m_experimentEngine.machines().setContinuousPressure(maxTime, monitorTime, setTop, setLeak, pressure.toInt(), stepSize, inputValve, openOutputValve, exhuastMethod);
+            m_pressuriser = 2;
+        }
+        else
+        {
+            m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve, openOutputValve, exhuastMethod);
+            m_pressuriser = 1;
+        }
     }
 
     void Testing::requestHighPressureStop()
     {
-        m_experimentEngine.machines().stopSetPressure();
+        if(m_pressuriser == 2)
+        {
+            m_experimentEngine.machines().stopSetContinuousPressure();
+        }
+        else if(m_pressuriser == 1)
+        {
+            m_experimentEngine.machines().stopSetPressure();
+        }
+
+        m_pressuriser = 0;
     }
 
 

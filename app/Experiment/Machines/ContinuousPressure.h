@@ -61,7 +61,7 @@ namespace App { namespace Experiment { namespace Machines
 
         private:
             // Referance to QObject
-            QObject *parent;
+            //QObject *parent;
 
             // Holds the application settings
             Settings::Container m_settings;
