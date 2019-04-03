@@ -284,7 +284,7 @@ namespace App { namespace Experiment { namespace Machines
         // Check for leak
         if(abs(currentPressure - desiredPressure) > params["leak"].toDouble())
         {
-            qInfo() << "Leak detected "<<abs(currentPressure - desiredPressure);
+            qCInfo(continiousPressureStateFunctions) << "Leak detected "<<abs(currentPressure - desiredPressure);
             emit emit_leakDetected();
             return;
         }

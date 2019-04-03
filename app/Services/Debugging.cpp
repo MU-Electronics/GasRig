@@ -17,6 +17,8 @@ Q_LOGGING_CATEGORY(flowStateFunctions, "machine.states.functions.flow")
 
 Q_LOGGING_CATEGORY(pressureStateFunctions, "machine.states.functions.pressure")
 
+Q_LOGGING_CATEGORY(continiousPressureStateFunctions, "machine.states.functions.continiousPressure")
+
 Q_LOGGING_CATEGORY(vacStationStateFunctions, "machine.states.functions.vac-station")
 
 Q_LOGGING_CATEGORY(valvesStateFunctions, "machine.states.functions.valves")

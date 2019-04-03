@@ -15,6 +15,8 @@ Q_DECLARE_LOGGING_CATEGORY(flowStateFunctions)
 
 Q_DECLARE_LOGGING_CATEGORY(pressureStateFunctions)
 
+Q_DECLARE_LOGGING_CATEGORY(continiousPressureStateFunctions)
+
 Q_DECLARE_LOGGING_CATEGORY(vacStationStateFunctions)
 
 Q_DECLARE_LOGGING_CATEGORY(valvesStateFunctions)
