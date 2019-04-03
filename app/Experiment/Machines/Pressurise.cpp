@@ -151,24 +151,19 @@ namespace App { namespace Experiment { namespace Machines
 
 
 
+        // To sort
+        connect(validator("sml_valveTwoPirorReading", true), &Functions::CommandValidatorState::entered, this, &Pressurise::updatePreviousPressureReading);
 
+        connect(validator("sml_waitForPressureAfterShouldOpenValveFive", true), &Functions::CommandValidatorState::entered, this, &Pressurise::waitForPressureAfterShouldOpenValveFive);
 
+        connect(state("sml_openExhuastValve", true), &QState::entered, this->valves(), &Functions::Valves::openExhuast);
+        connect(validator("sml_validateOpenExhuastValve", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateOpenExhuast);
 
-/*
- * States to connect to functions
- *
-        state("sml_valveTwoPirorReading", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_valveTwoPirorReading", true));
-            validator("sml_valveTwoPirorReading", true)->addTransition(this, &Pressurise::emit_continue, state("sml_openSlowExhuastPath_1", true));
+        connect(state("sml_waitExhuastValve", true), &QState::entered, this, &Pressurise::startValveTwoPulseTimer);
 
+        connect(state("sml_closeExhuastValve", true), &QState::entered, this->valves(), &Functions::Valves::closeExhuast);
+        connect(validator("sml_validateCloseExhuastValve", true), &Functions::CommandValidatorState::entered, this->valves(), &Functions::Valves::validateCloseExhuast);
 
-        state("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(&m_hardware, &Hardware::Access::emit_pressureSensorPressure, validator("sml_waitForPressureAfterShouldOpenValveFive", true));
-            validator("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveTrue, state("sml_waitForVacuumValveTimer_3", true));
-            validator("sml_waitForPressureAfterShouldOpenValveFive", true)->addTransition(this, &Pressurise::emit_shouldOpenValveFiveFalse, state("sml_openExhuastValve", true));
-                transitionsBuilder()->openValve(state("sml_openExhuastValve", true), validator("sml_validateOpenExhuastValve", true), state("sml_waitExhuastValve", true), &sm_stopAsFailed);
-                state("sml_waitExhuastValve", true)->addTransition(&t_pulseValveTwo, &QTimer::timeout, state("sml_closeExhuastValve", true));
-                transitionsBuilder()->closeValve(state("sml_closeExhuastValve", true), validator("sml_validateCloseExhuastValve", true), state("sml_waitForVacuumValveTimer_3", true), &sm_stopAsFailed);
-
-*/
 
 
 
@@ -761,6 +756,8 @@ namespace App { namespace Experiment { namespace Machines
 
         // Update previous reading
         previousPressureReading = currentPressure;
+
+        emit emit_continue();
     }
 
     void Pressurise::waitForPressureAfterShouldOpenValveFive()
