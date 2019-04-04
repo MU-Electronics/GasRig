@@ -23,7 +23,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            VacDown(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            VacDown(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~VacDown();
 
@@ -53,7 +53,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
 
             // Timers

@@ -7,12 +7,12 @@
 #include "../Services/JsonFile.h"
 
 namespace App { namespace Settings{
-    class Safety: public App::Services::JsonFile
+    class Safety: public QObject, public App::Services::JsonFile
     {
 
     public:
 
-        Safety();
+        Safety(QObject *parent, QString location);
 
         QVariantMap pressure;
         QVariantMap vacuum;
@@ -23,7 +23,8 @@ namespace App { namespace Settings{
 
         void read(const QJsonObject &json);
         void write(QJsonObject &json) const;
-
+    signals:
+        void emit_saved();
     private:
         //explicit Safety(const Safety& rhs) = delete;
         //Safety& operator= (const Safety& rhs) = delete;

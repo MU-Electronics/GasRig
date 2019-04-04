@@ -9,7 +9,7 @@
 
 namespace App { namespace View { namespace Managers { namespace Graphs
 {
-    VacuumVsTime::VacuumVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    VacuumVsTime::VacuumVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
         : Graph(parent),
           m_root(root),
           m_settings(settings),
@@ -76,7 +76,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
     void VacuumVsTime::data(QVariantMap package)
     {
         // If port is the same as the vacuum guage port
-        if(package["port"] == m_settings.hardware.vacuum_guage.value("connection").toString())
+        if(package["port"] == m_settings->hardware()->vacuum_guage.value("connection").toString())
         {
             // Get pressure
             double vacuum = (std::pow(10, (1.667*package.value("calibrated").toDouble()-9.333)))/100;

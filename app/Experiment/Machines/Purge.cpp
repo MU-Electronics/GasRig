@@ -23,7 +23,7 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    Purge::Purge(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    Purge::Purge(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
             // Pressurise state machine

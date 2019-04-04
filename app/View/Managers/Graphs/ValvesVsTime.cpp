@@ -9,7 +9,7 @@
 
 namespace App { namespace View { namespace Managers { namespace Graphs
 {
-    ValvesVsTime::ValvesVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    ValvesVsTime::ValvesVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
         : Graph(parent),
           m_root(root),
           m_settings(settings),
@@ -121,7 +121,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
     void ValvesVsTime::data(QVariantMap package)
     {
         // Get valve number
-        int valve = m_settings.hardware.valve_connections.key(package.value("port").toString()).toInt();
+        int valve = m_settings->hardware()->valve_connections.key(package.value("port").toString()).toInt();
 
         // Update valve value
         int value = package.value("value").toReal();

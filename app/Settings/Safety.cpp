@@ -15,9 +15,12 @@ namespace App { namespace Settings
      * @brief Safety::Safety
      * @param parent
      */
-    Safety::Safety()
+    Safety::Safety(QObject *parent, QString location)
+        :   QObject(parent)
+        ,   JsonFile()
     {
-
+        // Load json data
+        load(location, SaveFormat::Json);
     }
 
 

@@ -4,7 +4,7 @@
 
 namespace App { namespace View { namespace Managers
 {
-    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings),
@@ -67,7 +67,7 @@ namespace App { namespace View { namespace Managers
             return;
 
         // Get the flow units
-        auto flowUnits = m_settings.hardware.flow_controller_units.value("temperature").toMap();
+        auto flowUnits = m_settings->hardware()->flow_controller_units.value("temperature").toMap();
         QString unit = " " + flowUnits.value(command.value("temperature_unit").toString()).toString();
 
         // Display message
@@ -86,7 +86,7 @@ namespace App { namespace View { namespace Managers
             return;
 
         // Get the flow units
-        auto flowUnits = m_settings.hardware.flow_controller_units.value("flow").toMap();
+        auto flowUnits = m_settings->hardware()->flow_controller_units.value("flow").toMap();
         QString unit = " " + flowUnits.value(command.value("flow_unit").toString()).toString();
 
         // Display message
@@ -339,7 +339,7 @@ namespace App { namespace View { namespace Managers
             return;
 
         // Get the port name
-        QString portNumber  = m_settings.hardware.valve_connections.key(command.value("port").toString());
+        QString portNumber  = m_settings->hardware()->valve_connections.key(command.value("port").toString());
 
         if(!portNumber.isNull())
         {
@@ -379,7 +379,7 @@ namespace App { namespace View { namespace Managers
             return;
 
         // If port is the same as the vacuum guage port
-        if(command["port"] == m_settings.hardware.vacuum_guage.value("connection").toString())
+        if(command["port"] == m_settings->hardware()->vacuum_guage.value("connection").toString())
         {
             double pressure = (std::pow(10, (1.667*command.value("calibrated").toDouble()-9.333)))/100;
             emit emit_testingMaintenanceReply("Vacuum pressure is: " + QString::number(pressure) + " mbar");
@@ -580,7 +580,7 @@ namespace App { namespace View { namespace Managers
         setRequestedCommand("requestValveState");
 
         // Find the correct valve name
-        QString valveName = m_settings.hardware.valve_connections.value(QString::number(port)).toString();
+        QString valveName = m_settings->hardware()->valve_connections.value(QString::number(port)).toString();
 
         // Emit siganl to HAL
         emit hardwareRequest(m_commandConstructor.setValveState(valveName, state));
@@ -599,9 +599,9 @@ namespace App { namespace View { namespace Managers
         setRequestedCommand("requestVacuumPressure");
 
         // Emit siganl to HAL
-        emit hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings.hardware.vacuum_guage.value("connection").toString(),
-                                                                     m_settings.hardware.vacuum_guage.value("slope").toDouble(),
-                                                                     m_settings.hardware.vacuum_guage.value("offset").toDouble()));
+        emit hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings->hardware()->vacuum_guage.value("connection").toString(),
+                                                                     m_settings->hardware()->vacuum_guage.value("slope").toDouble(),
+                                                                     m_settings->hardware()->vacuum_guage.value("offset").toDouble()));
     }
 
 

@@ -3,6 +3,7 @@
 // External deps
 #include <QDir>
 #include <QCoreApplication>
+#include <QStandardPaths>
 
 // Include the setting managers
 #include "Safety.h"
@@ -21,14 +22,12 @@ namespace App { namespace Settings
      * @param parent
      */
     Container::Container(QObject *parent)
-           : safety(*new Safety()),
-             general(*new General()),
-             view(*new View()),
-             hardware(*new Hardware())
+        : QObject(parent)
     {
         // Configure the setting
         loadSettings();
     }
+
 
 
     /**
@@ -42,16 +41,16 @@ namespace App { namespace Settings
         QString pathDir = getDir();
 
         // Load the safety settings file
-        safety.load(pathDir+"/config/Safety.json", safety.SaveFormat::Json);
+        m_safety = QSharedPointer<Safety>(new Safety(this, (getDir() + "Safety.json")));
 
         // Load the general settings file
-        general.load(pathDir+"/config/General.json", general.SaveFormat::Json);
+        m_general = QSharedPointer<General>(new General(this, (getDir() + "General.json")));
 
         // Load the view settings file
-        view.load(pathDir+"/config/View.json", view.SaveFormat::Json);
+        m_view = QSharedPointer<View>(new View(this, (getDir() + "View.json")));
 
         // Load the hardware settings file
-        hardware.load(pathDir+"/config/Hardware.json", hardware.SaveFormat::Json);
+        m_hardware = QSharedPointer<Hardware>(new Hardware(this, (getDir() + "Hardware.json")));
     }
 
 
@@ -63,8 +62,12 @@ namespace App { namespace Settings
      */
     QString Container::getDir()
     {
-        // This should work across platform, working windows need to check mac
-        QString path = QCoreApplication::applicationDirPath();
+        /*
+         * This was to ensure settings remains inside the application folder.
+         * However windows now only lets applications write a certain locations
+         * hece the below is being replaced.
+         */
+        QString path = QCoreApplication::applicationDirPath() + "/config/";
 
         // I know the below works fine for mac
         #ifdef __APPLE__
@@ -73,9 +76,20 @@ namespace App { namespace Settings
                 // Instance of QDir at current path of program
                 QDir pathsRoot(QDir::currentPath());
                 pathsRoot.cdUp(); pathsRoot.cdUp(); pathsRoot.cdUp();
-                path = pathsRoot.path();
+                path = pathsRoot.path() + "/config/";
             #endif
         #endif
+
+        /*
+         * // This should work across platform, working windows need to check mac
+        QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/vacuum_reservoir_controller/config/";
+
+        qDebug() << path;
+
+        // Check it exists and if not create it
+        if(!QDir(path).exists())
+            QDir().mkdir(path);
+        */
 
         // Return the path
         return path;

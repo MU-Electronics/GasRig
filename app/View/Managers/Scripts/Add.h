@@ -72,7 +72,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
                }
             } functionOption;
 
-            Add(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
+            Add(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine &experimentEngine);
 
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
@@ -201,7 +201,7 @@ namespace App { namespace View { namespace Managers { namespace Scripts
             QQmlApplicationEngine* m_root;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold current setup
             QList<t_functionOption> m_functionList;

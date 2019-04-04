@@ -5,7 +5,7 @@
 
 namespace App { namespace View { namespace Managers
 {
-    MachineStatus::MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    MachineStatus::MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
         :   QObject(parent)
         ,   m_root(root)
         ,   m_settings(settings)

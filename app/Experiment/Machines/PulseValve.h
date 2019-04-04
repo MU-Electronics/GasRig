@@ -26,7 +26,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            PulseValve(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            PulseValve(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~PulseValve();
 
@@ -63,7 +63,7 @@ namespace App { namespace Experiment { namespace Machines
             QObject *parent;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Valve to open and close
             QState* valvePointerOpen;

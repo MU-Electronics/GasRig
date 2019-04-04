@@ -22,7 +22,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     {
         Q_OBJECT
         public:
-            TransitionsBuilder(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef);
+            TransitionsBuilder(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef);
 
             // Com errors transitions
             void stateComErrors(QState* state, QState* failed);
@@ -91,7 +91,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
         private:
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold the hardware gateway
             Hardware::Access &m_hardware;

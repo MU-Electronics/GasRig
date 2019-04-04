@@ -33,7 +33,7 @@ namespace App { namespace View { namespace Managers
         Q_OBJECT
 
         public:
-            Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
+            Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine &experimentEngine);
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
 
@@ -114,7 +114,7 @@ namespace App { namespace View { namespace Managers
             QQmlApplicationEngine* m_root;
 
             // Holds the settings container
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold experiment engine
             Experiment::Engine& m_experimentEngine;

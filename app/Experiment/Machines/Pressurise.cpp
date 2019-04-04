@@ -17,7 +17,7 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    Pressurise::Pressurise(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    Pressurise::Pressurise(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
             // Timers for state machine

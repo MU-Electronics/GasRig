@@ -7,9 +7,12 @@
 
 namespace App { namespace Settings
 {
-    View::View()
+    View::View(QObject *parent, QString location)
+        :   QObject(parent)
+        ,   JsonFile()
     {
-
+        // Load json data
+        load(location, SaveFormat::Json);
     }
 
     void View::read(const QJsonObject &json)

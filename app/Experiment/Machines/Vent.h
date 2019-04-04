@@ -27,7 +27,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            Vent(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            Vent(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~Vent();
 
@@ -69,7 +69,7 @@ namespace App { namespace Experiment { namespace Machines
             QObject *parent;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Holds the current stage
             int stage = 0;

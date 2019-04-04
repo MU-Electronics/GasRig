@@ -34,7 +34,7 @@ namespace App { namespace Hardware
      * @brief Monitor::Monitor
      * @param parent
      */
-    Access::Access(QObject *parent, Settings::Container settings)
+    Access::Access(QObject *parent, Settings::Container *settings)
         :   Thread(parent, false, false),
 
             // System settings container
@@ -120,7 +120,7 @@ namespace App { namespace Hardware
         if(!m_vacStation.isOpen())
         {
             // Get connection data
-            QVariantMap vacData = m_settings.hardware.usb_connections.value("vacuum_station").toMap();
+            QVariantMap vacData = m_settings->hardware()->usb_connections.value("vacuum_station").toMap();
 
             // Set vac pump id from settings
             m_vacStation.setId(vacData["id"].toInt());
@@ -142,7 +142,7 @@ namespace App { namespace Hardware
         if(!m_pressureSensor.isOpen())
         {
             // Get connection data
-            QVariantMap pressureData = m_settings.hardware.usb_connections.value("pressure_sensor").toMap();
+            QVariantMap pressureData = m_settings->hardware()->usb_connections.value("pressure_sensor").toMap();
 
             // Set vac pump id from settings
             m_pressureSensor.setId(pressureData["id"].toInt());
@@ -163,7 +163,7 @@ namespace App { namespace Hardware
         if(!m_flowController.isOpen())
         {
             // Get connection data
-            QVariantMap flowData = m_settings.hardware.usb_connections.value("flow_controller").toMap();
+            QVariantMap flowData = m_settings->hardware()->usb_connections.value("flow_controller").toMap();
 
             // Is com port provided?
             QString flowComPort = flowData["com"].toString();

@@ -11,7 +11,7 @@
 namespace App { namespace View { namespace Managers { namespace Scripts
 {           
 
-    Editor::Editor(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    Editor::Editor(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings)

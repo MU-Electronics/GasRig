@@ -23,7 +23,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            ReadVacuum(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            ReadVacuum(QObject *parent, Settings::Container *settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~ReadVacuum();
 
@@ -45,7 +45,7 @@ namespace App { namespace Experiment { namespace Machines
             QObject *parent;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Timers
             QTimer t_vacPressureMonitor;

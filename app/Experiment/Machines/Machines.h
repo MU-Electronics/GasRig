@@ -26,7 +26,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            Machines(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety);
+            Machines(QObject *parent, Settings::Container *settings, Hardware::Access& hardware, Safety::Monitor &safety);
 
             void stateMachinesToThread();
 

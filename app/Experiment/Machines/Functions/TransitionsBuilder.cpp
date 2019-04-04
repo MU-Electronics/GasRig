@@ -23,7 +23,7 @@
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
-    TransitionsBuilder::TransitionsBuilder(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef)
+    TransitionsBuilder::TransitionsBuilder(QObject *parent, Settings::Container *settings, Hardware::Access &hardware, Valves* valvesRef, Vacuum* vacuumRef, Pressure* pressureRef, Flow* flowRef)
         :   QObject(parent)
 
             // Access the global referances

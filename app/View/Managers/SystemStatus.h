@@ -59,7 +59,7 @@ namespace App { namespace View { namespace Managers
 
         public:
             // constructure and destructor
-            SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
+            SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine &experimentEngine);
 
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
@@ -118,7 +118,7 @@ namespace App { namespace View { namespace Managers
             QQmlApplicationEngine* m_root;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold experiment engine
             Experiment::Engine& m_experimentEngine;

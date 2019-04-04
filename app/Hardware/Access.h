@@ -31,7 +31,7 @@ namespace App { namespace Hardware
     {
         Q_OBJECT
         public:
-            Access(QObject *parent, Settings::Container settings);
+            Access(QObject *parent, Settings::Container* settings);
             ~Access();
 
         signals:
@@ -99,7 +99,7 @@ namespace App { namespace Hardware
 
         private:
             // Contains for settings container
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Timer for time based events
             QTimer& m_timer;

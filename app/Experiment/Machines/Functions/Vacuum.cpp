@@ -21,7 +21,7 @@
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
-    Vacuum::Vacuum(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap &params, Hardware::CommandConstructor &commandConstructor)
+    Vacuum::Vacuum(QObject *parent, Settings::Container *settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap &params, Hardware::CommandConstructor &commandConstructor)
         :   QObject(parent)
 
         ,   m_settings(settings)

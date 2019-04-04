@@ -5,7 +5,7 @@
 
 namespace App { namespace View { namespace Managers
 {
-    ConnectionStatus::ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    ConnectionStatus::ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings)
@@ -52,7 +52,7 @@ namespace App { namespace View { namespace Managers
         if( m_hardwareConnection.value("VacStation").toInt() == 1 &&
             m_hardwareConnection.value("PressureSensor").toInt() == 1  &&
             m_hardwareConnection.value("LabJack").toInt() == 1  &&
-           ( m_hardwareConnection.value("FlowController").toInt() == 1 || (!m_settings.hardware.rig_config["flow_control_1"].toBool() || !m_settings.hardware.rig_config["flow_control_2"].toBool())))
+           ( m_hardwareConnection.value("FlowController").toInt() == 1 || (!m_settings->hardware()->rig_config["flow_control_1"].toBool() || !m_settings->hardware()->rig_config["flow_control_2"].toBool())))
         {
             m_hardwareConnection.insert("all_connections", true);
             return;

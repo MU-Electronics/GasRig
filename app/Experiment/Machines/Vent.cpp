@@ -18,7 +18,7 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    Vent::Vent(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    Vent::Vent(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
     {
         // We have stop state machines

@@ -7,9 +7,12 @@
 
 namespace App { namespace Settings
 {
-    Hardware::Hardware()
+    Hardware::Hardware(QObject *parent, QString location)
+        :   QObject(parent)
+        ,   JsonFile()
     {
-
+        // Load json data
+        load(location, SaveFormat::Json);
     }
 
 

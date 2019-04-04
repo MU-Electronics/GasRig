@@ -17,7 +17,7 @@ namespace App { namespace Safety
     {
         Q_OBJECT
         public:
-            Monitor(QObject *parent, App::Settings::Container settings);
+            Monitor(QObject *parent, Settings::Container *settings);
             ~Monitor();
 
         private:

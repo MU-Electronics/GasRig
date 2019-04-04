@@ -23,7 +23,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            SafeValve(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            SafeValve(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~SafeValve();
 
@@ -48,7 +48,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
 
             // Valve state machines

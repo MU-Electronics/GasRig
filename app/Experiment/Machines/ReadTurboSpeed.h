@@ -23,7 +23,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            ReadTurboSpeed(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            ReadTurboSpeed(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~ReadTurboSpeed();
 
@@ -45,7 +45,7 @@ namespace App { namespace Experiment { namespace Machines
             QObject *parent;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Timers
             QTimer t_turboSpeed;

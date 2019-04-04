@@ -7,11 +7,11 @@
 #include "../Services/JsonFile.h"
 
 namespace App { namespace Settings{
-    class Hardware: public App::Services::JsonFile
+    class Hardware: public QObject, public App::Services::JsonFile
     {
 
     public:
-        Hardware();
+        Hardware(QObject *parent, QString location);
 
         QVariantMap usb_connections;
         QVariantMap valve_connections;
@@ -23,7 +23,8 @@ namespace App { namespace Settings{
 
         void read(const QJsonObject &json);
         void write(QJsonObject &json) const;
-
+    signals:
+        void emit_saved();
     private:
         //explicit Hardware(const Hardware& rhs) = delete;
         //Hardware& operator= (const Hardware& rhs) = delete;

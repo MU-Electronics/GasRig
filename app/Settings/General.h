@@ -7,16 +7,20 @@
 #include "../Services/JsonFile.h"
 
 namespace App { namespace Settings{
-    class General: public App::Services::JsonFile
+
+    class General: public QObject, private Services::JsonFile
     {
 
     public:
-        General();
+        General(QObject *parent, QString location);
 
         QVariantMap admin;
 
         void read(const QJsonObject &json);
         void write(QJsonObject &json) const;
+
+    signals:
+        void emit_saved();
 
     private:
         //explicit General(const General& rhs) = delete;

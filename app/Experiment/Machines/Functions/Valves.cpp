@@ -21,7 +21,7 @@
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
-    Valves::Valves(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap &params, Hardware::CommandConstructor &commandConstructor)
+    Valves::Valves(QObject *parent, Settings::Container *settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap &params, Hardware::CommandConstructor &commandConstructor)
         :   QObject(parent)
 
         ,   m_settings(settings)
@@ -57,7 +57,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
     void Valves::valveHelper(QString number, bool state)
     {
         // Find the correct valve name
-        QString valveName = m_settings.hardware.valve_connections.value(number).toString();
+        QString valveName = m_settings->hardware()->valve_connections.value(number).toString();
 
         // Generate command
         QVariantMap command = m_commandConstructor.setValveState(valveName, state);
@@ -87,7 +87,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
             QVariantMap package = command->package;
 
             // Find the correct valve name
-            QString valveName = m_settings.hardware.valve_connections.value(number).toString();
+            QString valveName = m_settings->hardware()->valve_connections.value(number).toString();
 
             // If id was not registered then the signal name was correct but the signal is not
             if(!isRegister(package.value("command_identifier").toString()))

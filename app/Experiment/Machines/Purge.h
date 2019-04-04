@@ -31,7 +31,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            Purge(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            Purge(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~Purge();
 
@@ -77,7 +77,7 @@ namespace App { namespace Experiment { namespace Machines
             QObject *parent;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Holds the current stage
             int cycles = 0;

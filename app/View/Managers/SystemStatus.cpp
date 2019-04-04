@@ -10,7 +10,7 @@
 
 namespace App { namespace View { namespace Managers
 {
-    SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings),
@@ -202,12 +202,12 @@ namespace App { namespace View { namespace Managers
             // Ensure lab jack configured
             emit emit_hardwareRequest(m_commandConstructor.setLabJackConfig(0,0,0,0,0,0,0,0,0,0,0,0));
             // Get current values for vacuum
-            emit emit_hardwareRequest(m_commandConstructor.getVacuumPressure(   m_settings.hardware.vacuum_guage.value("connection").toString(),
-                                                                                m_settings.hardware.vacuum_guage.value("slope").toDouble(),
-                                                                                m_settings.hardware.vacuum_guage.value("offset").toDouble()));
+            emit emit_hardwareRequest(m_commandConstructor.getVacuumPressure(   m_settings->hardware()->vacuum_guage.value("connection").toString(),
+                                                                                m_settings->hardware()->vacuum_guage.value("slope").toDouble(),
+                                                                                m_settings->hardware()->vacuum_guage.value("offset").toDouble()));
             // Ensure all valves are closed
             for(int i=1; i<=9; i++)
-                emit emit_hardwareRequest(m_commandConstructor.setValveState(m_settings.hardware.valve_connections.value(QString::number(i)).toString(), false));
+                emit emit_hardwareRequest(m_commandConstructor.setValveState(m_settings->hardware()->valve_connections.value(QString::number(i)).toString(), false));
 
             // Inital commands sent
             initalCommands.insert("LabJack", true);
@@ -273,12 +273,12 @@ namespace App { namespace View { namespace Managers
         // Start monitoring the sensors
         if(!initalCommands.value("SensorMonitor") && package.value("status").toBool())
         {
-            m_experimentEngine.machines().sensorReadings(m_settings.hardware.polling_times.value("vacuum_sensor").toInt(),
-                                                         m_settings.hardware.polling_times.value("pressure_sensor").toInt(),
-                                                         m_settings.hardware.polling_times.value("flow_controller_flow").toInt(),
-                                                         m_settings.hardware.polling_times.value("turbo_speed").toInt(),
-                                                         m_settings.hardware.polling_times.value("vacuum_station_temperatures").toInt(),
-                                                         m_settings.hardware.polling_times.value("flow_controller_temperatures").toInt());
+            m_experimentEngine.machines().sensorReadings(m_settings->hardware()->polling_times.value("vacuum_sensor").toInt(),
+                                                         m_settings->hardware()->polling_times.value("pressure_sensor").toInt(),
+                                                         m_settings->hardware()->polling_times.value("flow_controller_flow").toInt(),
+                                                         m_settings->hardware()->polling_times.value("turbo_speed").toInt(),
+                                                         m_settings->hardware()->polling_times.value("vacuum_station_temperatures").toInt(),
+                                                         m_settings->hardware()->polling_times.value("flow_controller_temperatures").toInt());
 
             // Inital commands sent
             initalCommands.insert("SensorMonitor", true);
@@ -322,7 +322,7 @@ namespace App { namespace View { namespace Managers
     void SystemStatus::receiveValveStatus(QVariantMap package)
     {
         // Get the port name
-        QString portNumber  = m_settings.hardware.valve_connections.key(package.value("port").toString());
+        QString portNumber  = m_settings->hardware()->valve_connections.key(package.value("port").toString());
 
         if(!portNumber.isNull())
         {
@@ -451,7 +451,7 @@ namespace App { namespace View { namespace Managers
     void SystemStatus::receiveVacuumPressure(QVariantMap command)
     {
         // If port is the same as the vacuum guage port
-        if(command["port"] == m_settings.hardware.vacuum_guage.value("connection").toString())
+        if(command["port"] == m_settings->hardware()->vacuum_guage.value("connection").toString())
         {
             // Update vacuum reading
             double pressure = (std::pow(10, (1.667*command.value("calibrated").toDouble()-9.333)))/100;

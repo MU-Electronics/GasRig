@@ -24,7 +24,7 @@
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
-    MachineStates::MachineStates(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety)
+    MachineStates::MachineStates(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety)
         :   QObject(parent)
 
             // Access the global referances

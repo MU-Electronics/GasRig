@@ -15,7 +15,7 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    PulseValve::PulseValve(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    PulseValve::PulseValve(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
             // Timers

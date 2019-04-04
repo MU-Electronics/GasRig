@@ -15,7 +15,7 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    ReadFlowControllerFlow::ReadFlowControllerFlow(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    ReadFlowControllerFlow::ReadFlowControllerFlow(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
             // Timer

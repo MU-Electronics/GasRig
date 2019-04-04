@@ -5,7 +5,7 @@
 
 namespace App { namespace View { namespace Managers
 {
-    Global::Global(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine& experimentEngine)
+    Global::Global(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings)
@@ -14,7 +14,7 @@ namespace App { namespace View { namespace Managers
         UNUSED(experimentEngine);
 
         // Rig settings
-        auto rigSettings = m_settings.hardware.rig_config;
+        auto rigSettings = m_settings->hardware()->rig_config;
         m_rigSettings["valve_4"] = rigSettings["valve_4"].toBool();
         m_rigSettings["valve_6"] = rigSettings["valve_6"].toBool();
         m_rigSettings["flow_controller_1"] = rigSettings["flow_controller_1"].toBool();

@@ -15,7 +15,7 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    SafeValve::SafeValve(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    SafeValve::SafeValve(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
     {
         // Set class name

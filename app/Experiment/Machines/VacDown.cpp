@@ -15,7 +15,7 @@
 
 namespace App { namespace Experiment { namespace Machines
 {
-    VacDown::VacDown(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    VacDown::VacDown(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   MachineStates(parent, settings, hardware, safety)
 
             // Timers

@@ -15,7 +15,7 @@
 
 namespace App { namespace Experiment
 {
-    Engine::Engine(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    Engine::Engine(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   QObject(parent)
         ,   m_settings(settings)
         ,   m_hardware(hardware)

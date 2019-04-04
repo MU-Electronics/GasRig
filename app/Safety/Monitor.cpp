@@ -17,7 +17,7 @@ namespace App { namespace Safety
      * @brief Monitor::Monitor
      * @param parent
      */
-    Monitor::Monitor(QObject *parent, Settings::Container settings)
+    Monitor::Monitor(QObject *parent, Settings::Container* settings)
         : Thread(parent, false, false),
           m_settings(settings)
     {

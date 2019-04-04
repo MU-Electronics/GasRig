@@ -41,7 +41,7 @@ namespace App { namespace View { namespace Managers
         Q_PROPERTY(QVariantMap controllable READ controllable NOTIFY emit_controllableChanged)
 
         public:
-            MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
+            MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine &experimentEngine);
 
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
@@ -104,7 +104,7 @@ namespace App { namespace View { namespace Managers
             QQmlApplicationEngine* m_root;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold experiment engine
             Experiment::Engine& m_experimentEngine;

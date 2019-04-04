@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QVariantMap>
 #include <QString>
+#include <QScopedPointer>
 
 // Include setting managers
 #include "Safety.h"
@@ -14,20 +15,46 @@
 
 namespace App { namespace Settings
 {
-    class Container
+    class Container: public QObject
     {
 
-        public:
-            Container(QObject *parent = 0);
+        Q_OBJECT
 
-            App::Settings::Safety& safety;
-            App::Settings::General& general;
-            App::Settings::View& view;
-            App::Settings::Hardware& hardware;
+        public:
+            Container(QObject *parent);
+
+            QSharedPointer<General> general()
+            {
+                QSharedPointer<General> pointer(m_general);
+                return pointer;
+            }
+
+            QSharedPointer<Safety> safety()
+            {
+                QSharedPointer<Safety> pointer(m_safety);
+                return pointer;
+            }
+
+            QSharedPointer<View> view()
+            {
+                QSharedPointer<View> pointer(m_view);
+                return pointer;
+            }
+
+            QSharedPointer<Hardware> hardware()
+            {
+                QSharedPointer<Hardware> pointer(m_hardware);
+                return pointer;
+            }
 
        private:
             void loadSettings();
             QString getDir();
+
+            QSharedPointer<Safety> m_safety;
+            QSharedPointer<General> m_general;
+            QSharedPointer<View> m_view;
+            QSharedPointer<Hardware> m_hardware;
     };
 }}
 

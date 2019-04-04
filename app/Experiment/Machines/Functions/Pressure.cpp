@@ -23,7 +23,7 @@
 namespace App { namespace Experiment { namespace Machines { namespace Functions
 {
 
-    Pressure::Pressure(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap &params, Hardware::CommandConstructor &commandConstructor)
+    Pressure::Pressure(QObject *parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap &params, Hardware::CommandConstructor &commandConstructor)
         :   QObject(parent)
 
         ,   m_settings(settings)
@@ -131,7 +131,7 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         float pressureIn = package.value("pressure").toFloat();
 
         // Get the max pressure allowed
-        float maxPressure = m_settings.safety.vacuum.value("vacuum_from").toFloat();
+        float maxPressure = m_settings->safety()->vacuum.value("vacuum_from").toFloat();
 
         // Check the pressure is safe to vac down
         if(pressureIn < maxPressure)
@@ -159,9 +159,9 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
 
     void Pressure::vacPressure()
     {
-        emit hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings.hardware.vacuum_guage.value("connection").toString(),
-                                                                     m_settings.hardware.vacuum_guage.value("slope").toDouble(),
-                                                                     m_settings.hardware.vacuum_guage.value("offset").toDouble()));
+        emit hardwareRequest(m_commandConstructor.getVacuumPressure( m_settings->hardware()->vacuum_guage.value("connection").toString(),
+                                                                     m_settings->hardware()->vacuum_guage.value("slope").toDouble(),
+                                                                     m_settings->hardware()->vacuum_guage.value("offset").toDouble()));
     }
 
     void Pressure::validateVacPressureForTurbo()
@@ -173,10 +173,10 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         QVariantMap package = state->package;
 
         // Get value form settings
-        double setPressure = (m_settings.safety.turbo_pump.value("turbo_from").toDouble()) * 1000;
+        double setPressure = (m_settings->safety()->turbo_pump.value("turbo_from").toDouble()) * 1000;
 
         // If port is the same as the vacuum guage port
-        if(package.value("port").toString() == m_settings.hardware.vacuum_guage.value("connection").toString())
+        if(package.value("port").toString() == m_settings->hardware()->vacuum_guage.value("connection").toString())
         {
             // Calculate current vacuum
             m_vacuumPressure = (std::pow(10, (1.667*package.value("calibrated").toDouble()-9.333)))/100;

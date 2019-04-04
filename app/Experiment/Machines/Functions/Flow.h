@@ -29,12 +29,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         Q_OBJECT
 
         public:
-            Flow(QObject* parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap& params, Hardware::CommandConstructor& commandConstructor);
+            Flow(QObject* parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap& params, Hardware::CommandConstructor& commandConstructor);
             ~Flow();
 
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold the hardware gateway
             Hardware::Access &m_hardware;

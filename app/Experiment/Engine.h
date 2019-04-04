@@ -23,7 +23,7 @@ namespace App { namespace Experiment
         Q_OBJECT
 
         public:
-            Engine(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety);
+            Engine(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety);
 
             ~Engine();
 
@@ -33,7 +33,7 @@ namespace App { namespace Experiment
 
         private:
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold the hardware gateway
             Hardware::Access &m_hardware;

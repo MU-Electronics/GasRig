@@ -28,7 +28,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            Pressurise(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            Pressurise(QObject *parent, Settings::Container *settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~Pressurise();
 
@@ -46,7 +46,7 @@ namespace App { namespace Experiment { namespace Machines
 
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold the pressure for the previous stage
             double pressureReading = 1;

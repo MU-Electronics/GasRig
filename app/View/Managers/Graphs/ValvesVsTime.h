@@ -39,7 +39,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
 
         public:
             // constructure and destructor
-            ValvesVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
+            ValvesVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine &experimentEngine);
 
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
@@ -64,7 +64,7 @@ namespace App { namespace View { namespace Managers { namespace Graphs
             QQmlApplicationEngine* m_root;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold experiment engine
             Experiment::Engine& m_experimentEngine;        

@@ -23,7 +23,7 @@ namespace App { namespace Experiment { namespace Machines
         Q_OBJECT
 
         public:
-            ReadFlowControllerTemperatures(QObject *parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety);
+            ReadFlowControllerTemperatures(QObject *parent, Settings::Container *settings, Hardware::Access &hardware, Safety::Monitor &safety);
 
             ~ReadFlowControllerTemperatures();
 
@@ -45,7 +45,7 @@ namespace App { namespace Experiment { namespace Machines
             QObject *parent;
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Timer for flow
             QTimer t_flowControllerTemperatureMonitor;

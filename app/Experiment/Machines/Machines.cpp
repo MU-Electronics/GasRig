@@ -6,7 +6,7 @@
 namespace App { namespace Experiment { namespace Machines
 {
 
-    Machines::Machines(QObject *parent, Settings::Container settings, Hardware::Access& hardware, Safety::Monitor& safety)
+    Machines::Machines(QObject *parent, Settings::Container* settings, Hardware::Access& hardware, Safety::Monitor& safety)
         :   QObject(parent)
         ,   m_vacDown(*new VacDown(parent, settings, hardware, safety))
         ,   m_safeValve(*new SafeValve(parent, settings, hardware, safety))

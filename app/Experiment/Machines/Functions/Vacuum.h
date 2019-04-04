@@ -29,12 +29,12 @@ namespace App { namespace Experiment { namespace Machines { namespace Functions
         Q_OBJECT
 
         public:
-            Vacuum(QObject* parent, Settings::Container settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap& params, Hardware::CommandConstructor& commandConstructor);
+            Vacuum(QObject* parent, Settings::Container* settings, Hardware::Access &hardware, Safety::Monitor &safety, QStateMachine& machine, QVariantMap& params, Hardware::CommandConstructor& commandConstructor);
             ~Vacuum();
 
 
             // Holds the application settings
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             // Hold the hardware gateway
             Hardware::Access &m_hardware;

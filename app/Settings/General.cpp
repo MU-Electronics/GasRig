@@ -7,9 +7,12 @@
 
 namespace App { namespace Settings
 {
-    General::General()
+    General::General(QObject *parent, QString location)
+        :   QObject(parent)
+        ,   JsonFile()
     {
-
+        // Load json data
+        load(location, SaveFormat::Json);
     }
 
     void General::read(const QJsonObject &json)
