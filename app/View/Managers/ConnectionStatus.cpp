@@ -52,7 +52,7 @@ namespace App { namespace View { namespace Managers
         if( m_hardwareConnection.value("VacStation").toInt() == 1 &&
             m_hardwareConnection.value("PressureSensor").toInt() == 1  &&
             m_hardwareConnection.value("LabJack").toInt() == 1  &&
-            m_hardwareConnection.value("FlowController").toInt() == 1)
+           ( m_hardwareConnection.value("FlowController").toInt() == 1 || (!m_settings.hardware.rig_config["flow_control_1"].toBool() || !m_settings.hardware.rig_config["flow_control_1"].toBool())))
         {
             m_hardwareConnection.insert("all_connections", true);
             return;
