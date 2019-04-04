@@ -199,8 +199,8 @@ Flickable
                         anchors.left: parent.left
                         anchors.leftMargin: (rectangleHolder.width - 230) / 2
                         width:230
-                        opacity: (model.type === "bus" && GlobalManager.rigSettings[model.config]) ? 1 : 0
-                        height: (model.type === "bus" && GlobalManager.rigSettings[model.config]) ? 50 : 0
+                        opacity: (((model.type === "bus" && model.config === "")) || (model.type === "bus" && GlobalManager.rigSettings[model.config])) ? 1 : 0
+                        height: (((model.type === "bus" && model.config === "")) || (model.type === "bus" && GlobalManager.rigSettings[model.config])) ? 50 : 0
                         Button {
                             text: qsTr("Help")
                             onClicked: {
