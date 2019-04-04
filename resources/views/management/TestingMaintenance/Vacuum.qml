@@ -137,6 +137,8 @@ Item
                         checked: false
                         text: qsTr("To Vacuum Output")
                         id: vacDown_toVacOutput
+                        opacity: GlobalManager.rigSettings["valve_6"]
+                        width: (GlobalManager.rigSettings["valve_6"]) ? 160 : 0
                         //enabled: (MachineStatusManager.vacDownMachine["status"] === false) ? 1 : 0;
                     }
                     RadioButton {

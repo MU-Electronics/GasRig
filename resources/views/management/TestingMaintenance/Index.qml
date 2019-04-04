@@ -44,7 +44,15 @@ Item
                 text: qsTr("Vacuum")
             }
             TabButton {
+                id: flowTabButton
                 text: qsTr("Flow")
+                opacity: GlobalManager.rigSettings["valve_8"]
+                enabled: GlobalManager.rigSettings["valve_8"]
+
+                Component.onCompleted: {
+                    if(!GlobalManager.rigSettings["valve_8"])
+                        flowTabButton.width = 0
+                }
             }
             TabButton {
                 text: qsTr("Expansion")

@@ -70,7 +70,6 @@ FluidControls.Card
                 ]
 
                 delegate: ItemDelegate {
-
                     width: setPulseValve_valveId.width
                     height: (modelData.enabled) ? 48 : 0
                     text: modelData.title
