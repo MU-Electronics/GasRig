@@ -17,7 +17,7 @@ Flickable
     {
         id: layout
 
-        property var noInColoum: 4
+        property var noInColoum: 3
         property var noInRow: 2
 
         anchors.fill: parent
@@ -31,14 +31,12 @@ Flickable
         // Pressure sensor, Labjack, Vac station, Flow controller 1, Flow controller 2, 12V supply, 24V supply
         model: ListModel {
             id: toMonitor
-            ListElement { title: qsTr("Pressure Sensor Bus"); desc: qsTr("This shows the status of the connection to the pressure sensor."); hardware: "PressureSensor" }
-            ListElement { title: qsTr("LabJack Bus"); desc: qsTr("This shows the status of the connection to the LabJack."); hardware: "LabJack"  }
-            ListElement { title: qsTr("Vac Station Bus"); desc: qsTr("This shows the status of the connection to the vacuum station."); hardware: "VacStation"}
-            ListElement { title: qsTr("Flow Controller Bus"); desc: qsTr("This shows the status of the connection to flow controller one."); hardware: "FlowController" }
-            //ListElement { title: qsTr("Supplies"); desc: qsTr("This shows whether the 12V and 24V internal power supply is functioning."); hardware: "Supplies" }
-            //ListElement { title: qsTr("System Condition"); desc: qsTr("This shows whether the gas rig is in a state that it can be used."); hardware: "SystemCondition"}
-            //ListElement { title: qsTr("Safety Monitor"); desc: qsTr("This shows whether the program's safety monitor is running."); hardware: "SafetyMonitor" }
-            //ListElement { title: qsTr("Hardware Gateway"); desc: qsTr("This shows whether the program has access to the hardware gateway."); hardware: "HardwareGateway" }
+            ListElement { title: qsTr("Pressure Sensor"); desc: qsTr("This shows the status of the connection to the pressure sensor."); hardware: "PressureSensor"; config: ""; type: "bus" }
+            ListElement { title: qsTr("LabJack"); desc: qsTr("This shows the status of the connection to the LabJack."); hardware: "LabJack"; config: ""; type: "bus" }
+            ListElement { title: qsTr("Vac Station"); desc: qsTr("This shows the status of the connection to the vacuum station."); hardware: "VacStation"; config: ""; type: "bus" }
+            ListElement { title: qsTr("Flow Controller"); desc: qsTr("This shows the status of the connection to flow controller one."); hardware: "FlowController"; config: "valve_8"; type: "bus" }
+            ListElement { title: qsTr("Fast Exhuast"); desc: qsTr("Allows exhuast & pumping of system faster"); hardware: ""; config: "valve_4"; type: "config" }
+            ListElement { title: qsTr("Vacuum Output"); desc: qsTr("Dedicated output for pumping station"); hardware: ""; config: "valve_6"; type: "config" }
         }
         delegate: Rectangle
         {
@@ -49,7 +47,31 @@ Flickable
             width: (window.width / layout.noInColoum) - (200 / layout.noInColoum)
             height: (window.height / layout.noInRow) - 48
 
-            state: ConnectionStatusManager.hardwareConnection[model.hardware]
+            state: {
+                if(model.hardware === "")
+                {
+                    // Config setting
+                    var enabled = GlobalManager.rigSettings[model.config];
+
+                    if(enabled)
+                        return 1;
+
+                    return 0;
+                }
+                else
+                {
+                    if(model.config === "")
+                        return ConnectionStatusManager.hardwareConnection[model.hardware];
+
+                    // Config setting
+                    var enabled = GlobalManager.rigSettings[model.config];
+
+                    if(enabled)
+                        return ConnectionStatusManager.hardwareConnection[model.hardware];
+
+                    return 0;
+                }
+            }
 
             states: [
                 // Not connected
@@ -177,7 +199,8 @@ Flickable
                         anchors.left: parent.left
                         anchors.leftMargin: (rectangleHolder.width - 230) / 2
                         width:230
-
+                        opacity: (model.type === "bus" && GlobalManager.rigSettings[model.config]) ? 1 : 0
+                        height: (model.type === "bus" && GlobalManager.rigSettings[model.config]) ? 50 : 0
                         Button {
                             text: qsTr("Help")
                             onClicked: {
@@ -211,7 +234,7 @@ Flickable
         title: "Connection Failed"
         text: qsTr("<p>We tried to connect to the device but it seems that the connection has failed.</p><br/>" +
                    "<p>Try rebooting the PC and reloading the application, if that does not work check the vendor and product ID for the device in the settings for the applcation. </p><br/>" +
-                   "<p>If all else failed contact JFET services, The University of Manchester. </p>")
+                   "<p>If all else failed contact Electronic services, The University of Manchester. </p>")
 
         standardButtons: Dialog.Cancel
     }
