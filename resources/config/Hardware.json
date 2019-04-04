@@ -63,7 +63,7 @@
     {
         "valve_4": false,
         "valve_6": false,
-        "flow_controller_1": true,
+        "flow_controller_1": false,
         "flow_controller_2": false
     },
     "vacuum_guage":{

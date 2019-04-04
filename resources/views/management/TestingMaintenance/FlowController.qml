@@ -65,6 +65,8 @@ Item
                     {
                         id: getFlowControllerOne
                         text: "Get Flow Rate Controller 1"
+                        opacity: (GlobalManager.rigSettings["flow_controller_1"]) ? 1 : 0
+                        width: (GlobalManager.rigSettings["flow_controller_1"]) ? 250 : 0
                         onClicked:
                         {
                             TestingManager.requestActualFlowControllerFlowRate("FlowControllerOne");
@@ -75,6 +77,8 @@ Item
                     {
                         id: getTemperatureControllerOne
                         text: "Get Temperature Controller 1"
+                        opacity: (GlobalManager.rigSettings["flow_controller_1"]) ? 1 : 0
+                        width: (GlobalManager.rigSettings["flow_controller_1"]) ? 250 : 0
                         onClicked:
                         {
                             TestingManager.requestFlowControllerTemperature("FlowControllerOne");
@@ -89,6 +93,8 @@ Item
                     {
                         id: getFlowControllerTwo
                         text: "Get Flow Rate Controller 2"
+                        opacity: (GlobalManager.rigSettings["flow_controller_2"]) ? 1 : 0
+                        width: (GlobalManager.rigSettings["flow_controller_2"]) ? 250 : 0
                         onClicked:
                         {
                             TestingManager.requestActualFlowControllerFlowRate("FlowControllerTwo");
@@ -99,6 +105,8 @@ Item
                     {
                         id: getTemperatureControllerTwo
                         text: "Get Temperature Controller 2"
+                        opacity: (GlobalManager.rigSettings["flow_controller_2"]) ? 1 : 0
+                        width: (GlobalManager.rigSettings["flow_controller_2"]) ? 250 : 0
                         onClicked:
                         {
                             TestingManager.requestFlowControllerTemperature("FlowControllerTwo");
@@ -121,7 +129,7 @@ Item
             anchors.topMargin: 25
 
             width: parent.width-10
-            height: 170
+            height: rowValveOverride.height
 
             padding: 5
 
@@ -129,6 +137,8 @@ Item
             {
                 spacing: 15
                 width: parent.width
+                id: rowValveOverride
+
                 AlertBox
                 {
                     height: 30
@@ -140,8 +150,18 @@ Item
                 {
                     spacing: 20;
                     width: parent.width
-
+                    opacity: (GlobalManager.rigSettings["flow_controller_1"]) ? 1 : 0
+                    height: (GlobalManager.rigSettings["flow_controller_1"]) ? 50 : 0
+                    Text {
+                        text: qsTr("Controller 1: ")
+                        color: "#777777"
+                        visible: parent.opacity
+                        font.pixelSize: 16
+                        verticalAlignment : Text.AlignVCenter
+                        height: parent.height
+                    }
                     RadioButton {
+
                         checked: (SystemStatusManager.flowControllerState["controller_1_override"] === 0) ? true : false;
                         text: qsTr("Off")
                         onClicked: {
@@ -170,7 +190,16 @@ Item
                 {
                     spacing: 20;
                     width: parent.width
-
+                    opacity: (GlobalManager.rigSettings["flow_controller_2"]) ? 1 : 0
+                    height: (GlobalManager.rigSettings["flow_controller_2"]) ? 50 : 0
+                    Text {
+                        text: qsTr("Controller 2: ")
+                        color: "#777777"
+                        visible: parent.opacity
+                        font.pixelSize: 16
+                        verticalAlignment : Text.AlignVCenter
+                        height: parent.height
+                    }
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_2_override"] === 0) ? true : false;
                         text: qsTr("Off")
@@ -215,7 +244,7 @@ Item
             anchors.topMargin: 15
 
             width: parent.width-10
-            height: 175
+            height: setFlowRate.height + 20
 
             padding: 5
 
@@ -223,6 +252,7 @@ Item
             {
                 width: parent.width
                 spacing: 15
+                id: setFlowRate
                 AlertBox
                 {
                     height: 30
@@ -234,7 +264,8 @@ Item
                 {
                     spacing: 20;
                     width: parent.width
-
+                    opacity: (GlobalManager.rigSettings["flow_controller_1"]) ? 1 : 0
+                    height: (GlobalManager.rigSettings["flow_controller_1"]) ? 50 : 0
                     TextField
                     {
                         id: flowRateController1
@@ -259,7 +290,8 @@ Item
                 {
                     spacing: 20;
                     width: parent.width
-
+                    opacity: (GlobalManager.rigSettings["flow_controller_2"]) ? 1 : 0
+                    height: (GlobalManager.rigSettings["flow_controller_2"]) ? 50 : 0
                     TextField
                     {
                         id: flowRateController2
@@ -298,7 +330,7 @@ Item
             anchors.topMargin: 15
 
             width: parent.width-10
-            height: 260
+            height: setSoftStart.height + 20
 
             padding: 5
 
@@ -306,6 +338,7 @@ Item
             {
                 width: parent.width
                 spacing: 25
+                id: setSoftStart
                 AlertBox
                 {
                     height: 30
@@ -317,7 +350,8 @@ Item
                 {
                     spacing: 20;
                     width: parent.width
-
+                    opacity: (GlobalManager.rigSettings["flow_controller_1"]) ? 1 : 0
+                    height: (GlobalManager.rigSettings["flow_controller_1"]) ? 50 : 0
                     TextField
                     {
                         id: softStartTimeController1
@@ -343,7 +377,8 @@ Item
                 {
                     spacing: 20;
                     width: parent.width
-
+                    opacity: (GlobalManager.rigSettings["flow_controller_2"]) ? 1 : 0
+                    height: (GlobalManager.rigSettings["flow_controller_2"]) ? 50 : 0
                     TextField
                     {
                         id: softStartTimeController2
@@ -372,6 +407,8 @@ Item
 
                     Button
                     {
+                        opacity: (GlobalManager.rigSettings["flow_controller_1"]) ? 1 : 0
+                        height: (GlobalManager.rigSettings["flow_controller_1"]) ? 50 : 0
                         text: qsTr("Soft Start Controller 1")
                         Material.background: if(SystemStatusManager.flowControllerState["controller_1_softstart"] === 4){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
                         Material.foreground: if(SystemStatusManager.flowControllerState["controller_1_softstart"] === 4){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
@@ -395,6 +432,8 @@ Item
 
                     Button
                     {
+                        opacity: (GlobalManager.rigSettings["flow_controller_2"]) ? 1 : 0
+                        height: (GlobalManager.rigSettings["flow_controller_2"]) ? 50 : 0
                         text: qsTr("Soft Start Controller 2")
                         Material.background: if(SystemStatusManager.flowControllerState["controller_2_softstart"] === 4){ Material.color(Material.Green, Material.Shade500) }else{ Material.color(Material.Grey, Material.Shade300) }
                         Material.foreground: if(SystemStatusManager.flowControllerState["controller_2_softstart"] === 4){ Material.color(Material.Grey, Material.Shade100) }else{ Material.color(Material.Grey, Material.Shade800) }
@@ -422,7 +461,7 @@ Item
 
 
         /**
-          * Set the flow rate
+          * Set the control source
           */
         FluidControls.Card
         {
@@ -432,12 +471,13 @@ Item
             anchors.top: softStart.bottom
 
             width: parent.width-10
-            height: 170
+            height: setSource.height
 
             padding: 5
 
             Column
             {
+                id: setSource
                 spacing: 15
                 width: parent.width
                 AlertBox
@@ -451,7 +491,8 @@ Item
                 {
                     spacing: 20;
                     width: parent.width
-
+                    opacity: (GlobalManager.rigSettings["flow_controller_1"]) ? 1 : 0
+                    height: (GlobalManager.rigSettings["flow_controller_1"]) ? 50 : 0
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_1_source"] === 0) ? true : false;
                         text: qsTr("Analogue")
@@ -473,7 +514,8 @@ Item
                 {
                     spacing: 20;
                     width: parent.width
-
+                    opacity: (GlobalManager.rigSettings["flow_controller_2"]) ? 1 : 0
+                    height: (GlobalManager.rigSettings["flow_controller_2"]) ? 50 : 0
                     RadioButton {
                         checked: (SystemStatusManager.flowControllerState["controller_2_source"] === 0) ? true : false;
                         text: qsTr("Analogue")
