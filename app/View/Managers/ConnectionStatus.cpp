@@ -15,10 +15,6 @@ namespace App { namespace View { namespace Managers
         m_hardwareConnection.insert("PressureSensor", "0");
         m_hardwareConnection.insert("LabJack", "0");
         m_hardwareConnection.insert("FlowController", "0");
-//        m_hardwareConnection.insert("Supplies", "0");
-//        m_hardwareConnection.insert("SystemCondition", "0");
-//        m_hardwareConnection.insert("SafetyMonitor", "0");
-//        m_hardwareConnection.insert("HardwareGateway", "0");
 
         // All connects ok
         m_hardwareConnection.insert("all_connections", false);
@@ -41,10 +37,6 @@ namespace App { namespace View { namespace Managers
         connect(&hardware, &Hardware::Access::emit_serialComUpdated, this, &ConnectionStatus::listen_comConnectionStatus);
         connect(&hardware, &Hardware::Access::emit_timeoutSerialError, this, &ConnectionStatus::listen_timeoutSerialError);
         connect(&hardware, &Hardware::Access::emit_critialSerialError, this, &ConnectionStatus::listen_critialSerialError);
-
-        // Listen for power supply signals
-        // Listen for safety monitor signals
-        // Listen for system safe conition
 
         // Requests for hardware reconnects
         connect(this, &ConnectionStatus::emit_hardwareAccess, &hardware, &Hardware::Access::hardwareAccess);

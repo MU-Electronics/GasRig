@@ -31,6 +31,7 @@ namespace App { namespace View { namespace Managers
         Q_OBJECT
 
         AUTO_PROPERTY(int, currentNavigation)
+        Q_PROPERTY(QVariantMap rigSettings READ rigSettings NOTIFY emit_rigSettingsChanged)
 
         public:
             Global(QObject *parent, QQmlApplicationEngine *root, Settings::Container settings, Experiment::Engine &experimentEngine);
@@ -38,7 +39,10 @@ namespace App { namespace View { namespace Managers
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);
 
+            QVariantMap rigSettings() const { return m_rigSettings; }
+
         signals:
+            void emit_rigSettingsChanged(QVariantMap);
 
         public slots:
 
@@ -48,8 +52,7 @@ namespace App { namespace View { namespace Managers
             // Holds the application settings
             Settings::Container m_settings;
 
-            // Holds the connection statuses for all the hardware
-            QVariantMap m_hardwareConnection;
+            QVariantMap m_rigSettings;
 
     };
 }}}

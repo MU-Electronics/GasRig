@@ -19,6 +19,7 @@ namespace App { namespace Settings{
         QVariantMap polling_times;
         QVariantMap vacuum_guage;
         QVariantMap flow_controller_units;
+        QVariantMap rig_config;
 
         void read(const QJsonObject &json);
         void write(QJsonObject &json) const;

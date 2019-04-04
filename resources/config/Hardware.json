@@ -23,8 +23,8 @@
 
             "default": "1",
 
-            "2_name": "Flow Controller One",
-            "2_system_name": "FlowControllerOne",
+            "1_name": "Flow Controller One",
+            "1_system_name": "FlowControllerOne",
             "1_manufacturer": "138",
             "1_type": "90",
             "1_id_1": "27",
@@ -58,6 +58,13 @@
         "7": "EIO6",
         "8": "EIO7",
         "9": "CIO0"
+    },
+    "rig_config":
+    {
+        "valve_4": false,
+        "valve_6": flase,
+        "flow_controller_1": false,
+        "flow_controller_2": false
     },
     "vacuum_guage":{
         "connection": "AIN0",

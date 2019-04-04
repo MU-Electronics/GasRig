@@ -25,6 +25,9 @@ namespace App { namespace Settings
         usb_connections["labJack"] = connectionData["labJack"].toMap();
         usb_connections["flow_controller"] = connectionData["flow_controller"].toMap();
 
+        // Rig config
+        rig_config = rootMap["rig_config"].toMap();
+
         // Store valve connections
         valve_connections = rootMap["valve_connections"].toMap();
 
@@ -85,6 +88,13 @@ namespace App { namespace Settings
         valveConnectionsData["9"] = valve_connections["9"].toString();
         json["valve_connections"] = valveConnectionsData;
 
+        // Rig config
+        QJsonObject rigConfigData;
+        rigConfigData["valve_4"] = rig_config["valve_4"].toBool();
+        rigConfigData["valve_6"] = rig_config["valve_6"].toBool();
+        rigConfigData["flow_controller_1"] = rig_config["flow_controller_1"].toBool();
+        rigConfigData["flow_controller_2"] = rig_config["flow_controller_2"].toBool();
+        json["rig_config"] = rigConfigData;
 
         // Save absolute maxmiums
         QJsonObject absoluteMaxData;
