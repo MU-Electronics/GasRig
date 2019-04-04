@@ -55,17 +55,33 @@ FluidControls.Card
                 id: setPulseValve_valveId
                 height: parent.height
                 width: parent.width - 170
-                textRole: "key"
-                model: ListModel {
-                    ListElement { key: "Valve 1 (Output port)"; value: 1 }
-                    ListElement { key: "Valve 2 (Slow exhuast path)"; value: 2 }
-                    ListElement { key: "Valve 3 (Exhaust port)"; value: 3 }
-                    ListElement { key: "Valve 4 (Fast exhaust path)"; value: 4 }
-                    ListElement { key: "Valve 5 (Vacuum In)"; value: 5 }
-                    ListElement { key: "Valve 6 (Vacuum Out)"; value: 6 }
-                    ListElement { key: "Valve 7 (High Pressure In)"; value: 7 }
-                    ListElement { key: "Valve 8 (Flow Controllers)"; value: 8 }
-                    ListElement { key: "Valve 9 (Nitrogen In)"; value: 9 }
+                textRole: "title"
+
+                model: [
+                    { title: "Valve 1 (Output port)", value: 1, enabled: true  },
+                    { title: "Valve 2 (Slow exhuast path)", value:2 , enabled: true  },
+                    { title: "Valve 3 (Exhaust port)", value:3 , enabled: true  },
+                    { title: "Valve 4 (Fast exhaust path)", value:4 , enabled: GlobalManager.rigSettings["valve_4"]  },
+                    { title: "Valve 5 (Vacuum In)", value:5 , enabled: true  },
+                    { title: "Valve 6 (Vacuum Out)", value:6 , enabled: GlobalManager.rigSettings["valve_6"]  },
+                    { title: "Valve 7 (High Pressure In)", value:7 , enabled: true  },
+                    { title: "Valve 8 (Flow Controllers)", value:8 , enabled: GlobalManager.rigSettings["valve_8"]  },
+                    { title: "Valve 9 (Nitrogen In)", value:9 , enabled: true  },
+                ]
+
+                delegate: ItemDelegate {
+
+                    width: setPulseValve_valveId.width
+                    height: (modelData.enabled) ? 48 : 0
+                    text: modelData.title
+                    font.weight: setPulseValve_valveId.currentIndex === index ? Font.DemiBold : Font.Normal
+                    highlighted: ListView.isCurrentItem
+
+                    Material.primary: Material.LightBlue
+                    Material.accent: Material.Blue
+
+                    enabled: modelData.enabled
+                    opacity: modelData.enabled
                 }
             }
         }

@@ -60,51 +60,15 @@ FluidControls.Card
                 property var noInColoum: 5
                 property var noInRow: 2
                 property var buttons: [
-                    {
-                        number: "1",
-                        name: "Valve 1",
-                        enabled: true
-                    },
-                    {
-                        number: "2",
-                        name: "Valve 2",
-                        enabled: true
-                    },
-                    {
-                        number: "3",
-                        name: "Valve 3",
-                        enabled: true
-                    },
-                    {
-                        number: "4",
-                        name: "Valve 4",
-                        enabled: GlobalManager.rigSettings["valve_4"]
-                    },
-                    {
-                        number: "5",
-                        name: "Valve 5",
-                        enabled: true
-                    },
-                    {
-                        number: "6",
-                        name: "Valve 6",
-                        enabled: GlobalManager.rigSettings["valve_6"]
-                    },
-                    {
-                        number: "7",
-                        name: "Valve 7",
-                        enabled: true
-                    },
-                    {
-                        number: "8",
-                        name: "Valve 8",
-                        enabled: GlobalManager.rigSettings["valve_8"]
-                    },
-                    {
-                        number: "9",
-                        name: "Valve 9",
-                        enabled: true
-                    }
+                    { number: "1", name: "Valve 1", enabled: true },
+                    { number: "2", name: "Valve 2", enabled: true },
+                    { number: "3", name: "Valve 3", enabled: true },
+                    { number: "4", name: "Valve 4", enabled: GlobalManager.rigSettings["valve_4"] },
+                    { number: "5", name: "Valve 5", enabled: true },
+                    { number: "6", name: "Valve 6", enabled: GlobalManager.rigSettings["valve_6"] },
+                    { number: "7", name: "Valve 7", enabled: true },
+                    { number: "8", name: "Valve 8", enabled: GlobalManager.rigSettings["valve_8"] },
+                    { number: "9", name: "Valve 9", enabled: true }
                 ]
 
                 width: parent.width
