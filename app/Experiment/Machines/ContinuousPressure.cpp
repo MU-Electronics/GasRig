@@ -1,5 +1,7 @@
 #include "ContinuousPressure.h"
 
+#include <cmath>
+
 // Include extenral deps
 #include <QObject>
 #include <QDateTime>
