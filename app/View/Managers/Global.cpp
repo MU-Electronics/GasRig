@@ -15,14 +15,17 @@ namespace App { namespace View { namespace Managers
 
         // Rig settings
         auto rigSettings = m_settings.hardware.rig_config;
-        m_rigSettings["valve_4"] = rigSettings["valve_4"];
-        m_rigSettings["valve_6"] = rigSettings["valve_6"];
-        m_rigSettings["flow_controller_1"] = rigSettings["flow_controller_1"];
-        m_rigSettings["flow_controller_2"] = rigSettings["flow_controller_2"];
+        m_rigSettings["valve_4"] = rigSettings["valve_4"].toBool();
+        m_rigSettings["valve_6"] = rigSettings["valve_6"].toBool();
+        m_rigSettings["flow_controller_1"] = rigSettings["flow_controller_1"].toBool();
+        m_rigSettings["flow_controller_2"] = rigSettings["flow_controller_2"].toBool();
         m_rigSettings["valve_8"] = false;
 
-        if(m_rigSettings["flow_controller_1"].toBool() == true || m_rigSettings["flow_controller_2"] == true)
+        if(m_rigSettings["flow_controller_1"] == true || m_rigSettings["flow_controller_2"] == true)
             m_rigSettings["valve_8"] = true;
+
+        qDebug() << "Flow controller 2:"<<m_rigSettings["flow_controller_2"];
+        emit emit_rigSettingsChanged(m_rigSettings);
     }
 
 
@@ -37,6 +40,7 @@ namespace App { namespace View { namespace Managers
     {
         // Disable unused compiler warnings
         UNUSED(hardware);
+        emit emit_rigSettingsChanged(m_rigSettings);
     }
 
 

@@ -23,6 +23,10 @@
 // Experiment Engine with state machine methods
 #include "../../Experiment/Engine.h"
 
+typedef QMap<QString, bool> MapStringBool;
+Q_DECLARE_METATYPE(MapStringBool)
+
+
 namespace App { namespace View { namespace Managers
 {
 

@@ -57,6 +57,7 @@ Item
         message: "Vacuum Output"
         texttop: 5
         textleft:5
+        opacity: GlobalManager.rigSettings["valve_6"]
     }
 
     /**
@@ -113,12 +114,14 @@ Item
         controller: 1
         x: ((systemDrawing.width - 514) + 273) / 1.3
         y: 395
+        opacity: GlobalManager.rigSettings["flow_controller_1"]
     }
 
     SystemDiagramFlowController{
         controller: 2
         x: ((systemDrawing.width - 514) + 360)
         y: 395
+        opacity: GlobalManager.rigSettings["flow_controller_2"]
     }
 
 
@@ -144,6 +147,7 @@ Item
         number: 4
         x: ((systemDrawing.width - 514 + 12) + 360) / 2
         y: 125
+        opacity: GlobalManager.rigSettings["valve_4"]
     }
     SystemDiagramValve{
         number: 5
@@ -154,6 +158,7 @@ Item
         number: 6
         x: ((systemDrawing.width - 514 + 12) + 300) / 1.3
         y: 225
+        opacity: GlobalManager.rigSettings["valve_6"]
     }
     SystemDiagramValve{
         number: 7
@@ -164,6 +169,7 @@ Item
         number: 8
         x: ((systemDrawing.width - 514 + 12) + 360) / 2
         y: 325
+        opacity: GlobalManager.rigSettings["valve_8"]
     }
     SystemDiagramValve{
         number: 9

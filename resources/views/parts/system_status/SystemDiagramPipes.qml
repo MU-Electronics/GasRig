@@ -18,8 +18,21 @@ Item
      */
     SystemDiagramPipe
     {
+        width: ((parent.width - 514) / 3.7) + 130
+        x: 35
+        y: 143
+    }
+    SystemDiagramPipe
+    {
         width: (parent.width - 514) + 350
         x: 35
+        y: 143
+        opacity: GlobalManager.rigSettings["valve_4"]
+    }
+    SystemDiagramPipe
+    {
+        width: ((parent.width - 514) / 3.7) + 130
+        x: ((parent.width - 514 + 12) + 320) / 1.3
         y: 143
     }
 
@@ -32,6 +45,7 @@ Item
         width: ((parent.width - 514) / 3.7) + 150
         x: ((parent.width - 514 + 12) + 320) / 1.3
         y: 243
+        opacity: GlobalManager.rigSettings["valve_6"]
     }
 
     /**
@@ -39,9 +53,25 @@ Item
      */
     SystemDiagramPipe
     {
-        width: (parent.width - 514) + 392
+        width: ((parent.width - 514) / 3.7) + 120
         x: 43
         y: 344
+    }
+    // Flow controller 1
+    SystemDiagramPipe
+    {
+        width: ((parent.width - 514) / 2) + 135
+        x: ((parent.width - 514 + 12) + 555) / 3.7
+        y: 344
+        opacity: GlobalManager.rigSettings["flow_controller_1"]
+    }
+    // Flow controller 2
+    SystemDiagramPipe
+    {
+        width: ((parent.width - 514) / 1.37) + 282
+        x: ((parent.width - 514 + 12) + 555) / 3.7
+        y: 344
+        opacity: GlobalManager.rigSettings["flow_controller_2"]
     }
 
 
@@ -76,7 +106,7 @@ Item
      */
     SystemDiagramPipe
     {
-        height: 200
+        height: (GlobalManager.rigSettings["valve_6"]) ? 200 : 100
         x: ((parent.width - 514 + 12) + 320) / 1.3
         y: 43
     }
@@ -89,6 +119,7 @@ Item
         height: 100
         x: ((parent.width - 514) + 355) / 1.3
         y: 350
+        opacity: GlobalManager.rigSettings["flow_controller_1"]
     }
 
     /**
@@ -99,6 +130,7 @@ Item
         height: 100
         x: ((parent.width - 514) + 420)
         y: 350
+        opacity: GlobalManager.rigSettings["flow_controller_2"]
     }
 
 
@@ -129,6 +161,7 @@ Item
         color: "white"
         x: ((parent.width - 514) / 2) + 240
         y: 145
+        opacity: GlobalManager.rigSettings["valve_4"]
     }
     Text{
         text: "F"
@@ -153,5 +186,6 @@ Item
         color: "white"
         x: ((systemDrawing.width - 514 ) / 2) + 174
         y: 346
+        opacity: GlobalManager.rigSettings["valve_8"]
     }
 }
