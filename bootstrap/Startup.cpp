@@ -14,6 +14,7 @@
 // Application includes
 #include "app/Application.h"
 
+#include "app/Services/Debugger.h"
 
 namespace Bootstrap
 {

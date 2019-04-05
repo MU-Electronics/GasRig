@@ -9,7 +9,7 @@
 
 namespace App { namespace View { namespace Managers { namespace Graphs
 {
-    ValvesVsTime::ValvesVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
+    ValvesVsTime::ValvesVsTime(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine* experimentEngine)
         : Graph(parent),
           m_root(root),
           m_settings(settings),

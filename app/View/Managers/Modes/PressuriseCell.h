@@ -33,7 +33,7 @@ namespace App { namespace View { namespace Managers { namespace Modes
         AUTO_PROPERTY(int, currentNavigation)
 
         public:
-            PressuriseCell(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine &experimentEngine);
+            PressuriseCell(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine *experimentEngine);
 
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);

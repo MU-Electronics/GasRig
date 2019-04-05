@@ -9,20 +9,8 @@
 // Settings container
 #include "Settings/Container.h"
 
-// View managers
-#include "View/Managers/Testing.h"
-#include "View/Managers/ConnectionStatus.h"
-#include "View/Managers/SystemStatus.h"
-#include "View/Managers/MachineStatus.h"
-#include "View/Managers/Global.h"
-#include "View/Managers/Modes/PressuriseCell.h"
-#include "View/Managers/Scripts/Editor.h"
-#include "View/Managers/Scripts/Add.h"
-
-// Include view graph managers
-#include "View/Managers/Graphs/PressureVsTime.h"
-#include "View/Managers/Graphs/ValvesVsTime.h"
-#include "View/Managers/Graphs/VacuumVsTime.h"
+// View manager factory
+#include "View/ManagerFactory.h"
 
 // Objects to the threaded
 #include "Safety/Monitor.h"
@@ -60,19 +48,10 @@ namespace App
             // Hold the instance of expeirment engine
             Experiment::Engine& experiment_engine;
 
-            // View managers
-            View::Managers::Global& manager_global;
-            View::Managers::Testing& manager_testing;
-            View::Managers::ConnectionStatus& manager_connection;
-            View::Managers::SystemStatus& manager_systemStatus;
-            View::Managers::MachineStatus& manager_machineStatus;
-            View::Managers::Modes::PressuriseCell& manager_mode_pressuriseCell;
-            View::Managers::Graphs::PressureVsTime& manager_graph_pressureVsTime;
-            View::Managers::Graphs::ValvesVsTime& manager_graph_valvesVsTime;
-            View::Managers::Graphs::VacuumVsTime& manager_graph_vacuumVsTime;
-            View::Managers::Scripts::Editor& manager_scripts_editor;
-            View::Managers::Scripts::Add& manager_scripts_add;
+            // View manager factory
+            View::ManagerFactory& manager_factory;
 
+            void createManagers();
             void registerManagers();
             void registerQmlTypes();
             void registerAddtionalThreads();

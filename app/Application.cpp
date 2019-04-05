@@ -6,7 +6,20 @@
 #include <QThread>
 #include <QString>
 
-// For debugging only to be removed
+// View managers
+#include "View/Managers/Testing.h"
+#include "View/Managers/ConnectionStatus.h"
+#include "View/Managers/SystemStatus.h"
+#include "View/Managers/MachineStatus.h"
+#include "View/Managers/Global.h"
+#include "View/Managers/Modes/PressuriseCell.h"
+#include "View/Managers/Scripts/Editor.h"
+#include "View/Managers/Scripts/Add.h"
+
+// Include view graph managers
+#include "View/Managers/Graphs/PressureVsTime.h"
+#include "View/Managers/Graphs/ValvesVsTime.h"
+#include "View/Managers/Graphs/VacuumVsTime.h"
 
 
 namespace App
@@ -41,24 +54,17 @@ namespace App
         ,   hardware(*new Hardware::Access(this, &settings_container))
 
             // Include the expeirment engine
-        ,    experiment_engine(*new Experiment::Engine(this, &settings_container, hardware, monitor))
+        ,   experiment_engine(*new Experiment::Engine(this, &settings_container, hardware, monitor))
 
-            // Create instance for each view manager
-        ,   manager_global(*new View::Managers::Global(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_testing(*new View::Managers::Testing(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_connection(*new View::Managers::ConnectionStatus(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_systemStatus(*new View::Managers::SystemStatus(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_machineStatus(*new View::Managers::MachineStatus(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_mode_pressuriseCell(*new View::Managers::Modes::PressuriseCell(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_graph_pressureVsTime(*new View::Managers::Graphs::PressureVsTime(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_graph_valvesVsTime(*new View::Managers::Graphs::ValvesVsTime(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_graph_vacuumVsTime(*new View::Managers::Graphs::VacuumVsTime(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_scripts_editor(*new View::Managers::Scripts::Editor(parent, m_engine, &settings_container, experiment_engine))
-        ,   manager_scripts_add(*new View::Managers::Scripts::Add(parent, m_engine, &settings_container, experiment_engine))
+            // View manager factory
+        ,   manager_factory(*new View::ManagerFactory())
 
     {
         // Register qml types with qml
         registerQmlTypes();
+
+        // Create managers
+        createManagers();
 
         // Load all managers
         registerManagers();
@@ -99,6 +105,26 @@ namespace App
         //qDebug() << "Deleting safety thread in thread: " << this->QObject::thread()->currentThreadId();
     }
 
+    /**
+     * Create instance for each view manager
+     *
+     * @brief Application::createManagers
+     */
+    void Application::createManagers()
+    {
+        manager_factory.create<View::Managers::Global>("Global", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::Testing>("Testing", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::ConnectionStatus>("ConnectionStatus", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::SystemStatus>("SystemStatus", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::MachineStatus>("MachineStatus", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::Modes::PressuriseCell>("Modes::PressuriseCell", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::Graphs::PressureVsTime>("Graphs::PressureVsTime", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::Graphs::ValvesVsTime>("Graphs::ValvesVsTime", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::Graphs::VacuumVsTime>("Graphs::VacuumVsTime", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::Scripts::Editor>("Scripts::Editor", this, m_engine, &settings_container, &experiment_engine);
+        manager_factory.create<View::Managers::Scripts::Add>("Scripts::Add", this, m_engine, &settings_container, &experiment_engine);
+    }
+
 
     /**
      * Register all the view manager instances
@@ -108,38 +134,35 @@ namespace App
     void Application::registerManagers()
     {
         // Set global manger
-        m_engine->rootContext()->setContextProperty("GlobalManager", &manager_global);
+        m_engine->rootContext()->setContextProperty("GlobalManager", manager_factory.get<View::Managers::Global>("Global"));
 
         // Set testing manager
-        m_engine->rootContext()->setContextProperty("TestingManager", &manager_testing);
+        m_engine->rootContext()->setContextProperty("TestingManager", manager_factory.get<View::Managers::Testing>("Testing"));
 
         // Set connection status manager
-        m_engine->rootContext()->setContextProperty("ConnectionStatusManager", &manager_connection);
+        m_engine->rootContext()->setContextProperty("ConnectionStatusManager", manager_factory.get<View::Managers::ConnectionStatus>("ConnectionStatus"));
 
         // Set system status manager
-        m_engine->rootContext()->setContextProperty("SystemStatusManager", &manager_systemStatus);
+        m_engine->rootContext()->setContextProperty("SystemStatusManager", manager_factory.get<View::Managers::SystemStatus>("SystemStatus"));
 
         // Set machine status manger
-        m_engine->rootContext()->setContextProperty("MachineStatusManager", &manager_machineStatus);
+        m_engine->rootContext()->setContextProperty("MachineStatusManager", manager_factory.get<View::Managers::MachineStatus>("MachineStatus"));
 
         // Set mode pressurise cell manager
-        m_engine->rootContext()->setContextProperty("PressuriseCellManager", &manager_mode_pressuriseCell);
+        m_engine->rootContext()->setContextProperty("PressuriseCellManager", manager_factory.get<View::Managers::Modes::PressuriseCell>("Modes::PressuriseCell"));
 
         // Set pressure vs time graph manager
-        m_engine->rootContext()->setContextProperty("PressuriseVsTimeGraph", &manager_graph_pressureVsTime);
+        m_engine->rootContext()->setContextProperty("PressuriseVsTimeGraph", manager_factory.get<View::Managers::Graphs::PressureVsTime>("Graphs::PressureVsTime"));
 
         // Set valves vs time graph manager
-        m_engine->rootContext()->setContextProperty("ValvesVsTimeGraph", &manager_graph_valvesVsTime);
+        m_engine->rootContext()->setContextProperty("ValvesVsTimeGraph", manager_factory.get<View::Managers::Graphs::ValvesVsTime>("Graphs::ValvesVsTime"));
 
         // Set valves vs time graph manager
-        m_engine->rootContext()->setContextProperty("VacuumVsTimeGraph", &manager_graph_vacuumVsTime);
+        m_engine->rootContext()->setContextProperty("VacuumVsTimeGraph", manager_factory.get<View::Managers::Graphs::VacuumVsTime>("Graphs::VacuumVsTime"));
 
         // Set scripts
-        m_engine->rootContext()->setContextProperty("ScriptEditorManager", &manager_scripts_editor);
-        m_engine->rootContext()->setContextProperty("ScriptAddManager", &manager_scripts_add);
-
-
-
+        m_engine->rootContext()->setContextProperty("ScriptEditorManager", manager_factory.get<View::Managers::Scripts::Editor>("Scripts::Editor"));
+        m_engine->rootContext()->setContextProperty("ScriptAddManager", manager_factory.get<View::Managers::Scripts::Add>("Scripts::Add"));
     }
 
 
@@ -202,35 +225,35 @@ namespace App
     void Application::connectViewToThreads()
     {
         // Make connections for global view manager
-        manager_global.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::Global>("Global")->makeConnections(hardware, monitor);
 
         // Make connections for testing view manager
-        manager_testing.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::Testing>("Testing")->makeConnections(hardware, monitor);
 
         // Make connections for system settings view manager
-        manager_systemStatus.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::SystemStatus>("SystemStatus")->makeConnections(hardware, monitor);
 
         // Make connections for connection status view manager
-        manager_connection.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::ConnectionStatus>("ConnectionStatus")->makeConnections(hardware, monitor);
 
         // Make connections for machine status view manager
-        manager_machineStatus.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::MachineStatus>("MachineStatus")->makeConnections(hardware, monitor);
 
         // Make connections for machine status view manager
-        manager_mode_pressuriseCell.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::Modes::PressuriseCell>("Modes::PressuriseCell")->makeConnections(hardware, monitor);
 
         // Make connections for machine pressure vs time graph
-        manager_graph_pressureVsTime.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::Graphs::PressureVsTime>("Graphs::PressureVsTime")->makeConnections(hardware, monitor);
 
         // Make connections for machine valves vs time graph
-        manager_graph_valvesVsTime.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::Graphs::ValvesVsTime>("Graphs::ValvesVsTime")->makeConnections(hardware, monitor);
 
         // Make connections for machine vacuum vs time graph
-        manager_graph_vacuumVsTime.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::Graphs::VacuumVsTime>("Graphs::VacuumVsTime")->makeConnections(hardware, monitor);
 
         // Script
-        manager_scripts_editor.makeConnections(hardware, monitor);
-        manager_scripts_add.makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::Scripts::Editor>("Scripts::Editor")->makeConnections(hardware, monitor);
+        manager_factory.get<View::Managers::Scripts::Add>("Scripts::Add")->makeConnections(hardware, monitor);
     }
 
 

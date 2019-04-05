@@ -36,7 +36,7 @@ namespace App { namespace View { namespace Managers
         Q_PROPERTY(QVariantMap hardwareConnection READ hardwareConnection NOTIFY emit_hardwareConnectionChanged)
 
         public:
-            ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine &experimentEngine);
+            ConnectionStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container* settings, Experiment::Engine *experimentEngine);
 
             // Make connections with outside world
             void makeConnections(Hardware::Access& hardware, Safety::Monitor &safety);

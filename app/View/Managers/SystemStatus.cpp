@@ -10,7 +10,7 @@
 
 namespace App { namespace View { namespace Managers
 {
-    SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
+    SystemStatus::SystemStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine* experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings),
@@ -273,7 +273,7 @@ namespace App { namespace View { namespace Managers
         // Start monitoring the sensors
         if(!initalCommands.value("SensorMonitor") && package.value("status").toBool())
         {
-            m_experimentEngine.machines().sensorReadings(m_settings->hardware()->polling_times.value("vacuum_sensor").toInt(),
+            m_experimentEngine->machines().sensorReadings(m_settings->hardware()->polling_times.value("vacuum_sensor").toInt(),
                                                          m_settings->hardware()->polling_times.value("pressure_sensor").toInt(),
                                                          m_settings->hardware()->polling_times.value("flow_controller_flow").toInt(),
                                                          m_settings->hardware()->polling_times.value("turbo_speed").toInt(),

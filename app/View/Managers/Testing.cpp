@@ -4,7 +4,7 @@
 
 namespace App { namespace View { namespace Managers
 {
-    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
+    Testing::Testing(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine* experimentEngine)
         : QObject(parent),
           m_root(root),
           m_settings(settings),
@@ -724,12 +724,12 @@ namespace App { namespace View { namespace Managers
 
     void Testing::requestPurge(bool outputValve, int numberCycles, double nitrogenPressure, double vacTo)
     {
-        m_experimentEngine.machines().purge(outputValve, numberCycles, nitrogenPressure, vacTo);
+        m_experimentEngine->machines().purge(outputValve, numberCycles, nitrogenPressure, vacTo);
     }
 
     void Testing::requestPurgeStop()
     {
-        m_experimentEngine.machines().stopPurge();
+        m_experimentEngine->machines().stopPurge();
     }
 
 
@@ -738,12 +738,12 @@ namespace App { namespace View { namespace Managers
 
     void Testing::requestVent(bool output, bool vacuumOutput, bool flowCavity, bool nitrogenPipes, bool multiPipes, bool flowOnePipes, bool flowTwoPipes)
     {
-        m_experimentEngine.machines().vent(output, vacuumOutput, flowCavity, nitrogenPipes, multiPipes, flowOnePipes, flowTwoPipes);
+        m_experimentEngine->machines().vent(output, vacuumOutput, flowCavity, nitrogenPipes, multiPipes, flowOnePipes, flowTwoPipes);
     }
 
     void Testing::requestVentStop()
     {
-        m_experimentEngine.machines().stopVent();
+        m_experimentEngine->machines().stopVent();
     }
 
 
@@ -764,12 +764,12 @@ namespace App { namespace View { namespace Managers
     {
         if(continiousPressure)
         {
-            m_experimentEngine.machines().setContinuousPressure((maxTime*60000), (monitorTime*1000), setTop, setLeak, pressure.toInt(), stepSize, inputValve, openOutputValve, exhuastMethod);
+            m_experimentEngine->machines().setContinuousPressure((maxTime*60000), (monitorTime*1000), setTop, setLeak, pressure.toInt(), stepSize, inputValve, openOutputValve, exhuastMethod);
             m_pressuriser = 2;
         }
         else
         {
-            m_experimentEngine.machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve, openOutputValve, exhuastMethod);
+            m_experimentEngine->machines().setPressure(pressure.toInt(), initVacDown, stepSize, inputValve, openOutputValve, exhuastMethod);
             m_pressuriser = 1;
         }
     }
@@ -778,11 +778,11 @@ namespace App { namespace View { namespace Managers
     {
         if(m_pressuriser == 2)
         {
-            m_experimentEngine.machines().stopSetContinuousPressure();
+            m_experimentEngine->machines().stopSetContinuousPressure();
         }
         else if(m_pressuriser == 1)
         {
-            m_experimentEngine.machines().stopSetPressure();
+            m_experimentEngine->machines().stopSetPressure();
         }
 
         m_pressuriser = 0;
@@ -802,11 +802,11 @@ namespace App { namespace View { namespace Managers
     {
         if(state)
         {
-            m_experimentEngine.machines().safeValveOpen(port);
+            m_experimentEngine->machines().safeValveOpen(port);
         }
         else
         {
-            m_experimentEngine.machines().safeValveClose(port);
+            m_experimentEngine->machines().safeValveClose(port);
         }
     }
 
@@ -829,12 +829,12 @@ namespace App { namespace View { namespace Managers
             value = (value * 60) * 1000;
         }
 
-        m_experimentEngine.machines().vacDown(value, valueType, turbo, gasMode, mode);
+        m_experimentEngine->machines().vacDown(value, valueType, turbo, gasMode, mode);
     }
 
     void Testing::requestVacDownStop()
     {
-        m_experimentEngine.machines().stopVacDown();
+        m_experimentEngine->machines().stopVacDown();
     }
 
 
@@ -850,12 +850,12 @@ namespace App { namespace View { namespace Managers
      */
     void Testing::requestPulseValve(int valve, int cycles, int timeOpen, int timeClosed)
     {
-        m_experimentEngine.machines().pulseValve(valve, cycles, timeOpen, timeClosed);
+        m_experimentEngine->machines().pulseValve(valve, cycles, timeOpen, timeClosed);
     }
 
     void Testing::requestPulseValveStop()
     {
-        m_experimentEngine.machines().stopPulseValve();
+        m_experimentEngine->machines().stopPulseValve();
     }
 
 }}}

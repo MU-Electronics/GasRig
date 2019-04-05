@@ -5,7 +5,7 @@
 
 namespace App { namespace View { namespace Managers
 {
-    MachineStatus::MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine& experimentEngine)
+    MachineStatus::MachineStatus(QObject *parent, QQmlApplicationEngine *root, Settings::Container *settings, Experiment::Engine* experimentEngine)
         :   QObject(parent)
         ,   m_root(root)
         ,   m_settings(settings)
@@ -85,46 +85,46 @@ namespace App { namespace View { namespace Managers
         connect(this, &MachineStatus::emit_hardwareAccess, &hardware, &Hardware::Access::hardwareAccess);
 
         // Connect signals to and from experiment engine
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_ventMachineStarted, this, &MachineStatus::ventStarted);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_ventMachineStopped, this, &MachineStatus::ventStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_ventMachineFailed, this, &MachineStatus::ventStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_ventMachineStopping, this, &MachineStatus::ventStopping);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_ventMachineStarted, this, &MachineStatus::ventStarted);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_ventMachineStopped, this, &MachineStatus::ventStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_ventMachineFailed, this, &MachineStatus::ventStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_ventMachineStopping, this, &MachineStatus::ventStopping);
 
         // Connect signals to and from experiment engine
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_vacDownMachineStarted, this, &MachineStatus::vacDownStarted);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_vacDownMachineStopped, this, &MachineStatus::vacDownStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_vacDownMachineFailed, this, &MachineStatus::vacDownStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_vacDownMachineStopping, this, &MachineStatus::vacDownStopping);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_vacDownMachineStarted, this, &MachineStatus::vacDownStarted);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_vacDownMachineStopped, this, &MachineStatus::vacDownStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_vacDownMachineFailed, this, &MachineStatus::vacDownStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_vacDownMachineStopping, this, &MachineStatus::vacDownStopping);
 
         // Connect signals to and from experiment engine
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStarted, this, &MachineStatus::pulseValveStarted);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStopped, this, &MachineStatus::pulseValveStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveFailed, this, &MachineStatus::pulseValveStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pulseValveStopping, this, &MachineStatus::pulseValveStopping);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_pulseValveStarted, this, &MachineStatus::pulseValveStarted);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_pulseValveStopped, this, &MachineStatus::pulseValveStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_pulseValveFailed, this, &MachineStatus::pulseValveStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_pulseValveStopping, this, &MachineStatus::pulseValveStopping);
 
         // Connect signals to and from experiment engine
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_continuousPressureStarted, this, &MachineStatus::continuousPressuriseStarted);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_continuousPressureStopped, this, &MachineStatus::continuousPressuriseStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_continuousPressureFailed, this, &MachineStatus::continuousPressuriseStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_continuousPressureStopping, this, &MachineStatus::continuousPressuriseStopping);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_continuousPressureStarted, this, &MachineStatus::continuousPressuriseStarted);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_continuousPressureStopped, this, &MachineStatus::continuousPressuriseStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_continuousPressureFailed, this, &MachineStatus::continuousPressuriseStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_continuousPressureStopping, this, &MachineStatus::continuousPressuriseStopping);
 
         // Connect signals to and from experiment engine
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseStarted, this, &MachineStatus::pressuriseStarted);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseStopped, this, &MachineStatus::pressuriseStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseFailed, this, &MachineStatus::pressuriseStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_pressuriseStopping, this, &MachineStatus::pressuriseStopping);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_pressuriseStarted, this, &MachineStatus::pressuriseStarted);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_pressuriseStopped, this, &MachineStatus::pressuriseStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_pressuriseFailed, this, &MachineStatus::pressuriseStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_pressuriseStopping, this, &MachineStatus::pressuriseStopping);
 
         // Connect signals to and from experiment engine
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStarted, this, &MachineStatus::purgeStarted);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeFailed, this, &MachineStatus::purgeStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStopped, this, &MachineStatus::purgeStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_purgeStopping, this, &MachineStatus::purgeStopping);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_purgeStarted, this, &MachineStatus::purgeStarted);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_purgeFailed, this, &MachineStatus::purgeStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_purgeStopped, this, &MachineStatus::purgeStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_purgeStopping, this, &MachineStatus::purgeStopping);
 
         // Connect signals to and from experiment engine
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineStarted, this, &MachineStatus::safetyValveStarted);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineStopped, this, &MachineStatus::safetyValveStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineFailed, this, &MachineStatus::safetyValveStopped);
-        connect(&m_experimentEngine.machines(), &Experiment::Machines::Machines::emit_safeValveMachineStopping, this, &MachineStatus::safetyValveStopping);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_safeValveMachineStarted, this, &MachineStatus::safetyValveStarted);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_safeValveMachineStopped, this, &MachineStatus::safetyValveStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_safeValveMachineFailed, this, &MachineStatus::safetyValveStopped);
+        connect(&m_experimentEngine->machines(), &Experiment::Machines::Machines::emit_safeValveMachineStopping, this, &MachineStatus::safetyValveStopping);
 
         // Disable unused compiler warnings
         UNUSED(safety);

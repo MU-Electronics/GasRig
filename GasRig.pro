@@ -4,7 +4,7 @@ include(vendor/fluid/fluid.pri)
 TEMPLATE = app
 
 QT += qml quick quickcontrols2 widgets serialport charts
-CONFIG += c++11
+CONFIG += c++14
 
 QMAKE_MAC_SDK = macosx10.13
 
@@ -221,4 +221,5 @@ HEADERS += \
     app/Services/Debuging.h \
     app/View/Managers/Scripts/Editor.h \
     app/View/Managers/Scripts/Add.h \
-    app/Experiment/Machines/ContinuousPressure.h
+    app/Experiment/Machines/ContinuousPressure.h \
+    app/View/ManagerFactory.h
