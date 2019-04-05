@@ -14,8 +14,8 @@ Item
 {
     id: root
 
-    width: parent.width
-    height: parent.height
+    //width: parent.width
+    // height: parent.height
 
 
     TabBar {
