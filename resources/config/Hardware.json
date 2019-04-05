@@ -3,7 +3,7 @@
         "pressure_sensor": {
             "vendorId": "24577",
             "productId": "1288",
-            "com": "COM2",
+            "com": "COM7",
             "braud": "9600",
             "timeout": "800",
             "id": "1"
@@ -11,20 +11,20 @@
         "vacuum_station":{
             "vendorId": "1027",
             "productId": "24577",
-            "com": "COM5",
+            "com": "COM4",
             "braud": "9600",
             "timeout": "500",
             "id": "123"
         },
         "flow_controller":{
-            "com": "COM6",
+            "com": "COM5",
             "braud": "19200",
             "timeout": "1000",
 
             "default": "1",
 
-            "1_name": "Flow Controller One",
-            "1_system_name": "FlowControllerOne",
+            "2_name": "Flow Controller One",
+            "2_system_name": "FlowControllerOne",
             "1_manufacturer": "138",
             "1_type": "90",
             "1_id_1": "27",
