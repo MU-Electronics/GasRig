@@ -28,6 +28,10 @@ namespace App { namespace Settings
         loadSettings();
     }
 
+    Container::~Container()
+    {
+
+    }
 
 
     /**

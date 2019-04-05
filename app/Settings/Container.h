@@ -23,6 +23,8 @@ namespace App { namespace Settings
         public:
             Container(QObject *parent);
 
+            ~Container();
+
             QSharedPointer<General> general()
             {
                 QSharedPointer<General> pointer(m_general);

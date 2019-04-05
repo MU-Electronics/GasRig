@@ -21,7 +21,7 @@ namespace App { namespace Safety
             ~Monitor();
 
         private:
-            Settings::Container m_settings;
+            Settings::Container* m_settings;
 
             void configure(QThread &thread);
             void worker();
